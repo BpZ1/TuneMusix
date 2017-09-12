@@ -142,6 +142,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="Testexe\Debug.rar" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
