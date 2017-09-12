@@ -125,10 +125,10 @@ namespace TuneMusix.Model
         public bool AddTrack(Track track)
         {
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
-            if (valiUtil.insertValidation(track.tTitle,this.name,track,trackList))
+            if (valiUtil.insertValidation(track.Title,this.name,track,trackList))
             {
                 trackList.Add(track);
-                Logger.log("Track '" + track.tTitle + "' has been added to the playlist " + this.name);
+                Logger.log("Track '" + track.Title + "' has been added to the playlist " + this.name);
                 return true;
             }
             else
@@ -148,10 +148,10 @@ namespace TuneMusix.Model
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
             foreach (Track track in tracks)
             {
-                if(valiUtil.insertValidation(track.tTitle, this.name, track, trackList))
+                if(valiUtil.insertValidation(track.Title, this.name, track, trackList))
                 {
                     trackList.Add(track);
-                    Logger.log("Track '" + track.tTitle + "' has been added to the playlist " + this.name);
+                    Logger.log("Track '" + track.Title + "' has been added to the playlist " + this.name);
                     TracksAdded++;
                 }
             }

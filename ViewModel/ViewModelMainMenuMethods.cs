@@ -60,7 +60,7 @@ namespace TuneMusix.ViewModel
             foreach (Track selectedTrack in SelectedTracks)
             {
                 //binary search when sorted or better solution
-                Console.WriteLine(selectedTrack.tTitle);
+                Console.WriteLine(selectedTrack.Title);
                 foreach (Track track in TrackList)
                 {
                     if (track.url.Equals(selectedTrack.url))

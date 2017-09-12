@@ -54,10 +54,10 @@ namespace TuneMusix.Model
         public bool addTrack(Track track)
         {
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
-            if (valiUtil.insertValidation(track.tTitle, this.name, track, trackList))
+            if (valiUtil.insertValidation(track.Title, this.name, track, trackList))
             {
                 trackList.Add(track);
-                Logger.log(track.tTitle + " has been added to " + this.name + ".");
+                Logger.log(track.Title + " has been added to " + this.name + ".");
                 RaisePropertyChanged("trackList");
                 return true;
             }

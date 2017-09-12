@@ -35,22 +35,22 @@ namespace TuneMusix.Helpers
             if (isSet)
             {
                 //get   title   of   song; 
-                track.tTitle = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 3, 30));
+                track.Title = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 3, 30));
 
                 //get   interpret; 
-                track.tInterpret = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 33, 30));
+                track.Interpret = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 33, 30));
 
                 //get   album; 
-                track.tAlbum = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 63, 30));
+                track.Album = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 63, 30));
 
                 //get   Year; 
-                track.tYear = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 93, 4));
+                track.Year = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 93, 4));
 
                 //get   Comment; 
-                track.tComm = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 97, 30));
+                track.Comm = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 97, 30));
 
                 //get Genre
-                track.tGenre = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 127, 1));
+                track.Genre = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 127, 1));
 
             }
 
