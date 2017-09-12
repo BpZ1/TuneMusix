@@ -1,0 +1,40 @@
+﻿<Page x:Class="TuneMusix.View.PlaylistPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:vm="clr-namespace:TuneMusix.ViewModel"
+      xmlns:local="clr-namespace:TuneMusix.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="624" d:DesignWidth="1199.23"
+      Title="PlaylistPage"
+      DataContext="{DynamicResource PlaylistViewModel}">
+    <Page.Resources>
+        <vm:PlaylistViewModel x:Key="PlaylistViewModel"/>
+    </Page.Resources>
+    <Grid Background="#FFE5E5E5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+
+            <ColumnDefinition Width="5*" />
+        </Grid.ColumnDefinitions>
+
+
+        <StackPanel Grid.Column="1" HorizontalAlignment="Left" Height="603" Margin="10,10,0,0" VerticalAlignment="Top" Width="573">
+            <Label x:Name="label" Content="Playlists" HorizontalAlignment="Center" FontSize="18.667" FontWeight="Bold"/>
+            <ListBox x:Name="PlaylistList" Height="574" ItemsSource="{Binding Playlists}">
+
+            </ListBox>
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Left" Height="603" Margin="10,10,0,0" VerticalAlignment="Top" Width="573">
+           
+            <Label x:Name="currentplaylistname" Content="{Binding CurrentPlaylist.Name}" HorizontalContentAlignment="Center"
+                               FontSize="18.667" FontWeight="Bold" Height="37" Background="Gray"/>
+            <ListView Height="566">
+                
+            </ListView>
+
+        </StackPanel>
+    </Grid>
+</Page>

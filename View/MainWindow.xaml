@@ -1,0 +1,58 @@
+﻿<Window x:Class="TuneMusix.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:TuneMusix.ViewModel"
+        xmlns:local="clr-namespace:TuneMusix"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="TuneMusix" Height="700" Width="1200"
+        DataContext="{DynamicResource ViewModelMain}">
+    <Window.Resources>
+        <vm:ViewModelMain x:Key="ViewModelMain"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="15*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Load" Command="{Binding GetFiles}"/>
+                <MenuItem Header="_Save" />
+                <MenuItem Header="_Options" />
+                <Separator />
+                <MenuItem Header="_Exit" Command="{Binding ExitApplication}"/>
+            </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Header="_Debug" Command="{Binding DebugMethod}"/>
+                <MenuItem Header="_...."/>
+                <MenuItem Header="_...." >
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="_...." />
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1"  Background="Black">
+            <Frame Source="MusicPlayerPage.xaml"/>
+        </Grid>
+
+        <TabControl Grid.Row="2" x:Name="tabControl" >
+            <TabItem Header="Playlists">
+                <Frame Source="PlaylistPage.xaml"/>
+            </TabItem>
+
+            <TabItem Header="Trackslist">
+                <Frame Source="TracklistPage.xaml"/>
+            </TabItem>
+
+            <TabItem Header="Records">
+                <Frame Source="RecordPage.xaml"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

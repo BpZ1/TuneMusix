@@ -1,0 +1,30 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TuneMusix.Model;
+
+namespace TuneMusix.Helpers
+{
+    /// <summary>
+    /// Class for Logging of the Program
+    /// </summary>
+    static class Logger
+    {
+        
+        public static void log(String lines)
+        {
+            Options options = Options.Instance;
+            // Write the string to a file.append mode is enabled so that the log
+            // lines get appended to  test.txt than wiping content and writing the log
+            if (options.LoggerActive)
+            {
+                System.IO.StreamWriter file = new System.IO.StreamWriter(System.IO.Directory.GetCurrentDirectory() + "\\log.txt", true);
+                file.WriteLine(Convert.ToString(System.DateTime.Now) + " ----- " + lines + "-----");
+
+                file.Close();
+            }
+        }
+    }
+}
