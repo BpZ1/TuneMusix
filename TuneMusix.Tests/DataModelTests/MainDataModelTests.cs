@@ -1,0 +1,61 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TuneMusix.Data;
+using TuneMusix.Model;
+
+namespace TuneMusix.Tests.DataModelTests
+{
+    [TestClass]
+    public class MainDataModelTests
+    {
+        DataModel dataModel = DataModel.Instance;
+
+        //MockObjects
+        private Playlist playlist1 = new Playlist("1");
+        private Playlist playlist2 = new Playlist("2");
+        private Playlist playlist3 = new Playlist("3");
+        private Playlist playlist4 = new Playlist("4");
+        private Playlist playlist5 = new Playlist("5");
+
+        private Track track1 = new Track("url1");
+        private Track track2 = new Track("url2");
+        private Track track3 = new Track("url3");
+        private Track track4 = new Track("url4");
+        private Track track5 = new Track("url4");
+
+        
+
+        [TestMethod]
+        public void DeleteTrackTest()
+        {
+            dataModel.TrackList.Add(track1);
+            dataModel.TrackList.Add(track2);
+            dataModel.TrackList.Add(track3);
+            dataModel.TrackList.Add(track4);
+
+            Assert.AreEqual(4,dataModel.TrackList.Count);
+            dataModel.DeleteTrackFromList(track1);
+            Assert.AreEqual(3, dataModel.TrackList.Count);
+
+            Assert.IsFalse(dataModel.DeleteTrackFromList(null));
+            Assert.IsFalse(dataModel.DeleteTrackFromList(track5));
+        }
+
+        [TestMethod]
+        public void SetCurrentPlaylist()
+        {
+            Assert.IsNull(dataModel.CurrentPlaylist);
+            dataModel.CurrentPlaylist = playlist1;
+            Assert.IsNotNull(dataModel.CurrentPlaylist);
+            Assert.AreEqual(dataModel.CurrentPlaylist,playlist1);
+        }
+
+        [TestMethod]
+        public void SetCurrentTrack()
+        {
+            Assert.IsNull(dataModel.CurrentTrackDM);
+            dataModel.CurrentTrackDM = track1;
+            Assert.IsNotNull(dataModel.CurrentTrackDM);
+            Assert.AreEqual(dataModel.CurrentTrackDM, track1);
+        }
+    }
+}
