@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Timers;
 using System.Windows.Controls;
-using TuneMusix.Data;
-using TuneMusix.Helpers;
 
 namespace TuneMusix.ViewModel
 {
@@ -43,12 +41,12 @@ namespace TuneMusix.ViewModel
             if (NewState == 1 || NewState == 2)
             {
                 //Stop
-             
+                PlayButtonIcon = "PlayCircleOutline";
             }
             if (NewState == 3)
             {
                 //Start
-   
+                PlayButtonIcon = "PauseCircleOutline";            
             }
         }
 

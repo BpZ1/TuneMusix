@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControlzEx;
+using System;
 using System.Timers;
 using System.Windows.Controls;
 using TuneMusix.Data;
@@ -17,6 +18,7 @@ namespace TuneMusix.ViewModel
         public RelayCommand PlayButton { get; set; }
         public RelayCommand BackButton { get; set; }
 
+        private string _playButtonIcon;
         private string _currentTrackName;
         private double _currentPosition;
         private Timer timer;
@@ -26,7 +28,8 @@ namespace TuneMusix.ViewModel
         public MusicPlayerViewModel()
         {
             Dragging = false;
-            timer = new Timer(100);
+            timer = new Timer(10);
+            _playButtonIcon = "PlayCircleOutline";
 
             //RelayCommands
             LeftMouseDown_Slider = new RelayCommand(_leftMouseDown_Slider);
@@ -43,6 +46,20 @@ namespace TuneMusix.ViewModel
         }
 
         //Getter and setter  
+        public string PlayButtonIcon
+        {
+            get
+            {
+                return this._playButtonIcon;
+            }
+            set
+            {
+                this._playButtonIcon = value;
+                RaisePropertyChanged("PlayButtonIcon");
+            }
+        }
+
+
         public double CurrentSliderPosition
         {
             get

@@ -53,11 +53,11 @@
             
             <ListView.View>
                 <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Track Information">
-                    <GridViewColumn DisplayMemberBinding= "{Binding Path=tTitle}"  Header="Title" Width="400"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=tInterpret}" Header="Interpret" Width="200"/>
-                    <GridViewColumn DisplayMemberBinding= "{Binding Path=tAlbum}" Header="Album" Width="100"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=tYear}" Header="Year" Width="100"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=tGenre}"  Header="Genre" Width="200"/>
+                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="400"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="200"/>
+                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Album}" Header="Album" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="200"/>
                 </GridView>
 
             </ListView.View>
