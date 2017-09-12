@@ -16,8 +16,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="15*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="30*"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" DockPanel.Dock="Top">
             <MenuItem Header="_File">
