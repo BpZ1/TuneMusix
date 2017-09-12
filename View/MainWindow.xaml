@@ -21,14 +21,8 @@
     <Window.Resources>
         <vm:ViewModelMain x:Key="ViewModelMain"/>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="4*"/>
-            <RowDefinition Height="28*"/>
-        </Grid.RowDefinitions>
-
-        <Menu Grid.Row="0" IsMainMenu="True" DockPanel.Dock="Top">
+    <StackPanel>
+        <Menu IsMainMenu="True" DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="Load" InputGestureText="Ctrl+D">
                     <MenuItem Header="Load Files" IsCheckable="True" Command="{Binding GetFiles}" />
@@ -69,12 +63,9 @@
             </MenuItem>
         </Menu>
 
+        <Frame Source="MusicPlayerPage.xaml"/>
 
-        <Grid Grid.Row="1"  Background="Black">
-            <Frame Source="MusicPlayerPage.xaml"/>
-        </Grid>
-
-        <TabControl Grid.Row="2" x:Name="tabControl" >
+        <TabControl x:Name="tabControl" >
             <TabItem Header="Playlists">
                 <Frame Source="PlaylistPage.xaml"/>
             </TabItem>
@@ -87,5 +78,5 @@
                 <Frame Source="RecordPage.xaml"/>
             </TabItem>
         </TabControl>
-    </Grid>
+    </StackPanel>
 </Window>
