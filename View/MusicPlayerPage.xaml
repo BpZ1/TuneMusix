@@ -7,9 +7,18 @@
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:local="clr-namespace:TuneMusix.View"
       mc:Ignorable="d" 
-      d:DesignHeight="100" d:DesignWidth="800"
+      d:DesignHeight="150" d:DesignWidth="800"
       Title="MusicPlayerPage" 
-      DataContext="{DynamicResource MusicPlayerViewModel}">
+      DataContext="{DynamicResource MusicPlayerViewModel}"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      TextElement.FontWeight="Regular"
+      TextElement.FontSize="13"
+      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextRenderingMode="Auto"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}"
+      >
     <Page.Resources>
         <vm:MusicPlayerViewModel x:Key="MusicPlayerViewModel"/>
     </Page.Resources>
@@ -21,8 +30,8 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" x:Name="AudioControls">
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
@@ -31,33 +40,29 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Image x:Name="BackButton" Grid.Column="0" Source="{Binding BackwardButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseDown_BackButton}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Image>
-                <Image x:Name="PlayButton" Grid.Column="1" Source="{Binding PlayButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseDown_PlayButton,UpdateSourceTrigger=PropertyChanged}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Image>
-                <Image x:Name="ForwardButton" Grid.Column="2" Source="{Binding ForwardButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseDown_ForwardButton}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Image>
+
+                <ToggleButton x:Name="BackButton" Grid.Column="0" Style="{StaticResource MaterialDesignActionToggleButton}" Command="{Binding BackButton}">
+                    <ToggleButton.Content>
+                        <materialDesign:PackIcon Kind="StepBackward" />
+                    </ToggleButton.Content>
+                </ToggleButton>
+
+                <ToggleButton x:Name="PlayButton" Grid.Column="1" Style="{StaticResource MaterialDesignActionToggleButton}" Command="{Binding PlayButton}">
+                    <ToggleButton.Content>
+                        <materialDesign:PackIcon Kind="Play" />
+                    </ToggleButton.Content>
+                    <materialDesign:ToggleButtonAssist.OnContent>
+                        <materialDesign:PackIcon Kind="Pause" />
+                    </materialDesign:ToggleButtonAssist.OnContent>
+                </ToggleButton>
+
+                <Button x:Name="ForwardButton" Grid.Column="2" Style="{StaticResource MaterialDesignRaisedButton}" Command="{Binding ForwardButton}">
+                    <materialDesign:PackIcon Margin="4 .5 0 0" Kind="StepForward" />
+                </Button>
+
+
                 <Grid Grid.Column="3">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    <Slider x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" ToolTip="{Binding Volume,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Maximum="100"/>
+                    <Slider x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" Orientation="Horizontal" TickPlacement="BottomRight" ToolTip="{Binding Volume,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Maximum="100" IsSelectionRangeEnabled="True"/>
                 </Grid>
             </Grid>
             <Grid Grid.Row="1">
@@ -65,21 +70,23 @@
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Slider Grid.Column="0" x:Name="PositionSlider" Value="{Binding CurrentSliderPosition,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding CurrentSliderPosition,UpdateSourceTrigger=PropertyChanged}"
-                            Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}"  TickFrequency="0.1" IsEnabled="{Binding TrackLoaded}" >
-                    <Slider.Effect>
-                        <DropShadowEffect/>
-                    </Slider.Effect>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseUp_Slider}" CommandParameter="{Binding ElementName=PositionSlider}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseDown_Slider}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Slider>
-
+                <Grid Grid.Column="0">
+                    <Slider x:Name="PositionSlider" Style="{StaticResource MaterialDesignDiscreteSlider}" Value="{Binding CurrentSliderPosition,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                        Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TrackLoaded}" 
+                        Margin="0 0 0 0">
+                        <Slider.Effect>
+                            <DropShadowEffect/>
+                        </Slider.Effect>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding LeftMouseUp_Slider}" CommandParameter="{Binding ElementName=PositionSlider}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding LeftMouseDown_Slider}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Slider>
+                </Grid>
                 <Slider Grid.Column="1" x:Name="BalanceSlider" Value="{Binding Balance,Mode=TwoWay}" Grid.Row="1" Minimum="-100" Maximum="100"/>
             </Grid>
         </Grid>
@@ -89,10 +96,10 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
-                <Label Content="{Binding CurrentTrackName}" FontWeight="Bold" Background="Black" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Segoe WP"/>
+                <Label Content="{Binding CurrentTrackName}" FontWeight="Bold" Background="{x:Null}" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" FontFamily="Segoe WP"/>
             </Grid>
             <Grid Grid.Row="1">
-                <Label Content="{Binding CurrentPlaylistName}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="16" FontFamily="Segoe WP Black"/>
+                <Label Content="{Binding CurrentPlaylistName}" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="16" FontFamily="Segoe WP Black" Background="{x:Null}"/>
             </Grid>
         </Grid>
     </Grid>

@@ -13,15 +13,10 @@ namespace TuneMusix.ViewModel
 
         public RelayCommand LeftMouseDown_Slider { get; set; }
         public RelayCommand LeftMouseUp_Slider { get; set; }
-        public RelayCommand LeftMouseDown_ForwardButton { get; set; }
-        public RelayCommand LeftMouseDown_PlayButton { get; set; }
-        public RelayCommand LeftMouseDown_BackButton { get; set; }
+        public RelayCommand ForwardButton { get; set; }
+        public RelayCommand PlayButton { get; set; }
+        public RelayCommand BackButton { get; set; }
 
-        private string _playButtonURL;
-        private string _stopButtonURL;
-        private string _playButton;
-        private string _forwardButton;
-        private string _backwardsButton;
         private string _currentTrackName;
         private double _currentPosition;
         private Timer timer;
@@ -30,20 +25,15 @@ namespace TuneMusix.ViewModel
         //Constructor
         public MusicPlayerViewModel()
         {
-            _playButton = "../Images/playbutton.png";
-            _playButtonURL = "../Images/playbutton.png";
-            _stopButtonURL = "../Images/pausebutton.png";
-            _forwardButton = "../Images/forwardbutton.png";
-            _backwardsButton = "../Images/backbutton.png";
             Dragging = false;
             timer = new Timer(100);
 
             //RelayCommands
             LeftMouseDown_Slider = new RelayCommand(_leftMouseDown_Slider);
             LeftMouseUp_Slider = new RelayCommand(_leftMouseUp_Slider);
-            LeftMouseDown_ForwardButton = new RelayCommand(_leftMouseDown_ForwardButton);
-            LeftMouseDown_PlayButton = new RelayCommand(_leftMouseDown_PlayButton);
-            LeftMouseDown_BackButton = new RelayCommand(_leftMouseDown_BackButton);
+            ForwardButton = new RelayCommand(_forwardButton);
+            PlayButton = new RelayCommand(_playButton);
+            BackButton = new RelayCommand(_backButton);
 
             //Events
             audioControls.player.PlayStateChange += OnPlayStateChange;
@@ -52,30 +42,7 @@ namespace TuneMusix.ViewModel
             audioControls.player.MediaChange += OnCurrentItemChange;
         }
 
-        //Getter and setter
-        public string PlayButton
-        {
-            get
-            {
-                return this._playButton;
-            }
-            set
-            {
-                if(value != null)
-                {
-                    this._playButton = value;
-                }          
-            }
-        }
-        public string ForwardButton
-        {
-            get { return this._forwardButton; }
-        }
-        public string BackwardButton
-        {
-            get { return this._backwardsButton; }
-        }
-
+        //Getter and setter  
         public double CurrentSliderPosition
         {
             get
