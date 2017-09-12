@@ -35,6 +35,7 @@ namespace TuneMusix.ViewModel
         public void _leftMouseDown_BackButton(object argument)
         {
             //Implement
+            Console.WriteLine("TEST");
         }
 
         public void OnPlayStateChange(int NewState)
