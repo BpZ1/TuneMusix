@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:TuneMusix.ViewModel"
         xmlns:local="clr-namespace:TuneMusix"
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="TuneMusix" Height="700" Width="1200"
@@ -26,7 +27,7 @@
             <MenuItem Header="_File">
                 <MenuItem Header="Load" InputGestureText="Ctrl+D">
                     <MenuItem Header="Load Files" IsCheckable="True" Command="{Binding GetFiles}" />
-                    <MenuItem Header="Set Folder" IsCheckable="True" />
+                    <MenuItem Header="Set Folder" IsCheckable="False" />
                 </MenuItem>
                 <MenuItem Header="Save">
                     <MenuItem.Icon>
@@ -63,20 +64,19 @@
             </MenuItem>
         </Menu>
 
-        <Frame Source="MusicPlayerPage.xaml"/>
+       <Frame Source="MusicPlayerPage.xaml"/>
 
-        <TabControl x:Name="tabControl" >
+        <dragablz:TabablzControl>
             <TabItem Header="Playlists">
                 <Frame Source="PlaylistPage.xaml"/>
             </TabItem>
-
             <TabItem Header="Trackslist">
                 <Frame Source="TracklistPage.xaml"/>
             </TabItem>
-
             <TabItem Header="Records">
                 <Frame Source="RecordPage.xaml"/>
             </TabItem>
-        </TabControl>
+        </dragablz:TabablzControl>
+
     </StackPanel>
 </Window>

@@ -33,7 +33,7 @@
 
 
         <ListView Grid.Column="0" Grid.Row="0" x:Name="AllTrackList" ItemsSource="{Binding TrackList}"
-                  SelectionChanged="TrackList_SelectionChanged"  Margin="10,10,0,0"  RenderTransformOrigin="0.503,0.478"
+                  SelectionChanged="TrackList_SelectionChanged"  Margin="10"  RenderTransformOrigin="0.503,0.478"
                   MouseDoubleClick="AllTrackList_MouseDoubleClick">
             <ListView.ContextMenu>
                 <ContextMenu>
