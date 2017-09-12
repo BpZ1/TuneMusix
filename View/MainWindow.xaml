@@ -6,53 +6,77 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:TuneMusix.ViewModel"
         xmlns:local="clr-namespace:TuneMusix"
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="TuneMusix" Height="700" Width="1200"
-        DataContext="{DynamicResource ViewModelMain}">
+        DataContext="{DynamicResource ViewModelMain}"     
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <Window.Resources>
         <vm:ViewModelMain x:Key="ViewModelMain"/>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="15*"/>
-        </Grid.RowDefinitions>
-        <Menu Grid.Row="0" DockPanel.Dock="Top">
+    <StackPanel>
+        <Menu IsMainMenu="True" DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Load" Command="{Binding GetFiles}"/>
-                <MenuItem Header="_Save" />
-                <MenuItem Header="_Options" />
-                <Separator />
-                <MenuItem Header="_Exit" Command="{Binding ExitApplication}"/>
-            </MenuItem>
-            <MenuItem Header="_Tools">
-                <MenuItem Header="_Debug" Command="{Binding DebugMethod}"/>
-                <MenuItem Header="_...."/>
-                <MenuItem Header="_...." >
+                <MenuItem Header="Load" InputGestureText="Ctrl+D">
+                    <MenuItem Header="Load Files" IsCheckable="True" Command="{Binding GetFiles}" />
+                    <MenuItem Header="Set Folder" IsCheckable="False" />
                 </MenuItem>
-                <Separator />
-                <MenuItem Header="_...." />
+                <MenuItem Header="Save">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ContentSave" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Options">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Settings" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Exit" Command="{Binding ExitApplication}" InputGestureText="Ctrl+E">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ExitToApp" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Cut" Command="Cut">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ContentCut" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Copy" Command="Copy">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ContentCopy" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Paste" Command="Paste">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ContentPaste" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
 
-        <Grid Grid.Row="1"  Background="Black">
-            <Frame Source="MusicPlayerPage.xaml"/>
-        </Grid>
+       <Frame Source="MusicPlayerPage.xaml"/>
 
-        <TabControl Grid.Row="2" x:Name="tabControl" >
+        <dragablz:TabablzControl>
             <TabItem Header="Playlists">
                 <Frame Source="PlaylistPage.xaml"/>
             </TabItem>
-
             <TabItem Header="Trackslist">
                 <Frame Source="TracklistPage.xaml"/>
             </TabItem>
-
             <TabItem Header="Records">
                 <Frame Source="RecordPage.xaml"/>
             </TabItem>
-        </TabControl>
-    </Grid>
+        </dragablz:TabablzControl>
+
+    </StackPanel>
 </Window>

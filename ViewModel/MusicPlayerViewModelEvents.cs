@@ -8,12 +8,12 @@ namespace TuneMusix.ViewModel
 {
     partial class MusicPlayerViewModel
     {
-        public void _leftMouseDown_ForwardButton(object argument)
+        public void _forwardButton(object argument)
         {
             //Implement
         }
 
-        public void _leftMouseDown_PlayButton(object argument)
+        public void _playButton(object argument)
         {
             if (audioControls.player.currentMedia != null)
             {
@@ -32,7 +32,7 @@ namespace TuneMusix.ViewModel
 
         }
 
-        public void _leftMouseDown_BackButton(object argument)
+        public void _backButton(object argument)
         {
             //Implement
             Console.WriteLine("TEST");
@@ -43,14 +43,12 @@ namespace TuneMusix.ViewModel
             if (NewState == 1 || NewState == 2)
             {
                 //Stop
-                _playButton = _playButtonURL;
-                RaisePropertyChanged("PlayButton");
+             
             }
             if (NewState == 3)
             {
                 //Start
-                _playButton = _stopButtonURL;
-                RaisePropertyChanged("PlayButton");
+   
             }
         }
 

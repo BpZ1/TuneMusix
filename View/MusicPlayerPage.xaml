@@ -7,9 +7,18 @@
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:local="clr-namespace:TuneMusix.View"
       mc:Ignorable="d" 
-      d:DesignHeight="100" d:DesignWidth="800"
+      d:DesignHeight="80" d:DesignWidth="800"
       Title="MusicPlayerPage" 
-      DataContext="{DynamicResource MusicPlayerViewModel}">
+      DataContext="{DynamicResource MusicPlayerViewModel}"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      TextElement.FontWeight="Regular"
+      TextElement.FontSize="13"
+      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextRenderingMode="Auto"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}"
+      >
     <Page.Resources>
         <vm:MusicPlayerViewModel x:Key="MusicPlayerViewModel"/>
     </Page.Resources>
@@ -20,56 +29,71 @@
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0" x:Name="AudioControls">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-                <Image x:Name="BackButton" Grid.Column="0" Source="{Binding BackwardButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseDown_BackButton}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Image>
-                <Image x:Name="PlayButton" Grid.Column="1" Source="{Binding PlayButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseDown_PlayButton,UpdateSourceTrigger=PropertyChanged}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Image>
-                <Image x:Name="ForwardButton" Grid.Column="2" Source="{Binding ForwardButton}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseDown_ForwardButton}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Image>
-                <Grid Grid.Column="3">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-                    <Slider x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" ToolTip="{Binding Volume,UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Maximum="100"/>
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" x:Name="BackButton" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding BackButton}">
+                        <materialDesign:PackIcon Kind="SkipPreviousCircleOutline" RenderTransformOrigin="0.5,0.5" >
+                            <materialDesign:PackIcon.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </materialDesign:PackIcon.RenderTransform>
+                        </materialDesign:PackIcon>
+                    </Button>
+
+                    <Button Grid.Column="1" x:Name="PlayButton" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding PlayButton}">
+                        <materialDesign:PackIcon Kind="PlayCircleOutline" RenderTransformOrigin="0.5,0.5" >
+                            <materialDesign:PackIcon.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </materialDesign:PackIcon.RenderTransform>
+                        </materialDesign:PackIcon>
+                    </Button>
+                    <Button Grid.Column="2" x:Name="ForwardButton" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding ForwardButton}">
+                        <materialDesign:PackIcon Kind="SkipNextCircleOutline" RenderTransformOrigin="0.5,0.5" >
+                            <materialDesign:PackIcon.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </materialDesign:PackIcon.RenderTransform>
+                        </materialDesign:PackIcon>
+                    </Button>
+                    <StackPanel Grid.Column="3" Orientation="Horizontal">
+                        <Button Style="{StaticResource MaterialDesignFlatButton}" >
+                            <materialDesign:PackIcon Kind="VolumeHigh" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" >
+                                <materialDesign:PackIcon.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </materialDesign:PackIcon.RenderTransform>
+                            </materialDesign:PackIcon>
+                        </Button>
+                        <Slider  x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" Orientation="Vertical" ToolTip="{Binding Volume,UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Row="0" Maximum="100" IsSelectionRangeEnabled="True" Margin="0,3" HorizontalAlignment="Center"/>
+                    </StackPanel>
                 </Grid>
-            </Grid>
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-                <Slider Grid.Column="0" x:Name="PositionSlider" Value="{Binding CurrentSliderPosition,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding CurrentSliderPosition,UpdateSourceTrigger=PropertyChanged}"
-                            Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}"  TickFrequency="0.1" IsEnabled="{Binding TrackLoaded}" >
-                    <Slider.Effect>
-                        <DropShadowEffect/>
-                    </Slider.Effect>
+
+                <Slider x:Name="PositionSlider" Value="{Binding CurrentSliderPosition,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
+                        Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TrackLoaded}" Margin="0,0,0,8">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
                             <i:InvokeCommandAction Command="{Binding LeftMouseUp_Slider}" CommandParameter="{Binding ElementName=PositionSlider}"/>
@@ -79,21 +103,15 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Slider>
-
-                <Slider Grid.Column="1" x:Name="BalanceSlider" Value="{Binding Balance,Mode=TwoWay}" Grid.Row="1" Minimum="-100" Maximum="100"/>
-            </Grid>
+            </StackPanel>
         </Grid>
-        <Grid x:Name="TrackInfo" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0">
-                <Label Content="{Binding CurrentTrackName}" FontWeight="Bold" Background="Black" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"/>
-            </Grid>
-            <Grid Grid.Row="1">
-                <Label Content="{Binding CurrentPlaylistName}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="16"/>
-            </Grid>
+
+        <Grid x:Name="TrackInfo" Grid.Column="1" RenderTransformOrigin="0.5,0.5">
+            <StackPanel>
+                <Label Content="{Binding CurrentTrackName}" FontWeight="Bold" Background="{x:Null}" Foreground="Black" FontSize="16" FontFamily="Segoe WP" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Content="{Binding CurrentPlaylistName}" Foreground="Black" FontWeight="Bold"
+                       FontSize="16" FontFamily="Segoe WP Black" Background="{x:Null}" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>
