@@ -28,11 +28,9 @@
         </Grid.ColumnDefinitions>
 
 
-        <StackPanel Grid.Column="1" HorizontalAlignment="Left" Height="603" Margin="10,10,0,0" VerticalAlignment="Top" Width="573">
-            <Label x:Name="label" Content="Playlists" HorizontalAlignment="Center" FontSize="18.667" FontWeight="Bold"/>
-            <ListBox x:Name="PlaylistList" Height="574" ItemsSource="{Binding Playlists}">
-
-            </ListBox>
+        <StackPanel Grid.Column="1" Margin="10,10,0,0" VerticalAlignment="Top">
+            <Label x:Name="label" Content="Playlists" FontSize="18.667" FontWeight="Bold"/>
+            <ListBox x:Name="PlaylistList" ItemsSource="{Binding Playlists}"/>
         </StackPanel>
 
 

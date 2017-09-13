@@ -9,7 +9,7 @@
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="TuneMusix" Height="700" Width="1200"
+        Title="TuneMusix"
         DataContext="{DynamicResource ViewModelMain}"     
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -18,15 +18,15 @@
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
-        FontFamily="{DynamicResource MaterialDesignFont}">
+        FontFamily="{DynamicResource MaterialDesignFont}" Width="1300" Height="796">
     <Window.Resources>
         <vm:ViewModelMain x:Key="ViewModelMain"/>
     </Window.Resources>
-    <StackPanel>
+    <DockPanel>
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="Load" InputGestureText="Ctrl+D">
-                    <MenuItem Header="Load Files" IsCheckable="false" Command="{Binding GetFiles}" />
+                    <MenuItem Header="Add Files" IsCheckable="false" Command="{Binding GetFiles}" />
                     <MenuItem Header="Add Folder" IsCheckable="False" Command="{Binding AddFolder}"/>
                 </MenuItem>
                 <MenuItem Header="Save">
@@ -64,19 +64,21 @@
             </MenuItem>
         </Menu>
 
-       <Frame Source="MusicPlayerPage.xaml"/>
+       <Frame DockPanel.Dock="Top" Source="MusicPlayerPage.xaml"/>
 
-        <dragablz:TabablzControl>
-            <TabItem Header="Playlists">
-                <Frame Source="PlaylistPage.xaml"/>
+        <dragablz:TabablzControl DockPanel.Dock="Bottom">
+            <TabItem Header="Playlists" >
+                <Frame Source="PlaylistPage.xaml" />
             </TabItem>
             <TabItem Header="Trackslist">
-                <Frame Source="TracklistPage.xaml"/>
+                <Grid x:Name="tab" Background="Aqua">
+                    <Frame Source="TracklistPage.xaml" Width="{Binding ActualWidth, ElementName=Tab}" Height="{Binding ActualHeight, ElementName=Tab}"/>
+                </Grid>
             </TabItem>
             <TabItem Header="Records">
                 <Frame Source="RecordPage.xaml"/>
             </TabItem>
         </dragablz:TabablzControl>
 
-    </StackPanel>
+    </DockPanel>
 </Window>
