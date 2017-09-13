@@ -83,6 +83,8 @@
     <Compile Include="Data\DataModel.cs" />
     <Compile Include="Data\SQLManager.cs" />
     <Compile Include="Helpers\AudioControls.cs" />
+    <Compile Include="Helpers\IDGenerator.cs" />
+    <Compile Include="Helpers\SystemWatcher.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />

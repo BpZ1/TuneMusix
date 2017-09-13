@@ -238,10 +238,23 @@ namespace TuneMusix.Data
             if (contained == false)
             {
                 RootFolders.Add(folder);
-                OnRootFolderListChanged();
+                AddFolderContent(folder);
+                OnRootFolderListChanged();           
                 return true;
             }
             return false;       
+        }
+
+        private void AddFolderContent(Folder folder)
+        {
+            foreach (Track t in folder.Tracklist)
+            {
+                this.AddTrack(t);
+            }
+            foreach (Folder f in folder.Folderlist)
+            {
+                this.AddFolderContent(f);
+            }
         }
 
         /// <summary>

@@ -19,10 +19,11 @@ namespace TuneMusix.Data
         {
             SQLiteConnection.CreateFile("db_Sqlite_Musix.sqlite");
             dbConnection = new SQLiteConnection("Data Source=db_Sqlite_Musix.db;Version=3;");
-            string sqlCreateTrackTable = "CREATE TABLE tracks (URL VARCHAR (100),title VARCHAR(30),interpret VARCHAR(30),album VARCHAR(30),releaseyear VARCHAR(10),comm VARCHAR(50),genre VARCHAR(20),rating INT NOT NULL);"; //, PRIMARY KEY(URL)
+            SQLiteCommand sqlCreateTrackTable = new SQLiteCommand("CREATE TABLE if not exists tracks (URL VARCHAR (100),title VARCHAR(30),interpret VARCHAR(30),album VARCHAR(30),releaseyear VARCHAR(10),comm VARCHAR(50),genre VARCHAR(20),rating INT NOT NULL);", dbConnection);
+            SQLiteCommand sqlCreateFolderTable = new SQLiteCommand("CREATE TABLE if not exists folders (URL VARCHAR (100),name VARCHAR(30))", dbConnection);
             dbConnection.Open();
-            SQLiteCommand command = new SQLiteCommand(sqlCreateTrackTable, dbConnection);
-            command.ExecuteNonQuery();
+            sqlCreateTrackTable.ExecuteNonQuery();
+            sqlCreateFolderTable.ExecuteNonQuery();
             dbConnection.Close();
         }
 
@@ -39,8 +40,14 @@ namespace TuneMusix.Data
             sqlcommand.Parameters.AddWithValue("Genre", track.Genre);
             sqlcommand.Parameters.AddWithValue("Rating", track.Rating);
             dbConnection.Open();
-            sqlcommand.ExecuteNonQuery();
-            dbConnection.Close();
+            try
+            {
+                sqlcommand.ExecuteNonQuery();
+            }
+            finally
+            {
+                dbConnection.Close();
+            }     
         }
 
         public List<Track> GetTracks()
