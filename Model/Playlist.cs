@@ -137,7 +137,6 @@ namespace TuneMusix.Model
             if (valiUtil.insertValidation(track.Title,this.name,track,_trackList))
             {
                 _trackList.Add(track);
-                Logger.Log("Track '" + track.Title + "' has been added to the playlist " + this.name);
                 return true;
             }
             else
@@ -160,11 +159,9 @@ namespace TuneMusix.Model
                 if(valiUtil.insertValidation(track.Title, this.name, track, _trackList))
                 {
                     _trackList.Add(track);
-                    Logger.Log("Track '" + track.Title + "' has been added to the playlist " + this.name);
                     TracksAdded++;
                 }
             }
-            Logger.Log(TracksAdded + " of " + tracks.Count + " have been added.");
             return TracksAdded;
 
         }

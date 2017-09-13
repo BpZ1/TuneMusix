@@ -37,8 +37,6 @@ namespace TuneMusix.ViewModel
 
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Logger.Log(Convert.ToString(ofd.FileNames.Length) + " files were selected.");
-
                 //for every File selected
                 foreach (String url in ofd.FileNames)
                 {

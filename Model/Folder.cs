@@ -39,7 +39,6 @@ namespace TuneMusix.Model
             ValidationUtil<Folder> valiUtil = new ValidationUtil<Folder>();
             if(valiUtil.insertValidation(Folder.name, this.name, Folder, _folderlist)){
                 _folderlist.Add(Folder);
-                Logger.Log(Folder.name + " has been added to " + this.name + ".");
                 RaisePropertyChanged("containerList");
                 return true;
             }else{
@@ -51,18 +50,20 @@ namespace TuneMusix.Model
         public bool AddTrack(Track track)
         {
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
-            if (valiUtil.insertValidation(track.Title, this.name, track, _tracklist))
+            if(track != null)
             {
-                _tracklist.Add(track);
-                Logger.Log(track.Title + " has been added to " + this.name + ".");
-                RaisePropertyChanged("trackList");
-                return true;
+                if (valiUtil.insertValidation(track.Title, this.name, track, _tracklist))
+                {
+                    _tracklist.Add(track);
+                    Logger.Log(track.Title + " has been added to " + this.name + ".");
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else
-            {
-                return false;
-            }
-
+            return false;
         }
 
 

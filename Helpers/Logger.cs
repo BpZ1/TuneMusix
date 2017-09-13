@@ -30,6 +30,8 @@ namespace TuneMusix.Helpers
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(System.IO.Directory.GetCurrentDirectory() + "\\log.txt",true);
             file.WriteLine(Convert.ToString(System.DateTime.Now) + " ----- " + ex.Message + "-----\n" + ex.ToString());
+
+            file.Close();
         }
     }
 }

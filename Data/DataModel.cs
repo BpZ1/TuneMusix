@@ -201,9 +201,14 @@ namespace TuneMusix.Data
             if (contained == false)
             {
                 FileParser fileParser = new FileParser();
-                TrackList.Add(fileParser.GetAudioData(URL));
-                OnTrackListChanged();
-                return true;
+                Track mp3 = fileParser.GetAudioData(URL);
+                if(mp3 != null)
+                {
+                    TrackList.Add(mp3);
+                    OnTrackListChanged();
+                    return true;
+                }           
+                return false;
             }
             else
             {
@@ -232,12 +237,10 @@ namespace TuneMusix.Data
             Track removeObj = null;
             if (track == null)
             {
-                Logger.Log("Could not remove track from Tracklist because object was null.");
                 return false;
             }
             if (track.url == null)
             {
-                Logger.Log("Could not remove track from Tracklist because url was null.");
                 return false;
             }
             foreach (Track t in TrackList)
@@ -249,12 +252,10 @@ namespace TuneMusix.Data
             }
             if(removeObj == null)
             {
-                Logger.Log("Could not remove track from Tracklist because no object was found.");
                 return false;
             }
             else
             {
-                Logger.Log("Track '" + track.url + "' was deleted from the Tracklist.");
                 TrackList.Remove(removeObj);
                 OnTrackListChanged();
                 return true;

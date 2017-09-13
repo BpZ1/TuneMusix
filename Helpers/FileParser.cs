@@ -21,11 +21,13 @@ namespace TuneMusix.Helpers
             {
                 if (url == null) return null;
                 Track track = new Track(url);
-
+                Console.WriteLine(url);
                 byte[] b = new byte[128];
 
                 FileStream fs = new FileStream(url, FileMode.Open);
                 fs.Seek(-128, SeekOrigin.End);
+
+                
                 fs.Read(b, 0, 128);
                 bool isSet = false;
                 String sFlag = System.Text.Encoding.Default.GetString(b, 0, 3);
@@ -57,10 +59,19 @@ namespace TuneMusix.Helpers
                 }
                 return track;
             }
-            catch (Exception e)
+            catch (UnauthorizedAccessException ex)
             {
-                //show to user with url
-                Logger.LogException(e);
+                Logger.LogException(ex);
+                return null;
+            }
+            catch (FileNotFoundException ex)
+            {
+                Logger.LogException(ex);
+                return null;
+            }
+            catch (IOException ex)
+            {
+                Logger.LogException(ex);
                 return null;
             }
         }
@@ -84,8 +95,12 @@ namespace TuneMusix.Helpers
                 if (extention.Equals(".mp3"))
                 {
                     Track mp3 = GetAudioData(url);
-                    tracks.Add(mp3);
-                    root.AddTrack(mp3);
+                    if(mp3 != null)
+                    {
+                        tracks.Add(mp3);
+                        root.AddTrack(mp3);
+                    }
+                   
                 }
             }
             //Recursion for subdirectories
