@@ -13,16 +13,18 @@ namespace TuneMusix.Model
 {
     public class Folder : BaseModel
     {
+        private long ID;
         private string name;
         private string _url;
         private ObservableCollection<Folder> _folderlist;
         private ObservableCollection<Track> _tracklist;
+       
 
-        public Folder(string name,string url)
+        public Folder(string name,string url,long ID)
         {
-
             this.Name = name;
             this.URL = url;
+            this.ID = ID;
 
              _folderlist = new ObservableCollection<Folder>();
             _tracklist = new ObservableCollection<Track>();
@@ -104,6 +106,10 @@ namespace TuneMusix.Model
                 }
                 this._url = value;
             }
+        }
+        public long GetID
+        {
+            get { return this.ID; }
         }
 
         public ObservableCollection<Track> Tracklist

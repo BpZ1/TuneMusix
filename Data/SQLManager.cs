@@ -30,7 +30,8 @@ namespace TuneMusix.Data
         public void AddTrack(Track track)
         {        
             Logger.Log("Track: '" + track.url + "' added to database");
-            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT INTO tracks (URL,title,interpret,album,releaseyear,comm,genre,rating) VALUES(@URL,@Title,@Interpret,@Album,@ReleaseYear,@Comm,@Genre,@Rating);", dbConnection);
+            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT INTO tracks (ID,URL,title,interpret,album,releaseyear,comm,genre,rating) VALUES(@ID,@URL,@Title,@Interpret,@Album,@ReleaseYear,@Comm,@Genre,@Rating);", dbConnection);
+            sqlcommand.Parameters.AddWithValue("ID",track.ID);
             sqlcommand.Parameters.AddWithValue("URL",track.url);
             sqlcommand.Parameters.AddWithValue("Title", track.Title);
             sqlcommand.Parameters.AddWithValue("Interpret", track.Interpret);

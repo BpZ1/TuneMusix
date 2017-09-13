@@ -8,6 +8,7 @@ namespace TuneMusix.Model
 {
     public class Track : BaseModel
     {
+        private long ID;
         private string URL;
         private string _title;
         private string _interpret;
@@ -22,13 +23,18 @@ namespace TuneMusix.Model
         /// Constructor for Track
         /// </summary>
         /// <param name="URL"></param> 
-        public Track(string URL)
+        public Track(string URL,long ID)
         {
+            this.ID = ID;
             this.URL = URL;
             Rating = 0;
         }
 
         //getter and setter
+        public long GetID
+        {
+            get { return this.ID; }
+        }
         public string url
         {
             get

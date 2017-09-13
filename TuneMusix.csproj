@@ -86,7 +86,6 @@
     <Compile Include="Exceptions\FileNotFoundException.cs" />
     <Compile Include="Helpers\AudioControls.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
-    <Compile Include="Helpers\SystemWatcher.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />

@@ -14,7 +14,7 @@ namespace TuneMusix.Helpers
 
         public FileParser()
         {
-            IDgen = new IDGenerator();
+            IDgen = IDGenerator.Instance;
         }
 
         /// <summary>

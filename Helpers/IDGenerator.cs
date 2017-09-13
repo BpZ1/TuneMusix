@@ -1,15 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TuneMusix.Exceptions;
 
 namespace TuneMusix.Helpers
 {
-    class IDGenerator
+    public class IDGenerator
     {
         public static long IDCounter = 0;
         private bool IsInit = false;
+
+        private static IDGenerator instance;
+
+        private IDGenerator() { }
+
+        public static IDGenerator Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new IDGenerator();
+                }
+                return instance;
+            }
+        }
+
 
         public void Initialize(long init)
         {
@@ -24,7 +37,7 @@ namespace TuneMusix.Helpers
                 IDCounter++;
                 return IDCounter - 1;
             }
-           throw new 
+            throw new ClassNotInitializedException("IDGenerator can only be used after it was initialized.");
         }
     }
 }
