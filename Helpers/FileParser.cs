@@ -21,7 +21,6 @@ namespace TuneMusix.Helpers
             {
                 if (url == null) return null;
                 Track track = new Track(url);
-                Console.WriteLine(url);
                 byte[] b = new byte[128];
 
                 FileStream fs = new FileStream(url, FileMode.Open);

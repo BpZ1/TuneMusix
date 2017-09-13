@@ -37,14 +37,17 @@ namespace TuneMusix.Model
         public bool AddFolder(Folder Folder)
         {
             ValidationUtil<Folder> valiUtil = new ValidationUtil<Folder>();
-            if(valiUtil.insertValidation(Folder.name, this.name, Folder, _folderlist)){
-                _folderlist.Add(Folder);
-                RaisePropertyChanged("containerList");
-                return true;
-            }else{
-                return false;
+            if(Folder != null)
+            {
+                if (valiUtil.insertValidation(Folder.name, this.name, Folder, _folderlist))
+                {
+                    _folderlist.Add(Folder);
+                    RaisePropertyChanged("containerList");
+                    return true;
+                }
+                else { return false; }
             }
-            
+            return false;          
         }
 
         public bool AddTrack(Track track)
@@ -118,7 +121,11 @@ namespace TuneMusix.Model
                 return this._folderlist;
             }
         }
-
+        CompositeCollection cc = new CompositeCollection();
+        
+        /// <summary>
+        /// Returns a IList for the Treeview
+        /// </summary>
         public IList Children
         {
             get

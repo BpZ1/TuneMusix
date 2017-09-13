@@ -158,7 +158,7 @@ namespace TuneMusix.Model
                 {
                     return this.Title;
                 }
-                return this.Title + " - " + this.Interpret;
+                return this.Interpret + " - " + this.Title;
             }
         }
     }

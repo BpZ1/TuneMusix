@@ -215,16 +215,33 @@ namespace TuneMusix.Data
                 return false;
             }
         }
-
+        /// <summary>
+        /// Checks if a folder is already contained in the list, or if it
+        /// is a parent/child of an existing folder.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
         public bool AddRootFolder(Folder folder)
         {
             if (RootFolders.Contains(folder))
             {
                 return false;
             }
-            RootFolders.Add(folder);
-            OnRootFolderListChanged();
-            return true;
+            bool contained = false;
+            foreach (Folder f in RootFolders)
+            {
+                if (folder.URL.Contains(f.URL) || f.URL.Contains(folder.URL))
+                {
+                    contained = true;
+                }
+            }
+            if (contained == false)
+            {
+                RootFolders.Add(folder);
+                OnRootFolderListChanged();
+                return true;
+            }
+            return false;       
         }
 
         /// <summary>
@@ -262,27 +279,11 @@ namespace TuneMusix.Data
             }
         }
 
-        public void AddFolder(Folder folder)
-        {
-            bool contained = false;
-            foreach (Folder f in RootFolders)
-            {
-                if (folder.URL.Contains(f.URL))
-                {
-                    contained = true;
-                }
-            }
-            if(contained == false)
-            {
-                RootFolders.Add(folder);
-            }
-        }
-
         public void AddFolder(string url)
         {
             FileParser fileParser = new FileParser();
             Folder folder = fileParser.GetFolderData(url);
-            AddFolder(folder);
+            AddRootFolder(folder);
         }
 
     }

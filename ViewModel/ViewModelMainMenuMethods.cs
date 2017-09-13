@@ -81,7 +81,7 @@ namespace TuneMusix.ViewModel
 
         public void _debugMethod(object argument)
         {
-            Console.WriteLine("------------------------------" + dataModel.RootFolders.Count);
+            Console.WriteLine("------------------------------" + dataModel.RootFolders.ElementAt(0).Children.ToString());
         }
 
 
