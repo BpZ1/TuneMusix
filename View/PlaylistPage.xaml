@@ -21,10 +21,9 @@
     <Page.Resources>
         <vm:PlaylistViewModel x:Key="PlaylistViewModel"/>
     </Page.Resources>
-    <Grid Background="#FFE5E5E5">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"/>
-
             <ColumnDefinition Width="5*" />
         </Grid.ColumnDefinitions>
 
@@ -36,14 +35,81 @@
             </ListBox>
         </StackPanel>
 
-        <StackPanel HorizontalAlignment="Left" Height="603" Margin="10,10,0,0" VerticalAlignment="Top" Width="573">
-           
-            <Label x:Name="currentplaylistname" Content="{Binding CurrentPlaylist.Name}" HorizontalContentAlignment="Center"
-                               FontSize="18.667" FontWeight="Bold" Height="37" Background="Gray"/>
-            <ListView Height="566">
-                
-            </ListView>
 
-        </StackPanel>
+
+
+
+
+
+
+
+
+
+        <materialDesign:DialogHost DialogClosing="Sample1_DialogHost_OnDialogClosing"
+                                Grid.Column="0" Grid.Row="1">
+            <materialDesign:DialogHost.DialogContent>
+                <StackPanel Margin="16">
+                    <TextBlock>Add a new fruit.</TextBlock>
+                    <TextBox Margin="0 8 0 0" HorizontalAlignment="Stretch" x:Name="FruitTextBox" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        IsDefault="True"
+                                        Margin="0 8 8 0"
+                                        Command="">
+
+                            ACCEPT
+                        </Button>
+                        <Button Style="{StaticResource MaterialDesignFlatButton}"
+                                        IsCancel="True"
+                                        Margin="0 8 8 0"
+                                        Command="">
+                            CANCEL
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </materialDesign:DialogHost.DialogContent>
+            <Border BorderThickness="1" BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+                            MinWidth="256" MinHeight="256" ClipToBounds="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" Effect="{DynamicResource MaterialDesignShadowDepth5}">
+                        <TextBlock Margin="16" Text="{Binding CurrentPlaylistName}"/>
+                    </materialDesign:ColorZone>
+                    <ListBox Grid.Row="1" x:Name="FruitListBox" ItemsSource="{Binding CurrentPlaylist.PlaylistItems}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="{Binding Path=Titel}"/>
+                                    <Label Grid.Column="1" Content=" - "/>
+                                    <Label Grid.Column="2" Content="{Binding Path=Interpret}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    
+                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                                    VerticalAlignment="Bottom" HorizontalAlignment="Right" 
+                                    Grid.Row="0" Margin="0 0 28 -20">
+                        <Viewbox Width="22" Height="22">
+                            <Canvas Width="24" Height="24">
+                                <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                            </Canvas>
+                        </Viewbox>
+                    </Button>
+                </Grid>
+            </Border>
+        </materialDesign:DialogHost>
+
+
+
     </Grid>
 </Page>

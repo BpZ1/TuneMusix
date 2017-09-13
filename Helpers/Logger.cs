@@ -13,7 +13,7 @@ namespace TuneMusix.Helpers
     static class Logger
     {
         
-        public static void log(String lines)
+        public static void Log(String lines)
         {
             Options options = Options.Instance;
             // Write the string to a file.append mode is enabled so that the log
@@ -25,6 +25,11 @@ namespace TuneMusix.Helpers
 
                 file.Close();
             }
+        }
+        public static void LogException(Exception ex)
+        {
+            System.IO.StreamWriter file = new System.IO.StreamWriter(System.IO.Directory.GetCurrentDirectory() + "\\log.txt",true);
+            file.WriteLine(Convert.ToString(System.DateTime.Now) + " ----- " + ex.Message + "-----\n" + ex.ToString());
         }
     }
 }

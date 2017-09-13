@@ -179,12 +179,12 @@ namespace TuneMusix.Data
             Track removeObj = null;
             if (track == null)
             {
-                Logger.log("Could not remove track from Tracklist because object was null.");
+                Logger.Log("Could not remove track from Tracklist because object was null.");
                 return false;
             }
             if (track.url == null)
             {
-                Logger.log("Could not remove track from Tracklist because url was null.");
+                Logger.Log("Could not remove track from Tracklist because url was null.");
                 return false;
             }
             foreach (Track t in TrackList)
@@ -196,12 +196,12 @@ namespace TuneMusix.Data
             }
             if(removeObj == null)
             {
-                Logger.log("Could not remove track from Tracklist because no object was found.");
+                Logger.Log("Could not remove track from Tracklist because no object was found.");
                 return false;
             }
             else
             {
-                Logger.log("Track '" + track.url + "' was deleted from the Tracklist.");
+                Logger.Log("Track '" + track.url + "' was deleted from the Tracklist.");
                 TrackList.Remove(removeObj);
                 OnTrackListChanged();
                 return true;

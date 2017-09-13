@@ -28,7 +28,7 @@ namespace TuneMusix.Helpers
                 throw new ArgumentNullException("Element is Null");
             }else if (validationList.Contains(toValidate))
             {
-                Logger.log( ObjectName + " is already contained in " + ListObjectName + ".");
+                Logger.Log( ObjectName + " is already contained in " + ListObjectName + ".");
                 return false;
             }
             else

@@ -16,12 +16,12 @@ namespace TuneMusix.Model
     public class Playlist : BaseModel
     {
         private string name;
-        private ObservableCollection<Track> trackList;
+        private ObservableCollection<Track> _trackList;
 
         //Constructor-------
         public Playlist(string name)
         {
-            trackList = new ObservableCollection<Track>();
+            _trackList = new ObservableCollection<Track>();
             if (name == null)
             {
                 throw new ArgumentNullException("Name can't be null.");
@@ -39,7 +39,7 @@ namespace TuneMusix.Model
         public Playlist(string name,Track track)
         {
             //maybe check for validation
-            trackList = new ObservableCollection<Track>();
+            _trackList = new ObservableCollection<Track>();
             if (name == null)
             {
                 throw new ArgumentNullException("Name can't be null.");
@@ -53,7 +53,7 @@ namespace TuneMusix.Model
                 this.name = name;
                 if(track != null)
                 {
-                    trackList.Add(track);
+                    _trackList.Add(track);
                 }
                 else
                 {
@@ -66,7 +66,7 @@ namespace TuneMusix.Model
         public Playlist(string name,List<Track> tracks)
         {
             //maybe check for validation
-            trackList = new ObservableCollection<Track>();
+            _trackList = new ObservableCollection<Track>();
             if (name == null)
             {
                 throw new ArgumentNullException("Name can't be null.");
@@ -82,7 +82,7 @@ namespace TuneMusix.Model
                 {
                     foreach(Track track in tracks)
                     {
-                        trackList.Add(track);
+                        _trackList.Add(track);
                     }
                 }
                 else
@@ -93,9 +93,7 @@ namespace TuneMusix.Model
             }
         }
 
-        /// <summary>
-        /// Getter and setter for the name of the Playlist.
-        /// </summary>
+        //Getter and setter
         public string Name
         {
             get { return this.name; }
@@ -116,6 +114,17 @@ namespace TuneMusix.Model
                 }
              }
         }
+        public ObservableCollection<Track> PlaylistItems
+        {
+            get
+            {
+                return this._trackList;
+            }
+            set
+            {
+                this._trackList = value;
+            }
+        }
         
         /// <summary>
         /// Adds one Element to the List.
@@ -125,10 +134,10 @@ namespace TuneMusix.Model
         public bool AddTrack(Track track)
         {
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
-            if (valiUtil.insertValidation(track.Title,this.name,track,trackList))
+            if (valiUtil.insertValidation(track.Title,this.name,track,_trackList))
             {
-                trackList.Add(track);
-                Logger.log("Track '" + track.Title + "' has been added to the playlist " + this.name);
+                _trackList.Add(track);
+                Logger.Log("Track '" + track.Title + "' has been added to the playlist " + this.name);
                 return true;
             }
             else
@@ -148,14 +157,14 @@ namespace TuneMusix.Model
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
             foreach (Track track in tracks)
             {
-                if(valiUtil.insertValidation(track.Title, this.name, track, trackList))
+                if(valiUtil.insertValidation(track.Title, this.name, track, _trackList))
                 {
-                    trackList.Add(track);
-                    Logger.log("Track '" + track.Title + "' has been added to the playlist " + this.name);
+                    _trackList.Add(track);
+                    Logger.Log("Track '" + track.Title + "' has been added to the playlist " + this.name);
                     TracksAdded++;
                 }
             }
-            Logger.log(TracksAdded + " of " + tracks.Count + " have been added.");
+            Logger.Log(TracksAdded + " of " + tracks.Count + " have been added.");
             return TracksAdded;
 
         }

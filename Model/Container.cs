@@ -42,7 +42,7 @@ namespace TuneMusix.Model
             ValidationUtil<Container> valiUtil = new ValidationUtil<Container>();
             if(valiUtil.insertValidation(container.name, this.name, container, containerList)){
                 containerList.Add(container);
-                Logger.log(container.name + " has been added to " + this.name + ".");
+                Logger.Log(container.name + " has been added to " + this.name + ".");
                 RaisePropertyChanged("containerList");
                 return true;
             }else{
@@ -57,7 +57,7 @@ namespace TuneMusix.Model
             if (valiUtil.insertValidation(track.Title, this.name, track, trackList))
             {
                 trackList.Add(track);
-                Logger.log(track.Title + " has been added to " + this.name + ".");
+                Logger.Log(track.Title + " has been added to " + this.name + ".");
                 RaisePropertyChanged("trackList");
                 return true;
             }
