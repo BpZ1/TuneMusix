@@ -107,7 +107,7 @@
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\ValidationUtil.cs" />
     <Compile Include="Model\BaseModel.cs" />
-    <Compile Include="Model\Container.cs" />
+    <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\Options.cs" />
     <Compile Include="Model\Playlist.cs" />
     <Compile Include="Model\Track.cs" />

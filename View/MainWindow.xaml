@@ -27,7 +27,7 @@
             <MenuItem Header="_File">
                 <MenuItem Header="Load" InputGestureText="Ctrl+D">
                     <MenuItem Header="Load Files" IsCheckable="false" Command="{Binding GetFiles}" />
-                    <MenuItem Header="Set Folder" IsCheckable="False" Command="{Binding AddFolder}"/>
+                    <MenuItem Header="Add Folder" IsCheckable="False" Command="{Binding AddFolder}"/>
                 </MenuItem>
                 <MenuItem Header="Save">
                     <MenuItem.Icon>

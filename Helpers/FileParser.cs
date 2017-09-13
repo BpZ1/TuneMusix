@@ -64,7 +64,11 @@ namespace TuneMusix.Helpers
                 return null;
             }
         }
-
+        /// <summary>
+        /// Adds all Files and Folders contained in the given URL to the DataModel.
+        /// </summary>
+        /// <param name="URL"></param>
+        /// <returns></returns>
         public List<Track> GetFolderData(string URL)
         {
             List<Track> tracks = new List<Track>();
@@ -83,6 +87,7 @@ namespace TuneMusix.Helpers
             foreach (string dir in dirs)
             {
                List<Track> SubList = GetFolderData(dir);
+                Folder fold = new Folder();
                 foreach (Track t in SubList)
                 {
                     tracks.Add(t);
@@ -91,6 +96,11 @@ namespace TuneMusix.Helpers
             return tracks;
         }
 
+        /// <summary>
+        /// Removes all control characters from a given string.
+        /// </summary>
+        /// <param name="inString"></param>
+        /// <returns></returns>
         public string RemoveControlCharacters(string inString)
         {
             if (inString == null) return "";
