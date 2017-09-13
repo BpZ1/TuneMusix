@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TuneMusix.Data;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 using WinForms = System.Windows.Forms;
@@ -31,8 +30,8 @@ namespace TuneMusix.ViewModel
         {
 
             var ofd = new WinForms.OpenFileDialog();
-            ofd.Title = "Open File Dialog";
-            ofd.InitialDirectory = @"C:\";
+            ofd.Title = "File Browser";
+            ofd.InitialDirectory = @"C:\"; //change to systems default hd
             ofd.Filter = "mp3 file (*.mp3)|*.mp3"; //| wav file (*.wav)|*wav
             ofd.Multiselect = true;
 
@@ -43,7 +42,7 @@ namespace TuneMusix.ViewModel
                 //for every File selected
                 foreach (String url in ofd.FileNames)
                 {
-                    dataModel.AddTrackToPlaylist(url);
+                    dataModel.AddTrackURL(url);
                 }
             }
         }
@@ -88,5 +87,18 @@ namespace TuneMusix.ViewModel
         {
 
         }
+
+
+        public void _addFolder(object argument)
+        {
+            var folderbrowser = new WinForms.FolderBrowserDialog();
+
+            if (folderbrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderbrowser.SelectedPath))
+            {
+                dataModel.AddFolder(folderbrowser.SelectedPath);
+            }           
+        }
+
+
     }
 }

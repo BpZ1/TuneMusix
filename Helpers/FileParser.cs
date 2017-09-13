@@ -55,18 +55,41 @@ namespace TuneMusix.Helpers
                     track.Genre = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 127, 1)).Trim();
 
                 }
-
                 return track;
             }
             catch (Exception e)
             {
-                //show to user
+                //show to user with url
                 Logger.LogException(e);
                 return null;
             }
         }
 
-
+        public List<Track> GetFolderData(string URL)
+        {
+            List<Track> tracks = new List<Track>();
+            string[] files = Directory.GetFiles(URL);
+            string[] dirs = Directory.GetDirectories(URL);
+            //Add all files in the firectory
+            foreach (string url in files)
+            {
+                string extention = Path.GetExtension(url);
+                if (extention.Equals(".mp3"))
+                {
+                    tracks.Add(GetAudioData(url));
+                }
+            }
+            //Recursion for subdirectories
+            foreach (string dir in dirs)
+            {
+               List<Track> SubList = GetFolderData(dir);
+                foreach (Track t in SubList)
+                {
+                    tracks.Add(t);
+                }
+            }
+            return tracks;
+        }
 
         public string RemoveControlCharacters(string inString)
         {

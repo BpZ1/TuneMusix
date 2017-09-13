@@ -26,8 +26,8 @@
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="Load" InputGestureText="Ctrl+D">
-                    <MenuItem Header="Load Files" IsCheckable="True" Command="{Binding GetFiles}" />
-                    <MenuItem Header="Set Folder" IsCheckable="False" />
+                    <MenuItem Header="Load Files" IsCheckable="false" Command="{Binding GetFiles}" />
+                    <MenuItem Header="Set Folder" IsCheckable="False" Command="{Binding AddFolder}"/>
                 </MenuItem>
                 <MenuItem Header="Save">
                     <MenuItem.Icon>

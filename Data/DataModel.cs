@@ -139,11 +139,29 @@ namespace TuneMusix.Data
             }
         }
 
+        public bool AddTrack(Track track)
+        {
+            bool contained = false;
+            foreach (Track t in TrackList)
+            {
+                if (track.url.Equals(t.url))
+                {
+                    contained = true;
+                }
+            }
+            if(contained == false)
+            {
+                TrackList.Add(track);
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Checks if a Track is already in the List and then adds it.
         /// </summary>
         /// <param name="URL"></param>
-        public bool AddTrackToPlaylist(string URL)
+        public bool AddTrackURL(string URL)
         {
             if(URL == null) { return false; }
             bool contained = false;
@@ -205,6 +223,16 @@ namespace TuneMusix.Data
                 TrackList.Remove(removeObj);
                 OnTrackListChanged();
                 return true;
+            }
+        }
+
+        public void AddFolder(string url)
+        {
+            FileParser fileParser = new FileParser();
+            List<Track> tList = fileParser.GetFolderData(url);
+            foreach (Track t in tList)
+            {
+                AddTrack(t);
             }
         }
 
