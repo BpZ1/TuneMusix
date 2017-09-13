@@ -72,7 +72,7 @@ namespace TuneMusix.Model
             get { return this.name; }
             set
             {
-                if (name != null && name.Length > 0)
+                if (value != null && value.Length > 0)
                 {
                     this.name = value;
                     RaisePropertyChanged("Name");
@@ -97,6 +97,22 @@ namespace TuneMusix.Model
                     throw new ArgumentNullException("URL mustn't be null.");
                 }
                 this._url = value;
+            }
+        }
+
+        public ObservableCollection<Track> Tracklist
+        {
+            get
+            {
+                return this._tracklist;
+            }
+        }
+
+        public ObservableCollection<Folder> Folderlist
+        {
+            get
+            {
+                return this._folderlist;
             }
         }
 

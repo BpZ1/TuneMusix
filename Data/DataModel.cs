@@ -229,7 +229,7 @@ namespace TuneMusix.Data
         public void AddFolder(string url)
         {
             FileParser fileParser = new FileParser();
-            List<Track> tList = fileParser.GetFolderData(url);
+            Folder folder = fileParser.GetFolderData(url);
             foreach (Track t in tList)
             {
                 AddTrack(t);

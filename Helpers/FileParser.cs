@@ -69,8 +69,13 @@ namespace TuneMusix.Helpers
         /// </summary>
         /// <param name="URL"></param>
         /// <returns></returns>
-        public List<Track> GetFolderData(string URL)
+        public Folder GetFolderData(string URL)
         {
+            //Add new root Folder
+            Folder root = new Folder(Path.GetFileNameWithoutExtension(URL),URL);
+
+            Console.WriteLine("--" + Path.GetFileNameWithoutExtension(URL));
+
             List<Track> tracks = new List<Track>();
             string[] files = Directory.GetFiles(URL);
             string[] dirs = Directory.GetDirectories(URL);
@@ -80,20 +85,20 @@ namespace TuneMusix.Helpers
                 string extention = Path.GetExtension(url);
                 if (extention.Equals(".mp3"))
                 {
-                    tracks.Add(GetAudioData(url));
+                    Track mp3 = GetAudioData(url);
+                    tracks.Add(mp3);
+                    root.AddTrack(mp3);
                 }
             }
             //Recursion for subdirectories
             foreach (string dir in dirs)
-            {
-               List<Track> SubList = GetFolderData(dir);
-                Folder fold = new Folder();
-                foreach (Track t in SubList)
-                {
-                    tracks.Add(t);
-                }
+            { 
+                //Add subfolder to root folder
+                Folder fold = GetFolderData(dir);
+                root.AddFolder(fold);
+                Console.WriteLine("------" + Path.GetFileNameWithoutExtension(dir));
             }
-            return tracks;
+            return root;
         }
 
         /// <summary>
