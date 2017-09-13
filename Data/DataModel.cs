@@ -230,10 +230,7 @@ namespace TuneMusix.Data
         {
             FileParser fileParser = new FileParser();
             Folder folder = fileParser.GetFolderData(url);
-            foreach (Track t in tList)
-            {
-                AddTrack(t);
-            }
+            //Add Tracks to tracklist
         }
 
     }
