@@ -27,7 +27,7 @@ namespace TuneMusix.Helpers
             try
             {
                 if (url == null) return null;
-                Track track = new Track(url);
+                Track track = new Track(url,IDgen.GetID());
                 byte[] b = new byte[128];
 
                 FileStream fs = new FileStream(url, FileMode.Open);
@@ -89,9 +89,8 @@ namespace TuneMusix.Helpers
         public Folder GetFolderData(string URL)
         {
             //Add new root Folder
-            Folder root = new Folder(Path.GetFileNameWithoutExtension(URL),URL);
+            Folder root = new Folder(Path.GetFileNameWithoutExtension(URL),URL,IDgen.GetID());
 
-            List<Track> tracks = new List<Track>();
             string[] files = Directory.GetFiles(URL);
             string[] dirs = Directory.GetDirectories(URL);
             //Add all files in the firectory
@@ -103,7 +102,7 @@ namespace TuneMusix.Helpers
                     Track mp3 = GetAudioData(url);
                     if(mp3 != null)
                     {
-                        tracks.Add(mp3);
+                        mp3.FolderID = root.FolderID;
                         root.AddTrack(mp3);
                     }
                    
@@ -114,6 +113,7 @@ namespace TuneMusix.Helpers
             { 
                 //Add subfolder to root folder
                 Folder fold = GetFolderData(dir);
+                fold.FolderID = root.FolderID;
                 root.AddFolder(fold);
             }
             return root;

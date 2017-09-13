@@ -13,7 +13,7 @@ namespace TuneMusix.ViewModel
         DataModel dataModel = DataModel.Instance;
 
 
-        //Getter and setter
+        //Getter
         public ObservableCollection<Track> TrackList
         {
             get { return dataModel.TrackList; }
@@ -70,11 +70,17 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("SelectedTracks");
             }
         }
+        //getter
+        public ObservableCollection<Folder> RootFolders
+        {
+            get { return dataModel.RootFolders; }
+        }
         //basic ViewModelBase
         internal void RaisePropertyChanged(string prop)
         {
             if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         //Extra Stuff, shows why a base ViewModel is useful

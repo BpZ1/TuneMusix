@@ -21,19 +21,6 @@ namespace TuneMusix.ViewModel
             dataModel = DataModel.Instance;
         }
 
-        //getter and setter
-        public ObservableCollection<Folder> RootFolders
-        {
-            get{ return dataModel.RootFolders; }
-        }
-
-        public void OnRootFolderlistChanged(object argument)
-        {
-
-        }
-
-
-
 
     }
 }

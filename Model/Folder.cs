@@ -119,11 +119,11 @@ namespace TuneMusix.Model
                 this._url = value;
             }
         }
-        public long GetID
+        public long ID
         {
             get { return this._id; }
         }
-        public long GetfolderID
+        public long FolderID
         {
             get { return this._folderID; }
             set { _folderID = value; }
