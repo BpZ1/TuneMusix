@@ -41,6 +41,8 @@ namespace TuneMusix.Data
         private ObservableCollection<Track> _SelectedTracks = new ObservableCollection<Track>();
         //The currently selected playlist
         private Playlist _SelectedPlaylist = null;
+        //List of rootfolders
+        private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
 
         public double currentPosition { get; set; }
 
@@ -54,6 +56,8 @@ namespace TuneMusix.Data
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
 
         public event DataModelChangedEventHandler PlaylistsChanged;
+
+        public event DataModelChangedEventHandler RootFolderListChanged;
 
         protected virtual void OnCurrentTrackChanged()
         {
@@ -83,6 +87,14 @@ namespace TuneMusix.Data
             if (PlaylistsChanged != null)
             {
                 PlaylistsChanged(this,Playlists);
+            }
+        }
+
+        protected virtual void OnRootFolderListChanged()
+        {
+            if (RootFolderListChanged != null)
+            {
+                RootFolderListChanged(this,RootFolders);
             }
         }
         
@@ -134,11 +146,24 @@ namespace TuneMusix.Data
             get { return this._SelectedPlaylist; }
             set
             {
-                this._SelectedPlaylist = value;
-               
+                this._SelectedPlaylist = value;          
+            }
+        }
+        public ObservableCollection<Folder> RootFolders
+        {
+            get { return this._rootFolders; }
+            set
+            {
+                this._rootFolders = value;
+                OnRootFolderListChanged();
             }
         }
 
+        /// <summary>
+        /// Adds a Track to the Tracklist after checking if it is already contained.
+        /// </summary>
+        /// <param name="track"></param>
+        /// <returns></returns>
         public bool AddTrack(Track track)
         {
             bool contained = false;
@@ -152,6 +177,7 @@ namespace TuneMusix.Data
             if(contained == false)
             {
                 TrackList.Add(track);
+                OnTrackListChanged();
                 return true;
             }
             return false;
@@ -176,7 +202,7 @@ namespace TuneMusix.Data
             {
                 FileParser fileParser = new FileParser();
                 TrackList.Add(fileParser.GetAudioData(URL));
-                
+                OnTrackListChanged();
                 return true;
             }
             else
@@ -185,7 +211,16 @@ namespace TuneMusix.Data
             }
         }
 
-
+        public bool AddRootFolder(Folder folder)
+        {
+            if (RootFolders.Contains(folder))
+            {
+                return false;
+            }
+            RootFolders.Add(folder);
+            OnRootFolderListChanged();
+            return true;
+        }
 
         /// <summary>
         /// Deletes a track from the tracklist if contained.
@@ -226,11 +261,27 @@ namespace TuneMusix.Data
             }
         }
 
+        public void AddFolder(Folder folder)
+        {
+            bool contained = false;
+            foreach (Folder f in RootFolders)
+            {
+                if (folder.URL.Contains(f.URL))
+                {
+                    contained = true;
+                }
+            }
+            if(contained == false)
+            {
+                RootFolders.Add(folder);
+            }
+        }
+
         public void AddFolder(string url)
         {
             FileParser fileParser = new FileParser();
             Folder folder = fileParser.GetFolderData(url);
-            //Add Tracks to tracklist
+            AddFolder(folder);
         }
 
     }

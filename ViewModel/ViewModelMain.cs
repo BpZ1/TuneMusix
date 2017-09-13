@@ -19,26 +19,14 @@ namespace TuneMusix.ViewModel
         public RelayCommand AddToPlaylist { get; set; }
         public RelayCommand DeleteTracks { get; set; }
         public RelayCommand ExitApplication { get; set; }
-        public RelayCommand DebugMethod { get; set; }
-
-        
+        public RelayCommand DebugMethod { get; set; }  
 
         DataModel dataModel = DataModel.Instance;
         AudioControls audioControls = AudioControls.Instance;
-
-
-      
+  
         //constructor
         public ViewModelMain()
         {
-
-
-
-            //Events
-            
-
-
-
 
             //Relaycommands
             GetFiles = new RelayCommand(_getFiles);

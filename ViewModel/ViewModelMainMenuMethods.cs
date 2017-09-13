@@ -65,8 +65,6 @@ namespace TuneMusix.ViewModel
                     if (track.url.Equals(selectedTrack.url))
                     {
                         deleteList.Add(track);
-
-
                     }
                 }
 
@@ -85,7 +83,7 @@ namespace TuneMusix.ViewModel
 
         public void _debugMethod(object argument)
         {
-
+            Console.WriteLine("------------------------------" + dataModel.RootFolders.Count);
         }
 
 

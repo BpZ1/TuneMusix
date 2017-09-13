@@ -46,17 +46,17 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Edit">
-                <MenuItem Header="_Cut" Command="Cut">
+                <MenuItem Header="_Debug" Command="{Binding DebugMethod}">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ContentCut" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Copy" Command="Copy">
+                <MenuItem Header="_...">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ContentCopy" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Paste" Command="Paste">
+                <MenuItem Header="_...">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ContentPaste" />
                     </MenuItem.Icon>
@@ -71,12 +71,12 @@
                 <Frame Source="PlaylistPage.xaml" />
             </TabItem>
             <TabItem Header="Trackslist">
-                <Grid x:Name="tab" Background="Aqua">
-                    <Frame Source="TracklistPage.xaml" Width="{Binding ActualWidth, ElementName=Tab}" Height="{Binding ActualHeight, ElementName=Tab}"/>
+                <Grid x:Name="tab">
+                    <Frame Source="TracklistPage.xaml"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Records">
-                <Frame Source="RecordPage.xaml"/>
+            <TabItem Header="Folders">
+                <Frame Source="FolderPage.xaml"/>
             </TabItem>
         </dragablz:TabablzControl>
 

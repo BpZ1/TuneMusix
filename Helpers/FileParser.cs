@@ -74,8 +74,6 @@ namespace TuneMusix.Helpers
             //Add new root Folder
             Folder root = new Folder(Path.GetFileNameWithoutExtension(URL),URL);
 
-            Console.WriteLine("--" + Path.GetFileNameWithoutExtension(URL));
-
             List<Track> tracks = new List<Track>();
             string[] files = Directory.GetFiles(URL);
             string[] dirs = Directory.GetDirectories(URL);
@@ -96,7 +94,6 @@ namespace TuneMusix.Helpers
                 //Add subfolder to root folder
                 Folder fold = GetFolderData(dir);
                 root.AddFolder(fold);
-                Console.WriteLine("------" + Path.GetFileNameWithoutExtension(dir));
             }
             return root;
         }

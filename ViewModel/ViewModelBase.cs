@@ -26,6 +26,7 @@ namespace TuneMusix.ViewModel
             set
             {
                 dataModel.CurrentTrackDM = value;
+                RaisePropertyChanged("CurrentTrackMVM");
             }
         }
         //Getter and setter
@@ -56,6 +57,7 @@ namespace TuneMusix.ViewModel
             set
             {
                 dataModel.SelectedPlaylist = value;
+                RaisePropertyChanged("SelectedPlaylist");
             }
         }
         //Getter and setter
@@ -65,6 +67,7 @@ namespace TuneMusix.ViewModel
             set
             {
                 dataModel.SelectedTracks = value;
+                RaisePropertyChanged("SelectedTracks");
             }
         }
         //basic ViewModelBase

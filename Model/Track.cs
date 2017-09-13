@@ -150,6 +150,16 @@ namespace TuneMusix.Model
                 this._rating = value;
             }
         }
-
+        public string Name
+        {
+            get
+            {
+                if(this.Interpret == null)
+                {
+                    return this.Title;
+                }
+                return this.Title + " - " + this.Interpret;
+            }
+        }
     }
 }
