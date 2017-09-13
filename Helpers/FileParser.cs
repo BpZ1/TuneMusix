@@ -10,6 +10,13 @@ namespace TuneMusix.Helpers
 {
     public class FileParser
     {
+        IDGenerator IDgen;
+
+        public FileParser()
+        {
+            IDgen = new IDGenerator();
+        }
+
         /// <summary>
         /// Reads the Data from a given URL for Audiofiles
         /// </summary>

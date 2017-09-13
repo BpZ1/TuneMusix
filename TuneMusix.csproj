@@ -82,6 +82,8 @@
     </ApplicationDefinition>
     <Compile Include="Data\DataModel.cs" />
     <Compile Include="Data\SQLManager.cs" />
+    <Compile Include="Exceptions\ClassNotInitializedException.cs" />
+    <Compile Include="Exceptions\FileNotFoundException.cs" />
     <Compile Include="Helpers\AudioControls.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
     <Compile Include="Helpers\SystemWatcher.cs" />

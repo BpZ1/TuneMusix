@@ -9,12 +9,22 @@ namespace TuneMusix.Helpers
     class IDGenerator
     {
         public static long IDCounter = 0;
+        private bool IsInit = false;
 
-        public long GetID(long init)
+        public void Initialize(long init)
         {
             IDCounter = init;
-            IDCounter++;
-            return IDCounter - 1;
+            IsInit = true;
+        }
+
+        public long GetID()
+        {
+            if (IsInit)
+            {
+                IDCounter++;
+                return IDCounter - 1;
+            }
+           throw new 
         }
     }
 }
