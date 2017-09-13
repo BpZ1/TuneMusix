@@ -25,6 +25,7 @@ namespace TuneMusix.Model
         public Track(string URL)
         {
             this.URL = URL;
+            Rating = 0;
         }
 
         //getter and setter

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TuneMusix.Data;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 using WinForms = System.Windows.Forms;
@@ -81,7 +82,18 @@ namespace TuneMusix.ViewModel
 
         public void _debugMethod(object argument)
         {
-            Console.WriteLine("------------------------------" + dataModel.RootFolders.ElementAt(0).Children.ToString());
+            Console.WriteLine("DBTEST");
+            Console.WriteLine("DBTEST");
+            SQLManager manager = new SQLManager();
+            foreach (Track t in TrackList)
+            {
+                manager.AddTrack(t);
+            }
+            List<Track> tracks = manager.GetTracks();
+            foreach (Track t in tracks)
+            {
+                Console.WriteLine(t.Name + " - " + t.url);
+            }
         }
 
 
