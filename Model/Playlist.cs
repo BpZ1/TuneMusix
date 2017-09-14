@@ -8,7 +8,7 @@ namespace TuneMusix.Model
     /// <summary>
     /// Class for the Playlist model containing a list of tracks
     /// </summary>
-    public class Playlist : BaseModel
+    public class Playlist
     {
         private long _id;
         private string _name;
@@ -68,10 +68,11 @@ namespace TuneMusix.Model
                 {
                     this._name = value;
                     this.Modified = true;
-                    RaisePropertyChanged("name");
+
                 }
              }
         }
+
         public bool Modified
         {
             get { return this._modified; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TuneMusix.Model
 {
-    public class Track : BaseModel
+    public class Track
     {
         private long _id;
         private long _folderID;
@@ -18,7 +18,6 @@ namespace TuneMusix.Model
         private string _comm;
         private string _genre;
         private int _rating;
-        private bool _modified;
         
 
         /// <summary>
@@ -41,6 +40,17 @@ namespace TuneMusix.Model
             Rating = 0;
         }
 
+
+        //events
+        public delegate void TrackChangedEventHandler(object source,object changed);
+
+        public event TrackChangedEventHandler FolderIDChanged;
+
+        public event TrackChangedEventHandler TrackURLChanged;
+
+        public event TrackChangedEventHandler TrackNameChanged;
+
+
         //getter and setter
         public long ID
         {
@@ -52,13 +62,7 @@ namespace TuneMusix.Model
             set
             {
                 _folderID = value;
-                this.Modified = true;
             }
-        }
-        public bool Modified
-        {
-            get { return this._modified; }
-            set { this._modified = value; }
         }
         public string url
         {
@@ -75,8 +79,8 @@ namespace TuneMusix.Model
                 if (value != null)
                 {
                     URL = value;
-                    this.Modified = true;
-                    RaisePropertyChanged("URL");
+
+
                 }
                 throw new ArgumentNullException("URL can't be null");
             }
@@ -169,7 +173,7 @@ namespace TuneMusix.Model
             }
             set
             {
-                this.Modified = true;
+
                 this._genre = value;
             }
         }
@@ -181,7 +185,7 @@ namespace TuneMusix.Model
             }
             set
             {
-                this.Modified = true;
+
                 this._rating = value;
             }
         }

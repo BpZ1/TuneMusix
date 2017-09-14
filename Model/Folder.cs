@@ -11,7 +11,7 @@ using TuneMusix.Helpers;
 
 namespace TuneMusix.Model
 {
-    public class Folder : BaseModel
+    public class Folder
     {
         private long _id;
         private long _folderID;
@@ -58,7 +58,7 @@ namespace TuneMusix.Model
                 if (valiUtil.insertValidation(Folder.name, this.name, Folder, _folderlist))
                 {
                     _folderlist.Add(Folder);
-                    RaisePropertyChanged("containerList");
+
                     return true;
                 }
                 else { return false; }
@@ -97,7 +97,7 @@ namespace TuneMusix.Model
                 if (value != null && value.Length > 0)
                 {
                     this.name = value;
-                    RaisePropertyChanged("Name");
+
                 }
                 else
                 {
