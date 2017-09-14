@@ -105,7 +105,19 @@ namespace TuneMusix.Data
 
         public void AddPlaylist(Playlist playlist)
         {
-            
+            Logger.Log("Playlist: '" + playlist.Name + "' added to database");
+            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT INTO playlists (ID,name) VALUES(@ID,@name);", dbConnection);
+            sqlcommand.Parameters.AddWithValue("ID", playlist.ID);
+            sqlcommand.Parameters.AddWithValue("name",playlist.Name);
+            dbConnection.Open();
+            try
+            {
+                sqlcommand.ExecuteNonQuery();
+            }
+            finally
+            {
+                dbConnection.Close();
+            }         
         }
 
         public void UpdateOptions(long IDGenStand,Options options)
@@ -136,8 +148,7 @@ namespace TuneMusix.Data
         public List<Track> GetTracks()
         {
             List<Track> tracklist = new List<Track>();
-            string dbCommand = "SELECT * FROM tracks";
-            SQLiteCommand command = new SQLiteCommand(dbCommand, dbConnection);
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM tracks", dbConnection);
             dbConnection.Open();
             dbReader = command.ExecuteReader();
             try
@@ -145,7 +156,7 @@ namespace TuneMusix.Data
                 // Always call Read before accessing data.
                 while (dbReader.Read())
                 {
-                    Track track = new Track(dbReader.GetString(2),dbReader.GetInt32(0));
+                    Track track = new Track(dbReader.GetString(2),dbReader.GetInt32(0),dbReader.GetInt64(1));
                     track.Title = dbReader.GetString(3);
                     track.Interpret = dbReader.GetString(4);
                     track.Album = dbReader.GetString(5);
@@ -162,6 +173,57 @@ namespace TuneMusix.Data
                 dbConnection.Close();
             }
             return tracklist;
+        }
+
+        public List<Folder> GetFolders()
+        {
+            List<Folder> folderlist = new List<Folder>();
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM tracks", dbConnection);
+            dbConnection.Open();
+            dbReader = command.ExecuteReader();
+            try
+            {
+                // Always call Read before accessing data.
+                while (dbReader.Read())
+                {
+                    Folder folder = new Folder(dbReader.GetString(3),dbReader.GetString(2), dbReader.GetInt32(0));
+                    folder.FolderID = dbReader.GetInt64(1);
+                    folderlist.Add(folder);
+                }
+            }
+            finally
+            {
+                dbReader.Close();
+                dbConnection.Close();
+            }
+            return folderlist;
+        }
+
+        public Options GetOptions()
+        {
+            Options options = Options.Instance;
+
+            //Implement
+
+            return options;
+        }
+
+        public long GetIDCounterStand()
+        {
+            long IDCounter;
+            SQLiteCommand command = new SQLiteCommand("SELECT ID FROM options",dbConnection);
+            dbConnection.Open();
+            dbReader = command.ExecuteReader();
+            try
+            {
+                IDCounter = dbReader.GetInt64(0);
+            }
+            finally
+            {
+                dbReader.Close();
+                dbConnection.Close();
+            }
+            return IDCounter;
         }
 
         

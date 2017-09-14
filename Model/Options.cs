@@ -1,4 +1,6 @@
-﻿namespace TuneMusix.Model
+﻿using TuneMusix.Helpers;
+
+namespace TuneMusix.Model
 {
     public class Options
     {
@@ -18,7 +20,7 @@
             }
         }
 
-        private bool _LoggerActive = true;
+        private bool _LoggerActive = false;
         private int _Volume;
 
         //Getter and setter
@@ -38,8 +40,6 @@
 
             }
         }
-
-        //Getter and setter
         public bool LoggerActive
         {
             get { return this._LoggerActive; }

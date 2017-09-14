@@ -33,6 +33,50 @@ namespace TuneMusix.ViewModel
             {
                 DBmanager.AddPlaylist(p);
             }
+            DBmanager.UpdateOptions(IDGenerator.IDCounter,options);
+        }
+
+        private void LoadFromDB()
+        {
+            SQLManager DBmanager = new SQLManager();
+            //Load options
+            IDGenerator IDgen = IDGenerator.Instance;
+            IDgen.Initialize(DBmanager.GetIDCounterStand());
+            options = DBmanager.GetOptions();
+            //Load all folders
+            List<Folder> tempList = DBmanager.GetFolders();
+            //load all tracks
+            foreach (Track track in DBmanager.GetTracks())
+            {
+                if (track != null)
+                {
+                    TrackList.Add(track);
+                    foreach (Folder folder in tempList)
+                    {
+                        if (track.FolderID == folder.ID || track.FolderID != -1)
+                        {
+                            folder.Tracklist.Add(track);
+                        }
+                    }
+                }    
+            }
+            foreach (Folder folder in tempList)
+            {
+                if (folder.ID == -1)
+                {
+                    RootFolders.Add(folder);
+                }
+            }
+            foreach (Folder folder in tempList)
+            {
+                foreach(Folder f in tempList)
+                {
+                    if (folder.FolderID == f.ID || folder.ID != -1)
+                    {
+                        f.AddFolder(folder);
+                    }
+                }
+            }       
         }
 
         /// <summary>

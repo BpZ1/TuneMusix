@@ -29,6 +29,9 @@ namespace TuneMusix.ViewModel
         //constructor
         public ViewModelMain()
         {
+            //Load data from database.
+            LoadFromDB();
+
 
             //Relaycommands
             GetFiles = new RelayCommand(_getFiles);

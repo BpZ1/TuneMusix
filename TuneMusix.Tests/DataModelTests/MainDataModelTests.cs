@@ -10,17 +10,17 @@ namespace TuneMusix.Tests.DataModelTests
         DataModel dataModel = DataModel.Instance;
 
         //MockObjects
-        private Playlist playlist1 = new Playlist("1");
-        private Playlist playlist2 = new Playlist("2");
-        private Playlist playlist3 = new Playlist("3");
-        private Playlist playlist4 = new Playlist("4");
-        private Playlist playlist5 = new Playlist("5");
+        private Playlist playlist1 = new Playlist("1",1);
+        private Playlist playlist2 = new Playlist("2", 1);
+        private Playlist playlist3 = new Playlist("3", 1);
+        private Playlist playlist4 = new Playlist("4", 1);
+        private Playlist playlist5 = new Playlist("5", 1);
 
-        private Track track1 = new Track("url1");
-        private Track track2 = new Track("url2");
-        private Track track3 = new Track("url3");
-        private Track track4 = new Track("url4");
-        private Track track5 = new Track("url4");
+        private Track track1 = new Track("url1", 1);
+        private Track track2 = new Track("url2", 1);
+        private Track track3 = new Track("url3", 1);
+        private Track track4 = new Track("url4", 1);
+        private Track track5 = new Track("url4", 1);
 
         
 
