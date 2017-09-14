@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TuneMusix.Helpers;
-
-//duplicate code!!!
 
 namespace TuneMusix.Model
 {
@@ -15,80 +10,38 @@ namespace TuneMusix.Model
     /// </summary>
     public class Playlist : BaseModel
     {
-        private string name;
+        private long _id;
+        private string _name;
         private ObservableCollection<Track> _trackList;
 
         //Constructor-------
-        public Playlist(string name)
+        public Playlist(string name,long ID)
         {
-            _trackList = new ObservableCollection<Track>();
-            if (name == null)
-            {
-                throw new ArgumentNullException("Name can't be null.");
-            }
-            else if (name.Length <= 0)
-            {
-                throw new ArgumentException("Name has to contain more than 0 symbols");
-            }
-            else
-            {
-                this.name = name;
-            }
+            this.Name = name;
+            this._id = ID;
         }
         //Constructor-------
-        public Playlist(string name,Track track)
+        public Playlist(string name,Track track,long ID)
         {
-            //maybe check for validation
-            _trackList = new ObservableCollection<Track>();
-            if (name == null)
-            {
-                throw new ArgumentNullException("Name can't be null.");
-            }
-            else if(name.Length <= 0)
-            {
-                throw new ArgumentException("Name has to contain more than 0 symbols");
-            }
-            else
-            {
-                this.name = name;
-                if(track != null)
-                {
-                    _trackList.Add(track);
-                }
-                else
-                {
-                    throw new ArgumentNullException("Track can't be null.");
 
-                }
+            this.Name = name;
+            this._id = ID;
+            if (track != null)
+            {
+                Tracklist.Add(track);
             }
+            
         }
         //Constructor-------
-        public Playlist(string name,List<Track> tracks)
+        public Playlist(string name,List<Track> tracks,long ID)
         {
-            //maybe check for validation
-            _trackList = new ObservableCollection<Track>();
-            if (name == null)
+            this.Name = name;
+            this._id = ID;
+            foreach (Track track in tracks)
             {
-                throw new ArgumentNullException("Name can't be null.");
-            }
-            else if (name.Length <= 0)
-            {
-                throw new ArgumentException("Name has to contain more than 0 symbols");
-            }
-            else
-            {
-                this.name = name;
-                if (tracks != null)
+                if (track != null)
                 {
-                    foreach(Track track in tracks)
-                    {
-                        _trackList.Add(track);
-                    }
-                }
-                else
-                {
-                    throw new ArgumentNullException("Track can't be null.");
-
+                    Tracklist.Add(track);
                 }
             }
         }
@@ -96,7 +49,7 @@ namespace TuneMusix.Model
         //Getter and setter
         public string Name
         {
-            get { return this.name; }
+            get { return this._name; }
             set
             {
                 if (value == null)
@@ -109,12 +62,12 @@ namespace TuneMusix.Model
                 }
                 else
                 {
-                    this.name = value;
+                    this._name = value;
                     RaisePropertyChanged("name");
                 }
              }
         }
-        public ObservableCollection<Track> PlaylistItems
+        public ObservableCollection<Track> Tracklist
         {
             get
             {
@@ -125,6 +78,11 @@ namespace TuneMusix.Model
                 this._trackList = value;
             }
         }
+
+        public long ID
+        {
+            get { return this._id; }
+        }
         
         /// <summary>
         /// Adds one Element to the List.
@@ -134,7 +92,7 @@ namespace TuneMusix.Model
         public bool AddTrack(Track track)
         {
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
-            if (valiUtil.insertValidation(track.Title,this.name,track,_trackList))
+            if (valiUtil.insertValidation(track.Title,this._name,track,_trackList))
             {
                 _trackList.Add(track);
                 return true;
@@ -156,7 +114,7 @@ namespace TuneMusix.Model
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
             foreach (Track track in tracks)
             {
-                if(valiUtil.insertValidation(track.Title, this.name, track, _trackList))
+                if(valiUtil.insertValidation(track.Title, this._name, track, _trackList))
                 {
                     _trackList.Add(track);
                     TracksAdded++;

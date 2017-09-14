@@ -10,6 +10,7 @@ namespace TuneMusix.Model
     {
         private long _id;
         private long _folderID;
+        private long _playlistID;
         private string URL;
         private string _title;
         private string _interpret;
@@ -28,6 +29,7 @@ namespace TuneMusix.Model
         {
             this._id = ID;
             this._folderID = -1;
+            this._playlistID = -1;
             this.URL = URL;
             Rating = 0;
         }

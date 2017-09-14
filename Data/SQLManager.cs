@@ -19,14 +19,26 @@ namespace TuneMusix.Data
         {
             SQLiteConnection.CreateFile("db_Sqlite_Musix.sqlite");
             dbConnection = new SQLiteConnection("Data Source=db_Sqlite_Musix.db;Version=3;");
-            SQLiteCommand sqlCreateTrackTable = new SQLiteCommand("CREATE TABLE if not exists tracks (ID INT UNSIGNED UNIQUE NOT NULL,folderID INT,URL VARCHAR (100),title VARCHAR(30),interpret VARCHAR(30),album VARCHAR(30),releaseyear VARCHAR(10),comm VARCHAR(50),genre VARCHAR(20),rating INT NOT NULL,PRIMARY KEY(ID), FOREIGN KEY (folderID) REFERENCES folders (ID));", dbConnection);
-            SQLiteCommand sqlCreateFolderTable = new SQLiteCommand("CREATE TABLE if not exists folders (ID INT UNSIGNED NOT NULL,folderID INT, URL VARCHAR (100),name VARCHAR(30),PRIMARY KEY(ID),FOREIGN KEY(folderID) REFERENCES folders(ID))", dbConnection);
+            //Initial SQL Querys
+            SQLiteCommand sqlCreateTrackTable = new SQLiteCommand("CREATE TABLE if not exists tracks (ID INT UNSIGNED UNIQUE NOT NULL,folderID INT,URL VARCHAR (100),title VARCHAR(30),interpret VARCHAR(30),album VARCHAR(30),releaseyear VARCHAR(10),comm VARCHAR(50),genre VARCHAR(20),rating INT NOT NULL,PRIMARY KEY(ID));", dbConnection);
+            SQLiteCommand sqlCreateFolderTable = new SQLiteCommand("CREATE TABLE if not exists folders (ID INT NOT NULL,folderID INT, URL VARCHAR (100),name VARCHAR(30),PRIMARY KEY(ID))", dbConnection);
+            SQLiteCommand sqlCreatePlaylistTable = new SQLiteCommand("CREATE TABLE if not exists playlists (ID INT NOT NULL, name VARCHAR (30),PRIMARY KEY(ID))", dbConnection);
+
             SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL)",dbConnection);
+            //Only needed if foreign key exists
+            //SQLiteCommand sqlFolderInit = new SQLiteCommand("INSERT INTO folders(ID, folderID, URL, name) VALUES(-1, -1,'Nothing','Nothing'",dbConnection);
             dbConnection.Open();
-            sqlCreateTrackTable.ExecuteNonQuery();
-            sqlCreateFolderTable.ExecuteNonQuery();
-            sqlCreateFolderTable.ExecuteNonQuery();
-            dbConnection.Close();
+            try
+            {
+                sqlCreateTrackTable.ExecuteNonQuery();
+                sqlCreateFolderTable.ExecuteNonQuery();
+                sqlCreatePlaylistTable.ExecuteNonQuery();
+                sqlCreateFolderTable.ExecuteNonQuery();
+            }
+            finally
+            {
+                dbConnection.Close();
+            }      
         }
 
 
@@ -93,7 +105,7 @@ namespace TuneMusix.Data
 
         public void AddPlaylist(Playlist playlist)
         {
-            //Implement
+            
         }
 
         public void UpdateOptions(long IDGenStand,Options options)
