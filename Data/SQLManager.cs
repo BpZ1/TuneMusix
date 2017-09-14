@@ -62,7 +62,6 @@ namespace TuneMusix.Data
 
 
         //Insertion methods
-
         /// <summary>
         /// Adds a given Track to the Database.
         /// </summary>

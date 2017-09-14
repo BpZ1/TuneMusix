@@ -17,6 +17,7 @@ namespace TuneMusix.Model
         private long _folderID;
         private string name;
         private string _url;
+        private bool _modified;
         private ObservableCollection<Folder> _folderlist;
         private ObservableCollection<Track> _tracklist;
        
@@ -27,7 +28,7 @@ namespace TuneMusix.Model
             this.URL = url;
             this._id = ID;
             this._folderID = -1;
-
+            this._modified = false;
              _folderlist = new ObservableCollection<Folder>();
             _tracklist = new ObservableCollection<Track>();                    
         }
@@ -36,6 +37,7 @@ namespace TuneMusix.Model
             this.Name = name;
             this.URL = url;
             this._id = ID;
+            this._modified = false;
             this._folderID = folderID;
 
             _folderlist = new ObservableCollection<Folder>();
@@ -103,6 +105,11 @@ namespace TuneMusix.Model
                     throw new InvalidOperationException("Name of a Folder has to be longer then 0");
                 }
             }
+        }
+        public bool Modified
+        {
+            get { return this._modified; }
+            set { this._modified = value; }
         }
         public string URL
         {

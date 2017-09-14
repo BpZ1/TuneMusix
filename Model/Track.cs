@@ -10,7 +10,6 @@ namespace TuneMusix.Model
     {
         private long _id;
         private long _folderID;
-        private long _playlistID;
         private string URL;
         private string _title;
         private string _interpret;
@@ -19,6 +18,7 @@ namespace TuneMusix.Model
         private string _comm;
         private string _genre;
         private int _rating;
+        private bool _modified;
         
 
         /// <summary>
@@ -29,7 +29,6 @@ namespace TuneMusix.Model
         {
             this._id = ID;
             this._folderID = -1;
-            this._playlistID = -1;
             this.URL = URL;
             Rating = 0;
         }
@@ -50,7 +49,16 @@ namespace TuneMusix.Model
         public long FolderID
         {
             get { return this._folderID; }
-            set { _folderID = value; }
+            set
+            {
+                _folderID = value;
+                this.Modified = true;
+            }
+        }
+        public bool Modified
+        {
+            get { return this._modified; }
+            set { this._modified = value; }
         }
         public string url
         {
@@ -67,6 +75,7 @@ namespace TuneMusix.Model
                 if (value != null)
                 {
                     URL = value;
+                    this.Modified = true;
                     RaisePropertyChanged("URL");
                 }
                 throw new ArgumentNullException("URL can't be null");
@@ -160,6 +169,7 @@ namespace TuneMusix.Model
             }
             set
             {
+                this.Modified = true;
                 this._genre = value;
             }
         }
@@ -171,6 +181,7 @@ namespace TuneMusix.Model
             }
             set
             {
+                this.Modified = true;
                 this._rating = value;
             }
         }

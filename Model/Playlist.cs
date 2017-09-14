@@ -12,11 +12,13 @@ namespace TuneMusix.Model
     {
         private long _id;
         private string _name;
+        private bool _modified;
         private ObservableCollection<Track> _trackList;
 
         //Constructor-------
         public Playlist(string name,long ID)
         {
+            this._modified = false;
             this.Name = name;
             this._id = ID;
         }
@@ -26,6 +28,7 @@ namespace TuneMusix.Model
 
             this.Name = name;
             this._id = ID;
+            this._modified = false;
             if (track != null)
             {
                 Tracklist.Add(track);
@@ -37,6 +40,7 @@ namespace TuneMusix.Model
         {
             this.Name = name;
             this._id = ID;
+            this._modified = false;
             foreach (Track track in tracks)
             {
                 if (track != null)
@@ -63,9 +67,15 @@ namespace TuneMusix.Model
                 else
                 {
                     this._name = value;
+                    this.Modified = true;
                     RaisePropertyChanged("name");
                 }
              }
+        }
+        public bool Modified
+        {
+            get { return this._modified; }
+            set { this._modified = value; }
         }
         public ObservableCollection<Track> Tracklist
         {
@@ -76,6 +86,7 @@ namespace TuneMusix.Model
             set
             {
                 this._trackList = value;
+                this.Modified = true;
             }
         }
 
@@ -95,6 +106,7 @@ namespace TuneMusix.Model
             if (valiUtil.insertValidation(track.Title,this._name,track,_trackList))
             {
                 _trackList.Add(track);
+                this.Modified = true;
                 return true;
             }
             else
@@ -120,8 +132,8 @@ namespace TuneMusix.Model
                     TracksAdded++;
                 }
             }
+            this.Modified = true;
             return TracksAdded;
-
         }
 
         
