@@ -74,6 +74,14 @@ namespace TuneMusix.Model
             }
             return false;          
         }
+        /// <summary>
+        /// Inertion method for Database loading
+        /// Avoids all checks.
+        /// </summary>
+        public void InsertFolder(Folder folder)
+        {
+            Folderlist.Add(folder);
+        }
 
         public bool AddTrack(Track track)
         {

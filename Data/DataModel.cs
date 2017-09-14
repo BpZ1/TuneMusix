@@ -45,6 +45,7 @@ namespace TuneMusix.Data
         private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
 
         public double currentPosition { get; set; }
+   
 
         //events
         public delegate void DataModelChangedEventHandler(object source,object changedObject);
@@ -97,7 +98,41 @@ namespace TuneMusix.Data
                 RootFolderListChanged(this,RootFolders);
             }
         }
-        
+
+        //////////////////////////database methods///////////////////////////////////
+        /// <summary>
+        /// Method for adding tracks.
+        /// Should only be used for loading from the database as it avoids all checks
+        /// </summary>
+        /// <param name="tracks"></param>
+        public void AddTracksDB(List<Track> tracks)
+        {
+            foreach (Track track in tracks)
+            {
+                TrackList.Add(track);
+            }
+            OnTrackListChanged();
+        }
+        public void AddRootFoldersDB(List<Folder> folders)
+        {
+            Console.WriteLine("Size: " + folders.Count);
+            foreach (Folder folder in folders)
+            {
+                RootFolders.Add(folder);
+            }
+            Console.WriteLine("Folders added");
+            OnRootFolderListChanged();
+        }
+        public void AddPlaylistsDB(List<Playlist> playlists)
+        {
+            foreach (Playlist playlist in playlists)
+            {
+                Playlists.Add(playlist);
+            }
+            OnPlaylistsChanged();
+        }
+        //////////////////////////////////////////////////////////////////////////////
+
         //Getter and setter
         public ObservableCollection<Track> TrackList
         {
@@ -287,13 +322,17 @@ namespace TuneMusix.Data
                 return true;
             }
         }
-
+        /// <summary>
+        /// Adds a root folder and all of its content to the model/database
+        /// </summary>
+        /// <param name="url"></param>
         public void AddRootFolder(string url)
         {
             FileParser fileParser = new FileParser();
             Folder folder = fileParser.GetFolderData(url);
             folder.FolderID = 1;
             AddRootFolder(folder);
+            AddFolderContent(folder);
 
         }
     

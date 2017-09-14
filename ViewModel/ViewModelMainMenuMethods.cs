@@ -22,22 +22,19 @@ namespace TuneMusix.ViewModel
             {
                 DBmanager.AddFolder(folder);
             }
-            Console.WriteLine("Folders Saved");
             foreach (Track t in TrackList)
             {
-                if (t.FolderID == -1)
-                {
-                    DBmanager.AddTrack(t);
-                }
+                DBmanager.AddTrack(t);
             }
-            Console.WriteLine("Tracks Saved");
             foreach (Playlist p in Playlists)
             {
                 DBmanager.AddPlaylist(p);
             }
             DBmanager.UpdateOptions(IDGenerator.IDCounter,options);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void LoadFromDB()
         {
             SQLManager DBmanager = new SQLManager();
@@ -51,50 +48,58 @@ namespace TuneMusix.ViewModel
             IDgen.Initialize(idgen);
             options = DBmanager.GetOptions();
             //Load all folders
-            List<Folder> tempList = DBmanager.GetFolders();
-            List<Folder> templist2 = tempList;
+            List<Folder> FolderList = DBmanager.GetFolders();
+            List<Folder> RootList = new List<Folder>();
             Console.WriteLine("Folders loaded");
-            foreach (Folder f in tempList)
-            {
-                Console.WriteLine("Folder ID: " + f.ID + "   Folder folderID: " + f.FolderID);
-            }
+
             //load all tracks
-            foreach (Track track in DBmanager.GetTracks())
+            Console.WriteLine("Loading Tracks");
+            List<Track> tracklist = DBmanager.GetTracks();
+            dataModel.AddTracksDB(tracklist);
+            Console.WriteLine("Tracks loaded");         
+            FolderSort(FolderList);
+            TrackSort(FolderList);
+            foreach (Folder folder in FolderList)
             {
-                if (track != null)
+                if (folder.FolderID == 1)
                 {
-                    TrackList.Add(track);
-                    foreach (Folder folder in tempList)
-                    {
-                        if (track.FolderID == folder.ID || track.FolderID != -1)//change ID to 0----------------------------------------------------------------
-                        {
-                            folder.AddTrack(track);
-                        }
-                    }
-                }    
-            }
-            Console.WriteLine("Tracks loaded");
-            foreach (Folder folder in tempList)
-            {
-                foreach(Folder f in templist2)
-                {
-                    if (folder.ID == f.FolderID || folder.FolderID != -1 || f != folder)//change ID to 0----------------------------------------------------------------
-                    {
-                        folder.AddFolder(f);
-                        //f.AddFolder(folder);
-                    }
+                    RootList.Add(folder);
                 }
             }
-            Console.WriteLine("Tracks loaded");
-            foreach (Folder folder in tempList)
-            {
-                if (folder.FolderID == -1)//change ID to 0----------------------------------------------------------------
-                {
-                    dataModel.AddRootFolder(folder);
-                }
-            }
+            dataModel.AddRootFoldersDB(RootList);
+            Console.WriteLine("Loading finished");
         }
 
+        private List<Folder> FolderSort(List<Folder> FolderList)
+        {
+            List<Folder> templist = FolderList;
+            foreach (Folder a in templist)
+            {
+                foreach (Folder b in templist)
+                {
+                    if (a.ID == b.FolderID)
+                    {
+                        a.InsertFolder(b);
+                    }
+                }
+            }
+            return templist;
+        }
+        private List<Folder> TrackSort(List<Folder> FolderList)
+        {
+            List<Folder> tempFolderList = FolderList;
+            foreach (Track track in TrackList)
+            {
+                foreach (Folder folder in FolderList)
+                {
+                    if (track.FolderID == folder.ID)
+                    {
+                        folder.AddTrack(track);
+                    }
+                }
+            }
+            return tempFolderList;
+        }
 
         /// <summary>
         /// Adds the selected tracks to the selected playlist

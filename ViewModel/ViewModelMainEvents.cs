@@ -15,7 +15,7 @@ namespace TuneMusix.ViewModel
     {
        public void RootFoldersChanged(object source,object obj)
         {
-            RaisePropertyChanged("RootFolders");
+
         }
 
       

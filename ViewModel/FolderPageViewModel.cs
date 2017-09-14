@@ -19,6 +19,13 @@ namespace TuneMusix.ViewModel
         public FolderPageViewModel()
         {
             dataModel = DataModel.Instance;
+            dataModel.RootFolderListChanged += OnRootlistChanged;
+        }
+
+        public void OnRootlistChanged(object source,object obj)
+        {
+            Console.WriteLine("Raise Property changed rootfolders");
+            RaisePropertyChanged("RootFolders");
         }
 
 

@@ -28,6 +28,12 @@ namespace TuneMusix.ViewModel
         {
             DeleteSelectedTracks = new RelayCommand(deleteSelectedTracks);
             AddToPlaylist = new RelayCommand(_addToPlaylist);
+            dataModel.TrackListChanged += OnTrackListChanged;
+        }
+
+        public void OnTrackListChanged(object source,object obj)
+        {
+            RaisePropertyChanged("TrackList");
         }
 
         /// <summary>
