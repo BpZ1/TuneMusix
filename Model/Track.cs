@@ -42,14 +42,17 @@ namespace TuneMusix.Model
 
 
         //events
-        public delegate void TrackChangedEventHandler(object source,object changed);
+        public delegate void TrackChangedEventHandler(object source);
 
-        public event TrackChangedEventHandler FolderIDChanged;
+        public event TrackChangedEventHandler TrackChanged;
 
-        public event TrackChangedEventHandler TrackURLChanged;
-
-        public event TrackChangedEventHandler TrackNameChanged;
-
+        protected virtual void OnTrackChanged()
+        {
+            if(TrackChanged != null)
+            {
+                TrackChanged(this);
+            }
+        }
 
         //getter and setter
         public long ID
@@ -62,6 +65,7 @@ namespace TuneMusix.Model
             set
             {
                 _folderID = value;
+                OnTrackChanged();
             }
         }
         public string url
@@ -79,8 +83,7 @@ namespace TuneMusix.Model
                 if (value != null)
                 {
                     URL = value;
-
-
+                    OnTrackChanged();
                 }
                 throw new ArgumentNullException("URL can't be null");
             }
@@ -99,6 +102,7 @@ namespace TuneMusix.Model
             set
             {
                 this._title = value;
+                OnTrackChanged();
             }
         }
         public string Interpret
@@ -114,6 +118,7 @@ namespace TuneMusix.Model
             set
             {
                 this._interpret = value;
+                OnTrackChanged();
             }
         }
         public string Album
@@ -129,6 +134,7 @@ namespace TuneMusix.Model
             set
             {
                 this._album = value;
+                OnTrackChanged();
             }
         }
         public string Year
@@ -144,6 +150,7 @@ namespace TuneMusix.Model
             set
             {
                 this._year = value;
+                OnTrackChanged();
             }
         }
         public string Comm
@@ -159,6 +166,7 @@ namespace TuneMusix.Model
             set
             {
                 this._comm = value;
+                OnTrackChanged();
             }
         }
         public string Genre
@@ -175,6 +183,7 @@ namespace TuneMusix.Model
             {
 
                 this._genre = value;
+                OnTrackChanged();
             }
         }
         public int Rating
@@ -185,8 +194,8 @@ namespace TuneMusix.Model
             }
             set
             {
-
                 this._rating = value;
+                OnTrackChanged();
             }
         }
         public string Name

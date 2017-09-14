@@ -44,6 +44,20 @@ namespace TuneMusix.Model
             _tracklist = new ObservableCollection<Track>();
 
         }
+        //Events
+
+        public delegate void FolderChangedEventHandler(object source);
+
+        public event FolderChangedEventHandler FolderChanged;
+
+        protected virtual void OnFolderChanged()
+        {
+            if(FolderChanged != null)
+            {
+                FolderChanged(this);
+            }
+        }
+
 
         /// <summary>
         /// Method for Adding a container to a container.
@@ -58,7 +72,7 @@ namespace TuneMusix.Model
                 if (valiUtil.insertValidation(Folder.name, this.name, Folder, _folderlist))
                 {
                     _folderlist.Add(Folder);
-
+                    OnFolderChanged();
                     return true;
                 }
                 else { return false; }
@@ -74,7 +88,7 @@ namespace TuneMusix.Model
                 if (valiUtil.insertValidation(track.Title, this.name, track, _tracklist))
                 {
                     _tracklist.Add(track);
-                    Logger.Log(track.Title + " has been added to " + this.name + ".");
+                    OnFolderChanged();
                     return true;
                 }
                 else
@@ -86,9 +100,8 @@ namespace TuneMusix.Model
         }
 
 
-        /// <summary>
-        /// Setter and Getter for the name of the Container
-        /// </summary>
+
+        // Setter and Getter for the name of the Container
         public string Name
         {
             get { return this.name; }
@@ -97,7 +110,7 @@ namespace TuneMusix.Model
                 if (value != null && value.Length > 0)
                 {
                     this.name = value;
-
+                    OnFolderChanged();
                 }
                 else
                 {
@@ -124,6 +137,7 @@ namespace TuneMusix.Model
                     throw new ArgumentNullException("URL mustn't be null.");
                 }
                 this._url = value;
+                OnFolderChanged();
             }
         }
         public long ID
@@ -133,7 +147,11 @@ namespace TuneMusix.Model
         public long FolderID
         {
             get { return this._folderID; }
-            set { _folderID = value; }
+            set
+            {
+                _folderID = value;
+                OnFolderChanged();
+            }
         }
 
         public ObservableCollection<Track> Tracklist
