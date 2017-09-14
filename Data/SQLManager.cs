@@ -15,7 +15,6 @@ namespace TuneMusix.Data
 
         SQLiteConnection dbConnection;
         SQLiteDataReader dbReader;
- 
 
         public SQLManager()
         {
