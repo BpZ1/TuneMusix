@@ -22,6 +22,7 @@ namespace TuneMusix.ViewModel
             {
                 DBmanager.AddFolder(folder);
             }
+            Console.WriteLine("Folders Saved");
             foreach (Track t in TrackList)
             {
                 if (t.FolderID == -1)
@@ -29,6 +30,7 @@ namespace TuneMusix.ViewModel
                     DBmanager.AddTrack(t);
                 }
             }
+            Console.WriteLine("Tracks Saved");
             foreach (Playlist p in Playlists)
             {
                 DBmanager.AddPlaylist(p);
@@ -41,10 +43,21 @@ namespace TuneMusix.ViewModel
             SQLManager DBmanager = new SQLManager();
             //Load options
             IDGenerator IDgen = IDGenerator.Instance;
-            IDgen.Initialize(DBmanager.GetIDCounterStand());
+            long idgen = DBmanager.GetIDCounterStand();
+            if (idgen == 0 || idgen == 1)
+            {
+                idgen = 2;
+            }
+            IDgen.Initialize(idgen);
             options = DBmanager.GetOptions();
             //Load all folders
             List<Folder> tempList = DBmanager.GetFolders();
+            List<Folder> templist2 = tempList;
+            Console.WriteLine("Folders loaded");
+            foreach (Folder f in tempList)
+            {
+                Console.WriteLine("Folder ID: " + f.ID + "   Folder folderID: " + f.FolderID);
+            }
             //load all tracks
             foreach (Track track in DBmanager.GetTracks())
             {
@@ -53,31 +66,35 @@ namespace TuneMusix.ViewModel
                     TrackList.Add(track);
                     foreach (Folder folder in tempList)
                     {
-                        if (track.FolderID == folder.ID || track.FolderID != -1)
+                        if (track.FolderID == folder.ID || track.FolderID != -1)//change ID to 0----------------------------------------------------------------
                         {
-                            folder.Tracklist.Add(track);
+                            folder.AddTrack(track);
                         }
                     }
                 }    
             }
+            Console.WriteLine("Tracks loaded");
             foreach (Folder folder in tempList)
             {
-                if (folder.ID == -1)
+                foreach(Folder f in templist2)
                 {
-                    RootFolders.Add(folder);
-                }
-            }
-            foreach (Folder folder in tempList)
-            {
-                foreach(Folder f in tempList)
-                {
-                    if (folder.FolderID == f.ID || folder.ID != -1)
+                    if (folder.ID == f.FolderID || folder.FolderID != -1 || f != folder)//change ID to 0----------------------------------------------------------------
                     {
-                        f.AddFolder(folder);
+                        folder.AddFolder(f);
+                        //f.AddFolder(folder);
                     }
                 }
-            }       
+            }
+            Console.WriteLine("Tracks loaded");
+            foreach (Folder folder in tempList)
+            {
+                if (folder.FolderID == -1)//change ID to 0----------------------------------------------------------------
+                {
+                    dataModel.AddRootFolder(folder);
+                }
+            }
         }
+
 
         /// <summary>
         /// Adds the selected tracks to the selected playlist
@@ -143,36 +160,38 @@ namespace TuneMusix.ViewModel
             }
             RaisePropertyChanged("TrackList");
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="argument"></param>
         public void _exitApplication(object argument)
         {
             System.Windows.Application.Current.Shutdown();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="argument"></param>
         public void _debugMethod(object argument)
         {
-            Console.WriteLine("DBTEST");
-            Console.WriteLine("DBTEST");
-            SQLManager manager = new SQLManager();
-            foreach (Track t in TrackList)
+            for (int i = 0;i<=20;i++)
             {
-                manager.AddTrack(t);
-            }
-            List<Track> tracks = manager.GetTracks();
-            foreach (Track t in tracks)
-            {
-                Console.WriteLine(t.Name + " - " + t.url);
-            }
+                IDGenerator gen = IDGenerator.Instance;
+                Console.WriteLine(gen.GetID());
+            }           
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="argument"></param>
         public void _addFolder(object argument)
         {
             var folderbrowser = new WinForms.FolderBrowserDialog();
 
             if (folderbrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderbrowser.SelectedPath))
             {
-                dataModel.AddFolder(folderbrowser.SelectedPath);
+                dataModel.AddRootFolder(folderbrowser.SelectedPath);
             }           
         }
 

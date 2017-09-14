@@ -75,6 +75,7 @@ namespace TuneMusix.ViewModel
         {
             get { return dataModel.RootFolders; }
         }
+
         //basic ViewModelBase
         internal void RaisePropertyChanged(string prop)
         {

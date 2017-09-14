@@ -4,12 +4,10 @@ namespace TuneMusix.Helpers
 {
     public class IDGenerator
     {
-        public static long IDCounter = 0;
+        public static long IDCounter;
         private bool IsInit = false;
 
         private static IDGenerator instance;
-
-        private IDGenerator() { }
 
         public static IDGenerator Instance
         {

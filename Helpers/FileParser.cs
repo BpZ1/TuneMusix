@@ -89,7 +89,7 @@ namespace TuneMusix.Helpers
         public Folder GetFolderData(string URL)
         {
             //Add new root Folder
-            Folder root = new Folder(Path.GetFileNameWithoutExtension(URL),URL,IDgen.GetID());
+            Folder root = new Folder(Path.GetFileNameWithoutExtension(URL), URL, IDgen.GetID());
 
             string[] files = Directory.GetFiles(URL);
             string[] dirs = Directory.GetDirectories(URL);
@@ -102,10 +102,8 @@ namespace TuneMusix.Helpers
                     Track mp3 = GetAudioData(url);
                     if(mp3 != null)
                     {
-                        mp3.FolderID = root.FolderID;
                         root.AddTrack(mp3);
-                    }
-                   
+                    }               
                 }
             }
             //Recursion for subdirectories
@@ -113,7 +111,6 @@ namespace TuneMusix.Helpers
             { 
                 //Add subfolder to root folder
                 Folder fold = GetFolderData(dir);
-                fold.FolderID = root.FolderID;
                 root.AddFolder(fold);
             }
             return root;

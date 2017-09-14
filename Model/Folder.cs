@@ -15,34 +15,28 @@ namespace TuneMusix.Model
     {
         private long _id;
         private long _folderID;
-        private string name;
+        private string _name;
         private string _url;
-        private bool _modified;
         private ObservableCollection<Folder> _folderlist;
         private ObservableCollection<Track> _tracklist;
-       
 
-        public Folder(string name,string url,long ID)
+        public Folder(string name, string url, long ID)
         {
             this.Name = name;
             this.URL = url;
             this._id = ID;
-            this._folderID = -1;
-            this._modified = false;
-             _folderlist = new ObservableCollection<Folder>();
-            _tracklist = new ObservableCollection<Track>();                    
+            _folderlist = new ObservableCollection<Folder>();
+            _tracklist = new ObservableCollection<Track>();
         }
+
         public Folder(string name, string url, long ID,long folderID)
         {
             this.Name = name;
             this.URL = url;
             this._id = ID;
-            this._modified = false;
             this._folderID = folderID;
-
             _folderlist = new ObservableCollection<Folder>();
             _tracklist = new ObservableCollection<Track>();
-
         }
         //Events
 
@@ -62,16 +56,17 @@ namespace TuneMusix.Model
         /// <summary>
         /// Method for Adding a container to a container.
         /// </summary>
-        /// <param name="Folder"></param>
+        /// <param name="folder"></param>
         /// <returns></returns>
-        public bool AddFolder(Folder Folder)
+        public bool AddFolder(Folder folder)
         {
             ValidationUtil<Folder> valiUtil = new ValidationUtil<Folder>();
-            if(Folder != null)
+            if(folder != null)
             {
-                if (valiUtil.insertValidation(Folder.name, this.name, Folder, _folderlist))
+                if (valiUtil.insertValidation(folder._name, this._name, folder, _folderlist))
                 {
-                    _folderlist.Add(Folder);
+                    _folderlist.Add(folder);
+                    folder.FolderID = this.ID;
                     OnFolderChanged();
                     return true;
                 }
@@ -85,9 +80,10 @@ namespace TuneMusix.Model
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
             if(track != null)
             {
-                if (valiUtil.insertValidation(track.Title, this.name, track, _tracklist))
+                if (valiUtil.insertValidation(track.Title, this._name, track, _tracklist))
                 {
                     _tracklist.Add(track);
+                    track.FolderID = this.ID;
                     OnFolderChanged();
                     return true;
                 }
@@ -104,12 +100,12 @@ namespace TuneMusix.Model
         // Setter and Getter for the name of the Container
         public string Name
         {
-            get { return this.name; }
+            get { return this._name; }
             set
             {
                 if (value != null && value.Length > 0)
                 {
-                    this.name = value;
+                    this._name = value;
                     OnFolderChanged();
                 }
                 else
@@ -118,11 +114,6 @@ namespace TuneMusix.Model
                     throw new InvalidOperationException("Name of a Folder has to be longer then 0");
                 }
             }
-        }
-        public bool Modified
-        {
-            get { return this._modified; }
-            set { this._modified = value; }
         }
         public string URL
         {

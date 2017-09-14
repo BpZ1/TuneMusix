@@ -20,8 +20,7 @@
       FontFamily="{DynamicResource MaterialDesignFont}"   
       >
     <Page.Resources>
-        <vm:FolderPageViewModel x:Key="FolderPageViewModel"/>
-        
+        <vm:FolderPageViewModel x:Key="FolderPageViewModel"/>  
     </Page.Resources>
 
     <Grid>

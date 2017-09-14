@@ -152,11 +152,6 @@ namespace TuneMusix.Data
         public ObservableCollection<Folder> RootFolders
         {
             get { return this._rootFolders; }
-            set
-            {
-                this._rootFolders = value;
-                OnRootFolderListChanged();
-            }
         }
 
         /// <summary>
@@ -238,8 +233,8 @@ namespace TuneMusix.Data
             if (contained == false)
             {
                 RootFolders.Add(folder);
-                AddFolderContent(folder);
-                OnRootFolderListChanged();           
+              //  AddFolderContent(folder);
+                OnRootFolderListChanged(); 
                 return true;
             }
             return false;       
@@ -255,6 +250,7 @@ namespace TuneMusix.Data
             {
                 this.AddFolderContent(f);
             }
+            OnRootFolderListChanged();
         }
 
         /// <summary>
@@ -292,12 +288,15 @@ namespace TuneMusix.Data
             }
         }
 
-        public void AddFolder(string url)
+        public void AddRootFolder(string url)
         {
             FileParser fileParser = new FileParser();
             Folder folder = fileParser.GetFolderData(url);
+            folder.FolderID = 1;
             AddRootFolder(folder);
+
         }
+    
 
     }
 }
