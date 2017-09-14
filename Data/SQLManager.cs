@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
+using TuneMusix.Exceptions;
 using TuneMusix.Model;
 using TuneMusix.Helpers;
 
@@ -62,10 +63,39 @@ namespace TuneMusix.Data
         }
 
      
-
-        
-
-
-     
+        /// <summary>
+        /// Opens the connection to the database
+        /// </summary>
+        private void OpenDBConnection()
+        {
+            if(dbConnection != null)
+            {
+                if (dbConnection.State != System.Data.ConnectionState.Open)
+                {
+                    dbConnection.Open();
+                }
+            }
+            else
+            {
+                throw new ConnectionNotSetException("Connection is not null");
+            }    
+        }
+        /// <summary>
+        /// Closes the connection to the database
+        /// </summary>
+        private void CloseDBConnection()
+        {
+            if (dbConnection != null)
+            {
+                if (dbConnection.State != System.Data.ConnectionState.Closed)
+                {
+                    dbConnection.Close();
+                }
+            }
+            else
+            {
+                throw new ConnectionNotSetException("Connection is not null");
+            }
+        }    
     }
 }
