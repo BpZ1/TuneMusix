@@ -20,11 +20,30 @@ namespace TuneMusix.Data
             SQLiteConnection.CreateFile("db_Sqlite_Musix.sqlite");
             dbConnection = new SQLiteConnection("Data Source=db_Sqlite_Musix.db;Version=3;");
             //Initial SQL Querys
-            SQLiteCommand sqlCreateTrackTable = new SQLiteCommand("CREATE TABLE if not exists tracks (ID INT UNSIGNED UNIQUE NOT NULL,folderID INT,URL VARCHAR (100),title VARCHAR(30),interpret VARCHAR(30),album VARCHAR(30),releaseyear VARCHAR(10),comm VARCHAR(50),genre VARCHAR(20),rating INT NOT NULL,PRIMARY KEY(ID));", dbConnection);
-            SQLiteCommand sqlCreateFolderTable = new SQLiteCommand("CREATE TABLE if not exists folders (ID INT NOT NULL,folderID INT, URL VARCHAR (100),name VARCHAR(30),PRIMARY KEY(ID))", dbConnection);
-            SQLiteCommand sqlCreatePlaylistTable = new SQLiteCommand("CREATE TABLE if not exists playlists (ID INT NOT NULL, name VARCHAR (30),PRIMARY KEY(ID))", dbConnection);
+            SQLiteCommand sqlCreateTrackTable = new SQLiteCommand("CREATE TABLE if not exists tracks (ID INT UNSIGNED UNIQUE NOT NULL,"+
+                                                                                                     "folderID INT,"+
+                                                                                                     "URL VARCHAR (100),"+
+                                                                                                     "title VARCHAR(30),"+
+                                                                                                     "interpret VARCHAR(30),"+
+                                                                                                     "album VARCHAR(30),"+
+                                                                                                     "releaseyear VARCHAR(10),"+
+                                                                                                     "comm VARCHAR(50),"+
+                                                                                                     "genre VARCHAR(20),"+
+                                                                                                     "rating INT NOT NULL,PRIMARY KEY(ID));",
+                                                                                                     dbConnection);
+            SQLiteCommand sqlCreateFolderTable = new SQLiteCommand("CREATE TABLE if not exists folders (ID INT NOT NULL,"+
+                                                                                                       "folderID INT,"+
+                                                                                                       "URL VARCHAR (100),"+
+                                                                                                       "name VARCHAR(30),"+
+                                                                                                       "PRIMARY KEY(ID))",
+                                                                                                       dbConnection);
+            SQLiteCommand sqlCreatePlaylistTable = new SQLiteCommand("CREATE TABLE if not exists playlists (ID INT NOT NULL,"+
+                                                                                                           "name VARCHAR (30),"+
+                                                                                                           "PRIMARY KEY(ID))",
+                                                                                                           dbConnection);
+            SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL);",
+                                                                                                         dbConnection);
 
-            SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL)",dbConnection);
             //Only needed if foreign key exists
             //SQLiteCommand sqlFolderInit = new SQLiteCommand("INSERT INTO folders(ID, folderID, URL, name) VALUES(-1, -1,'Nothing','Nothing'",dbConnection);
             dbConnection.Open();
@@ -33,7 +52,7 @@ namespace TuneMusix.Data
                 sqlCreateTrackTable.ExecuteNonQuery();
                 sqlCreateFolderTable.ExecuteNonQuery();
                 sqlCreatePlaylistTable.ExecuteNonQuery();
-                sqlCreateFolderTable.ExecuteNonQuery();
+                sqlCreateOptionsTable.ExecuteNonQuery();
             }
             finally
             {
@@ -49,9 +68,39 @@ namespace TuneMusix.Data
         /// </summary>
         /// <param name="track"></param>
         public void AddTrack(Track track)
-        {        
+        {
             Logger.Log("Track: '" + track.url + "' added to database");
-            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT INTO tracks (ID,folderID,URL,title,interpret,album,releaseyear,comm,genre,rating) VALUES(@ID,@folderID,@URL,@Title,@Interpret,@Album,@ReleaseYear,@Comm,@Genre,@Rating);", dbConnection);
+            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT INTO tracks (ID,"+
+                                                                             "folderID,"+
+                                                                             "URL,"+
+                                                                             "title,"+
+                                                                             "interpret,"+
+                                                                             "album,"+
+                                                                             "releaseyear,"+
+                                                                             "comm,"+
+                                                                             "genre,"+
+                                                                             "rating)"+
+                                                                     "VALUES(@ID,"+
+                                                                            "@folderID,"+
+                                                                            "@URL,"+
+                                                                            "@Title,"+
+                                                                            "@Interpret,"+
+                                                                            "@Album,"+
+                                                                            "@ReleaseYear,"+
+                                                                            "@Comm,"+
+                                                                            "@Genre,"+
+                                                                            "@Rating)"+
+                                                                            "ON DUPLICATE KEY UPDATE"+
+                                                                            "folderID=@folderID,"+
+                                                                            "URL=@URL," +
+                                                                            "title=@Title," +
+                                                                            "interpret=@Interpret," +
+                                                                            "album=@Album," +
+                                                                            "releaseyear=@ReleaseYear," +
+                                                                            "comm=@Comm," +
+                                                                            "genre=@Genre," +
+                                                                            "rating=@Rating," +
+                                                                            dbConnection);
             sqlcommand.Parameters.AddWithValue("ID",track.ID);
             sqlcommand.Parameters.AddWithValue("folderID",track.FolderID);
             sqlcommand.Parameters.AddWithValue("URL",track.url);
@@ -62,7 +111,10 @@ namespace TuneMusix.Data
             sqlcommand.Parameters.AddWithValue("Comm", track.Comm);
             sqlcommand.Parameters.AddWithValue("Genre", track.Genre);
             sqlcommand.Parameters.AddWithValue("Rating", track.Rating);
+            if (dbConnection.State != System.Data.ConnectionState.Open)
+            {
             dbConnection.Open();
+            }
             try
             {
                 sqlcommand.ExecuteNonQuery();
@@ -79,7 +131,15 @@ namespace TuneMusix.Data
         public void AddFolder(Folder folder)
         {
             Logger.Log("Folder: '" + folder.URL + "' added to database");
-            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT INTO folders (ID,folderID,URL,name) VALUES(@ID,@folderID,@URL,@name);", dbConnection);
+            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT INTO folders (ID,"+
+                                                                              "folderID,"+
+                                                                              "URL,"+
+                                                                              "name) "+
+                                                                       "VALUES(@ID,"+
+                                                                              "@folderID,"+
+                                                                              "@URL,"+
+                                                                              "@name);",
+                                                                              dbConnection);
             sqlcommand.Parameters.AddWithValue("ID", folder.ID);
             sqlcommand.Parameters.AddWithValue("folderID", folder.FolderID);
             sqlcommand.Parameters.AddWithValue("URL", folder.URL);
@@ -106,7 +166,11 @@ namespace TuneMusix.Data
         public void AddPlaylist(Playlist playlist)
         {
             Logger.Log("Playlist: '" + playlist.Name + "' added to database");
-            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT INTO playlists (ID,name) VALUES(@ID,@name);", dbConnection);
+            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT INTO playlists (ID,"+
+                                                                                "name) "+
+                                                                         "VALUES(@ID,"+
+                                                                         "@name);",
+                                                                         dbConnection);
             sqlcommand.Parameters.AddWithValue("ID", playlist.ID);
             sqlcommand.Parameters.AddWithValue("name",playlist.Name);
             dbConnection.Open();
@@ -122,13 +186,15 @@ namespace TuneMusix.Data
 
         public void UpdateOptions(long IDGenStand,Options options)
         {
-            SQLiteCommand sqlClearCommand = new SQLiteCommand("TRUNCATE TABLE options", dbConnection);
-            SQLiteCommand sqlAddCommand = new SQLiteCommand("INSERT INTO options (ID) VALUES (@ID);");
-            sqlAddCommand.Parameters.AddWithValue("ID",IDGenStand);
+            SQLiteCommand sqlClearCommand = new SQLiteCommand("DROP TABLE options", dbConnection);
+            SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL);", dbConnection);
+            SQLiteCommand sqlAddCommand = new SQLiteCommand("INSERT INTO options (IDgen) VALUES (@IDgen);",dbConnection);
+            sqlAddCommand.Parameters.AddWithValue("IDgen",IDGenStand);
             dbConnection.Open();
             try
             {
                 sqlClearCommand.ExecuteNonQuery();
+                sqlCreateOptionsTable.ExecuteNonQuery();
                 sqlAddCommand.ExecuteNonQuery();
             }
             finally
@@ -210,13 +276,24 @@ namespace TuneMusix.Data
 
         public long GetIDCounterStand()
         {
-            long IDCounter;
-            SQLiteCommand command = new SQLiteCommand("SELECT ID FROM options",dbConnection);
+            long IDCounter = 0;
+            SQLiteCommand command = new SQLiteCommand("SELECT IDgen FROM options", dbConnection);
             dbConnection.Open();
             dbReader = command.ExecuteReader();
             try
             {
-                IDCounter = dbReader.GetInt64(0);
+                while (dbReader.Read())
+                {
+                    if (dbReader.IsDBNull(0))
+                    {
+                        IDCounter = 0;
+                    }
+                    else
+                    {
+                        IDCounter = dbReader.GetInt64(0);
+                    }
+                }
+               
             }
             finally
             {

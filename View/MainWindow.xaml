@@ -29,7 +29,7 @@
                     <MenuItem Header="Add Files" IsCheckable="false" Command="{Binding GetFiles}" />
                     <MenuItem Header="Add Folder" IsCheckable="False" Command="{Binding AddFolder}"/>
                 </MenuItem>
-                <MenuItem Header="Save">
+                <MenuItem Header="Save" Command="{Binding Save}">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="ContentSave" />
                     </MenuItem.Icon>
