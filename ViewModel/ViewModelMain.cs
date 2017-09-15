@@ -32,7 +32,8 @@ namespace TuneMusix.ViewModel
             //Load data from database.
             LoadFromDB();
 
-            dataModel.RootFolderListChanged += RootFoldersChanged;
+            dataModel.DataModelChanged += RootFoldersChanged;
+
             //Relaycommands
             GetFiles = new RelayCommand(_getFiles);
             AddFolder = new RelayCommand(_addFolder);

@@ -59,7 +59,7 @@ namespace TuneMusix.ViewModel
 
         public void OnCurrentItemChange(object e)
         {
-            this.CurrentTrackName = dataModel.CurrentTrackDM.Title + " - " + dataModel.CurrentTrackDM.Interpret;
+            this.CurrentTrackName = dataModel.CurrentTrack.Title + " - " + dataModel.CurrentTrack.Interpret;
             RaisePropertyChanged("Length");
             RaisePropertyChanged("CurrentPosition");
             RaisePropertyChanged("TrackLoaded");

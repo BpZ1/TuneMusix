@@ -44,13 +44,13 @@ namespace TuneMusix.View
             }
             DataModel dataModel = DataModel.Instance;
             AudioControls audio = AudioControls.Instance;    
-            if (dataModel.CurrentTrackDM == clickedTrack)
+            if (dataModel.CurrentTrack == clickedTrack)
             {
                 return;
             }
             else
             {
-                dataModel.CurrentTrackDM = clickedTrack;
+                dataModel.CurrentTrack = clickedTrack;
                 audio.PlayTrack();
             }
         }

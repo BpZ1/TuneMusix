@@ -40,9 +40,9 @@ namespace TuneMusix.Helpers
         /// <returns></returns>
         public bool PlayTrack()
         {
-            if (dataModel.CurrentTrackDM != null)
+            if (dataModel.CurrentTrack != null)
             {
-                player.URL = dataModel.CurrentTrackDM.url;
+                player.URL = dataModel.CurrentTrack.url;
                 player.controls.play();
                 return true;
             }

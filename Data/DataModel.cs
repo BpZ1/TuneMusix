@@ -52,52 +52,33 @@ namespace TuneMusix.Data
 
         public event DataModelChangedEventHandler CurrentTrackChanged;
 
-        public event DataModelChangedEventHandler TrackListChanged;
-
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
 
-        public event DataModelChangedEventHandler PlaylistsChanged;
-
-        public event DataModelChangedEventHandler RootFolderListChanged;
+        public event DataModelChangedEventHandler DataModelChanged;
 
         protected virtual void OnCurrentTrackChanged()
         {
             if(CurrentTrackChanged != null)
             {
-                CurrentTrackChanged(this,CurrentTrackDM);
+                CurrentTrackChanged(this,CurrentTrack);
             }
         }
-
-        protected virtual void OnTrackListChanged()
-        {
-            if (TrackListChanged != null)
-            {
-                TrackListChanged(this,TrackList);
-            }
-        }
-
         protected virtual void OnCurrentPlaylistChanged()
         {
             if (CurrentPlaylistChanged != null)
             {
-                CurrentPlaylistChanged(this,CurrentPlaylist);
-            }
-        }
-        protected virtual void OnPlaylistsChanged()
-        {
-            if (PlaylistsChanged != null)
-            {
-                PlaylistsChanged(this,Playlists);
+                CurrentPlaylistChanged(this, CurrentPlaylist);
             }
         }
 
-        protected virtual void OnRootFolderListChanged()
+        protected virtual void OnDataModelChanged()
         {
-            if (RootFolderListChanged != null)
+            if (DataModelChanged != null)
             {
-                RootFolderListChanged(this,RootFolders);
+                DataModelChanged(this,TrackList);
             }
         }
+
 
         //////////////////////////database methods///////////////////////////////////
         /// <summary>
@@ -111,17 +92,15 @@ namespace TuneMusix.Data
             {
                 TrackList.Add(track);
             }
-            OnTrackListChanged();
+            OnDataModelChanged();
         }
         public void AddRootFoldersDB(List<Folder> folders)
         {
-            Console.WriteLine("Size: " + folders.Count);
             foreach (Folder folder in folders)
             {
                 RootFolders.Add(folder);
             }
-            Console.WriteLine("Folders added");
-            OnRootFolderListChanged();
+            OnDataModelChanged();
         }
         public void AddPlaylistsDB(List<Playlist> playlists)
         {
@@ -129,7 +108,7 @@ namespace TuneMusix.Data
             {
                 Playlists.Add(playlist);
             }
-            OnPlaylistsChanged();
+            OnDataModelChanged();
         }
         //////////////////////////////////////////////////////////////////////////////
 
@@ -138,7 +117,7 @@ namespace TuneMusix.Data
         {
             get { return this._TrackList; }
         }
-        public Track CurrentTrackDM
+        public Track CurrentTrack
         {
             get { return this._CurrentTrack; }
             set
@@ -156,7 +135,7 @@ namespace TuneMusix.Data
             set
             {
                 this._Playlists = value;
-                OnPlaylistsChanged();
+                OnDataModelChanged();
             }
         }
         public Playlist CurrentPlaylist
@@ -181,7 +160,8 @@ namespace TuneMusix.Data
             get { return this._SelectedPlaylist; }
             set
             {
-                this._SelectedPlaylist = value;          
+                this._SelectedPlaylist = value;  
+                    
             }
         }
         public ObservableCollection<Folder> RootFolders
@@ -207,7 +187,7 @@ namespace TuneMusix.Data
             if(contained == false)
             {
                 TrackList.Add(track);
-                OnTrackListChanged();
+                OnDataModelChanged();
                 return true;
             }
             return false;
@@ -235,7 +215,7 @@ namespace TuneMusix.Data
                 if(mp3 != null)
                 {
                     TrackList.Add(mp3);
-                    OnTrackListChanged();
+                    OnDataModelChanged();
                     return true;
                 }           
                 return false;
@@ -269,7 +249,7 @@ namespace TuneMusix.Data
             {
                 RootFolders.Add(folder);
               //  AddFolderContent(folder);
-                OnRootFolderListChanged(); 
+                OnDataModelChanged(); 
                 return true;
             }
             return false;       
@@ -285,7 +265,7 @@ namespace TuneMusix.Data
             {
                 this.AddFolderContent(f);
             }
-            OnRootFolderListChanged();
+            OnDataModelChanged();
         }
 
         /// <summary>
@@ -318,7 +298,7 @@ namespace TuneMusix.Data
             else
             {
                 TrackList.Remove(removeObj);
-                OnTrackListChanged();
+                OnDataModelChanged();
                 return true;
             }
         }

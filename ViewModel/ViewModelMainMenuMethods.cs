@@ -148,20 +148,7 @@ namespace TuneMusix.ViewModel
 
             foreach (Track selectedTrack in SelectedTracks)
             {
-                //binary search when sorted or better solution
-                Console.WriteLine(selectedTrack.Title);
-                foreach (Track track in TrackList)
-                {
-                    if (track.url.Equals(selectedTrack.url))
-                    {
-                        deleteList.Add(track);
-                    }
-                }
-
-            }
-            foreach (Track t in deleteList)
-            {
-                TrackList.Remove(t);
+                selectedTrack.Dispose();
             }
             RaisePropertyChanged("TrackList");
         }
@@ -179,11 +166,7 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void _debugMethod(object argument)
         {
-            for (int i = 0;i<=20;i++)
-            {
-                IDGenerator gen = IDGenerator.Instance;
-                Console.WriteLine(gen.GetID());
-            }           
+        
         }
 
         /// <summary>

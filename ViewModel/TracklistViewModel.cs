@@ -28,7 +28,7 @@ namespace TuneMusix.ViewModel
         {
             DeleteSelectedTracks = new RelayCommand(deleteSelectedTracks);
             AddToPlaylist = new RelayCommand(_addToPlaylist);
-            dataModel.TrackListChanged += OnTrackListChanged;
+            dataModel.DataModelChanged += OnTrackListChanged;
         }
 
         public void OnTrackListChanged(object source,object obj)
@@ -42,17 +42,13 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void deleteSelectedTracks(object argument)
         {
-            List<Track> deletList = new List<Track>();
-            foreach (Track t in SelectedTracks)
+            for (int i = 0;i<=SelectedTracks.Count;i++)
             {
-                Console.WriteLine("Tracklist Length " +dataModel.TrackList.Count);
-                deletList.Add(t);                      
-            }
-            foreach (Track t in deletList)
-            {
-                dataModel.DeleteTrackFromList(t);
-            }
-           
+                Track track = SelectedTracks.ElementAt(i);
+                dataModel.DeleteTrackFromList(track);
+                track.Dispose();
+                Console.WriteLine("TEST: " + track.Title);////////////////////////////////////////////////////////////////
+            }             
         }
 
         private void _addToPlaylist(object parameter)

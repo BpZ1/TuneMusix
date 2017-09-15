@@ -52,10 +52,10 @@ namespace TuneMusix.Tests.DataModelTests
         [TestMethod]
         public void SetCurrentTrack()
         {
-            Assert.IsNull(dataModel.CurrentTrackDM);
-            dataModel.CurrentTrackDM = track1;
-            Assert.IsNotNull(dataModel.CurrentTrackDM);
-            Assert.AreEqual(dataModel.CurrentTrackDM, track1);
+            Assert.IsNull(dataModel.CurrentTrack);
+            dataModel.CurrentTrack = track1;
+            Assert.IsNotNull(dataModel.CurrentTrack);
+            Assert.AreEqual(dataModel.CurrentTrack, track1);
         }
     }
 }

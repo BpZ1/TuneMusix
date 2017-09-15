@@ -22,10 +22,10 @@ namespace TuneMusix.ViewModel
         //Getter and setter
         public Track CurrentTrackMVM
         {
-            get { return dataModel.CurrentTrackDM; }
+            get { return dataModel.CurrentTrack; }
             set
             {
-                dataModel.CurrentTrackDM = value;
+                dataModel.CurrentTrack = value;
                 RaisePropertyChanged("CurrentTrackMVM");
             }
         }

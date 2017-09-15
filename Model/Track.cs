@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TuneMusix.Model
 {
-    public class Track
+    public class Track 
     {
         private long _id;
         private long _folderID;
@@ -18,7 +18,6 @@ namespace TuneMusix.Model
         private string _comm;
         private string _genre;
         private int _rating;
-        
 
         /// <summary>
         /// Constructor for Track
@@ -52,6 +51,11 @@ namespace TuneMusix.Model
             {
                 TrackChanged(this);
             }
+        }
+
+        public void Dispose()
+        {
+            
         }
 
         //getter and setter
