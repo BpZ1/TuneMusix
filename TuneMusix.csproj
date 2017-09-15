@@ -103,6 +103,7 @@
     <Compile Include="Data\DataModelParserMethods.cs" />
     <Compile Include="Data\DataModelProperty.cs" />
     <Compile Include="Data\SQLManager.cs" />
+    <Compile Include="Data\SQLManagerDeletion.cs" />
     <Compile Include="Data\SQLManagerInsertion.cs" />
     <Compile Include="Data\SQLManagerSelection.cs" />
     <Compile Include="Exceptions\ClassNotInitializedException.cs" />

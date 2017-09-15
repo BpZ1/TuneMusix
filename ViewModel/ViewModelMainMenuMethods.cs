@@ -129,11 +129,13 @@ namespace TuneMusix.ViewModel
 
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                List<string> URLList = new List<string>();
                 //for every File selected
                 foreach (String url in ofd.FileNames)
                 {
-                    dataModel.AddTrackFromFileURL(url);
+                    URLList.Add(url);
                 }
+                dataModel.AddTracksFromFileURLs(URLList);
             }
         }
 

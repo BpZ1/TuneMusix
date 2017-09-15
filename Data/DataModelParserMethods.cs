@@ -20,37 +20,37 @@ namespace TuneMusix.Data
     /// </summary>
     public partial class DataModel
     {
+        
         /// <summary>
-        /// Checks if a Track is already in the List and then adds it.
+        /// 
         /// </summary>
-        /// <param name="URL"></param>
-        public bool AddTrackFromFileURL(string URL)
+        /// <param name="urls"></param>
+        public void AddTracksFromFileURLs(List<string> urls)
         {
-            if (URL == null) { return false; }
-            bool contained = false;
-            foreach (Track track in TrackList)
+            List<Track> Tracklist = new List<Track>();
+            foreach (string url in urls)
             {
-                if (track.url.Equals(URL))
+                bool contained = false;
+                foreach (Track track in TrackList)
                 {
-                    contained = true;
+                    if (track.url.Equals(url))
+                    {
+                        contained = true;
+                    }
+                }
+                if (!contained)
+                {
+                    FileParser fileParser = new FileParser();
+                    Track mp3 = fileParser.GetAudioData(url);
+                    if (mp3 != null)
+                    {
+                        TrackList.Add(mp3);
+                        Tracklist.Add(mp3);
+                        OnDataModelChanged();
+                    }
                 }
             }
-            if (contained == false)
-            {
-                FileParser fileParser = new FileParser();
-                Track mp3 = fileParser.GetAudioData(URL);
-                if (mp3 != null)
-                {
-                    TrackList.Add(mp3);
-                    OnDataModelChanged();
-                    return true;
-                }
-                return false;
-            }
-            else
-            {
-                return false;
-            }
+            DBManager.AddTrackList(Tracklist);
         }
 
         /// <summary>

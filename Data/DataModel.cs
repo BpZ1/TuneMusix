@@ -16,8 +16,11 @@ namespace TuneMusix.Data
     {
 
         private static DataModel instance;
-
-        private DataModel() { }
+        SQLManager DBManager;
+        private DataModel()
+        {
+            DBManager = new SQLManager();
+        }
 
         public static DataModel Instance
         {
@@ -164,7 +167,6 @@ namespace TuneMusix.Data
         }
         //////////////////////////////////////////////////////////////////////////////
 
-        //Getter and setter
         
 
         /// <summary>
@@ -189,6 +191,11 @@ namespace TuneMusix.Data
                 return true;
             }
             return false;
+        }
+
+        public void AddTracks(List<Track> tracks)
+        {
+
         }
 
        
