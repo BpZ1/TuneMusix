@@ -18,14 +18,14 @@ namespace TuneMusix.ViewModel
         {
             SQLManager DBmanager = new SQLManager();
             DBmanager.UpdateOptions(IDGenerator.IDCounter,options);
+            //add folders to database
             foreach (Folder folder in RootFolders)
             {
                 DBmanager.AddFolder(folder);
             }
-            foreach (Track t in TrackList)
-            {
-                DBmanager.AddTrack(t);
-            }
+            //add tracks to database
+            DBmanager.AddTrackList(TrackList.ToList<Track>());
+            //add playlists to database
             foreach (Playlist p in Playlists)
             {
                 DBmanager.AddPlaylist(p);

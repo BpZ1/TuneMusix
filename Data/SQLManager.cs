@@ -15,6 +15,8 @@ namespace TuneMusix.Data
 
         SQLiteConnection dbConnection;
         SQLiteDataReader dbReader;
+        SQLiteCommand BeginCommand;
+        SQLiteCommand EndCommand;
 
         public SQLManager()
         {
@@ -58,7 +60,11 @@ namespace TuneMusix.Data
             finally
             {
                 dbConnection.Close();
-            }      
+            }
+
+
+            BeginCommand = new SQLiteCommand("begin", dbConnection);
+            EndCommand = new SQLiteCommand("end", dbConnection);
         }
 
      
