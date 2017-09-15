@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TuneMusix.Attributes;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
@@ -80,7 +81,7 @@ namespace TuneMusix.Data
             }
         }
         /// <summary>
-        /// Deletes a track and all of its content from the datamodel/database
+        /// Deletes a track from the folder, tracklist and database
         /// </summary>
         /// <param name="track"></param>
         public void Delete(Track track)
@@ -89,7 +90,10 @@ namespace TuneMusix.Data
             track.Dispose();
             OnDataModelChanged();
         }
-
+        /// <summary>
+        ///  Deletes a folder and all of its content from the datamodel/database
+        /// </summary>
+        /// <param name="folder"></param>
         public void Delete(Folder folder)
         {
             foreach (Track track in folder.Tracklist)
@@ -114,6 +118,8 @@ namespace TuneMusix.Data
         /// Should only be used for loading from the database as it avoids all checks
         /// </summary>
         /// <param name="tracks"></param>
+        /// 
+        [DatabaseMethod]
         public void AddTracksDB(List<Track> tracks)
         {
             foreach (Track track in tracks)
@@ -122,6 +128,7 @@ namespace TuneMusix.Data
             }
             OnDataModelChanged();
         }
+        [DatabaseMethod]
         public void AddRootFoldersDB(List<Folder> folders)
         {
             foreach (Folder folder in folders)
@@ -130,6 +137,7 @@ namespace TuneMusix.Data
             }
             OnDataModelChanged();
         }
+        [DatabaseMethod]
         public void AddPlaylistsDB(List<Playlist> playlists)
         {
             foreach (Playlist playlist in playlists)

@@ -24,7 +24,6 @@ namespace TuneMusix.ViewModel
 
         public void OnRootlistChanged(object source,object obj)
         {
-            Console.WriteLine("Root updated");///////////////////////////////////////////
             RaisePropertyChanged("RootFolders");
         }
 

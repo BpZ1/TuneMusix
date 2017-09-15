@@ -98,6 +98,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Attributes\DatabaseMethodAttribute.cs" />
     <Compile Include="Data\DataModel.cs" />
     <Compile Include="Data\SQLManager.cs" />
     <Compile Include="Data\SQLManagerInsertion.cs" />
