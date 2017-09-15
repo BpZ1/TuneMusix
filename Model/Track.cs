@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TuneMusix.Model
 {
-    public class Track 
+    public class Track :IDisposable
     {
         private long _id;
         private long _folderID;
@@ -18,6 +18,7 @@ namespace TuneMusix.Model
         private string _comm;
         private string _genre;
         private int _rating;
+        public Folder Container { get; set; }
 
         /// <summary>
         /// Constructor for Track
@@ -53,9 +54,13 @@ namespace TuneMusix.Model
             }
         }
 
+
+        /// <summary>
+        /// Removes the reference to the track from the folder it is in.
+        /// </summary>
         public void Dispose()
         {
-            
+            this.Container.Tracklist.Remove(this);
         }
 
         //getter and setter

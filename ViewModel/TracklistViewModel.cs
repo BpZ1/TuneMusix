@@ -45,12 +45,14 @@ namespace TuneMusix.ViewModel
             for (int i = 0;i<=SelectedTracks.Count;i++)
             {
                 Track track = SelectedTracks.ElementAt(i);
-                dataModel.DeleteTrackFromList(track);
-                track.Dispose();
-                Console.WriteLine("TEST: " + track.Title);////////////////////////////////////////////////////////////////
+                dataModel.Delete(track);
             }             
         }
 
+        /// <summary>
+        /// Adds all selected tracks to the playlist
+        /// </summary>
+        /// <param name="parameter"></param>
         private void _addToPlaylist(object parameter)
         {
             if (SelectedPlaylist != null)

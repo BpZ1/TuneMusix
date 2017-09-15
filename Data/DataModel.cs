@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,7 +79,34 @@ namespace TuneMusix.Data
                 DataModelChanged(this,TrackList);
             }
         }
+        /// <summary>
+        /// Deletes a track and all of its content from the datamodel/database
+        /// </summary>
+        /// <param name="track"></param>
+        public void Delete(Track track)
+        {
+            TrackList.Remove(track);
+            track.Dispose();
+            OnDataModelChanged();
+        }
 
+        public void Delete(Folder folder)
+        {
+            foreach (Track track in folder.Tracklist)
+            {
+                TrackList.Remove(track);
+            }
+            foreach (Folder f in folder.Folderlist)
+            {
+                this.Delete(f);
+            }
+            if (folder.Container != null)
+            {
+                folder.Container.Folderlist.Remove(folder);
+            }
+            OnDataModelChanged();
+        }
+       
 
         //////////////////////////database methods///////////////////////////////////
         /// <summary>

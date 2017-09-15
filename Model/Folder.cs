@@ -17,6 +17,7 @@ namespace TuneMusix.Model
         private long _folderID;
         private string _name;
         private string _url;
+        public Folder Container { get; set; }
         private ObservableCollection<Folder> _folderlist;
         private ObservableCollection<Track> _tracklist;
 
@@ -67,6 +68,7 @@ namespace TuneMusix.Model
                 {
                     _folderlist.Add(folder);
                     folder.FolderID = this.ID;
+                    folder.Container = this;
                     OnFolderChanged();
                     return true;
                 }
@@ -81,6 +83,7 @@ namespace TuneMusix.Model
         public void InsertFolder(Folder folder)
         {
             Folderlist.Add(folder);
+            folder.Container = this;
         }
 
         public bool AddTrack(Track track)
@@ -92,6 +95,7 @@ namespace TuneMusix.Model
                 {
                     _tracklist.Add(track);
                     track.FolderID = this.ID;
+                    track.Container = this;
                     OnFolderChanged();
                     return true;
                 }
