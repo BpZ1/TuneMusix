@@ -59,26 +59,44 @@ namespace TuneMusix.Data
         /// <param name="url"></param>
         public void AddFolderFromFileURL(string url)
         {
-            bool contained = false;
+            bool IsSubFolder = false;
+            bool IsRootFolder = false;
+            Folder SubFolder = null;
             foreach (Folder f in RootFolders)
             {
                 if (url.Contains(f.URL))
                 {
-                    contained = true;
+                    IsSubFolder = true;
+                }
+                if (f.URL.Contains(url) && !f.URL.Equals(url))
+                {
+                    IsRootFolder = true;
+                    SubFolder = f;
                 }
             }
-            if (!contained)
+            if (IsSubFolder)
+            {
+                Console.WriteLine("Folder already contained");
+                //////Show message that foder is already in an existing folder
+            }
+            else if (!IsSubFolder)
             {
                 FileParser fileParser = new FileParser();
                 Folder folder = fileParser.GetFolderData(url);
                 folder.FolderID = 1;
                 AddRootFolder(folder);
                 AddFolderContent(folder);
-            }
-            else
-            {
-                Console.WriteLine("Folder already contained");
-                //////Show message that foder is already in an existing folder
+                //Show Popup that the folder was added (a small popup on the side?)
+                if (IsRootFolder && SubFolder != null)
+                {
+                    Console.WriteLine("Is Root of " + SubFolder.Name);
+                    Delete(SubFolder);
+                    Console.WriteLine("Deleted");
+                    //Show Popup that the folder was added and is root to another (a small popup on the side?)
+                    // RootFolders.Remove(RootFolder);
+                    //folder.AddFolder(RootFolder);        Parse only the data that is not already in the database later?        
+                    OnDataModelChanged();
+                }
             }
         }
     }

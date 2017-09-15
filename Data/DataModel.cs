@@ -94,6 +94,7 @@ namespace TuneMusix.Data
         /// <param name="track"></param>
         public void Delete(Track track)
         {
+            //TODO remove track from db here
             TrackList.Remove(track);
             track.Dispose();
             OnDataModelChanged();
@@ -104,17 +105,24 @@ namespace TuneMusix.Data
         /// <param name="folder"></param>
         public void Delete(Folder folder)
         {
+            //TODO remove folder from db here
             foreach (Track track in folder.Tracklist)
             {
+                //TODO remove track from db here
                 TrackList.Remove(track);
             }
             foreach (Folder f in folder.Folderlist)
             {
                 this.Delete(f);
             }
+            //Delete reference from container
             if (folder.Container != null)
             {
                 folder.Container.Folderlist.Remove(folder);
+            }
+            if(folder.Container == null)
+            {
+                RootFolders.Remove(folder);
             }
             OnDataModelChanged();
         }
@@ -192,26 +200,13 @@ namespace TuneMusix.Data
         /// <returns></returns>
         public bool AddRootFolder(Folder folder)
         {
-            if (RootFolders.Contains(folder))
-            {
-                return false;
-            }
-            bool contained = false;
-            foreach (Folder f in RootFolders)
-            {
-                if (folder.URL.Contains(f.URL) || f.URL.Contains(folder.URL))
-                {
-                    contained = true;
-                }
-            }
-            if (contained == false)
+            if (!RootFolders.Contains(folder))
             {
                 RootFolders.Add(folder);
-              //  AddFolderContent(folder);
-                OnDataModelChanged(); 
+                OnDataModelChanged();
                 return true;
             }
-            return false;       
+            return false;           
         }
 
         private void AddFolderContent(Folder folder)
