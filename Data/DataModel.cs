@@ -12,7 +12,7 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Data
 {
-    public class DataModel
+    public partial class DataModel
     {
 
         private static DataModel instance;
@@ -33,23 +33,29 @@ namespace TuneMusix.Data
 
         //currently active playlist
         private Playlist _currentPlaylist = null;
+
         //List of all Playlists
         private ObservableCollection<Playlist> _Playlists = new ObservableCollection<Playlist>();
+
         //List of all tracks
         private ObservableCollection<Track> _TrackList = new ObservableCollection<Track>();
+
         //Currently playing track
         private Track _CurrentTrack = null;
+
         //The currently selected tracks
         private ObservableCollection<Track> _SelectedTracks = new ObservableCollection<Track>();
+
         //The currently selected playlist
         private Playlist _SelectedPlaylist = null;
+
         //List of rootfolders
         private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
 
         public double currentPosition { get; set; }
    
 
-        //events
+        //events/////////////////////////////////////////////////////////////////////////////////
         public delegate void DataModelChangedEventHandler(object source,object changedObject);
 
         public event DataModelChangedEventHandler CurrentTrackChanged;
@@ -80,6 +86,8 @@ namespace TuneMusix.Data
                 DataModelChanged(this,TrackList);
             }
         }
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
         /// <summary>
         /// Deletes a track from the folder, tracklist and database
         /// </summary>
@@ -149,61 +157,7 @@ namespace TuneMusix.Data
         //////////////////////////////////////////////////////////////////////////////
 
         //Getter and setter
-        public ObservableCollection<Track> TrackList
-        {
-            get { return this._TrackList; }
-        }
-        public Track CurrentTrack
-        {
-            get { return this._CurrentTrack; }
-            set
-            {
-                if(this._CurrentTrack != value)
-                {
-                    this._CurrentTrack = value;
-                    OnCurrentTrackChanged();
-                }          
-            }
-        }
-        public ObservableCollection<Playlist> Playlists
-        {
-            get { return this._Playlists; }
-            set
-            {
-                this._Playlists = value;
-                OnDataModelChanged();
-            }
-        }
-        public Playlist CurrentPlaylist
-        {
-            get { return this._currentPlaylist; }
-            set
-            {
-                this._currentPlaylist = value;
-                OnCurrentPlaylistChanged();
-            }
-        }
-        public ObservableCollection<Track> SelectedTracks
-        {
-            get { return this._SelectedTracks; }
-            set
-            {
-                this._SelectedTracks = value;
-            }
-        }
-        public Playlist SelectedPlaylist
-        {
-            get { return this._SelectedPlaylist; }
-            set
-            {
-                this._SelectedPlaylist = value;  
-                    
-            }
-        }
-        public ObservableCollection<Folder> RootFolders
-        {
-            get { return this._rootFolders; }
-        }
+        
 
         /// <summary>
         /// Adds a Track to the Tracklist after checking if it is already contained.
@@ -229,38 +183,7 @@ namespace TuneMusix.Data
             return false;
         }
 
-        /// <summary>
-        /// Checks if a Track is already in the List and then adds it.
-        /// </summary>
-        /// <param name="URL"></param>
-        public bool AddTrackURL(string URL)
-        {
-            if(URL == null) { return false; }
-            bool contained = false;
-            foreach (Track track in TrackList)
-            {
-                if (track.url.Equals(URL))
-                {
-                    contained = true;
-                }
-            }
-            if (contained == false)
-            {
-                FileParser fileParser = new FileParser();
-                Track mp3 = fileParser.GetAudioData(URL);
-                if(mp3 != null)
-                {
-                    TrackList.Add(mp3);
-                    OnDataModelChanged();
-                    return true;
-                }           
-                return false;
-            }
-            else
-            {
-                return false;
-            }
-        }
+       
         /// <summary>
         /// Checks if a folder is already contained in the list, or if it
         /// is a parent/child of an existing folder.
@@ -304,53 +227,6 @@ namespace TuneMusix.Data
             OnDataModelChanged();
         }
 
-        /// <summary>
-        /// Deletes a track from the tracklist if contained.
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns>True if track was found and deleted, otherwise false.</returns>
-        public bool DeleteTrackFromList(Track track)
-        {
-            Track removeObj = null;
-            if (track == null)
-            {
-                return false;
-            }
-            if (track.url == null)
-            {
-                return false;
-            }
-            foreach (Track t in TrackList)
-            {
-                if (t.url.Equals(track.url))
-                {
-                    removeObj = t;
-                }
-            }
-            if(removeObj == null)
-            {
-                return false;
-            }
-            else
-            {
-                TrackList.Remove(removeObj);
-                OnDataModelChanged();
-                return true;
-            }
-        }
-        /// <summary>
-        /// Adds a root folder and all of its content to the model/database
-        /// </summary>
-        /// <param name="url"></param>
-        public void AddRootFolder(string url)
-        {
-            FileParser fileParser = new FileParser();
-            Folder folder = fileParser.GetFolderData(url);
-            folder.FolderID = 1;
-            AddRootFolder(folder);
-            AddFolderContent(folder);
-
-        }
     
 
     }

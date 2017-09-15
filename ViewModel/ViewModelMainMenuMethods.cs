@@ -132,7 +132,7 @@ namespace TuneMusix.ViewModel
                 //for every File selected
                 foreach (String url in ofd.FileNames)
                 {
-                    dataModel.AddTrackURL(url);
+                    dataModel.AddTrackFromFileURL(url);
                 }
             }
         }
@@ -179,7 +179,7 @@ namespace TuneMusix.ViewModel
 
             if (folderbrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderbrowser.SelectedPath))
             {
-                dataModel.AddRootFolder(folderbrowser.SelectedPath);
+                dataModel.AddFolderFromFileURL(folderbrowser.SelectedPath);
             }           
         }
 

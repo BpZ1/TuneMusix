@@ -33,11 +33,8 @@ namespace TuneMusix.Tests.DataModelTests
             dataModel.TrackList.Add(track4);
 
             Assert.AreEqual(4,dataModel.TrackList.Count);
-            dataModel.DeleteTrackFromList(track1);
+            dataModel.Delete(track1);
             Assert.AreEqual(3, dataModel.TrackList.Count);
-
-            Assert.IsFalse(dataModel.DeleteTrackFromList(null));
-            Assert.IsFalse(dataModel.DeleteTrackFromList(track5));
         }
 
         [TestMethod]

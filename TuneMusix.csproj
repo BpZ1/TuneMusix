@@ -100,6 +100,8 @@
     </ApplicationDefinition>
     <Compile Include="Attributes\DatabaseMethodAttribute.cs" />
     <Compile Include="Data\DataModel.cs" />
+    <Compile Include="Data\DataModelParserMethods.cs" />
+    <Compile Include="Data\DataModelProperty.cs" />
     <Compile Include="Data\SQLManager.cs" />
     <Compile Include="Data\SQLManagerInsertion.cs" />
     <Compile Include="Data\SQLManagerSelection.cs" />
