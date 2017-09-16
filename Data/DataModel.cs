@@ -95,23 +95,27 @@ namespace TuneMusix.Data
         /// Deletes a track from the folder, tracklist and database
         /// </summary>
         /// <param name="track"></param>
-        public void Delete(Track track)
+        public void Delete(List<Track> tracks)
         {
-            //TODO remove track from db here
-            TrackList.Remove(track);
-            track.Dispose();
-            OnDataModelChanged();
+            foreach (Track track in tracks)
+            {
+                TrackList.Remove(track);
+                track.Dispose();
+                OnDataModelChanged();
+            }
+            DBManager.Delete(tracks);         
         }
+
+
         /// <summary>
         ///  Deletes a folder and all of its content from the datamodel/database
         /// </summary>
         /// <param name="folder"></param>
         public void Delete(Folder folder)
         {
-            //TODO remove folder from db here
+            DBManager.Delete(folder);
             foreach (Track track in folder.Tracklist)
             {
-                //TODO remove track from db here
                 TrackList.Remove(track);
             }
             foreach (Folder f in folder.Folderlist)
@@ -129,7 +133,6 @@ namespace TuneMusix.Data
             }
             OnDataModelChanged();
         }
-       
 
         //////////////////////////database methods///////////////////////////////////
         /// <summary>
@@ -184,7 +187,7 @@ namespace TuneMusix.Data
                     contained = true;
                 }
             }
-            if(contained == false)
+            if(!contained)
             {
                 TrackList.Add(track);
                 OnDataModelChanged();
@@ -192,12 +195,6 @@ namespace TuneMusix.Data
             }
             return false;
         }
-
-        public void AddTracks(List<Track> tracks)
-        {
-
-        }
-
        
         /// <summary>
         /// Checks if a folder is already contained in the list, or if it
@@ -205,28 +202,39 @@ namespace TuneMusix.Data
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        public bool AddRootFolder(Folder folder)
+        public void AddRootFolder(Folder folder)
         {
             if (!RootFolders.Contains(folder))
             {
                 RootFolders.Add(folder);
+                
+                TempFolderList = new List<Folder>();
+                TempTrackList = new List<Track>();
+                TempFolderList.Add(folder);
+                AddFolderContent(folder);
                 OnDataModelChanged();
-                return true;
+                DBManager.AddAll(TempFolderList);
+                DBManager.AddAll(TempTrackList);
+                TempFolderList = null;
+                TempTrackList = null;
             }
-            return false;           
         }
+
+        private List<Folder> TempFolderList;
+        private List<Track> TempTrackList;
 
         private void AddFolderContent(Folder folder)
         {
             foreach (Track t in folder.Tracklist)
             {
                 this.AddTrack(t);
+                this.TempTrackList.Add(t);
             }
             foreach (Folder f in folder.Folderlist)
             {
                 this.AddFolderContent(f);
+                this.TempFolderList.Add(f);
             }
-            OnDataModelChanged();
         }
 
     

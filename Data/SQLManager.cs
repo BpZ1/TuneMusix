@@ -24,7 +24,7 @@ namespace TuneMusix.Data
             dbConnection = new SQLiteConnection("Data Source=db_Sqlite_Musix.db;Version=3;");
             //Initial SQL Querys
             SQLiteCommand sqlCreateTrackTable = new SQLiteCommand("CREATE TABLE if not exists tracks (ID INT UNSIGNED UNIQUE NOT NULL,"+
-                                                                                                     "folderID INT,"+
+                                                                                                     "folderID INT UNSIGNED,"+
                                                                                                      "URL VARCHAR (100),"+
                                                                                                      "title VARCHAR(30),"+
                                                                                                      "interpret VARCHAR(30),"+
@@ -32,13 +32,19 @@ namespace TuneMusix.Data
                                                                                                      "releaseyear VARCHAR(10),"+
                                                                                                      "comm VARCHAR(50),"+
                                                                                                      "genre VARCHAR(20),"+
-                                                                                                     "rating INT NOT NULL,PRIMARY KEY(ID));",
+                                                                                                     "rating INT NOT NULL,PRIMARY KEY(ID),"+
+                                                                                                     "FOREIGN KEY (folderID) "+
+                                                                                                     "REFERENCES folders(ID) "+
+                                                                                                     "ON DELETE CASCADE);",
                                                                                                      dbConnection);
-            SQLiteCommand sqlCreateFolderTable = new SQLiteCommand("CREATE TABLE if not exists folders (ID INT NOT NULL,"+
+            SQLiteCommand sqlCreateFolderTable = new SQLiteCommand("CREATE TABLE if not exists folders (ID INT UNSIGNED NOT NULL,"+
                                                                                                        "folderID INT,"+
                                                                                                        "URL VARCHAR (100),"+
                                                                                                        "name VARCHAR(30),"+
-                                                                                                       "PRIMARY KEY(ID))",
+                                                                                                       "PRIMARY KEY(ID), "+
+                                                                                                       "FOREIGN KEY (folderID) "+
+                                                                                                       "REFERENCES folders(ID) "+
+                                                                                                       "ON DELETE CASCADE);",
                                                                                                        dbConnection);
             SQLiteCommand sqlCreatePlaylistTable = new SQLiteCommand("CREATE TABLE if not exists playlists (ID INT NOT NULL,"+
                                                                                                            "name VARCHAR (30),"+

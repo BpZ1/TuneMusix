@@ -50,7 +50,7 @@ namespace TuneMusix.Data
                     }
                 }
             }
-            DBManager.AddTrackList(Tracklist);
+            DBManager.AddAll(Tracklist);
         }
 
         /// <summary>
@@ -85,7 +85,6 @@ namespace TuneMusix.Data
                 Folder folder = fileParser.GetFolderData(url);
                 folder.FolderID = 1;
                 AddRootFolder(folder);
-                AddFolderContent(folder);
                 //Show Popup that the folder was added (a small popup on the side?)
                 if (IsRootFolder && SubFolder != null)
                 {

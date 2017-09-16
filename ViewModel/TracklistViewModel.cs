@@ -42,11 +42,7 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void deleteSelectedTracks(object argument)
         {
-            for (int i = 0;i<=SelectedTracks.Count;i++)
-            {
-                Track track = SelectedTracks.ElementAt(i);
-                dataModel.Delete(track);
-            }             
+            dataModel.Delete(SelectedTracks.ToList<Track>());      
         }
 
         /// <summary>

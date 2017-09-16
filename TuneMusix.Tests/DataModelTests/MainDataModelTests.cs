@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using TuneMusix.Data;
 using TuneMusix.Model;
 
@@ -33,7 +34,8 @@ namespace TuneMusix.Tests.DataModelTests
             dataModel.TrackList.Add(track4);
 
             Assert.AreEqual(4,dataModel.TrackList.Count);
-            dataModel.Delete(track1);
+            List<Track> tracklist = new List<Track>();
+            dataModel.Delete(tracklist);
             Assert.AreEqual(3, dataModel.TrackList.Count);
         }
 

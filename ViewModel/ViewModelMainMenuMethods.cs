@@ -24,7 +24,7 @@ namespace TuneMusix.ViewModel
                 DBmanager.AddFolder(folder);
             }
             //add tracks to database
-            DBmanager.AddTrackList(TrackList.ToList<Track>());
+            DBmanager.AddAll(TrackList.ToList<Track>());
             //add playlists to database
             foreach (Playlist p in Playlists)
             {

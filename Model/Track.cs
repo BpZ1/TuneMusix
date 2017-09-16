@@ -27,7 +27,7 @@ namespace TuneMusix.Model
         public Track(string URL,long ID)
         {
             this._id = ID;
-            this._folderID = -1;
+            this._folderID = 0;
             this.URL = URL;
             Rating = 0;
         }
@@ -60,7 +60,10 @@ namespace TuneMusix.Model
         /// </summary>
         public void Dispose()
         {
-            this.Container.Tracklist.Remove(this);
+            if(this.Container != null)
+            {
+                this.Container.Tracklist.Remove(this);
+            }
         }
 
         //getter and setter
