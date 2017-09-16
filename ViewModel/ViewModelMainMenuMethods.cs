@@ -11,28 +11,6 @@ namespace TuneMusix.ViewModel
     partial class ViewModelMain
     {
         /// <summary>
-        /// Saves Options,Tracks and Folders to the database
-        /// </summary>
-        /// <param name="parameter"></param>
-        private void _save(object parameter)
-        {
-            SQLManager DBmanager = new SQLManager();
-            DBmanager.UpdateOptions(IDGenerator.IDCounter,options);
-            //add folders to database
-            foreach (Folder folder in RootFolders)
-            {
-                DBmanager.AddFolder(folder);
-            }
-            //add tracks to database
-            DBmanager.AddAll(TrackList.ToList<Track>());
-            //add playlists to database
-            foreach (Playlist p in Playlists)
-            {
-                DBmanager.AddPlaylist(p);
-            }
-            DBmanager.UpdateOptions(IDGenerator.IDCounter,options);
-        }
-        /// <summary>
         /// 
         /// </summary>
         private void LoadFromDB()

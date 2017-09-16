@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:local="clr-namespace:TuneMusix.View"
       mc:Ignorable="d" 
@@ -22,33 +23,30 @@
         <vm:TracklistViewModel x:Key="TracklistViewModel"/>
     </Page.Resources>
     <ListView x:Name="AllTrackList" ItemsSource="{Binding TrackList}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  SelectionChanged="TrackList_SelectionChanged"  Margin="10"  RenderTransformOrigin="0.503,0.478"
-                  MouseDoubleClick="AllTrackList_MouseDoubleClick">
-            <ListView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Command="{Binding PlayTrack}" Header="Play">
-                        <!--<MenuItem.Icon>
-                              <Image Source="Images/cut.png" />
-                        </MenuItem.Icon> -->
-                    </MenuItem>
-                    <MenuItem Command="{Binding AddToPlaylist}" Header="Add to playlist">
-
-                    </MenuItem>
-                    <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete">
-
-                    </MenuItem>
-                </ContextMenu>
-            </ListView.ContextMenu>
-
-            <ListView.View>
-                <GridView AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="400"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="200"/>
-                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Album}" Header="Album" Width="100"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="100"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="200"/>
-                </GridView>
-
-            </ListView.View>
-        </ListView>
+                    Margin="10"  RenderTransformOrigin="0.503,0.478">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDoubleClick">
+                <i:InvokeCommandAction Command="{Binding PlayTrack}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="SelectionChanged">
+                <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <ListView.ContextMenu>
+            <ContextMenu>
+                <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
+                <MenuItem Command="{Binding AddToPlaylist}" Header="Add to playlist"/>
+                <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete"/>
+            </ContextMenu>
+        </ListView.ContextMenu>
+        <ListView.View>
+            <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
+                <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="400"/>
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="200"/>
+                <GridViewColumn DisplayMemberBinding= "{Binding Path=Album}" Header="Album" Width="100"/>
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="100"/>
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="200"/>
+            </GridView>
+        </ListView.View>
+    </ListView>
 </Page>

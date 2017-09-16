@@ -16,7 +16,6 @@ namespace TuneMusix.ViewModel
 
         public RelayCommand GetFiles { get; set; }
         public RelayCommand AddFolder { get; set; }
-        public RelayCommand Save { get; set; }
         public RelayCommand AddToPlaylist { get; set; }
         public RelayCommand DeleteTracks { get; set; }
         public RelayCommand ExitApplication { get; set; }
@@ -37,7 +36,6 @@ namespace TuneMusix.ViewModel
             //Relaycommands
             GetFiles = new RelayCommand(_getFiles);
             AddFolder = new RelayCommand(_addFolder);
-            Save = new RelayCommand(_save);
             AddToPlaylist = new RelayCommand(_addToPlaylist);
             DeleteTracks = new RelayCommand(_deleteTracks);
             DebugMethod = new RelayCommand(_debugMethod);
