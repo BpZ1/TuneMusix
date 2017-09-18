@@ -50,7 +50,10 @@ namespace TuneMusix.Data
                                                                                                            "name VARCHAR (30),"+
                                                                                                            "PRIMARY KEY(ID))",
                                                                                                            dbConnection);
-            SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL);",
+            SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL,"+
+                                                                                                        "volume INT UNSIGNED,"+
+                                                                                                        "shuffle INT UNSIGNED,"+
+                                                                                                        "repeatTrack INT UNSIGNED);",
                                                                                                          dbConnection);
 
             //Only needed if foreign key exists

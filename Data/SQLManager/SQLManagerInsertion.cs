@@ -200,8 +200,14 @@ namespace TuneMusix.Data
         {
             SQLiteCommand sqlClearCommand = new SQLiteCommand("DROP TABLE options", dbConnection);
             SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL);", dbConnection);
-            SQLiteCommand sqlAddCommand = new SQLiteCommand("INSERT INTO options (IDgen) VALUES (@IDgen);", dbConnection);
+            SQLiteCommand sqlAddCommand = new SQLiteCommand("INSERT INTO options (IDgen,volume,shuffle,repeatTrack) VALUES (@IDgen,@volume,@shuffle,@repeatTrack);", dbConnection);
             sqlAddCommand.Parameters.AddWithValue("IDgen", IDGenStand);
+            sqlAddCommand.Parameters.AddWithValue("volume",options.Volume);
+            int shuffle;
+            if (options.Shuffle) shuffle = 1;
+            else shuffle = 0;
+            sqlAddCommand.Parameters.AddWithValue("shuffle",shuffle);
+            sqlAddCommand.Parameters.AddWithValue("repeatTrack",options.RepeatTrack);
             OpenDBConnection();
             try
             {

@@ -102,6 +102,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\SQLManager\SQLLoader.cs" />
     <Compile Include="Helpers\Attributes\DatabaseMethodAttribute.cs" />
     <Compile Include="Data\DataModel\DataModel.cs" />
     <Compile Include="Data\DataModel\DataModelParserMethods.cs" />

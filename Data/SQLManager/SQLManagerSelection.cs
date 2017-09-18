@@ -91,13 +91,35 @@ namespace TuneMusix.Data
             return folderlist;
         }
 
-        public Options GetOptions()
+        public void GetOptions()
         {
             Options options = Options.Instance;
 
-            //Implement
+            SQLiteCommand command = new SQLiteCommand("SELECT volume,shuffle,repeatTrack FROM options;",dbConnection);
 
-            return options;
+
+            OpenDBConnection();
+            dbReader = command.ExecuteReader();
+            try
+            {
+                options.Volume = dbReader.GetInt32(0);             
+                if (dbReader.GetInt32(1) == 1)
+                {
+                    options.Shuffle = true;
+                }
+                else
+                {
+                    options.Shuffle = false;
+                }
+                options.RepeatTrack = dbReader.GetInt32(2);
+            }
+            finally
+            {
+                CloseDBConnection();
+                dbConnection.Close();
+            }
+
+
         }
 
         /// <summary>
@@ -107,7 +129,7 @@ namespace TuneMusix.Data
         public long GetIDCounterStand()
         {
             long IDCounter = 0;
-            SQLiteCommand command = new SQLiteCommand("SELECT IDgen FROM options", dbConnection);
+            SQLiteCommand command = new SQLiteCommand("SELECT IDgen FROM options;", dbConnection);
             OpenDBConnection();
             dbReader = command.ExecuteReader();
             try
@@ -123,7 +145,6 @@ namespace TuneMusix.Data
                         IDCounter = dbReader.GetInt64(0);
                     }
                 }
-
             }
             finally
             {
