@@ -20,6 +20,7 @@ namespace TuneMusix.Data
         private DataModel()
         {
             DBManager = new SQLManager();
+            QueueIndex = 0;
         }
 
         public static DataModel Instance
@@ -55,6 +56,10 @@ namespace TuneMusix.Data
         //List of rootfolders
         private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
 
+        public List<Track> _trackQueue;
+
+        public int QueueIndex { get; set; }
+
         public double currentPosition { get; set; }
    
 
@@ -66,6 +71,8 @@ namespace TuneMusix.Data
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
 
         public event DataModelChangedEventHandler DataModelChanged;
+
+        public event DataModelChangedEventHandler TrackQueueChanged;
 
         protected virtual void OnCurrentTrackChanged()
         {
@@ -89,6 +96,14 @@ namespace TuneMusix.Data
                 DataModelChanged(this,TrackList);
             }
         }
+
+        protected virtual void OnTrackQueueChanged()
+        {
+            if (TrackQueueChanged != null)
+            {
+                TrackQueueChanged(this,TrackQueue);
+            }
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
@@ -100,6 +115,12 @@ namespace TuneMusix.Data
             foreach (Track track in tracks)
             {
                 TrackList.Remove(track);
+                TrackQueue.Remove(track);
+                foreach (Playlist playlist in Playlists)
+                {
+                    playlist.Tracklist.Remove(track);
+                    //database removal-------------------------------------------------------------------------------------------
+                }
                 track.Dispose();
                 OnDataModelChanged();
             }
@@ -117,6 +138,7 @@ namespace TuneMusix.Data
             foreach (Track track in folder.Tracklist)
             {
                 TrackList.Remove(track);
+                TrackQueue.Remove(track);
             }
             foreach (Folder f in folder.Folderlist)
             {
@@ -182,7 +204,7 @@ namespace TuneMusix.Data
             bool contained = false;
             foreach (Track t in TrackList)
             {
-                if (track.url.Equals(t.url))
+                if (track.sourceURL.Equals(t.sourceURL))
                 {
                     contained = true;
                 }

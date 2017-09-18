@@ -23,7 +23,7 @@
         <vm:TracklistViewModel x:Key="TracklistViewModel"/>
     </Page.Resources>
     <ListView x:Name="AllTrackList" ItemsSource="{Binding TrackList}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    Margin="10"  RenderTransformOrigin="0.503,0.478">
+                    Margin="10">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding PlayTrack}" CommandParameter="{Binding ElementName=AllTrackList}"/>

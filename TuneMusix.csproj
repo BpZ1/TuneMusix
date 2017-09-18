@@ -98,17 +98,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Attributes\DatabaseMethodAttribute.cs" />
-    <Compile Include="Data\DataModel.cs" />
-    <Compile Include="Data\DataModelParserMethods.cs" />
-    <Compile Include="Data\DataModelProperty.cs" />
-    <Compile Include="Data\SQLManager.cs" />
-    <Compile Include="Data\SQLManagerDeletion.cs" />
-    <Compile Include="Data\SQLManagerInsertion.cs" />
-    <Compile Include="Data\SQLManagerSelection.cs" />
-    <Compile Include="Exceptions\ClassNotInitializedException.cs" />
-    <Compile Include="Exceptions\ConnectionNotSetException.cs" />
-    <Compile Include="Exceptions\FileNotFoundException.cs" />
+    <Compile Include="Helpers\Attributes\DatabaseMethodAttribute.cs" />
+    <Compile Include="Data\DataModel\DataModel.cs" />
+    <Compile Include="Data\DataModel\DataModelParserMethods.cs" />
+    <Compile Include="Data\DataModel\DataModelProperty.cs" />
+    <Compile Include="Data\SQLManager\SQLManager.cs" />
+    <Compile Include="Data\SQLManager\SQLManagerDeletion.cs" />
+    <Compile Include="Data\SQLManager\SQLManagerInsertion.cs" />
+    <Compile Include="Data\SQLManager\SQLManagerSelection.cs" />
+    <Compile Include="Helpers\Exceptions\ClassNotInitializedException.cs" />
+    <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
+    <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
     <Compile Include="Helpers\AudioControls.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />

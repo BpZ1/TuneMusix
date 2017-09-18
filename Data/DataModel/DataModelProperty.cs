@@ -15,6 +15,7 @@ namespace TuneMusix.Data
 {
     public partial class DataModel
     {
+
         public ObservableCollection<Track> TrackList
         {
             get { return this._TrackList; }
@@ -63,12 +64,22 @@ namespace TuneMusix.Data
             set
             {
                 this._SelectedPlaylist = value;
-
             }
         }
         public ObservableCollection<Folder> RootFolders
         {
             get { return this._rootFolders; }
+        }
+
+        public List<Track> TrackQueue
+        {
+            get { return this._trackQueue; }
+            set
+            {
+                this._trackQueue = value;
+                this.QueueIndex = 0;
+                OnTrackQueueChanged();
+            }
         }
     }
 }

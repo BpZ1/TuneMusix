@@ -63,6 +63,8 @@ namespace TuneMusix.Helpers
                     track.Genre = RemoveControlCharacters(System.Text.Encoding.Default.GetString(b, 127, 1)).Trim();
 
                 }
+
+                
                 return track;
             }
             catch (UnauthorizedAccessException ex)
@@ -81,6 +83,7 @@ namespace TuneMusix.Helpers
                 return null;
             }
         }
+
         /// <summary>
         /// Adds all Files and Folders contained in the given URL to the DataModel.
         /// </summary>

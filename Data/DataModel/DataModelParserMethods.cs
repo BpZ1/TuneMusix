@@ -33,7 +33,7 @@ namespace TuneMusix.Data
                 bool contained = false;
                 foreach (Track track in TrackList)
                 {
-                    if (track.url.Equals(url))
+                    if (track.sourceURL.Equals(url))
                     {
                         contained = true;
                     }

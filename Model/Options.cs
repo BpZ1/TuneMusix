@@ -22,6 +22,8 @@ namespace TuneMusix.Model
 
         private bool _LoggerActive = false;
         private int _Volume;
+        public bool Shuffle { get; set; }
+        public int RepeatTrack { get; set; }
 
         //Getter and setter
         public int Volume

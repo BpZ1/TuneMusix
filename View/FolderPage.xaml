@@ -27,6 +27,14 @@
     <Grid>
         
         <TreeView ItemsSource="{Binding RootFolders}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding PlayTrack}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type model:Folder}" ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">

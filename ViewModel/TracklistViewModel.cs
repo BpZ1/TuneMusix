@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace TuneMusix.ViewModel
         //Constructor
         public TracklistViewModel()
         {
-            DeleteSelectedTracks = new RelayCommand(deleteSelectedTracks);
+            DeleteSelectedTracks = new RelayCommand(_deleteSelectedTracks);
             AddToPlaylist = new RelayCommand(_addToPlaylist);
             SelectionChanged = new RelayCommand(_selectionChanged);
             PlayTrack = new RelayCommand(_playTrack);
@@ -43,7 +44,7 @@ namespace TuneMusix.ViewModel
         /// Deletes all selected tracks from the tracklist.
         /// </summary>
         /// <param name="argument"></param>
-        public void deleteSelectedTracks(object argument)
+        public void _deleteSelectedTracks(object argument)
         {
             dataModel.Delete(SelectedTracks.ToList<Track>());      
         }
@@ -76,20 +77,17 @@ namespace TuneMusix.ViewModel
 
         private void _playTrack(object argument)
         {
-            var listView = argument as ListView;
-            var clickedTrack = listView.SelectedItem as Track;
-            if (clickedTrack == null)
-            {
-                return;
+            if (SelectedTracks.Count > 0)
+            { 
+                TrackQueue = SelectedTracks.ToList<Track>();
             }
-            if (dataModel.CurrentTrack == clickedTrack)
-            {
-                return;
-            }
+            Track Playtrack = SelectedTracks.First();
+            if (Playtrack == null){ return; }
+            if (dataModel.CurrentTrack == Playtrack) { return; }
             else
             {
-                dataModel.CurrentTrack = clickedTrack;
-                audio.PlayTrack();
+                Debug.WriteLine("Playing Selected Track(s)");
+                dataModel.CurrentTrack = Playtrack;
             }
         }
 

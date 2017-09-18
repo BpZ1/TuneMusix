@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -20,13 +21,13 @@ namespace TuneMusix.ViewModel
         }
 
         //Getter and setter
-        public Track CurrentTrackMVM
+        public Track CurrentTrack
         {
             get { return dataModel.CurrentTrack; }
             set
             {
                 dataModel.CurrentTrack = value;
-                RaisePropertyChanged("CurrentTrackMVM");
+                RaisePropertyChanged("CurrentTrack");
             }
         }
         //Getter and setter
@@ -75,7 +76,16 @@ namespace TuneMusix.ViewModel
         {
             get { return dataModel.RootFolders; }
         }
-
+        public List<Track> TrackQueue
+        {
+            get { return dataModel.TrackQueue; }
+            set { dataModel.TrackQueue = value; }
+        }
+        public int TrackQueueIndex
+        {
+            get { return dataModel.QueueIndex; }
+            set { dataModel.QueueIndex = value; }
+        }
         //basic ViewModelBase
         internal void RaisePropertyChanged(string prop)
         {

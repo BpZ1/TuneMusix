@@ -4,22 +4,24 @@ using System.Timers;
 using System.Windows.Controls;
 using TuneMusix.Data;
 using TuneMusix.Helpers;
+using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
 {
     partial class MusicPlayerViewModel : ViewModelBase
     {
         DataModel dataModel = DataModel.Instance;
+        Options options = Options.Instance;
         AudioControls audioControls = AudioControls.Instance;
 
         public RelayCommand LeftMouseDown_Slider { get; set; }
         public RelayCommand LeftMouseUp_Slider { get; set; }
-        public RelayCommand ForwardButton { get; set; }
         public RelayCommand PlayButton { get; set; }
-        public RelayCommand BackButton { get; set; }
+        public RelayCommand NextTrack { get; set; }
+        public RelayCommand PreviousTrack { get; set; }
+        public RelayCommand RepeatButton { get; set; }
 
         private string _playButtonIcon;
-        private string _currentTrackName;
         private double _currentPosition;
         private Timer timer;
         private bool Dragging;
@@ -28,21 +30,20 @@ namespace TuneMusix.ViewModel
         public MusicPlayerViewModel()
         {
             Dragging = false;
-            timer = new Timer(10);
+            timer = new Timer(100);
             _playButtonIcon = "PlayCircleOutline";
 
             //RelayCommands
             LeftMouseDown_Slider = new RelayCommand(_leftMouseDown_Slider);
             LeftMouseUp_Slider = new RelayCommand(_leftMouseUp_Slider);
-            ForwardButton = new RelayCommand(_forwardButton);
             PlayButton = new RelayCommand(_playButton);
-            BackButton = new RelayCommand(_backButton);
+            NextTrack = new RelayCommand(_nextTrack);
+            PreviousTrack = new RelayCommand(_previousTrack);
+            RepeatButton = new RelayCommand(_onRepeatButtonClicked);
 
             //Events
-            audioControls.player.PlayStateChange += OnPlayStateChange;
             timer.Elapsed += OnTimeElapsed;
-            audioControls.player.PositionChange += OnPlayPositionChange;
-            audioControls.player.MediaChange += OnCurrentItemChange;
+            audioControls.NewTrackLoaded += OnTrackLoaded;
         }
 
         //Getter and setter  
@@ -73,8 +74,12 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        public double RealCurrentPosition
+        public double CurrentPosition
         {
+            get
+            {
+                return audioControls.CurrentPosition;
+            }
             set
             {
                 audioControls.player.controls.currentPosition = value;
@@ -124,19 +129,56 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if (CurrentTrackMVM != null)
+                if (CurrentTrack != null)
                 {
-                    return _currentTrackName;
+                    return CurrentTrack.Name;
                 }
                 else
                 {
                     return "...";
                 }
             }
+        }
+        public bool Shuffle
+        {
+            get { return options.Shuffle; }
             set
             {
-                _currentTrackName = value;
-                RaisePropertyChanged("CurrentTrackName");
+                options.Shuffle = value;
+                RaisePropertyChanged("Shuffle");
+            }
+        }
+        /// <summary>
+        /// 0 = No repeat
+        /// 1 = Repeat all
+        /// 2 = repeat track
+        /// </summary>
+        public int RepeatTrack
+        {
+            get { return options.RepeatTrack; }
+            set
+            {
+                options.RepeatTrack = value;
+                RaisePropertyChanged("RepeatTrack");                     
+            }
+        }
+
+        public string RepeatButtonIcon
+        {
+            get
+            {
+                if (RepeatTrack == 0)
+                {
+                    return "repeatoff";
+                }
+                else if (RepeatTrack == 1)
+                {
+                    return "repeat";
+                }
+                else
+                {
+                    return "repeatonce";
+                }
             }
         }
 

@@ -7,10 +7,11 @@ using TuneMusix.Data;
 using WMPLib;
 using TuneMusix.Model;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace TuneMusix.Helpers
 {
-    public class AudioControls : INotifyPropertyChanged
+    public class AudioControls
     {
 
         public WindowsMediaPlayer player = new WindowsMediaPlayer();
@@ -19,7 +20,11 @@ namespace TuneMusix.Helpers
 
         private static AudioControls instance;
 
-        private AudioControls() { }
+        private AudioControls()
+        {
+            player.PlayStateChange += OnStateChanged;
+            dataModel.CurrentTrackChanged += OnCurrentTrackChanged;
+        }
 
         public static AudioControls Instance
         {
@@ -32,25 +37,35 @@ namespace TuneMusix.Helpers
                 return instance;
             }
         }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool PlayTrack()
+        
+        private void OnStateChanged(int state)
         {
-            if (dataModel.CurrentTrack != null)
+          
+        }
+
+        public void PlayNext()
+        {
+
+        }
+
+        private void OnCurrentTrackChanged(object source,object NewTrack)
+        {
+            Track NewCurrentTrack = NewTrack as Track;
+
+            player.URL = NewCurrentTrack.sourceURL;
+            OnNewTrackLoaded();
+            player.controls.play();
+        }
+
+        public delegate void AudioControlsEventHandler(object obj);
+        public event AudioControlsEventHandler NewTrackLoaded;
+
+        protected virtual void OnNewTrackLoaded()
+        {
+            if (NewTrackLoaded!=null)
             {
-                player.URL = dataModel.CurrentTrack.url;
-                player.controls.play();
-                return true;
+                NewTrackLoaded(dataModel.CurrentTrack);
             }
-            else
-            {
-                return false;
-            }
-            
         }
 
         /// <summary>
@@ -69,19 +84,17 @@ namespace TuneMusix.Helpers
             }
         }
 
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        internal void RaisePropertyChanged(string prop)
+        public double CurrentPosition
         {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+            get
+            {
+                return this.player.controls.currentPosition;
+            }
+            set
+            {
+                this.player.controls.currentPosition = value;
+            }
         }
 
-
-
-
-        public void smth()
-        {
-            
-        }
     }
 }

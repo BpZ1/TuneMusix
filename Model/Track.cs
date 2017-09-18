@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WMPLib;
 
 namespace TuneMusix.Model
 {
-    public class Track :IDisposable
+    public class Track :IDisposable, IWMPMedia
     {
         private long _id;
         private long _folderID;
@@ -66,6 +67,51 @@ namespace TuneMusix.Model
             }
         }
 
+        public double getMarkerTime(int MarkerNum)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getMarkerName(int MarkerNum)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getAttributeName(int lIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getItemInfo(string bstrItemName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void setItemInfo(string bstrItemName, string bstrVal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string getItemInfoByAtom(int lAtom)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool isMemberOf(IWMPPlaylist pPlaylist)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool isReadOnlyItem(string bstrItemName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool get_isIdentical(IWMPMedia pIWMPMedia)
+        {
+            throw new NotImplementedException();
+        }
+
         //getter and setter
         public long ID
         {
@@ -80,7 +126,7 @@ namespace TuneMusix.Model
                 OnTrackChanged();
             }
         }
-        public string url
+        public string sourceURL
         {
             get
             {
@@ -219,6 +265,68 @@ namespace TuneMusix.Model
                     return this.Title;
                 }
                 return this.Interpret + " - " + this.Title;
+            }
+        }
+
+
+        public string name
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int imageSourceWidth
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int imageSourceHeight
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int markerCount
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public double duration
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public string durationString
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public int attributeCount
+        {
+            get
+            {
+                throw new NotImplementedException();
             }
         }
     }

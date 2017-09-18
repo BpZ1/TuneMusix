@@ -1,26 +1,23 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Timers;
 using System.Windows.Controls;
+using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
 {
     partial class MusicPlayerViewModel
     {
-        public void _forwardButton(object argument)
-        {
-            //Implement
-        }
 
         public void _playButton(object argument)
         {
-            if (audioControls.player.currentMedia != null)
+            if (audioControls.IsPlaying())
             {
-                Console.WriteLine("Pause");
                 if (audioControls.player.playState == WMPLib.WMPPlayState.wmppsPlaying)
                 {
-                    Console.WriteLine("Pause");
+                    timer.Stop();
                     audioControls.player.controls.pause();
-                    Console.WriteLine("Pause");
                 }
                 else
                 {
@@ -28,58 +25,34 @@ namespace TuneMusix.ViewModel
                 }
             }
 
-        }
+        }   
 
-        public void _backButton(object argument)
+
+        public void OnTrackLoaded(object e)
         {
-            //Implement
-            Console.WriteLine("TEST");
-        }
-
-        public void OnPlayStateChange(int NewState)
-        {
-            if (NewState == 1 || NewState == 2)
-            {
-                //Stop
-                PlayButtonIcon = "PlayCircleOutline";
-            }
-            if (NewState == 3)
-            {
-                //Start
-                PlayButtonIcon = "PauseCircleOutline";            
-            }
-        }
-
-        public void OnPlayPositionChange(double oldValue, double newValue)
-        {
-            CurrentSliderPosition = audioControls.player.controls.currentPosition;
-            RaisePropertyChanged("CurrentPosition");
-        }
-
-
-        public void OnCurrentItemChange(object e)
-        {
-            this.CurrentTrackName = dataModel.CurrentTrack.Title + " - " + dataModel.CurrentTrack.Interpret;
             RaisePropertyChanged("Length");
+            RaisePropertyChanged("CurrentTrackName");     
             RaisePropertyChanged("CurrentPosition");
-            RaisePropertyChanged("TrackLoaded");
             timer.Start();
-            CurrentSliderPosition = 0;
         }
-
+        /// <summary>
+        /// This method gets called every time the time set in the
+        /// timer has elapsed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void OnTimeElapsed(object sender, ElapsedEventArgs e)
         {
             if (!Dragging)
             {
                 try
                 {
-                    CurrentSliderPosition = audioControls.player.controls.currentPosition;
+                    CurrentSliderPosition = CurrentPosition;
                 }
                 catch
                 {
 
                 }
-
             }
         }
 
@@ -92,7 +65,43 @@ namespace TuneMusix.ViewModel
         {
             Dragging = false;
             var slider = sender as Slider;
-            RealCurrentPosition = slider.Value;
+            CurrentPosition = slider.Value;
+        }
+
+        public void OnCurrentTrackChanged(object source,object newCurrentTrack)
+        {
+            RaisePropertyChanged("CurrentSliderPosition");
+            RaisePropertyChanged("Length");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="argument"></param>
+        private void _nextTrack(object argument)
+        {
+  
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="argument"></param>
+        private void _previousTrack(object argument)
+        {
+          
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="argument"></param>
+        private void _onRepeatButtonClicked(object argument)
+        {
+            RepeatTrack++;
+            if (RepeatTrack > 2)
+            {
+                RepeatTrack = 0;
+            }
+            RaisePropertyChanged("RepeatButtonIcon");
         }
     }
 }
