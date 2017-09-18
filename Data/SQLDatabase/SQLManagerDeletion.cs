@@ -4,7 +4,7 @@ using System.Data.SQLite;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
-namespace TuneMusix.Data
+namespace TuneMusix.Data.SQLDatabase
 {
     partial class SQLManager
     {

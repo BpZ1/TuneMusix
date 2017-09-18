@@ -18,7 +18,13 @@
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
-        FontFamily="{DynamicResource MaterialDesignFont}" Width="1300" Height="796">
+        FontFamily="{DynamicResource MaterialDesignFont}" Width="1300" Height="796"
+        >
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding ExitApplication}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Window.Resources>
         <vm:ViewModelMain x:Key="ViewModelMain"/>
     </Window.Resources>

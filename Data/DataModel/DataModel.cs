@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TuneMusix.Attributes;
+using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 

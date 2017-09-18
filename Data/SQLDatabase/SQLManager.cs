@@ -8,7 +8,7 @@ using TuneMusix.Exceptions;
 using TuneMusix.Model;
 using TuneMusix.Helpers;
 
-namespace TuneMusix.Data
+namespace TuneMusix.Data.SQLDatabase
 {
     partial class SQLManager
     {
@@ -51,7 +51,7 @@ namespace TuneMusix.Data
                                                                                                            "PRIMARY KEY(ID))",
                                                                                                            dbConnection);
             SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL,"+
-                                                                                                        "volume INT UNSIGNED,"+
+                                                                                                        "volume INT UNSIGNED," +
                                                                                                         "shuffle INT UNSIGNED,"+
                                                                                                         "repeatTrack INT UNSIGNED);",
                                                                                                          dbConnection);

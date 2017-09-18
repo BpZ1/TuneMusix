@@ -4,7 +4,7 @@ using System.Data.SQLite;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
-namespace TuneMusix.Data
+namespace TuneMusix.Data.SQLDatabase
 {
     partial class SQLManager
     {
@@ -199,7 +199,11 @@ namespace TuneMusix.Data
         public void UpdateOptions(long IDGenStand, Options options)
         {
             SQLiteCommand sqlClearCommand = new SQLiteCommand("DROP TABLE options", dbConnection);
-            SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL);", dbConnection);
+            SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL," +
+                                                                                                        "volume INT UNSIGNED," +
+                                                                                                        "shuffle INT UNSIGNED," +
+                                                                                                        "repeatTrack INT UNSIGNED);",
+                                                                                                         dbConnection);
             SQLiteCommand sqlAddCommand = new SQLiteCommand("INSERT INTO options (IDgen,volume,shuffle,repeatTrack) VALUES (@IDgen,@volume,@shuffle,@repeatTrack);", dbConnection);
             sqlAddCommand.Parameters.AddWithValue("IDgen", IDGenStand);
             sqlAddCommand.Parameters.AddWithValue("volume",options.Volume);

@@ -4,7 +4,7 @@ using System.Data.SQLite;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
-namespace TuneMusix.Data
+namespace TuneMusix.Data.SQLDatabase
 {
     partial class SQLManager
     {
@@ -102,17 +102,50 @@ namespace TuneMusix.Data
             dbReader = command.ExecuteReader();
             try
             {
-                options.Volume = dbReader.GetInt32(0);             
-                if (dbReader.GetInt32(1) == 1)
+                int i = 0;
+                while (dbReader.Read())
                 {
-                    options.Shuffle = true;
+                    i++;
+                    if (!dbReader.IsDBNull(0))
+                    {
+                        options.Volume = dbReader.GetInt32(0);
+                    }
+                    else
+                    {
+                        options.Volume = 50;
+                    }
+                    if (!dbReader.IsDBNull(1))
+                    {
+                        if (dbReader.GetInt32(1) == 1)
+                        {
+                            options.Shuffle = true;
+                        }
+                        else
+                        {
+                            options.Shuffle = false;
+                        }
+                    }
+                    else
+                    {
+                        options.Shuffle = false;
+                    }
+                    if (!dbReader.IsDBNull(2))
+                    {
+                        options.RepeatTrack = dbReader.GetInt32(2);
+                    }
+                    else
+                    {
+                        options.RepeatTrack = 0;
+                    }
                 }
-                else
+                if (i == 0)
                 {
+                    options.Volume = 50;
                     options.Shuffle = false;
+                    options.RepeatTrack = 0;
                 }
-                options.RepeatTrack = dbReader.GetInt32(2);
-            }
+
+            }                    
             finally
             {
                 CloseDBConnection();
