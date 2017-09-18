@@ -38,6 +38,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSCore, Version=1.2.1.1, Culture=neutral, PublicKeyToken=5a08f2b6f4415dea, processorArchitecture=MSIL">
+      <HintPath>packages\CSCore.1.2.1.1\lib\net35-client\CSCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Dragablz, Version=0.0.3.197, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Dragablz.0.0.3.197\lib\net45\Dragablz.dll</HintPath>
       <Private>True</Private>
@@ -109,8 +113,10 @@
     <Compile Include="Helpers\Exceptions\ClassNotInitializedException.cs" />
     <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
     <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
-    <Compile Include="Helpers\AudioControls.cs" />
+    <Compile Include="Helpers\MediaPlayer\AudioControls.cs" />
+    <Compile Include="Helpers\MediaPlayer\AudioPlayerImpl.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
+    <Compile Include="Helpers\MediaPlayer\AudioPlayer.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />

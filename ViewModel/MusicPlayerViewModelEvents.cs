@@ -12,23 +12,21 @@ namespace TuneMusix.ViewModel
 
         public void _playButton(object argument)
         {
-            if (audioControls.IsPlaying())
+            if (audioControls.IsPlaying)
             {
-                if (audioControls.player.playState == WMPLib.WMPPlayState.wmppsPlaying)
-                {
-                    timer.Stop();
-                    audioControls.player.controls.pause();
-                }
-                else
-                {
-                    audioControls.player.controls.play();
-                }
+                timer.Stop();
+                audioControls.Pause();
             }
+            else
+            {
+                audioControls.Play();
+            }
+           
 
         }   
 
 
-        public void OnTrackLoaded(object e)
+        public void OnTrackChanged(object e)
         {
             RaisePropertyChanged("Length");
             RaisePropertyChanged("CurrentTrackName");     
@@ -96,11 +94,14 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         private void _onRepeatButtonClicked(object argument)
         {
-            RepeatTrack++;
-            if (RepeatTrack > 2)
+            if (RepeatTrack+1 > 2)
             {
                 RepeatTrack = 0;
             }
+            else
+            {
+                RepeatTrack++;
+            }                   
             RaisePropertyChanged("RepeatButtonIcon");
         }
     }

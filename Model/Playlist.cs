@@ -9,7 +9,7 @@ namespace TuneMusix.Model
     /// <summary>
     /// Class for the Playlist model containing a list of tracks
     /// </summary>
-    public class Playlist : IWMPPlaylist
+    public class Playlist
     {
         private long _id;
         private string _name;
@@ -96,35 +96,7 @@ namespace TuneMusix.Model
         {
             get { return this._id; }
         }
-
-        public int count
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public string name
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public int attributeCount
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+    
 
         /// <summary>
         /// Adds one Element to the List.
@@ -173,54 +145,6 @@ namespace TuneMusix.Model
             //database removal
         }
 
-        public string getItemInfo(string bstrName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void setItemInfo(string bstrName, string bstrValue)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void clear()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void insertItem(int lIndex, IWMPMedia pIWMPMedia)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void appendItem(IWMPMedia pIWMPMedia)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void removeItem(IWMPMedia pIWMPMedia)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void moveItem(int lIndexOld, int lIndexNew)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string get_attributeName(int lIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IWMPMedia get_Item(int lIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool get_isIdentical(IWMPPlaylist pIWMPPlaylist)
-        {
-            throw new NotImplementedException();
-        }
+   
     }
 }

@@ -103,7 +103,6 @@
                         </Button>
                     </StackPanel>
                 </Grid>
-
                 <Slider x:Name="PositionSlider" Value="{Binding CurrentSliderPosition,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
                         Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TrackLoaded}" Margin="20,0,20,8">
                     <i:Interaction.Triggers>

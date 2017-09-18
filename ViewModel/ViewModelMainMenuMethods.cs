@@ -138,6 +138,7 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void _exitApplication(object argument)
         {
+            audioControls.Dispose();
             System.Windows.Application.Current.Shutdown();
         }
         /// <summary>

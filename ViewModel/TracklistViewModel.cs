@@ -16,7 +16,6 @@ namespace TuneMusix.ViewModel
     {
 
         DataModel dataModel = DataModel.Instance;
-        AudioControls audio = AudioControls.Instance;
 
         //Relaycommands
         public RelayCommand PlayTrack { get; set; }
@@ -86,7 +85,6 @@ namespace TuneMusix.ViewModel
             if (dataModel.CurrentTrack == Playtrack) { return; }
             else
             {
-                Debug.WriteLine("Playing Selected Track(s)");
                 dataModel.CurrentTrack = Playtrack;
             }
         }

@@ -12,8 +12,6 @@ namespace TuneMusix.Tests.HelperTests
     [TestClass]
     class AudioControlsTests
     {
-        public WindowsMediaPlayer player = new WindowsMediaPlayer();
-        AudioControls audioControls = AudioControls.Instance;
 
     }
 }

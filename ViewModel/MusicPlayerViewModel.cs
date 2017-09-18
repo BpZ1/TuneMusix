@@ -4,6 +4,7 @@ using System.Timers;
 using System.Windows.Controls;
 using TuneMusix.Data;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
@@ -43,7 +44,7 @@ namespace TuneMusix.ViewModel
 
             //Events
             timer.Elapsed += OnTimeElapsed;
-            audioControls.NewTrackLoaded += OnTrackLoaded;
+            audioControls.TrackChanged += OnTrackChanged;
         }
 
         //Getter and setter  
@@ -78,51 +79,39 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                return audioControls.CurrentPosition;
+                return audioControls.CurrentPosition.TotalSeconds;
             }
             set
             {
-                audioControls.player.controls.currentPosition = value;
+                audioControls.CurrentPosition = TimeSpan.FromSeconds(value);
             }
         }
 
 
         public int Balance
         {
-            get { return audioControls.player.settings.balance; }
-            set { audioControls.player.settings.balance = value; }
+            set { }
         }
         public bool Muted
         {
-            get { return audioControls.player.settings.mute; }
-            set { audioControls.player.settings.mute = value; }
+            set { }
         }
         public double Length
         {
             get
             {
-                if (audioControls != null)
-                {
-                    if (audioControls.player != null)
-                    {
-                        if (audioControls.player.currentMedia != null)
-                        {
-                            return audioControls.player.currentMedia.duration;
-                        }
-                        else { return 0; }
-                    }
-                    else { return 0; }
-                }
-                else { return 0; }
+                return audioControls.Length.TotalSeconds;
             }
         }
         public int Volume
         {
-            get { return audioControls.player.settings.volume; }
+            get
+            {
+                return options.Volume;
+            }
             set
             {
-                audioControls.player.settings.volume = value;
-                RaisePropertyChanged("Volume");
+                options.Volume = value;
             }
         }
         public string CurrentTrackName

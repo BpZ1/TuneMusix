@@ -6,6 +6,7 @@ using TuneMusix.Helpers;
 using TuneMusix.Model;
 using WinForms = System.Windows.Forms;
 using System.Timers;
+using TuneMusix.Helpers.MediaPlayer;
 
 //TODO: Multithreading for dataloading, improve performance (binary search when list sorted)
 
@@ -24,6 +25,7 @@ namespace TuneMusix.ViewModel
         DataModel dataModel = DataModel.Instance;
         AudioControls audioControls = AudioControls.Instance;
         Options options = Options.Instance;
+
   
         //constructor
         public ViewModelMain()
@@ -61,14 +63,7 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if (audioControls.player.currentMedia != null)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return audioControls.TrackLoaded;
             }
         }
     }
