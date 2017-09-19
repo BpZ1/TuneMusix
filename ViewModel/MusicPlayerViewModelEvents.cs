@@ -1,9 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Timers;
+﻿using System.Timers;
 using System.Windows.Controls;
-using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
 {

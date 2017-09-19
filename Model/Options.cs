@@ -1,6 +1,4 @@
-﻿using TuneMusix.Helpers;
-
-namespace TuneMusix.Model
+﻿namespace TuneMusix.Model
 {
     public class Options
     {

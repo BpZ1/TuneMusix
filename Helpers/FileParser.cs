@@ -94,23 +94,5 @@ namespace TuneMusix.Helpers
             return root;
         }
 
-        /// <summary>
-        /// Removes all control characters from a given string.
-        /// </summary>
-        /// <param name="inString"></param>
-        /// <returns></returns>
-        public string RemoveControlCharacters(string inString)
-        {
-            if (inString == null) return "";
-            StringBuilder newString = new StringBuilder();
-            foreach (Char c in inString)
-            {
-                if (!char.IsControl(c))
-                {
-                    newString.Append(c);
-                }
-            }
-            return newString.ToString();
-        }
     }
 }
