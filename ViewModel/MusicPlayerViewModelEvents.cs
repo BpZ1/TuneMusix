@@ -16,10 +16,12 @@ namespace TuneMusix.ViewModel
             {
                 timer.Stop();
                 audioControls.Pause();
+                RaisePropertyChanged("PlayButtonIcon");
             }
             else
             {
                 audioControls.Play();
+                RaisePropertyChanged("PlayButtonIcon");
             }
            
 
@@ -31,6 +33,7 @@ namespace TuneMusix.ViewModel
             RaisePropertyChanged("Length");
             RaisePropertyChanged("CurrentTrackName");     
             RaisePropertyChanged("CurrentPosition");
+            RaisePropertyChanged("PlayButtonIcon");
             timer.Start();
         }
         /// <summary>

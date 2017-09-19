@@ -8,7 +8,6 @@ namespace TuneMusix.ViewModel
 {
     partial class ViewModelMain : ViewModelBase
     {
-
         public RelayCommand GetFiles { get; set; }
         public RelayCommand AddFolder { get; set; }
         public RelayCommand DeleteTracks { get; set; }
@@ -19,7 +18,6 @@ namespace TuneMusix.ViewModel
         AudioControls audioControls = AudioControls.Instance;
         Options options = Options.Instance;
         SQLLoader loader;
-
 
         //constructor
         public ViewModelMain()
