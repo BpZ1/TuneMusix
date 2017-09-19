@@ -67,7 +67,8 @@ namespace TuneMusix.Helpers
         public Folder GetFolderData(string URL)
         {
             //Add new root Folder
-            Folder root = new Folder(Path.GetFileNameWithoutExtension(URL), URL, IDgen.GetID());
+            string[] URLs = URL.Split('\\');
+            Folder root = new Folder(URLs.Last(), URL, IDgen.GetID());
 
             string[] files = Directory.GetFiles(URL);
             string[] dirs = Directory.GetDirectories(URL);

@@ -88,9 +88,7 @@ namespace TuneMusix.Data
                 //Show Popup that the folder was added (a small popup on the side?)
                 if (IsRootFolder && SubFolder != null)
                 {
-                    Console.WriteLine("Is Root of " + SubFolder.Name);
                     Delete(SubFolder);
-                    Console.WriteLine("Deleted");
                     //Show Popup that the folder was added and is root to another (a small popup on the side?)
                     // RootFolders.Remove(RootFolder);
                     //folder.AddFolder(RootFolder);        Parse only the data that is not already in the database later?        
