@@ -92,11 +92,11 @@ namespace TuneMusix.ViewModel
 
         public int Balance
         {
-            set { }
+            set { } //Implement
         }
         public bool Muted
         {
-            set { }
+            get { return true; } //Implement
         }
         public double Length
         {

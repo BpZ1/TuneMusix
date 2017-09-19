@@ -87,6 +87,11 @@ namespace TuneMusix.Model
             get { return this._LoggerActive; }
             set { this._LoggerActive = value; }
         }
+        /// <summary>
+        /// 0 = No repeat
+        /// 1 = Repeat all
+        /// 2 = repeat track
+        /// </summary>
         public int RepeatTrack
         {
             get

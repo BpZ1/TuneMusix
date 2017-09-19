@@ -23,10 +23,7 @@ namespace TuneMusix.ViewModel
                 audioControls.Play();
                 RaisePropertyChanged("PlayButtonIcon");
             }
-           
-
         }   
-
 
         public void OnTrackChanged(object e)
         {
