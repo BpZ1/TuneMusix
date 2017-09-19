@@ -26,13 +26,13 @@
 
     <Grid>
         
-        <TreeView ItemsSource="{Binding RootFolders}">
+        <TreeView x:Name="FolderTreeView" ItemsSource="{Binding RootFolders}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding PlayTrack}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                    <i:InvokeCommandAction Command="{Binding PlayTrack}" CommandParameter="{Binding ElementName=FolderTreeView}"/>
                 </i:EventTrigger>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                <i:EventTrigger EventName="SelectedItemChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectedItemChanged}" CommandParameter="{Binding ElementName=FolderTreeView}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <TreeView.Resources>

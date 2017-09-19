@@ -18,7 +18,7 @@ namespace TuneMusix.Data
 
         public ObservableCollection<Track> TrackList
         {
-            get { return this._TrackList; }
+            get { return this._tracklist; }
         }
         public Track CurrentTrack
         {
@@ -34,10 +34,10 @@ namespace TuneMusix.Data
         }
         public ObservableCollection<Playlist> Playlists
         {
-            get { return this._Playlists; }
+            get { return this._playlists; }
             set
             {
-                this._Playlists = value;
+                this._playlists = value;
                 OnDataModelChanged();
             }
         }
@@ -52,18 +52,18 @@ namespace TuneMusix.Data
         }
         public ObservableCollection<Track> SelectedTracks
         {
-            get { return this._SelectedTracks; }
+            get { return this._selectedTracks; }
             set
             {
-                this._SelectedTracks = value;
+                this._selectedTracks = value;
             }
         }
         public Playlist SelectedPlaylist
         {
-            get { return this._SelectedPlaylist; }
+            get { return this._selectedPlaylist; }
             set
             {
-                this._SelectedPlaylist = value;
+                this._selectedPlaylist = value;
             }
         }
         public ObservableCollection<Folder> RootFolders

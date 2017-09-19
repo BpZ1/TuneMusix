@@ -26,10 +26,10 @@ namespace TuneMusix.ViewModel
         //Constructor
         public TracklistViewModel()
         {
-            DeleteSelectedTracks = new RelayCommand(_deleteSelectedTracks);
-            AddToPlaylist = new RelayCommand(_addToPlaylist);
-            SelectionChanged = new RelayCommand(_selectionChanged);
-            PlayTrack = new RelayCommand(_playTrack);
+            DeleteSelectedTracks = new RelayCommand(deleteSelectedTracks);
+            AddToPlaylist = new RelayCommand(addToPlaylist);
+            SelectionChanged = new RelayCommand(selectionChanged);
+            PlayTrack = new RelayCommand(playTrack);
             dataModel.DataModelChanged += OnTrackListChanged;
 
         }
@@ -43,7 +43,7 @@ namespace TuneMusix.ViewModel
         /// Deletes all selected tracks from the tracklist.
         /// </summary>
         /// <param name="argument"></param>
-        public void _deleteSelectedTracks(object argument)
+        public void deleteSelectedTracks(object argument)
         {
             dataModel.Delete(SelectedTracks.ToList<Track>());      
         }
@@ -52,7 +52,7 @@ namespace TuneMusix.ViewModel
         /// Adds all selected tracks to the playlist
         /// </summary>
         /// <param name="parameter"></param>
-        private void _addToPlaylist(object argument)
+        private void addToPlaylist(object argument)
         {
             if (SelectedPlaylist != null)
             {
@@ -61,20 +61,20 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void _selectionChanged(object argument)
+        private void selectionChanged(object argument)
         {
             var listView = argument as ListView;
             if (listView == null) return;
 
             SelectedTracks.Clear();
-
+            dataModel.SelectedFolder = null;
             foreach (Track track in listView.SelectedItems)
             {
                 SelectedTracks.Add(track);
             }
         }
 
-        private void _playTrack(object argument)
+        private void playTrack(object argument)
         {
             if (SelectedTracks.Count > 0)
             { 

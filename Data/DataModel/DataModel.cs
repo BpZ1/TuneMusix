@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TuneMusix.Attributes;
 using TuneMusix.Data.SQLDatabase;
-using TuneMusix.Helpers;
 using TuneMusix.Model;
 
 namespace TuneMusix.Data
@@ -16,7 +9,7 @@ namespace TuneMusix.Data
     public partial class DataModel
     {
 
-        private static DataModel instance;
+        private static DataModel _instance;
         SQLManager DBManager;
         private DataModel()
         {
@@ -28,51 +21,34 @@ namespace TuneMusix.Data
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new DataModel();
+                    _instance = new DataModel();
                 }
-                return instance;
+                return _instance;
             }
         }
 
-        //currently active playlist
-        private Playlist _currentPlaylist = null;
-
-        //List of all Playlists
-        private ObservableCollection<Playlist> _Playlists = new ObservableCollection<Playlist>();
-
-        //List of all tracks
-        private ObservableCollection<Track> _TrackList = new ObservableCollection<Track>();
-
-        //Currently playing track
-        private Track _CurrentTrack = null;
-
-        //The currently selected tracks
-        private ObservableCollection<Track> _SelectedTracks = new ObservableCollection<Track>();
-
-        //The currently selected playlist
-        private Playlist _SelectedPlaylist = null;
-
-        //List of rootfolders
-        private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
-
-        public List<Track> _trackQueue;
-
         public int QueueIndex { get; set; }
-
-        public double currentPosition { get; set; }
+        public double CurrentPosition { get; set; }
+        public Folder SelectedFolder { get; set; }
+        private Playlist _currentPlaylist = null;
+        private ObservableCollection<Playlist> _playlists = new ObservableCollection<Playlist>();
+        private ObservableCollection<Track> _tracklist = new ObservableCollection<Track>();
+        private Track _CurrentTrack = null;
+        private ObservableCollection<Track> _selectedTracks = new ObservableCollection<Track>();
+        private Playlist _selectedPlaylist = null;       
+        private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
+        private List<Track> _trackQueue;
+        
    
 
         //events/////////////////////////////////////////////////////////////////////////////////
         public delegate void DataModelChangedEventHandler(object source,object changedObject);
 
         public event DataModelChangedEventHandler CurrentTrackChanged;
-
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
-
         public event DataModelChangedEventHandler DataModelChanged;
-
         public event DataModelChangedEventHandler TrackQueueChanged;
 
         protected virtual void OnCurrentTrackChanged()
@@ -89,7 +65,6 @@ namespace TuneMusix.Data
                 CurrentPlaylistChanged(this, CurrentPlaylist);
             }
         }
-
         protected virtual void OnDataModelChanged()
         {
             if (DataModelChanged != null)
@@ -97,7 +72,6 @@ namespace TuneMusix.Data
                 DataModelChanged(this,TrackList);
             }
         }
-
         protected virtual void OnTrackQueueChanged()
         {
             if (TrackQueueChanged != null)

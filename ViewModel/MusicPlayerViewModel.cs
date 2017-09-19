@@ -24,8 +24,8 @@ namespace TuneMusix.ViewModel
 
         private double _currentPosition;
         private string _playButtonIcon;
-        private string playIcon = "PlayCircleOutline";
-        private string pauseIcon = "PauseCircleOutline";
+        private const string playIcon = "PlayCircleOutline";
+        private const string pauseIcon = "PauseCircleOutline";
         private Timer timer;
         private bool Dragging;
 
@@ -37,12 +37,12 @@ namespace TuneMusix.ViewModel
             PlayButtonIcon = playIcon;
 
             //RelayCommands
-            LeftMouseDown_Slider = new RelayCommand(_leftMouseDown_Slider);
-            LeftMouseUp_Slider = new RelayCommand(_leftMouseUp_Slider);
-            PlayButton = new RelayCommand(_playButton);
-            NextTrack = new RelayCommand(_nextTrack);
-            PreviousTrack = new RelayCommand(_previousTrack);
-            RepeatButton = new RelayCommand(_onRepeatButtonClicked);
+            LeftMouseDown_Slider = new RelayCommand(leftMouseDown_Slider);
+            LeftMouseUp_Slider = new RelayCommand(leftMouseUp_Slider);
+            PlayButton = new RelayCommand(playButton);
+            NextTrack = new RelayCommand(nextTrack);
+            PreviousTrack = new RelayCommand(previousTrack);
+            RepeatButton = new RelayCommand(onRepeatButtonClicked);
 
             //Events
             timer.Elapsed += OnTimeElapsed;

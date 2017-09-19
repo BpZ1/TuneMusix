@@ -29,11 +29,11 @@ namespace TuneMusix.ViewModel
             dataModel.DataModelChanged += RootFoldersChanged;
 
             //Relaycommands
-            GetFiles = new RelayCommand(_getFiles);
-            AddFolder = new RelayCommand(_addFolder);
-            DeleteTracks = new RelayCommand(_deleteTracks);
-            DebugMethod = new RelayCommand(_debugMethod);
-            ExitApplication = new RelayCommand(_exitApplication);       
+            GetFiles = new RelayCommand(getFiles);
+            AddFolder = new RelayCommand(addFolder);
+            DeleteTracks = new RelayCommand(deleteTracks);
+            DebugMethod = new RelayCommand(debugMethod);
+            ExitApplication = new RelayCommand(exitApplication);       
         }
 
         //Getter and setter    

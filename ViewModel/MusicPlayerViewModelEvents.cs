@@ -6,7 +6,7 @@ namespace TuneMusix.ViewModel
     partial class MusicPlayerViewModel
     {
 
-        public void _playButton(object argument)
+        public void playButton(object argument)
         {
             if (audioControls.IsPlaying)
             {
@@ -64,12 +64,12 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        public void _leftMouseDown_Slider(object sender)
+        public void leftMouseDown_Slider(object sender)
         {
             Dragging = true;
         }
 
-        public void _leftMouseUp_Slider(object sender)
+        public void leftMouseUp_Slider(object sender)
         {
             Dragging = false;
             var slider = sender as Slider;
@@ -86,7 +86,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        private void _nextTrack(object argument)
+        private void nextTrack(object argument)
         {
             audioControls.PlayNext();
         }
@@ -94,7 +94,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        private void _previousTrack(object argument)
+        private void previousTrack(object argument)
         {
             audioControls.PlayPrevious();
         }
@@ -102,7 +102,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        private void _onRepeatButtonClicked(object argument)
+        private void onRepeatButtonClicked(object argument)
         {
             if (RepeatTrack+1 > 2)
             {

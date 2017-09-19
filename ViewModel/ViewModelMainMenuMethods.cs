@@ -17,9 +17,8 @@ namespace TuneMusix.ViewModel
         /// Opens a File Dialog to select Audio Files
         /// </summary>
         /// <param name="parameter"></param>
-        private void _getFiles(object parameter)
+        private void getFiles(object parameter)
         {
-
             var ofd = new WinForms.OpenFileDialog();
             ofd.Title = "File Browser";
             ofd.InitialDirectory = @"C:\"; //change to systems default hd
@@ -42,7 +41,7 @@ namespace TuneMusix.ViewModel
         /// Deletes all selected tracks from the tracklist
         /// </summary>
         /// <param name="parameter"></param>
-        private void _deleteTracks(object parameter)
+        private void deleteTracks(object parameter)
         {
 
             List<Track> deleteList = new List<Track>();
@@ -57,7 +56,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        public void _exitApplication(object argument)
+        public void exitApplication(object argument)
         {
             loader = new SQLLoader();
             loader.SaveOptions();
@@ -68,7 +67,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        public void _debugMethod(object argument)
+        public void debugMethod(object argument)
         {
         
         }
@@ -77,7 +76,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        public void _addFolder(object argument)
+        public void addFolder(object argument)
         {
             var folderbrowser = new WinForms.FolderBrowserDialog();
 
