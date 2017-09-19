@@ -80,13 +80,6 @@ namespace TuneMusix.ViewModel
             { 
                 TrackQueue = SelectedTracks.ToList<Track>();
             }
-            Track Playtrack = SelectedTracks.First();
-            if (Playtrack == null){ return; }
-            if (dataModel.CurrentTrack == Playtrack) { return; }
-            else
-            {
-                dataModel.CurrentTrack = Playtrack;
-            }
         }
 
     }

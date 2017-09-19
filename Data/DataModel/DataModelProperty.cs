@@ -78,6 +78,7 @@ namespace TuneMusix.Data
             {
                 this._trackQueue = value;
                 this.QueueIndex = 0;
+                CurrentTrack = value.First();
                 OnTrackQueueChanged();
             }
         }

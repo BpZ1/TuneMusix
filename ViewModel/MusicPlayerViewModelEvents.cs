@@ -78,7 +78,7 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         private void _nextTrack(object argument)
         {
-  
+            audioControls.PlayNext();
         }
         /// <summary>
         /// 
@@ -86,7 +86,7 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         private void _previousTrack(object argument)
         {
-          
+            audioControls.PlayPrevious();
         }
         /// <summary>
         /// 
