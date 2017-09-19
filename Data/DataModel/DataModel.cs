@@ -115,8 +115,11 @@ namespace TuneMusix.Data
         {
             foreach (Track track in tracks)
             {
-                TrackList.Remove(track);
-                TrackQueue.Remove(track);
+                if(TrackQueue!= null)
+                {
+                    TrackQueue.Remove(track);
+                }              
+                TrackList.Remove(track);              
                 foreach (Playlist playlist in Playlists)
                 {
                     playlist.Tracklist.Remove(track);

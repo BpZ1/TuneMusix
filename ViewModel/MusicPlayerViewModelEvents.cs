@@ -23,9 +23,22 @@ namespace TuneMusix.ViewModel
                 audioControls.Play();
                 RaisePropertyChanged("PlayButtonIcon");
             }
-        }   
+        }
 
-        public void OnTrackChanged(object e)
+        private void OnPlaying(object source)
+        {
+            PlayButtonIcon = pauseIcon;           
+        }
+        private void OnPaused(object source)
+        {
+            PlayButtonIcon = playIcon;
+        }
+        private void OnStopped(object source)
+        {
+            PlayButtonIcon = playIcon;
+        }
+
+        private void OnTrackChanged(object e)
         {
             RaisePropertyChanged("Length");
             RaisePropertyChanged("CurrentTrackName");     
@@ -43,6 +56,7 @@ namespace TuneMusix.ViewModel
         {
             if (!Dragging)
             {
+                RaisePropertyChanged("PlayButtonIcon");
                 try
                 {
                     CurrentSliderPosition = CurrentPosition;

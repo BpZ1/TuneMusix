@@ -29,7 +29,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                      "title VARCHAR(30),"+
                                                                                                      "interpret VARCHAR(30),"+
                                                                                                      "album VARCHAR(30),"+
-                                                                                                     "releaseyear VARCHAR(10),"+
+                                                                                                     "releaseyear INT UNSIGNED,"+
                                                                                                      "comm VARCHAR(50),"+
                                                                                                      "genre VARCHAR(20),"+
                                                                                                      "rating INT NOT NULL,PRIMARY KEY(ID),"+

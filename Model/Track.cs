@@ -15,7 +15,7 @@ namespace TuneMusix.Model
         private string _title;
         private string _interpret;
         private string _album;
-        private string _year;
+        private int _year;
         private string _comm;
         private string _genre;
         private int _rating;
@@ -195,15 +195,11 @@ namespace TuneMusix.Model
                 OnTrackChanged();
             }
         }
-        public string Year
+        public int Year
         {
             get
-            {
-                if (this._year != null)
-                {
-                    return this._year;
-                }
-                return "";
+            {  
+                return this._year;             
             }
             set
             {
@@ -260,7 +256,7 @@ namespace TuneMusix.Model
         {
             get
             {
-                if(this.Interpret == null)
+                if(this.Interpret == null||this.Interpret.Count() == 0)
                 {
                     return this.Title;
                 }

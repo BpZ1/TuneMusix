@@ -23,6 +23,9 @@ namespace TuneMusix.ViewModel
         public RelayCommand RepeatButton { get; set; }
 
         private double _currentPosition;
+        private string _playButtonIcon;
+        private string playIcon = "PlayCircleOutline";
+        private string pauseIcon = "PauseCircleOutline";
         private Timer timer;
         private bool Dragging;
 
@@ -31,7 +34,7 @@ namespace TuneMusix.ViewModel
         {
             Dragging = false;
             timer = new Timer(100);
-            
+            PlayButtonIcon = playIcon;
 
             //RelayCommands
             LeftMouseDown_Slider = new RelayCommand(_leftMouseDown_Slider);
@@ -44,6 +47,9 @@ namespace TuneMusix.ViewModel
             //Events
             timer.Elapsed += OnTimeElapsed;
             audioControls.TrackChanged += OnTrackChanged;
+            audioControls.Playing += OnPlaying;
+            audioControls.Stopped += OnStopped;
+            audioControls.Paused += OnPaused;
         }
 
         //Getter and setter  
@@ -51,15 +57,16 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                Console.WriteLine("ISPLAYING: " + audioControls.IsPlaying);
                 if (audioControls.IsPlaying)
                 {
-                    return "PauseCircleOutline";
+                    _playButtonIcon = pauseIcon;
                 }
-                else
-                {
-                    return "PlayCircleOutline";
-                }            
+                return _playButtonIcon;        
+            }
+            set
+            {
+                _playButtonIcon = value;
+                RaisePropertyChanged("PlayButtonIcon");
             }
         }
 

@@ -37,7 +37,7 @@ namespace TuneMusix.Data.SQLDatabase
                     track.Title = dbReader.GetString(3);
                     track.Interpret = dbReader.GetString(4);
                     track.Album = dbReader.GetString(5);
-                    track.Year = dbReader.GetString(6);
+                    track.Year = dbReader.GetInt32(6);
                     track.Comm = dbReader.GetString(7);
                     track.Genre = dbReader.GetString(8);
                     track.Rating = dbReader.GetInt32(9);
