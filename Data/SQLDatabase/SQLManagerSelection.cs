@@ -64,7 +64,6 @@ namespace TuneMusix.Data.SQLDatabase
             dbReader = command.ExecuteReader();
             try
             {
-                // Always call Read before accessing data.
                 while (dbReader.Read())
                 {
                     string name = dbReader.GetString(3);
@@ -186,5 +185,57 @@ namespace TuneMusix.Data.SQLDatabase
             }
             return IDCounter;
         }
+
+        public List<Playlist> GetPlaylists()
+        {
+            List<Playlist> playlistList = new List<Playlist>();
+            SQLiteCommand command = new SQLiteCommand("SELECT * FROM playlists;",dbConnection);
+            OpenDBConnection();
+            dbReader = command.ExecuteReader();
+            try
+            {
+ 
+                while (dbReader.Read())
+                {
+                    Playlist playlist = new Playlist(dbReader.GetString(1), dbReader.GetInt32(0));
+                    playlistList.Add(playlist);
+                }
+            }
+            finally
+            {
+                CloseDBConnection();
+                dbConnection.Close();
+            }
+            return playlistList;
+        }
+        /// <summary>
+        /// returns all PlaylistTrack objects for a given Playlist.
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
+        public List<PlaylistTrack> GetPlaylistTracks(Playlist playlist)
+        {
+            List<PlaylistTrack> playlistTrackList = new List<PlaylistTrack>();
+            SQLiteCommand command = new SQLiteCommand("SELECT * "+
+                                                      "FROM playlisttrack "+
+                                                      "WHERE playlistID=@ID;");
+            command.Parameters.AddWithValue("ID",playlist.ID);
+            try
+            {
+
+                while (dbReader.Read())
+                {
+                    PlaylistTrack playlistTrack = new PlaylistTrack(dbReader.GetInt32(0), dbReader.GetInt32(1));
+                    playlistTrackList.Add(playlistTrack);
+                }
+            }
+            finally
+            {
+                CloseDBConnection();
+                dbConnection.Close();
+            }
+            return playlistTrackList;
+        }
+    
     }
 }

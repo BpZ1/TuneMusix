@@ -141,6 +141,7 @@
     <Compile Include="Helpers\MediaPlayer\AudioPlayerImpl.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayer.cs" />
+    <Compile Include="Model\PlaylistTrack.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />

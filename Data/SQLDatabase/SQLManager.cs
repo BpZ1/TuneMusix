@@ -55,6 +55,15 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                         "shuffle INT UNSIGNED,"+
                                                                                                         "repeatTrack INT UNSIGNED);",
                                                                                                          dbConnection);
+            SQLiteCommand sqlCreateTrackPlaylisttable = new SQLiteCommand("CREATE TABLE if not exists playlisttrack(trackID INT UNSIGNED NOT NULL, "+
+                                                                                                                   "playlistID INT UNSIGNED NOT NULL, "+
+                                                                                                                   "FOREIGN KEY(trackID) "+
+                                                                                                                   "REFERENCES tracks(ID) "+
+                                                                                                                   "ON DELETE CASCADE, "+
+                                                                                                                   "FOREIGN KEY(playlistID) "+
+                                                                                                                   "REFERENCES playlists(ID) "+
+                                                                                                                   "ON DELETE CASCADE);"
+                                                                                                                   ,dbConnection);
 
             //Only needed if foreign key exists
             //SQLiteCommand sqlFolderInit = new SQLiteCommand("INSERT INTO folders(ID, folderID, URL, name) VALUES(-1, -1,'Nothing','Nothing'",dbConnection);

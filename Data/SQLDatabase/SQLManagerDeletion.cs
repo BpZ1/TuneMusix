@@ -69,14 +69,21 @@ namespace TuneMusix.Data.SQLDatabase
             }
         }
 
-        public void Delete(List<Playlist> playlists)
-        {
-
-        }
-
         public void Delete(Playlist playlist)
         {
-
+            SQLiteCommand command = new SQLiteCommand("DELETE FROM playlists WHERE ID=@ID;", dbConnection);
+            command.Parameters.AddWithValue("ID", playlist.ID);
+            OpenDBConnection();
+            try
+            {
+                BeginCommand.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+                EndCommand.ExecuteNonQuery();
+            }
+            finally
+            {
+                CloseDBConnection();
+            }
         }
 
 

@@ -179,7 +179,7 @@ namespace TuneMusix.Data.SQLDatabase
             SQLiteCommand sqlcommand = new SQLiteCommand("INSERT OR REPLACE INTO playlists (ID," +
                                                                                             "name) " +
                                                                                      "VALUES(@ID," +
-                                                                                             "@name);",
+                                                                                            "@name);",
                                                                                              dbConnection);
             sqlcommand.Parameters.AddWithValue("ID", playlist.ID);
             sqlcommand.Parameters.AddWithValue("name", playlist.Name);
@@ -188,6 +188,59 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 BeginCommand.ExecuteNonQuery();
                 sqlcommand.ExecuteNonQuery();
+                EndCommand.ExecuteNonQuery();
+            }
+            finally
+            {
+                CloseDBConnection();
+            }
+        }
+
+        public void AddPlaylistTrack(Track track,Playlist playlist)
+        {
+            SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttrack(trackID,"+
+                                                                                            "playlistID) " +
+                                                                                     "VALUES(@trackID,"+
+                                                                                            "@playlistID)",
+                                                                                             dbConnection);
+            command.Parameters.AddWithValue("trackID",track.ID);
+            command.Parameters.AddWithValue("playlistID",playlist.ID);
+
+            OpenDBConnection();
+            try
+            {
+                BeginCommand.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+                EndCommand.ExecuteNonQuery();
+            }
+            finally
+            {
+                CloseDBConnection();
+            }
+        }
+
+        public void AddAllPlaylistTracks(Playlist playlist,List<Track> tracklist)
+        {
+            List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
+            foreach (Track track in tracklist)
+            {
+                SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttrack(trackID,"+
+                                                                                               "playlistID) "+
+                                                                                         "VALUES(@trackID,"+
+                                                                                                "@playlistID)",
+                                                                                                 dbConnection);
+                command.Parameters.AddWithValue("trackID",track.ID);
+                command.Parameters.AddWithValue("playlistID",playlist.ID);
+                commandlist.Add(command);
+            }
+            OpenDBConnection();
+            try
+            {
+                BeginCommand.ExecuteNonQuery();
+                foreach (SQLiteCommand command in commandlist)
+                {
+                    command.ExecuteNonQuery();
+                }
                 EndCommand.ExecuteNonQuery();
             }
             finally
@@ -226,5 +279,6 @@ namespace TuneMusix.Data.SQLDatabase
                 CloseDBConnection();
             }
         }
+
     }
 }
