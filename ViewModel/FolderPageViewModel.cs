@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
 using TuneMusix.Data;
@@ -12,16 +13,16 @@ namespace TuneMusix.ViewModel
 
         DataModel dataModel;
 
-        public RelayCommand Delete;
-        public RelayCommand PlayTrack;
-        public RelayCommand SelectedItemChanged;
+        public RelayCommand DeleteSelected { get; set; }
+        public RelayCommand PlayTrack { get; set; }
+        public RelayCommand SelectedItemChanged { get; set; }
 
         //constructor
         public FolderPageViewModel()
         {
             dataModel = DataModel.Instance;
 
-            Delete = new RelayCommand(delete);
+            DeleteSelected = new RelayCommand(deleteSelected);
             PlayTrack = new RelayCommand(playTrack);
             SelectedItemChanged = new RelayCommand(selectedItemChanged);
 
@@ -34,43 +35,52 @@ namespace TuneMusix.ViewModel
             RaisePropertyChanged("RootFolders");
         }
 
-        private void delete(object argument)
+        private void deleteSelected(object argument)
         {
             if (dataModel.SelectedFolder != null)
             {
                 dataModel.Delete(dataModel.SelectedFolder);
                 dataModel.SelectedFolder = null;
             }
-            if (SelectedTracks.Count > 0)
+            else if(dataModel.SelectedTracks != null)
             {
                 dataModel.Delete(SelectedTracks.ToList<Track>());
-            }
+            }                    
         }
 
         private void selectedItemChanged(object argument)
         {
-            var FolderTree = argument as TreeView;
-            if (FolderTree != null)
+            if (argument != null)
             {
-                var selectedItem = FolderTree.SelectedItem;
-                if (selectedItem.GetType() == typeof(Folder))
+                if (argument.GetType() == typeof(Folder))
                 {
                     SelectedTracks.Clear();
-                    dataModel.SelectedFolder = (Folder)selectedItem;
+                    dataModel.SelectedFolder = (Folder)argument;
                 }
                 else
                 {
                     SelectedTracks.Clear();
                     dataModel.SelectedFolder = null;
-                    SelectedTracks.Add((Track)selectedItem);
+                    SelectedTracks.Add((Track)argument);
                 }
-                
+            }
+            if (argument == null)
+            {
+                Console.WriteLine("Argument is null");
             }
         }
 
         private void playTrack(object argument)
         {
-
+            if (dataModel.SelectedTracks != null)
+            {
+                if(dataModel.SelectedTracks.Count > 0)
+                {
+                    dataModel.TrackQueue = dataModel.SelectedTracks.ToList<Track>();
+                }
+            }                
         }
+
+
     }
 }

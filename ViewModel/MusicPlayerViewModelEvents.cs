@@ -52,7 +52,6 @@ namespace TuneMusix.ViewModel
         {
             if (!Dragging)
             {
-                RaisePropertyChanged("PlayButtonIcon");
                 try
                 {
                     CurrentSliderPosition = CurrentPosition;

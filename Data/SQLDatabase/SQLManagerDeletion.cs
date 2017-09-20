@@ -50,41 +50,17 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 CloseDBConnection();
             }
-        }
-
-        public void Delete(List<Folder> folders)
-        {
-
-            List<SQLiteCommand> commands = new List<SQLiteCommand>();
-            foreach (Folder folder in folders)
-            {
-                SQLiteCommand com = new SQLiteCommand("DELETE FROM folders WHERE ID=@ID;", dbConnection);
-                com.Parameters.AddWithValue("ID", folder.ID);
-                commands.Add(com);
-            }
-
-            OpenDBConnection();
-            try
-            {
-                BeginCommand.ExecuteNonQuery();
-
-
-                EndCommand.ExecuteNonQuery();
-            }
-            finally
-            {
-                CloseDBConnection();
-            }
-        }
+        }   
 
         public void Delete(Folder folder)
         {
+            SQLiteCommand command = new SQLiteCommand("DELETE FROM folders WHERE ID=@ID;",dbConnection);
+            command.Parameters.AddWithValue("ID",folder.ID);
             OpenDBConnection();
             try
             {
                 BeginCommand.ExecuteNonQuery();
-
-
+                command.ExecuteNonQuery();
                 EndCommand.ExecuteNonQuery();
             }
             finally

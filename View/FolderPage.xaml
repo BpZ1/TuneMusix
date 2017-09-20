@@ -25,14 +25,21 @@
     </Page.Resources>
 
     <Grid>
-        
-        <TreeView x:Name="FolderTreeView" ItemsSource="{Binding RootFolders}">
+
+        <TreeView Name="FolderTreeView" ItemsSource="{Binding RootFolders}">
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
+                    <MenuItem Command="{Binding AddToPlaylist}" Header="Add to playlist"/>
+                    <MenuItem Command="{Binding DeleteSelected}" Header="Delete"/>
+                </ContextMenu>
+            </TreeView.ContextMenu>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <i:InvokeCommandAction Command="{Binding PlayTrack}" CommandParameter="{Binding ElementName=FolderTreeView}"/>
                 </i:EventTrigger>
                 <i:EventTrigger EventName="SelectedItemChanged">
-                    <i:InvokeCommandAction Command="{Binding SelectedItemChanged}" CommandParameter="{Binding ElementName=FolderTreeView}"/>
+                    <i:InvokeCommandAction Command="{Binding SelectedItemChanged}" CommandParameter="{Binding ElementName=FolderTreeView, Path=SelectedItem}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <TreeView.Resources>

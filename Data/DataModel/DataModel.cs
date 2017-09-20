@@ -39,7 +39,7 @@ namespace TuneMusix.Data
         private ObservableCollection<Track> _selectedTracks = new ObservableCollection<Track>();
         private Playlist _selectedPlaylist = null;       
         private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
-        private List<Track> _trackQueue;
+        private List<Track> _trackQueue = new List<Track>();
         
    
 
@@ -113,10 +113,26 @@ namespace TuneMusix.Data
         public void Delete(Folder folder)
         {
             DBManager.Delete(folder);
+            DeleteFolderTracks(folder);
+
+            //Delete reference from container
+            if (folder.Container != null)
+            {
+                folder.Container.Folderlist.Remove(folder);
+            }
+            if (folder.Container == null)
+            {
+                RootFolders.Remove(folder);
+            }
+            OnDataModelChanged();
+
+            /*
+            DBManager.Delete(folder);
             foreach (Track track in folder.Tracklist)
             {
                 TrackList.Remove(track);
                 TrackQueue.Remove(track);
+                      
             }
             foreach (Folder f in folder.Folderlist)
             {
@@ -132,6 +148,20 @@ namespace TuneMusix.Data
                 RootFolders.Remove(folder);
             }
             OnDataModelChanged();
+            */
+        }
+
+        private void DeleteFolderTracks(Folder folder)
+        {
+            foreach (Track track in folder.Tracklist)
+            {
+                TrackList.Remove(track);
+                TrackQueue.Remove(track);
+            }
+            foreach (Folder f in folder.Folderlist)
+            {
+                DeleteFolderTracks(f);
+            }
         }
 
         //////////////////////////database methods///////////////////////////////////

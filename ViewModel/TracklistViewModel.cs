@@ -70,6 +70,7 @@ namespace TuneMusix.ViewModel
             dataModel.SelectedFolder = null;
             foreach (Track track in listView.SelectedItems)
             {
+                dataModel.SelectedFolder = null;
                 SelectedTracks.Add(track);
             }
         }
