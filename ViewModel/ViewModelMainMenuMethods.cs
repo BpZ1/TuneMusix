@@ -69,7 +69,41 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void debugMethod(object argument)
         {
-        
+            Console.WriteLine("--");
+            if (Playlists != null)
+            {
+                Console.WriteLine("Playlists:" + Playlists.Count);
+            }
+            Console.WriteLine("--");
+            Console.WriteLine("Playlists:");
+            if (Playlists != null)
+            {
+                foreach (Playlist p in Playlists)
+                {
+                    Console.WriteLine("Name: " + p.Name + " - - ID: " + p.ID);
+                }          
+            }
+            Console.WriteLine("--");
+            if (SelectedPlaylist != null)
+            {
+                Console.WriteLine("Selected Playlist: " + SelectedPlaylist.Name);
+            }
+            Console.WriteLine("--");
+            if (SelectedTracks!=null)
+            {
+                Console.WriteLine("Selected Track:");
+                foreach (Track track in SelectedTracks)
+                {
+                    Console.WriteLine(" - " + track);
+                }
+            }
+            Console.WriteLine("--");
+            if (SelectedFolder!=null)
+            {
+                Console.WriteLine("Selected Folder: " + SelectedFolder.Name);
+            }
+            Console.WriteLine("--");
+
         }
 
         /// <summary>

@@ -217,9 +217,12 @@ namespace TuneMusix.Data.SQLDatabase
         {
             List<PlaylistTrack> playlistTrackList = new List<PlaylistTrack>();
             SQLiteCommand command = new SQLiteCommand("SELECT * "+
-                                                      "FROM playlisttrack "+
-                                                      "WHERE playlistID=@ID;");
+                                                      "FROM playlisttracks "+
+                                                      "WHERE playlistID=@ID;"
+                                                      ,dbConnection);
             command.Parameters.AddWithValue("ID",playlist.ID);
+            OpenDBConnection();
+            dbReader = command.ExecuteReader();
             try
             {
 

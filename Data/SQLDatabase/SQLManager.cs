@@ -55,7 +55,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                         "shuffle INT UNSIGNED,"+
                                                                                                         "repeatTrack INT UNSIGNED);",
                                                                                                          dbConnection);
-            SQLiteCommand sqlCreateTrackPlaylisttable = new SQLiteCommand("CREATE TABLE if not exists playlisttrack(trackID INT UNSIGNED NOT NULL, "+
+            SQLiteCommand sqlCreateTrackPlaylisttable = new SQLiteCommand("CREATE TABLE if not exists playlisttracks(trackID INT UNSIGNED NOT NULL, " +
                                                                                                                    "playlistID INT UNSIGNED NOT NULL, "+
                                                                                                                    "FOREIGN KEY(trackID) "+
                                                                                                                    "REFERENCES tracks(ID) "+
@@ -74,6 +74,7 @@ namespace TuneMusix.Data.SQLDatabase
                 sqlCreateFolderTable.ExecuteNonQuery();
                 sqlCreatePlaylistTable.ExecuteNonQuery();
                 sqlCreateOptionsTable.ExecuteNonQuery();
+                sqlCreateTrackPlaylisttable.ExecuteNonQuery();
             }
             finally
             {

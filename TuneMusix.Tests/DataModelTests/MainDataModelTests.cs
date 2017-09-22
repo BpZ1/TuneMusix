@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using TuneMusix.Data;
+using TuneMusix.Data.DataModelOb;
 using TuneMusix.Model;
 
 namespace TuneMusix.Tests.DataModelTests

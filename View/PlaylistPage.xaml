@@ -5,7 +5,9 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
+      xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
       xmlns:local="clr-namespace:TuneMusix.View"
+      xmlns:system="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d" 
       d:DesignHeight="624" d:DesignWidth="1199.23"
       Title="PlaylistPage"
@@ -17,7 +19,7 @@
       TextOptions.TextFormattingMode="Ideal"
       TextOptions.TextRenderingMode="Auto"
       Background="{DynamicResource MaterialDesignPaper}"
-      FontFamily="{DynamicResource MaterialDesignFont}"        
+      FontFamily="{DynamicResource MaterialDesignFont}"    
       >
     <Page.Resources>
         <vm:PlaylistViewModel x:Key="PlaylistViewModel"/>
@@ -29,44 +31,39 @@
         </Grid.ColumnDefinitions>
 
 
-        <StackPanel Grid.Column="1" Margin="10,10,0,0" VerticalAlignment="Top">
-            <Label x:Name="label" Content="Playlists" FontSize="18.667" FontWeight="Bold"/>
-            <ListBox x:Name="PlaylistList" ItemsSource="{Binding Playlists}"/>
-        </StackPanel>
+        <DockPanel Grid.Column="0" Margin="10,10,0,0" VerticalAlignment="Top" DataContext="{Binding CurrentPlaylist}">
+            <Label DockPanel.Dock="Top" x:Name="label" Content="{Binding Name}" FontSize="18.667" FontWeight="Bold"/>
+            <ListView DockPanel.Dock="Bottom" x:Name="AllTrackList" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    Margin="10">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Page}}, Path=DataContext.PlayTrack}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Page}}, Path=DataContext.SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Play" Command="{Binding Source={StaticResource PlaylistViewModel}, Path=PlayTrack}"/>
+                        <MenuItem Header="Remove" Command="{Binding Source={StaticResource PlaylistViewModel}, Path=RemoveFromPlaylist}"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+                <ListView.View>
+                    <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Title}"  Header="Title" Width="400"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="200"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Album}" Header="Album" Width="100"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="100"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="200"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </DockPanel>
 
 
 
-
-
-
-
-
-
-
-
-        <materialDesign:DialogHost DialogClosing="Sample1_DialogHost_OnDialogClosing"
-                                Grid.Column="0" Grid.Row="1">
-            <materialDesign:DialogHost.DialogContent>
-                <StackPanel Margin="16">
-                    <TextBlock>Add a new fruit.</TextBlock>
-                    <TextBox Margin="0 8 0 0" HorizontalAlignment="Stretch" x:Name="FruitTextBox" />
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                        IsDefault="True"
-                                        Margin="0 8 8 0"
-                                        Command="">
-
-                            ACCEPT
-                        </Button>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                        IsCancel="True"
-                                        Margin="0 8 8 0"
-                                        Command="">
-                            CANCEL
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
-            </materialDesign:DialogHost.DialogContent>
+        <materialDesign:DialogHost Grid.Column="1" Grid.Row="1" Identifier="DialogHost">
             <Border BorderThickness="1" BorderBrush="{DynamicResource PrimaryHueMidBrush}"
                             MinWidth="256" MinHeight="256" ClipToBounds="True">
                 <Grid>
@@ -75,27 +72,39 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" Effect="{DynamicResource MaterialDesignShadowDepth5}">
-                        <TextBlock Margin="16" Text="{Binding CurrentPlaylistName}"/>
+                        <TextBlock Margin="16" Text="Playlists" FontWeight="Bold" FontSize="16"/>
                     </materialDesign:ColorZone>
-                    <ListBox Grid.Row="1" x:Name="FruitListBox" ItemsSource="{Binding CurrentPlaylist.PlaylistItems}">
+                    <ListBox ScrollViewer.CanContentScroll="True" Grid.Row="1" ItemsSource="{Binding Playlists,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFolder}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="5*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="5*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Content="{Binding Path=Titel}"/>
-                                    <Label Grid.Column="1" Content=" - "/>
-                                    <Label Grid.Column="2" Content="{Binding Path=Interpret}"/>
-                                </Grid>
+                                <Expander HorizontalAlignment="Stretch"
+                                      Header="{Binding Path=Name}" >
+                                    <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          Margin="10" >
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="SelectionChanged">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Page}}, Path=DataContext.SelectionChanged}" CommandParameter="{Binding ElementName=PlaylistTracks}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                        <ListView.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem Command="{Binding RemoveFromPlaylist}" Header="Remove"/>
+                                            </ContextMenu>
+                                        </ListView.ContextMenu>
+                                        <ListView.View>
+                                            <GridView AllowsColumnReorder="false"  ColumnHeaderToolTip="Track Information">
+                                                <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="400"/>
+                                                <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="200"/>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                </Expander>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    
+
                     <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
-                                    Command="{x:Static materialDesign:DialogHost.OpenDialogCommand}"
+                                    Command="{Binding OpenDialog}"
                                     VerticalAlignment="Bottom" HorizontalAlignment="Right" 
                                     Grid.Row="0" Margin="0 0 28 -20">
                         <Viewbox Width="22" Height="22">

@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using TuneMusix.Data;
+using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
@@ -39,30 +34,50 @@ namespace TuneMusix.ViewModel
             RaisePropertyChanged("TrackList");
         }
 
+        public void playTrack(object argument)
+        {
+            if (SelectedTracks.Count > 0)
+            { 
+                TrackQueue = SelectedTracks.ToList<Track>();
+            }
+        }
+
+
         /// <summary>
         /// Deletes all selected tracks from the tracklist.
         /// </summary>
         /// <param name="argument"></param>
-        public void deleteSelectedTracks(object argument)
+        private void deleteSelectedTracks(object argument)
         {
-            dataModel.Delete(SelectedTracks.ToList<Track>());      
+            dataModel.Delete(SelectedTracks.ToList<Track>());
         }
 
         /// <summary>
-        /// Adds all selected tracks to the playlist
+        /// Adds all selected tracks to the playlist with the given id.
         /// </summary>
-        /// <param name="parameter"></param>
+        /// <param name="argument"></param>
         private void addToPlaylist(object argument)
         {
-            if (SelectedPlaylist != null)
+            Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            var textBox = argument as TextBox;
+            string idstring = textBox.Text;
+            long? id = long.Parse(idstring);
+            if (id != null)
             {
-                SelectedPlaylist.AddAllTracks(SelectedTracks.ToList<Track>());
-                RaisePropertyChanged("SelectedPlayList");
+                Console.WriteLine("----------------------------------- ID: " + id);
+                foreach (Playlist playlist in Playlists)
+                {
+                    if (id == playlist.ID)
+                    {
+                        dataModel.AddTracksToPlaylist(dataModel.SelectedTracks.ToList<Track>(), playlist);
+                    }
+                }
             }
         }
 
-        private void selectionChanged(object argument)
+        public void selectionChanged(object argument)
         {
+            Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             var listView = argument as ListView;
             if (listView == null) return;
 
@@ -73,15 +88,7 @@ namespace TuneMusix.ViewModel
                 dataModel.SelectedFolder = null;
                 SelectedTracks.Add(track);
             }
-        }
 
-        private void playTrack(object argument)
-        {
-            if (SelectedTracks.Count > 0)
-            { 
-                TrackQueue = SelectedTracks.ToList<Track>();
-            }
         }
-
     }
 }

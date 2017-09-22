@@ -125,11 +125,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\DataModelOb\DataModelMethods.cs" />
     <Compile Include="Data\SQLDatabase\SQLLoader.cs" />
     <Compile Include="Helpers\Attributes\DatabaseMethodAttribute.cs" />
-    <Compile Include="Data\DataModel\DataModel.cs" />
-    <Compile Include="Data\DataModel\DataModelParserMethods.cs" />
-    <Compile Include="Data\DataModel\DataModelProperty.cs" />
+    <Compile Include="Data\DataModelOb\DataModel.cs" />
+    <Compile Include="Data\DataModelOb\DataModelParserMethods.cs" />
+    <Compile Include="Data\DataModelOb\DataModelProperty.cs" />
     <Compile Include="Data\SQLDatabase\SQLManager.cs" />
     <Compile Include="Data\SQLDatabase\SQLManagerDeletion.cs" />
     <Compile Include="Data\SQLDatabase\SQLManagerInsertion.cs" />
@@ -142,13 +143,18 @@
     <Compile Include="Helpers\IDGenerator.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayer.cs" />
     <Compile Include="Model\PlaylistTrack.cs" />
+    <Compile Include="ViewModel\Dialog\AddPlaylistViewModel.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />
     <Compile Include="ViewModel\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\TracklistViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelListBase.cs" />
     <Compile Include="ViewModel\ViewModelMainEvents.cs" />
     <Compile Include="ViewModel\ViewModelMainMenuMethods.cs" />
+    <Compile Include="View\Dialog\AddPlaylistDialog.xaml.cs">
+      <DependentUpon>AddPlaylistDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\FolderPage.xaml.cs">
       <DependentUpon>FolderPage.xaml</DependentUpon>
     </Compile>
@@ -161,6 +167,10 @@
     <Compile Include="View\TracklistPage.xaml.cs">
       <DependentUpon>TracklistPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\Dialog\AddPlaylistDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\FolderPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -242,6 +252,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />
+    <Folder Include="ViewModel\MainWindowViewModel\" />
+    <Folder Include="ViewModel\MusicPlayerViewModel\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

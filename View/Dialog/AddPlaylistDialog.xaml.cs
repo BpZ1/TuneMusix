@@ -12,20 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MaterialDesignThemes.Wpf;
 
-namespace TuneMusix.View
+namespace TuneMusix.View.Dialog
 {
     /// <summary>
-    /// Interaction logic for PlaylistPage.xaml
+    /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class PlaylistPage : Page
+    public partial class AddPlaylistDialog : UserControl
     {
-        public PlaylistPage()
+        public AddPlaylistDialog()
         {
             InitializeComponent();
         }
-
-
     }
 }

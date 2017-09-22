@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
@@ -29,13 +30,14 @@ namespace TuneMusix.Data.SQLDatabase
             Debug.WriteLine("Options loading...");
             DBmanager.GetOptions();
             Debug.WriteLine("Options loaded!");
-            //Load all folders
+
+            //Load folders
             Debug.WriteLine("Folders loading...");
             List<Folder> FolderList = DBmanager.GetFolders();
             List<Folder> RootList = new List<Folder>();
             Debug.WriteLine("Folders loaded");
 
-            //load all tracks
+            //load tracks
             Debug.WriteLine("Loading Tracks...");
             List<Track> tracklist = DBmanager.GetTracks();
             dataModel.AddTracksDB(tracklist);
@@ -50,6 +52,25 @@ namespace TuneMusix.Data.SQLDatabase
                 }
             }
             dataModel.AddRootFoldersDB(RootList);
+
+            //load playlists
+            Debug.WriteLine("Loading Playlists...");
+            dataModel.AddPlaylistsDB(DBmanager.GetPlaylists());          
+            foreach (Playlist playlist in dataModel.Playlists)
+            {
+                List<PlaylistTrack> playlistTracks = DBmanager.GetPlaylistTracks(playlist);
+                foreach (PlaylistTrack pt in playlistTracks)
+                {
+                    foreach (Track track in dataModel.TrackList)
+                    {
+                        if (track.ID == pt.TrackID)
+                        {
+                            dataModel.AddTrackToPlaylistDB(track,playlist);
+                        }
+                    }
+                }
+            }
+            Debug.WriteLine("Playlists loaded!");
             Debug.WriteLine("Loading finished");
         }
 

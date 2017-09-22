@@ -22,11 +22,11 @@
     <Page.Resources>
         <vm:TracklistViewModel x:Key="TracklistViewModel"/>
     </Page.Resources>
-    <ListView x:Name="AllTrackList" ItemsSource="{Binding TrackList}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+    <ListView Name="AllTrackList" ItemsSource="{Binding TrackList}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                     Margin="10">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
-                <i:InvokeCommandAction Command="{Binding PlayTrack}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                <i:InvokeCommandAction Command="{Binding PlayTrack}"  CommandParameter="{Binding ElementName=AllTrackList}"/>
             </i:EventTrigger>
             <i:EventTrigger EventName="SelectionChanged">
                 <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
@@ -35,17 +35,26 @@
         <ListView.ContextMenu>
             <ContextMenu>
                 <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
-                <MenuItem Command="{Binding AddToPlaylist}" Header="Add to playlist"/>
+                <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
+                    <MenuItem.ItemTemplate>
+                        <DataTemplate>
+                            <MenuItem  Header="{Binding Path=Name}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Page}}, Path=DataContext.AddToPlaylist}" CommandParameter="{Binding ElementName=PlaylistID}" RenderTransformOrigin="0.5,0.5">
+                                <TextBlock x:Name="PlaylistID" Visibility="Hidden" Text="{Binding Path=ID}"></TextBlock>
+                            </MenuItem>
+                        </DataTemplate>
+                    </MenuItem.ItemTemplate>
+                   
+                </MenuItem>
                 <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete"/>
             </ContextMenu>
         </ListView.ContextMenu>
         <ListView.View>
             <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="400"/>
-                <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="200"/>
-                <GridViewColumn DisplayMemberBinding= "{Binding Path=Album}" Header="Album" Width="100"/>
-                <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="100"/>
-                <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="200"/>
+                <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="Auto"/>
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="Auto"/>
+                <GridViewColumn DisplayMemberBinding= "{Binding Path=Album}" Header="Album" Width="Auto"/>
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="Auto"/>
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="Auto"/>
             </GridView>
         </ListView.View>
     </ListView>

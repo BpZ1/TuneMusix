@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
-using TuneMusix.Data;
+using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
@@ -47,7 +45,10 @@ namespace TuneMusix.ViewModel
                 dataModel.Delete(SelectedTracks.ToList<Track>());
             }                    
         }
-
+        /// <summary>
+        /// changes the selected items in the datamodel.
+        /// </summary>
+        /// <param name="argument"></param>
         private void selectedItemChanged(object argument)
         {
             if (argument != null)

@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
-using TuneMusix.Data;
+using TuneMusix.Data.DataModelOb;
 using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
@@ -69,6 +69,15 @@ namespace TuneMusix.ViewModel
             {
                 dataModel.SelectedTracks = value;
                 RaisePropertyChanged("SelectedTracks");
+            }
+        }
+        public Folder SelectedFolder
+        {
+            get { return dataModel.SelectedFolder; }
+            set
+            {
+                dataModel.SelectedFolder = value;
+                RaisePropertyChanged("SelectedFolder");
             }
         }
         //getter

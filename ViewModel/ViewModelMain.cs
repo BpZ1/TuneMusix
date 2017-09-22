@@ -3,6 +3,7 @@ using TuneMusix.Helpers;
 using TuneMusix.Model;
 using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Data.SQLDatabase;
+using TuneMusix.Data.DataModelOb;
 
 namespace TuneMusix.ViewModel
 {

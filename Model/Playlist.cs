@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using WMPLib;
 
@@ -13,35 +14,29 @@ namespace TuneMusix.Model
     {
         private long _id;
         private string _name;
-        private bool _modified;
-        private ObservableCollection<Track> _trackList;
+        public ObservableCollection<Track> Tracklist { get; set; }
 
         //Constructor-------
         public Playlist(string name,long ID)
         {
-            this._modified = false;
             this.Name = name;
             this._id = ID;
         }
         //Constructor-------
         public Playlist(string name,Track track,long ID)
         {
-
             this.Name = name;
             this._id = ID;
-            this._modified = false;
             if (track != null)
             {
                 Tracklist.Add(track);
-            }
-            
+            }           
         }
         //Constructor-------
         public Playlist(string name,List<Track> tracks,long ID)
         {
             this.Name = name;
             this._id = ID;
-            this._modified = false;
             foreach (Track track in tracks)
             {
                 if (track != null)
@@ -68,54 +63,14 @@ namespace TuneMusix.Model
                 else
                 {
                     this._name = value;
-                    this.Modified = true;
 
                 }
              }
         }
 
-        public bool Modified
-        {
-            get { return this._modified; }
-            set { this._modified = value; }
-        }
-        public ObservableCollection<Track> Tracklist
-        {
-            get
-            {
-                return this._trackList;
-            }
-            set
-            {
-                this._trackList = value;
-                this.Modified = true;
-            }
-        }
-
         public long ID
         {
             get { return this._id; }
-        }
-    
-
-        /// <summary>
-        /// Adds one Element to the List.
-        /// </summary>
-        /// <param name="track"></param>
-        /// <returns></returns>
-        public bool AddTrack(Track track)
-        {
-            ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
-            if (valiUtil.insertValidation(track.Title,this._name,track,_trackList))
-            {
-                _trackList.Add(track);
-                this.Modified = true;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         /// <summary>
@@ -123,28 +78,23 @@ namespace TuneMusix.Model
         /// </summary>
         /// <param name="tracks">Tracks to be added to the List.</param>
         /// <returns>Number of Elements added.</returns>
-        public int AddAllTracks(List<Track> tracks)
+        public void AddTracks(List<Track> tracks)
         {
-            int TracksAdded = 0;
-            ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
             foreach (Track track in tracks)
-            {
-                if(valiUtil.insertValidation(track.Title, this._name, track, _trackList))
-                {
-                    _trackList.Add(track);
-                    TracksAdded++;
-                }
+            {             
+                Tracklist.Add(track);             
             }
-            this.Modified = true;
-            return TracksAdded;
+    
         }
 
-        public void Remove(Track track)
+        /// <summary>
+        /// Adds a track to the playlist. (no database entry)
+        /// </summary>
+        /// <param name="track"></param>
+        public void AddTrack(Track track)
         {
-            Tracklist.Remove(track);
-            //database removal
+            this.Tracklist.Add(track);
         }
-
    
     }
 }

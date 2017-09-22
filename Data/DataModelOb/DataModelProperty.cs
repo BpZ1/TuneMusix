@@ -11,7 +11,7 @@ using TuneMusix.Helpers;
 using TuneMusix.Model;
 
 
-namespace TuneMusix.Data
+namespace TuneMusix.Data.DataModelOb
 {
     public partial class DataModel
     {

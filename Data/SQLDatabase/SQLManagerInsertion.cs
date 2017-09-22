@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Diagnostics;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
@@ -69,7 +70,7 @@ namespace TuneMusix.Data.SQLDatabase
         public void AddAll(List<Track> tracklist)
         {
             List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
-
+            
             foreach (Track track in tracklist)
             {
                 
@@ -127,6 +128,7 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 CloseDBConnection();
             }
+            Debug.WriteLine("Tracks were added to DB");
         }
 
         public void AddAll(List<Folder> folders)
@@ -170,7 +172,7 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 CloseDBConnection();
             }
-
+            Debug.WriteLine("Folders were added to DB");
         }
 
         public void AddPlaylist(Playlist playlist)
@@ -194,11 +196,12 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 CloseDBConnection();
             }
+            Debug.WriteLine("Playlist was added to DB: " + playlist.Name);
         }
 
         public void AddPlaylistTrack(Track track,Playlist playlist)
         {
-            SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttrack(trackID,"+
+            SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttracks(trackID," +
                                                                                             "playlistID) " +
                                                                                      "VALUES(@trackID,"+
                                                                                             "@playlistID)",
@@ -224,7 +227,7 @@ namespace TuneMusix.Data.SQLDatabase
             List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
             foreach (Track track in tracklist)
             {
-                SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttrack(trackID,"+
+                SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttracks(trackID,"+
                                                                                                "playlistID) "+
                                                                                          "VALUES(@trackID,"+
                                                                                                 "@playlistID)",

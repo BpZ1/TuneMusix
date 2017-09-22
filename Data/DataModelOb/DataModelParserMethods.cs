@@ -10,7 +10,7 @@ using TuneMusix.Attributes;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
-namespace TuneMusix.Data
+namespace TuneMusix.Data.DataModelOb
 {
     /// <summary>
     /// 
