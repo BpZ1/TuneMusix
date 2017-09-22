@@ -32,7 +32,6 @@ namespace TuneMusix.ViewModel
             //Relaycommands
             GetFiles = new RelayCommand(getFiles);
             AddFolder = new RelayCommand(addFolder);
-            DeleteTracks = new RelayCommand(deleteTracks);
             DebugMethod = new RelayCommand(debugMethod);
             ExitApplication = new RelayCommand(exitApplication);       
         }

@@ -36,10 +36,11 @@ namespace TuneMusix.ViewModel
 
         private void OnTrackChanged(object e)
         {
+            RaisePropertyChanged("IsLoaded");
             RaisePropertyChanged("Length");
             RaisePropertyChanged("CurrentTrackName");     
             RaisePropertyChanged("CurrentPosition");
-            RaisePropertyChanged("PlayButtonIcon");
+            RaisePropertyChanged("PlayButtonIcon");           
             timer.Start();
         }
         /// <summary>

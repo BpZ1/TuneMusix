@@ -36,9 +36,10 @@
             <ContextMenu>
                 <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
                 <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
+                    
                     <MenuItem.ItemTemplate>
                         <DataTemplate>
-                            <MenuItem  Header="{Binding Path=Name}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Page}}, Path=DataContext.AddToPlaylist}" CommandParameter="{Binding ElementName=PlaylistID}" RenderTransformOrigin="0.5,0.5">
+                            <MenuItem  Header="{Binding Path=Name}" Command="{Binding Source={StaticResource TracklistViewModel}, Path=AddToPlaylist}" CommandParameter="{Binding ElementName=PlaylistID}" RenderTransformOrigin="0.5,0.5">
                                 <TextBlock x:Name="PlaylistID" Visibility="Hidden" Text="{Binding Path=ID}"></TextBlock>
                             </MenuItem>
                         </DataTemplate>
@@ -50,8 +51,8 @@
         </ListView.ContextMenu>
         <ListView.View>
             <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="Auto"/>
-                <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="Auto"/>
+                <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="auto"/>
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="auto"/>
                 <GridViewColumn DisplayMemberBinding= "{Binding Path=Album}" Header="Album" Width="Auto"/>
                 <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="Auto"/>
                 <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="Auto"/>

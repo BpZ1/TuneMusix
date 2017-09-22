@@ -97,6 +97,27 @@ namespace TuneMusix.ViewModel
             }
         }
 
+        public string CurrentPlaylistName
+        {
+            get
+            {
+                if(dataModel.CurrentPlaylist != null){
+                    return dataModel.CurrentPlaylist.Name;
+                }
+                else
+                {
+                    return "...";
+                }
+            }
+        }
+
+        public bool TrackLoaded
+        {
+            get
+            {
+               return audioControls.IsLoaded;
+            }
+        }
 
         public int Balance
         {

@@ -5,11 +5,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
+      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
       xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
       xmlns:local="clr-namespace:TuneMusix.View"
+      xmlns:controls="clr-namespace:TuneMusix.View.Controls"
       xmlns:system="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d" 
-      d:DesignHeight="624" d:DesignWidth="1199.23"
+      d:DesignHeight="624" d:DesignWidth="510.73"
       Title="PlaylistPage"
       DataContext="{DynamicResource PlaylistViewModel}"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -23,46 +25,14 @@
       >
     <Page.Resources>
         <vm:PlaylistViewModel x:Key="PlaylistViewModel"/>
+        <DataTemplate x:Key="PlaylistDragAdorner">
+            <StackPanel>
+                <materialDesign:PackIcon Kind="PlaylistPlus" />
+                <TextBlock Text="{Binding Name}" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </DataTemplate>
     </Page.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
-            <ColumnDefinition Width="5*" />
-        </Grid.ColumnDefinitions>
-
-
-        <DockPanel Grid.Column="0" Margin="10,10,0,0" VerticalAlignment="Top" DataContext="{Binding CurrentPlaylist}">
-            <Label DockPanel.Dock="Top" x:Name="label" Content="{Binding Name}" FontSize="18.667" FontWeight="Bold"/>
-            <ListView DockPanel.Dock="Bottom" x:Name="AllTrackList" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    Margin="10">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="MouseDoubleClick">
-                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Page}}, Path=DataContext.PlayTrack}" CommandParameter="{Binding ElementName=AllTrackList}"/>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Page}}, Path=DataContext.SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Header="Play" Command="{Binding Source={StaticResource PlaylistViewModel}, Path=PlayTrack}"/>
-                        <MenuItem Header="Remove" Command="{Binding Source={StaticResource PlaylistViewModel}, Path=RemoveFromPlaylist}"/>
-                    </ContextMenu>
-                </ListView.ContextMenu>
-                <ListView.View>
-                    <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Title}"  Header="Title" Width="400"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="200"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Album}" Header="Album" Width="100"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="100"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="200"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </DockPanel>
-
-
-
+    <DockPanel x:Name="CurrentPlaylistField">
         <materialDesign:DialogHost Grid.Column="1" Grid.Row="1" Identifier="DialogHost">
             <Border BorderThickness="1" BorderBrush="{DynamicResource PrimaryHueMidBrush}"
                             MinWidth="256" MinHeight="256" ClipToBounds="True">
@@ -71,34 +41,18 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
+
                     <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" Effect="{DynamicResource MaterialDesignShadowDepth5}">
                         <TextBlock Margin="16" Text="Playlists" FontWeight="Bold" FontSize="16"/>
                     </materialDesign:ColorZone>
-                    <ListBox ScrollViewer.CanContentScroll="True" Grid.Row="1" ItemsSource="{Binding Playlists,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedFolder}">
+                    <ListBox ScrollViewer.CanContentScroll="True" Grid.Row="1" ItemsSource="{Binding Playlists,UpdateSourceTrigger=PropertyChanged}" 
+                             dd:DragDrop.IsDragSource="True" dd:DragDrop.DragHandler="{Binding}" dd:DragDrop.DragAdornerTemplate="{StaticResource PlaylistDragAdorner}"
+                             SelectionMode="Single" SelectedItem="{Binding SelectedPlaylist}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Expander HorizontalAlignment="Stretch"
-                                      Header="{Binding Path=Name}" >
-                                    <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                          Margin="10" >
-                                        <i:Interaction.Triggers>
-                                            <i:EventTrigger EventName="SelectionChanged">
-                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type Page}}, Path=DataContext.SelectionChanged}" CommandParameter="{Binding ElementName=PlaylistTracks}"/>
-                                            </i:EventTrigger>
-                                        </i:Interaction.Triggers>
-                                        <ListView.ContextMenu>
-                                            <ContextMenu>
-                                                <MenuItem Command="{Binding RemoveFromPlaylist}" Header="Remove"/>
-                                            </ContextMenu>
-                                        </ListView.ContextMenu>
-                                        <ListView.View>
-                                            <GridView AllowsColumnReorder="false"  ColumnHeaderToolTip="Track Information">
-                                                <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="400"/>
-                                                <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="200"/>
-                                            </GridView>
-                                        </ListView.View>
-                                    </ListView>
-                                </Expander>
+                                <DockPanel LastChildFill="True">
+                                    <controls:PlaylistItem HorizontalAlignment="Stretch" DockPanel.Dock="Left" />
+                                </DockPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -119,5 +73,5 @@
 
 
 
-    </Grid>
+    </DockPanel>
 </Page>

@@ -69,12 +69,17 @@
 
         <dragablz:TabablzControl DockPanel.Dock="Bottom">
             <TabItem Header="Playlists" >
-                <Frame Source="PlaylistPage.xaml" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Frame Grid.Column="0" Source="CurrentPlaylistPage.xaml" />
+                    <Frame Grid.Column="1" Source="PlaylistPage.xaml" />
+                </Grid>
             </TabItem>
             <TabItem Header="Trackslist">
-                <Grid x:Name="tab">
-                    <Frame Source="TracklistPage.xaml"/>
-                </Grid>
+                <Frame Source="TracklistPage.xaml"/>
             </TabItem>
             <TabItem Header="Folders">
                 <Frame Source="FolderPage.xaml"/>

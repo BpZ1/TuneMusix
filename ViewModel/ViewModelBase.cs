@@ -51,35 +51,6 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        //Getter and setter
-        public Playlist SelectedPlaylist
-        {
-            get { return dataModel.SelectedPlaylist; }
-            set
-            {
-                dataModel.SelectedPlaylist = value;
-                RaisePropertyChanged("SelectedPlaylist");
-            }
-        }
-        //Getter and setter
-        public ObservableCollection<Track> SelectedTracks
-        {
-            get { return dataModel.SelectedTracks; }
-            set
-            {
-                dataModel.SelectedTracks = value;
-                RaisePropertyChanged("SelectedTracks");
-            }
-        }
-        public Folder SelectedFolder
-        {
-            get { return dataModel.SelectedFolder; }
-            set
-            {
-                dataModel.SelectedFolder = value;
-                RaisePropertyChanged("SelectedFolder");
-            }
-        }
         //getter
         public ObservableCollection<Folder> RootFolders
         {

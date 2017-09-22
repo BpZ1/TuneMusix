@@ -69,6 +69,10 @@
       <HintPath>packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="GongSolutions.Wpf.DragDrop, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\gong-wpf-dragdrop.1.1.0\lib\net45\GongSolutions.Wpf.DragDrop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
       <Private>True</Private>
@@ -143,6 +147,7 @@
     <Compile Include="Helpers\IDGenerator.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayer.cs" />
     <Compile Include="Model\PlaylistTrack.cs" />
+    <Compile Include="ViewModel\CurrentPlaylistViewModel.cs" />
     <Compile Include="ViewModel\Dialog\AddPlaylistViewModel.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
@@ -152,6 +157,9 @@
     <Compile Include="ViewModel\ViewModelListBase.cs" />
     <Compile Include="ViewModel\ViewModelMainEvents.cs" />
     <Compile Include="ViewModel\ViewModelMainMenuMethods.cs" />
+    <Compile Include="View\CurrentPlaylistPage.xaml.cs">
+      <DependentUpon>CurrentPlaylistPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Dialog\AddPlaylistDialog.xaml.cs">
       <DependentUpon>AddPlaylistDialog.xaml</DependentUpon>
     </Compile>
@@ -161,12 +169,19 @@
     <Compile Include="View\MusicPlayerPage.xaml.cs">
       <DependentUpon>MusicPlayerPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Controls\PlaylistItem.xaml.cs">
+      <DependentUpon>PlaylistItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\PlaylistPage.xaml.cs">
       <DependentUpon>PlaylistPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TracklistPage.xaml.cs">
       <DependentUpon>TracklistPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\CurrentPlaylistPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Dialog\AddPlaylistDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -198,6 +213,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\MusicPlayerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Controls\PlaylistItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

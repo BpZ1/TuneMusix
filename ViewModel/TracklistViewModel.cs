@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
 using TuneMusix.Data.DataModelOb;
@@ -17,14 +18,20 @@ namespace TuneMusix.ViewModel
         public RelayCommand DeleteSelectedTracks { get; set; }
         public RelayCommand AddToPlaylist { get; set; }
         public RelayCommand SelectionChanged { get; set; }
+        public ObservableCollection<Track> SelectedTracks { get; set; }
 
         //Constructor
         public TracklistViewModel()
         {
+            SelectedTracks = new ObservableCollection<Track>();
+
+
             DeleteSelectedTracks = new RelayCommand(deleteSelectedTracks);
             AddToPlaylist = new RelayCommand(addToPlaylist);
             SelectionChanged = new RelayCommand(selectionChanged);
             PlayTrack = new RelayCommand(playTrack);
+
+            //events
             dataModel.DataModelChanged += OnTrackListChanged;
 
         }
@@ -36,6 +43,7 @@ namespace TuneMusix.ViewModel
 
         public void playTrack(object argument)
         {
+            if (SelectedTracks == null) return;
             if (SelectedTracks.Count > 0)
             { 
                 TrackQueue = SelectedTracks.ToList<Track>();
@@ -69,7 +77,7 @@ namespace TuneMusix.ViewModel
                 {
                     if (id == playlist.ID)
                     {
-                        dataModel.AddTracksToPlaylist(dataModel.SelectedTracks.ToList<Track>(), playlist);
+                        dataModel.AddTracksToPlaylist(SelectedTracks.ToList<Track>(), playlist);
                     }
                 }
             }
@@ -77,7 +85,6 @@ namespace TuneMusix.ViewModel
 
         public void selectionChanged(object argument)
         {
-            Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             var listView = argument as ListView;
             if (listView == null) return;
 

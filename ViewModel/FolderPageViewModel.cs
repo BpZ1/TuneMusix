@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
@@ -14,6 +15,9 @@ namespace TuneMusix.ViewModel
         public RelayCommand DeleteSelected { get; set; }
         public RelayCommand PlayTrack { get; set; }
         public RelayCommand SelectedItemChanged { get; set; }
+
+        public Track SelectedTrack { get; set; }
+        public Folder SelectedFolder { get; set; }
 
         //constructor
         public FolderPageViewModel()
@@ -35,14 +39,16 @@ namespace TuneMusix.ViewModel
 
         private void deleteSelected(object argument)
         {
-            if (dataModel.SelectedFolder != null)
+            if (SelectedFolder != null)
             {
-                dataModel.Delete(dataModel.SelectedFolder);
-                dataModel.SelectedFolder = null;
+                dataModel.Delete(SelectedFolder);
+                SelectedFolder = null;
             }
-            else if(dataModel.SelectedTracks != null)
+            else if(SelectedTrack != null)
             {
-                dataModel.Delete(SelectedTracks.ToList<Track>());
+                List<Track> selectedTracks = new List<Track>();
+                selectedTracks.Add(SelectedTrack);
+                dataModel.Delete(selectedTracks.ToList<Track>());
             }                    
         }
         /// <summary>
@@ -55,30 +61,22 @@ namespace TuneMusix.ViewModel
             {
                 if (argument.GetType() == typeof(Folder))
                 {
-                    SelectedTracks.Clear();
-                    dataModel.SelectedFolder = (Folder)argument;
+                    SelectedTrack = null;
+                    SelectedFolder = (Folder)argument;
                 }
                 else
-                {
-                    SelectedTracks.Clear();
-                    dataModel.SelectedFolder = null;
-                    SelectedTracks.Add((Track)argument);
+                {                  
+                    SelectedFolder = null;
+                    SelectedTrack = ((Track)argument);
                 }
-            }
-            if (argument == null)
-            {
-                Console.WriteLine("Argument is null");
             }
         }
 
         private void playTrack(object argument)
         {
-            if (dataModel.SelectedTracks != null)
+            if (SelectedTrack != null)
             {
-                if(dataModel.SelectedTracks.Count > 0)
-                {
-                    dataModel.TrackQueue = dataModel.SelectedTracks.ToList<Track>();
-                }
+                dataModel.CurrentTrack = SelectedTrack;
             }                
         }
 

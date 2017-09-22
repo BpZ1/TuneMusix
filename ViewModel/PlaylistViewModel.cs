@@ -1,10 +1,14 @@
 ﻿using MaterialDesignThemes.Wpf;
+using GongSolutions.Wpf.DragDrop;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
@@ -13,26 +17,51 @@ using TuneMusix.ViewModel.Dialog;
 
 namespace TuneMusix.ViewModel
 {
-    class PlaylistViewModel : ViewModelListBase
+    class PlaylistViewModel : ViewModelListBase, IDragSource
     {
 
         DataModel dataModel = DataModel.Instance;
 
         public RelayCommand OpenDialog { get; set; }
         public RelayCommand SelectionChanged { get; set; }
-        public RelayCommand RemoveFromPlaylist { get; set; }
-        public RelayCommand PlayTrack { get; set; }
+        public RelayCommand PlaylistDropped { get; set; }
+        public RelayCommand SelectPlaylist { get; set; }
+
+        public ObservableCollection<Track> SelectedTracks { get; set; }
+        private Playlist _selectedPlaylist;
 
         //constructor
         public PlaylistViewModel()
         {
+            SelectedTracks = new ObservableCollection<Track>();
             SelectionChanged = new RelayCommand(selectionChanged);
-            OpenDialog = new RelayCommand(openDialog);
-            RemoveFromPlaylist = new RelayCommand(removeFromPlaylist);
-            PlayTrack = new RelayCommand(playTrack);
-    
-        //events
-        dataModel.DataModelChanged += OnDataModelChanged;
+            OpenDialog = new RelayCommand(openDialog);                    
+            PlaylistDropped = new RelayCommand(playlistDropped);
+            SelectPlaylist = new RelayCommand(selectPlaylist);
+
+            //events
+            dataModel.DataModelChanged += OnDataModelChanged;
+            
+        }
+
+        private void selectPlaylist(object argument)
+        {
+            var playlist = argument as Playlist;
+            if(playlist != null)
+            {
+                SelectedPlaylist = playlist;
+            }
+        }
+
+        public Playlist SelectedPlaylist
+        {
+            get { return this._selectedPlaylist; }
+            set
+            {
+                this._selectedPlaylist = value;
+                Console.WriteLine("Selected Playlist: " + _selectedPlaylist.Name);
+                RaisePropertyChanged("SelectedPlaylist");
+            }
         }
 
         private void OnDataModelChanged(object source,object changed)
@@ -94,17 +123,54 @@ namespace TuneMusix.ViewModel
 
         private void selectionChanged(object argument)
         {
-            Console.WriteLine("Test3");
+            //implement
+        }
+        
+
+        private void playlistDropped(object argument)
+        {
+            Console.WriteLine("Dropped type:" + argument.GetType().ToString());
         }
 
-        public void removeFromPlaylist(object argument)
+        public void StartDrag(IDragInfo dragInfo)
         {
-            Console.WriteLine("Test1");
+            Console.WriteLine("Can not Drag because selection is null");
+            if (SelectedPlaylist != null)
+            {
+                dragInfo.Data = SelectedPlaylist;
+                dragInfo.Effects = DragDropEffects.Copy;
+                Console.WriteLine("Started dragging: " + dragInfo.Data.ToString());
+            }
         }
 
-        public void playTrack(object argument)
+        public bool CanStartDrag(IDragInfo dragInfo)
         {
-            Console.WriteLine("Test2");
+            Console.WriteLine("Can I drag?");
+            if (dragInfo != null)
+            {
+                Console.WriteLine("Can Drag");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Can not Drag");
+                return false;
+            }
+        }
+
+        public void Dropped(IDropInfo dropInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DragCancelled()
+        {
+            Console.WriteLine("Drag was Cancelled!");
+        }
+
+        public bool TryCatchOccurredException(Exception exception)
+        {
+            throw new NotImplementedException();
         }
     }
 }

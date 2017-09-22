@@ -1,0 +1,57 @@
+﻿<Page x:Class="TuneMusix.View.CurrentPlaylistPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:vm="clr-namespace:TuneMusix.ViewModel"
+      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+      xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+      xmlns:local="clr-namespace:TuneMusix.View"
+      xmlns:system="clr-namespace:System;assembly=mscorlib"
+      mc:Ignorable="d" 
+      d:DesignHeight="624" d:DesignWidth="1199.23"
+      DataContext="{DynamicResource CurrentPlaylistViewModel}"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      TextElement.FontWeight="Regular"
+      TextElement.FontSize="13"
+      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextRenderingMode="Auto"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}"   
+      Title="CurrentPlaylistPage"
+      dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" AllowDrop="True">
+    <Page.Resources>
+        <vm:CurrentPlaylistViewModel x:Key="CurrentPlaylistViewModel"/>        
+    </Page.Resources>
+    <DockPanel LastChildFill="True"  Margin="10,10,0,0" VerticalAlignment="Top" >
+        <Label DockPanel.Dock="Top" x:Name="label" Content="{Binding CurrentPlaylistName}" FontSize="18.667" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <ListView DockPanel.Dock="Bottom" x:Name="AllTrackList" ItemsSource="{Binding CurrentPlaylistTracks}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    Margin="10">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding SetPlaylistIndex}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Play" Command="{Binding SetPlaylistIndex}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"/>
+                    <MenuItem Header="Remove" Command="{Binding RemoveFromPlaylist}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Title}"  Header="Title" Width="auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Album}" Header="Album" Width="auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="auto"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Page>

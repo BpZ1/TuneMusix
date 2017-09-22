@@ -47,23 +47,8 @@ namespace TuneMusix.Data.DataModelOb
             set
             {
                 this._currentPlaylist = value;
+                TrackQueue = value.Tracklist.ToList<Track>();
                 OnCurrentPlaylistChanged();
-            }
-        }
-        public ObservableCollection<Track> SelectedTracks
-        {
-            get { return this._selectedTracks; }
-            set
-            {
-                this._selectedTracks = value;
-            }
-        }
-        public Playlist SelectedPlaylist
-        {
-            get { return this._selectedPlaylist; }
-            set
-            {
-                this._selectedPlaylist = value;
             }
         }
         public ObservableCollection<Folder> RootFolders
