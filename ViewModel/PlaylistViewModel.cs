@@ -134,12 +134,11 @@ namespace TuneMusix.ViewModel
 
         public void StartDrag(IDragInfo dragInfo)
         {
-            Console.WriteLine("Can not Drag because selection is null");
+
             if (SelectedPlaylist != null)
             {
-                dragInfo.Data = SelectedPlaylist;
+                dragInfo.Data = dragInfo.SourceItem;
                 dragInfo.Effects = DragDropEffects.Copy;
-                Console.WriteLine("Started dragging: " + dragInfo.Data.ToString());
             }
         }
 

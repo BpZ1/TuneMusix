@@ -98,8 +98,6 @@ namespace TuneMusix.ViewModel
             dataModel.CurrentPlaylist = sourceItem.DataContext as Playlist;
         }
 
-
-
         public string CurrentPlaylistName
         {
             get

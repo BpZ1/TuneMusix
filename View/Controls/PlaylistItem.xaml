@@ -20,12 +20,15 @@
     </UserControl.Resources>
     <Grid Margin="4">
         <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}" Margin="4,4,0,1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  >
             <materialDesign:Flipper.FrontContent>
                 <materialDesign:ColorZone Mode="PrimaryDark" Padding="6" VerticalAlignment="Stretch">
                     <DockPanel>
-                        <TextBlock DockPanel.Dock="Left" Margin="8 0 0 0" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding Path=Name}"
-                                   FontSize="16" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                        <Label HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="White">
+                            <TextBlock DockPanel.Dock="Left" Margin="8 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"
+                                   FontSize="16"/>
+                        </Label>
+                       
                         <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignToolForegroundButton}"
                                     Command="{x:Static materialDesign:Flipper.FlipCommand}"
                                     HorizontalAlignment="Right">

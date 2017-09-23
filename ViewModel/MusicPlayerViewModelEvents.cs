@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System;
+using System.Timers;
 using System.Windows.Controls;
 
 namespace TuneMusix.ViewModel
@@ -36,7 +37,7 @@ namespace TuneMusix.ViewModel
 
         private void OnTrackChanged(object e)
         {
-            RaisePropertyChanged("IsLoaded");
+            RaisePropertyChanged("TrackLoaded");
             RaisePropertyChanged("Length");
             RaisePropertyChanged("CurrentTrackName");     
             RaisePropertyChanged("CurrentPosition");
