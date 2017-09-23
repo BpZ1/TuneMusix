@@ -21,7 +21,7 @@
       Background="{DynamicResource MaterialDesignPaper}"
       FontFamily="{DynamicResource MaterialDesignFont}"   
       Title="CurrentPlaylistPage"
-      dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" AllowDrop="True">
+      dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
     <Page.Resources>
         <vm:CurrentPlaylistViewModel x:Key="CurrentPlaylistViewModel"/>        
     </Page.Resources>

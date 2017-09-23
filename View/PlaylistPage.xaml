@@ -16,10 +16,6 @@
       DataContext="{DynamicResource PlaylistViewModel}"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-      TextElement.FontWeight="Regular"
-      TextElement.FontSize="13"
-      TextOptions.TextFormattingMode="Ideal"
-      TextOptions.TextRenderingMode="Auto"
       Background="{DynamicResource MaterialDesignPaper}"
       FontFamily="{DynamicResource MaterialDesignFont}"    
       >
@@ -42,16 +38,16 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" Effect="{DynamicResource MaterialDesignShadowDepth5}">
-                        <TextBlock Margin="16" Text="Playlists" FontWeight="Bold" FontSize="16"/>
+                    <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" >
+                        <TextBlock Margin="16" Text="Playlists" FontWeight="DemiBold" FontSize="18" FontFamily="Segoe UI"/>
                     </materialDesign:ColorZone>
                     <ListBox ScrollViewer.CanContentScroll="True" Grid.Row="1" ItemsSource="{Binding Playlists,UpdateSourceTrigger=PropertyChanged}" 
                              dd:DragDrop.IsDragSource="True" dd:DragDrop.DragHandler="{Binding}" dd:DragDrop.DragAdornerTemplate="{StaticResource PlaylistDragAdorner}"
-                             SelectionMode="Single" SelectedItem="{Binding SelectedPlaylist}">
+                             SelectionMode="Single" SelectedItem="{Binding SelectedPlaylist}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <DockPanel LastChildFill="True">
-                                    <controls:PlaylistItem HorizontalAlignment="Stretch" DockPanel.Dock="Left" />
+                                    <controls:PlaylistItem DockPanel.Dock="Left" Width="Auto" />
                                 </DockPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

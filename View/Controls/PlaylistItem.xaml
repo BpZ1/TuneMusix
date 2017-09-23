@@ -18,50 +18,57 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-
-    <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}" Margin="4 4 0 0" >
-        <materialDesign:Flipper.FrontContent>
-            <DockPanel>
-
-                <Label DockPanel.Dock="Left" Content="{Binding Path=Name}" FontWeight="Bold" FontFamily="Segoe UI Black" FontSize="16"/>
-                <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignFlatButton}"
-                            Command="{x:Static materialDesign:Flipper.FlipCommand}" Content="Tracks"/>
-            </DockPanel>
-
-        </materialDesign:Flipper.FrontContent>
-        <materialDesign:Flipper.BackContent>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <materialDesign:ColorZone Mode="Accent" Padding="6">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
+    <Grid Margin="4">
+        <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}" Margin="4,4,0,1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+            <materialDesign:Flipper.FrontContent>
+                <materialDesign:ColorZone Mode="PrimaryDark" Padding="6" VerticalAlignment="Stretch">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Left" Margin="8 0 0 0" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding Path=Name}"
+                                   FontSize="16" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                        <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignToolForegroundButton}"
+                                    Command="{x:Static materialDesign:Flipper.FlipCommand}"
+                                    HorizontalAlignment="Right">
+                               <materialDesign:PackIcon Kind="ArrowRight" HorizontalAlignment="Right" VerticalAlignment="Stretch" />
+                        </Button>
+                    </DockPanel>
+                </materialDesign:ColorZone>
+            </materialDesign:Flipper.FrontContent>
+            <materialDesign:Flipper.BackContent>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <materialDesign:ColorZone Mode="PrimaryLight"  Padding="6" VerticalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
                                     Command="{x:Static materialDesign:Flipper.FlipCommand}"
                                     HorizontalAlignment="Left">
-                            <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Right" />
-                        </Button>
-                        <TextBlock Margin="8 0 0 0" VerticalAlignment="Center" Text="{Binding Path=Name}"/>
-                    </StackPanel>
-                </materialDesign:ColorZone>
-                <Grid Grid.Row="1" Margin="0 6 0 0" HorizontalAlignment="Center" VerticalAlignment="Top">
-                    <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                          Margin="10" >
-                        <ListView.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Command="{Binding RemoveFromPlaylist}" Header="Remove"/>
-                            </ContextMenu>
-                        </ListView.ContextMenu>
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="false"  ColumnHeaderToolTip="Track Information">
-                                <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="auto"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="auto"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                            </Button>
+                            <TextBlock Margin="8 0 0 0" VerticalAlignment="Center" Text="{Binding Path=Name}" FontSize="16"/>
+                        </StackPanel>
+                    </materialDesign:ColorZone>
+                    <Grid Grid.Row="1" Margin="0 6 0 0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  Margin="10" HorizontalContentAlignment="Stretch">
+                            <ListView.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding RemoveFromPlaylist}" Header="Remove"/>
+                                </ContextMenu>
+                            </ListView.ContextMenu>
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="false"  ColumnHeaderToolTip="Track Information">
+                                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="auto"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="auto"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </materialDesign:Flipper.BackContent>
-    </materialDesign:Flipper>
+            </materialDesign:Flipper.BackContent>
+        </materialDesign:Flipper>
+    </Grid>
+        
 </UserControl>

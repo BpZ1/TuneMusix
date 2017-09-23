@@ -32,7 +32,6 @@ namespace TuneMusix.ViewModel
             SelectionChanged = new RelayCommand(selectionChangedCurrentPlaylist);
             SetPlaylistIndex = new RelayCommand(newIndex);
             RemoveFromPlaylist = new RelayCommand(removeFromCurrentPlaylist);
-            OnItemDrop = new RelayCommand(onItemDrop);
 
             dataModel.CurrentPlaylistChanged += OnCurrentPlaylistChanged;
         }
@@ -83,7 +82,6 @@ namespace TuneMusix.ViewModel
         {
             Expander sourceItem = dropInfo.Data as Expander;
             CurrentPlaylistViewModel targetItem = dropInfo.TargetItem as CurrentPlaylistViewModel;
-
             if (sourceItem != null && targetItem != null)
             {
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
@@ -93,16 +91,13 @@ namespace TuneMusix.ViewModel
 
         public void Drop(IDropInfo dropInfo)
         {
+            Console.WriteLine("+#############################################+");
             Console.WriteLine("Type of drop: " + dropInfo.Data.GetType().ToString());
             Expander sourceItem = dropInfo.Data as Expander;
             CurrentPlaylistViewModel targetItem = dropInfo.TargetItem as CurrentPlaylistViewModel;
             dataModel.CurrentPlaylist = sourceItem.DataContext as Playlist;
         }
 
-        private void onItemDrop(object argument)
-        {
-            Console.WriteLine("Droptype: " + argument.GetType().ToString());
-        }
 
 
         public string CurrentPlaylistName
