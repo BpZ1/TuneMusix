@@ -1,11 +1,13 @@
-﻿using TuneMusix.Exceptions;
+﻿using TuneMusix.Data.DataModelOb;
+using TuneMusix.Data.SQLDatabase;
+using TuneMusix.Exceptions;
 
 namespace TuneMusix.Helpers
 {
     public class IDGenerator
     {
         public static long IDCounter;
-        private bool IsInit = false;
+        private static bool IsInit = false;
 
         private static IDGenerator instance;
 
@@ -28,11 +30,13 @@ namespace TuneMusix.Helpers
             IsInit = true;
         }
 
-        public long GetID()
+        public static long GetID()
         {
             if (IsInit)
             {
                 IDCounter++;
+                DataModel dm = DataModel.Instance;
+                dm.SaveOptions();
                 return IDCounter - 1;
             }
             throw new ClassNotInitializedException("IDGenerator can only be used after it was initialized.");

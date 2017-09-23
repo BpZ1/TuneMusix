@@ -22,7 +22,7 @@ namespace TuneMusix.Data.DataModelOb
     {
         
         /// <summary>
-        /// 
+        /// Adds a list of tracks from their URLs to the datamodel and the database.
         /// </summary>
         /// <param name="urls"></param>
         public void AddTracksFromFileURLs(List<string> urls)
@@ -76,8 +76,8 @@ namespace TuneMusix.Data.DataModelOb
             }
             if (IsSubFolder)
             {
-                Console.WriteLine("Folder already contained");
-                //////Show message that foder is already in an existing folder
+                //Show message that foder is already in an existing folder
+                DialogService.NotificationMessage("The folder you tried to add is already contained in an existing folder.");
             }
             else if (!IsSubFolder)
             {
@@ -89,6 +89,7 @@ namespace TuneMusix.Data.DataModelOb
                 if (IsRootFolder && SubFolder != null)
                 {
                     Delete(SubFolder);
+                    DialogService.NotificationMessage("The folder you added is the rootfolder of an existing folder.");
                     //Show Popup that the folder was added and is root to another (a small popup on the side?)
                     // RootFolders.Remove(RootFolder);
                     //folder.AddFolder(RootFolder);        Parse only the data that is not already in the database later?        

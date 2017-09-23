@@ -30,7 +30,7 @@ namespace TuneMusix.Data.SQLDatabase
             Debug.WriteLine("Options loading...");
             DBmanager.GetOptions();
             Debug.WriteLine("Options loaded!");
-
+          
             //Load folders
             Debug.WriteLine("Folders loading...");
             List<Folder> FolderList = DBmanager.GetFolders();
@@ -105,10 +105,6 @@ namespace TuneMusix.Data.SQLDatabase
             }
             return tempFolderList;
         }
-
-        public void SaveOptions()
-        {
-            DBmanager.UpdateOptions(IDgen.GetID(),options);
-        }
+     
     }
 }

@@ -37,7 +37,6 @@ namespace TuneMusix.Data.DataModelOb
         private ObservableCollection<Track> _tracklist = new ObservableCollection<Track>();
         private Track _CurrentTrack = null;
         private ObservableCollection<Track> _selectedTracks = new ObservableCollection<Track>();
-        private Playlist _selectedPlaylist = null;       
         private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
         private List<Track> _trackQueue = new List<Track>();
         

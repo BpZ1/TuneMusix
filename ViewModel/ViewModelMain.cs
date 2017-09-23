@@ -42,7 +42,7 @@ namespace TuneMusix.ViewModel
         }
 
 
-        private static void Notification(string message)
+        public static void Notification(string message)
         {
             //the message queue can be called from any thread
             Task.Factory.StartNew(() => MessageQueue.Enqueue(message));

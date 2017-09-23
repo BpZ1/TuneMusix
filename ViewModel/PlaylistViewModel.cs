@@ -117,7 +117,7 @@ namespace TuneMusix.ViewModel
         {
             if ((bool)eventArgs.Parameter == false) return;
 
-            //OK, lets cancel the close...
+            //chancel the closing
             eventArgs.Cancel();
             Console.WriteLine("Before added");
             var content = eventArgs.Session.Content as AddPlaylistDialog;
@@ -134,6 +134,10 @@ namespace TuneMusix.ViewModel
 
         }
 
+        /// <summary>
+        /// set the current playlist to the selected.
+        /// </summary>
+        /// <param name="argument"></param>
         private void _setPlaylistCurrent(object argument)
         {
             if (SelectedPlaylist != null)
@@ -141,7 +145,10 @@ namespace TuneMusix.ViewModel
                 dataModel.CurrentPlaylist = SelectedPlaylist;
             }
         }
-
+        /// <summary>
+        /// delets the currently selected playlist.
+        /// </summary>
+        /// <param name="argument"></param>
         private void _deletePlaylist(object argument)
         {
             if (SelectedPlaylist != null)
@@ -171,13 +178,19 @@ namespace TuneMusix.ViewModel
                 dragInfo.Effects = DragDropEffects.Copy;
             }
         }
-
+        /// <summary>
+        /// Method that is called to check whether a drag can be initiated or not.
+        /// </summary>
+        /// <param name="dragInfo"></param>
+        /// <returns></returns>
         public bool CanStartDrag(IDragInfo dragInfo)
         {
             if (dragInfo != null)  return true;
             else  return false; 
         }
-
+        /// <summary>
+        /// This method is called if a drag is cancelled.
+        /// </summary>
         public void DragCancelled()
         {
             IsDragging = false;
@@ -185,14 +198,22 @@ namespace TuneMusix.ViewModel
 
         public bool TryCatchOccurredException(Exception exception)
         {
-            throw new NotImplementedException();
+            Logger.LogException(exception);
+            return true;
         }
-
+        /// <summary>
+        /// Method gets called when the drag has endet and the element was successfully dropped.
+        /// </summary>
+        /// <param name="dropInfo"></param>
         public void Dropped(IDropInfo dropInfo)
         {
             IsDragging = false;
         }
-
+        /// <summary>
+        /// Method gets repeatedly called when an item is dragged over the element that is a
+        /// accepted droptarget.
+        /// </summary>
+        /// <param name="dropInfo"></param>
         public void DragOver(IDropInfo dropInfo)
         {
             dropInfo.NotHandled = true;
