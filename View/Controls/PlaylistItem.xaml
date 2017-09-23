@@ -12,11 +12,6 @@
         <Expander >
             <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                                       Margin="10" HorizontalContentAlignment="Stretch">
-                <ListView.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem Command="{Binding RemoveFromPlaylist}" Header="Remove"/>
-                    </ContextMenu>
-                </ListView.ContextMenu>
                 <ListView.View>
                     <GridView AllowsColumnReorder="false"  ColumnHeaderToolTip="Track Information">
                         <GridViewColumn DisplayMemberBinding= "{Binding Title}"  Header="Title" Width="auto"/>

@@ -45,6 +45,12 @@
                              dd:DragDrop.IsDragSource="True" dd:DragDrop.DragAdornerTemplate="{StaticResource PlaylistDragAdorner}"
                              dd:DragDrop.IsDropTarget="True"
                              SelectionMode="Single" SelectedItem="{Binding SelectedPlaylist}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <ListView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Play" Command="{Binding SetPlaylistCurrent}"/>
+                                <MenuItem Header="Delete" Command="{Binding DeletePlaylist}"/>
+                            </ContextMenu>
+                        </ListView.ContextMenu>
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <DockPanel LastChildFill="True">

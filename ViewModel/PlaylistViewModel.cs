@@ -24,8 +24,9 @@ namespace TuneMusix.ViewModel
 
         public RelayCommand OpenDialog { get; set; }
         public RelayCommand SelectionChanged { get; set; }
-        public RelayCommand PlaylistDropped { get; set; }
         public RelayCommand SelectPlaylist { get; set; }
+        public RelayCommand SetPlaylistCurrent { get; set; }
+        public RelayCommand DeletePlaylist { get; set; }
 
         public ObservableCollection<Track> SelectedTracks { get; set; }
         private Playlist _selectedPlaylist;
@@ -34,17 +35,17 @@ namespace TuneMusix.ViewModel
         public PlaylistViewModel()
         {
             SelectedTracks = new ObservableCollection<Track>();
-            SelectionChanged = new RelayCommand(selectionChanged);
-            OpenDialog = new RelayCommand(openDialog);                    
-            PlaylistDropped = new RelayCommand(playlistDropped);
-            SelectPlaylist = new RelayCommand(selectPlaylist);
+            OpenDialog = new RelayCommand(_openDialog);                    
+            SelectPlaylist = new RelayCommand(_selectPlaylist);
+            SetPlaylistCurrent = new RelayCommand(_setPlaylistCurrent);
+            DeletePlaylist = new RelayCommand(_deletePlaylist);
 
             //events
             dataModel.DataModelChanged += OnDataModelChanged;
             
         }
 
-        private void selectPlaylist(object argument)
+        private void _selectPlaylist(object argument)
         {
             var playlist = argument as Playlist;
             if(playlist != null)
@@ -72,7 +73,7 @@ namespace TuneMusix.ViewModel
         /// Open the dialog for adding a playlist.
         /// </summary>
         /// <param name="o"></param>
-        private async void openDialog(object o)
+        private async void _openDialog(object o)
         {
             var view = new AddPlaylistDialog
             {
@@ -120,20 +121,34 @@ namespace TuneMusix.ViewModel
 
         }
 
-        private void selectionChanged(object argument)
+        private void _setPlaylistCurrent(object argument)
         {
-            //implement
-        }
-        
-
-        private void playlistDropped(object argument)
-        {
-            if(argument != null)
+            if (SelectedPlaylist != null)
             {
-            Console.WriteLine("Dropped type:" + argument.GetType().ToString());
+                dataModel.CurrentPlaylist = SelectedPlaylist;
             }
         }
 
+        private void _deletePlaylist(object argument)
+        {
+            if (SelectedPlaylist != null)
+            {
+                if (CurrentPlaylist != null)
+                {
+                    if (CurrentPlaylist == SelectedPlaylist)
+                    {
+                        CurrentPlaylist = null;
+                    }
+                }
+                dataModel.Delete(SelectedPlaylist);
+                SelectedPlaylist = null;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dragInfo"></param>
         public void StartDrag(IDragInfo dragInfo)
         {
 
@@ -146,29 +161,21 @@ namespace TuneMusix.ViewModel
 
         public bool CanStartDrag(IDragInfo dragInfo)
         {
-            if (dragInfo != null)
-            {
-                Console.WriteLine("Can Drag");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Can not Drag");
-                return false;
-            }
-        }
-
-        public void Dropped(IDropInfo dropInfo)
-        {
-            throw new NotImplementedException();
+            if (dragInfo != null)  return true;
+            else  return false; 
         }
 
         public void DragCancelled()
         {
-            Console.WriteLine("Drag was Cancelled!");
+            
         }
 
         public bool TryCatchOccurredException(Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dropped(IDropInfo dropInfo)
         {
             throw new NotImplementedException();
         }
