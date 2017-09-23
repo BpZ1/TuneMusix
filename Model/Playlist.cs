@@ -21,29 +21,32 @@ namespace TuneMusix.Model
         {
             this.Name = name;
             this._id = ID;
+            Tracklist = new ObservableCollection<Track>();
         }
         //Constructor-------
         public Playlist(string name,Track track,long ID)
         {
             this.Name = name;
             this._id = ID;
+            Tracklist = new ObservableCollection<Track>();
             if (track != null)
             {
                 Tracklist.Add(track);
-            }           
+            }
         }
         //Constructor-------
         public Playlist(string name,List<Track> tracks,long ID)
         {
             this.Name = name;
             this._id = ID;
+            Tracklist = new ObservableCollection<Track>();
             foreach (Track track in tracks)
             {
                 if (track != null)
                 {
                     Tracklist.Add(track);
                 }
-            }
+            }          
         }
 
         //Getter and setter

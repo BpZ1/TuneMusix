@@ -66,21 +66,13 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         private void addToPlaylist(object argument)
         {
-            Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            var textBox = argument as TextBox;
-            string idstring = textBox.Text;
-            long? id = long.Parse(idstring);
-            if (id != null)
+            Playlist selectedPlaylist = argument as Playlist;
+
+            if (selectedPlaylist != null)
             {
-                Console.WriteLine("----------------------------------- ID: " + id);
-                foreach (Playlist playlist in Playlists)
-                {
-                    if (id == playlist.ID)
-                    {
-                        dataModel.AddTracksToPlaylist(SelectedTracks.ToList<Track>(), playlist);
-                    }
-                }
+                dataModel.AddTracksToPlaylist(SelectedTracks.ToList<Track>(),selectedPlaylist);
             }
+         
         }
 
         public void selectionChanged(object argument)
