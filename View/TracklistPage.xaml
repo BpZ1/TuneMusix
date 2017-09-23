@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
+      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
       xmlns:local="clr-namespace:TuneMusix.View"
       mc:Ignorable="d" 
       d:DesignHeight="623" d:DesignWidth="1195"
@@ -23,7 +24,7 @@
         <vm:TracklistViewModel x:Key="TracklistViewModel"/>
     </Page.Resources>
     <ListView Name="AllTrackList" ItemsSource="{Binding TrackList}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    Margin="10">
+              Margin="10" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseDoubleClick">
                 <i:InvokeCommandAction Command="{Binding PlayTrack}"  CommandParameter="{Binding ElementName=AllTrackList}"/>

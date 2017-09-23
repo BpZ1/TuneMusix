@@ -154,7 +154,6 @@
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />
     <Compile Include="ViewModel\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\TracklistViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelListBase.cs" />
     <Compile Include="ViewModel\ViewModelMainEvents.cs" />
     <Compile Include="ViewModel\ViewModelMainMenuMethods.cs" />
     <Compile Include="View\CurrentPlaylistPage.xaml.cs">

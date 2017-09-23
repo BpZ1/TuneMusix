@@ -17,7 +17,7 @@ using TuneMusix.ViewModel.Dialog;
 
 namespace TuneMusix.ViewModel
 {
-    class PlaylistViewModel : ViewModelListBase, IDragSource
+    class PlaylistViewModel : ViewModelBase, IDragSource
     {
 
         DataModel dataModel = DataModel.Instance;
@@ -59,7 +59,6 @@ namespace TuneMusix.ViewModel
             set
             {
                 this._selectedPlaylist = value;
-                Console.WriteLine("Selected Playlist: " + _selectedPlaylist.Name);
                 RaisePropertyChanged("SelectedPlaylist");
             }
         }
@@ -129,7 +128,10 @@ namespace TuneMusix.ViewModel
 
         private void playlistDropped(object argument)
         {
+            if(argument != null)
+            {
             Console.WriteLine("Dropped type:" + argument.GetType().ToString());
+            }
         }
 
         public void StartDrag(IDragInfo dragInfo)
@@ -144,7 +146,6 @@ namespace TuneMusix.ViewModel
 
         public bool CanStartDrag(IDragInfo dragInfo)
         {
-            Console.WriteLine("Can I drag?");
             if (dragInfo != null)
             {
                 Console.WriteLine("Can Drag");

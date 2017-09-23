@@ -63,7 +63,10 @@ namespace TuneMusix.Data.DataModelOb
             {
                 this._trackQueue = value;
                 this.QueueIndex = 0;
-                CurrentTrack = value.First();
+                if (value.Count > 0)
+                {
+                    CurrentTrack = value.First();
+                }            
                 OnTrackQueueChanged();
             }
         }

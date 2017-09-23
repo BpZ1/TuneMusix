@@ -52,7 +52,6 @@ namespace TuneMusix.ViewModel
 
         private void removeFromCurrentPlaylist(object argument)
         {
-            Console.WriteLine("TEST11111111");
             if (SelectedTracks != null && dataModel.CurrentPlaylist != null)
             {
                 dataModel.RemoveTracksFromPlaylist(SelectedTracks.ToList<Track>(), dataModel.CurrentPlaylist);
@@ -61,7 +60,6 @@ namespace TuneMusix.ViewModel
 
         private void newIndex(object argument)
         {
-            Console.WriteLine("TEST!!!!!!");
             if (SelectedTracks != null && CurrentPlaylist != null)
             {
                 var track = SelectedTracks.First();
@@ -80,10 +78,11 @@ namespace TuneMusix.ViewModel
 
         public void DragOver(IDropInfo dropInfo)
         {
-            Expander sourceItem = dropInfo.Data as Expander;
-            CurrentPlaylistViewModel targetItem = dropInfo.TargetItem as CurrentPlaylistViewModel;
-            if (sourceItem != null && targetItem != null)
+            dropInfo.NotHandled = true;
+            Playlist sourceItem = dropInfo.Data as Playlist;
+            if (sourceItem != null)
             {
+                Console.WriteLine("Dragging: " + sourceItem.Name );
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
                 dropInfo.Effects = DragDropEffects.Copy;
             }
@@ -91,11 +90,9 @@ namespace TuneMusix.ViewModel
 
         public void Drop(IDropInfo dropInfo)
         {
-            Console.WriteLine("+#############################################+");
-            Console.WriteLine("Type of drop: " + dropInfo.Data.GetType().ToString());
-            Expander sourceItem = dropInfo.Data as Expander;
-            CurrentPlaylistViewModel targetItem = dropInfo.TargetItem as CurrentPlaylistViewModel;
-            dataModel.CurrentPlaylist = sourceItem.DataContext as Playlist;
+            Console.WriteLine("DROPPED");
+            Playlist playlist = dropInfo.Data as Playlist;
+            dataModel.CurrentPlaylist = playlist;
         }
 
         public string CurrentPlaylistName

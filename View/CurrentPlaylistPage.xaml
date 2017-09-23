@@ -21,12 +21,17 @@
       Background="{DynamicResource MaterialDesignPaper}"
       FontFamily="{DynamicResource MaterialDesignFont}"   
       Title="CurrentPlaylistPage"
-      dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
-      AllowDrop="True">
+      >
     <Page.Resources>
         <vm:CurrentPlaylistViewModel x:Key="CurrentPlaylistViewModel"/>        
     </Page.Resources>
-    <DockPanel LastChildFill="True"  Margin="10,10,0,0" >
+    <DockPanel LastChildFill="True"  Margin="10,10,0,0"  dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
+                Background="Transparent" AllowDrop="True" >
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="PreviewDrop">
+                <i:InvokeCommandAction Command="{Binding TestMethod}"  CommandParameter="{Binding ElementName=AllTrackList}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
         <Label DockPanel.Dock="Top" x:Name="label" Content="{Binding CurrentPlaylistName}" FontSize="18.667" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <ListView DockPanel.Dock="Bottom" x:Name="AllTrackList" ItemsSource="{Binding CurrentPlaylistTracks}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                     Margin="10">

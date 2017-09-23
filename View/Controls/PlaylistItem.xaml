@@ -28,11 +28,11 @@
                             <TextBlock DockPanel.Dock="Left" Margin="8 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"
                                    FontSize="16"/>
                         </Label>
-                       
+
                         <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignToolForegroundButton}"
                                     Command="{x:Static materialDesign:Flipper.FlipCommand}"
                                     HorizontalAlignment="Right">
-                               <materialDesign:PackIcon Kind="ArrowRight" HorizontalAlignment="Right" VerticalAlignment="Stretch" />
+                            <materialDesign:PackIcon Kind="ArrowRight" HorizontalAlignment="Right" VerticalAlignment="Stretch" />
                         </Button>
                     </DockPanel>
                 </materialDesign:ColorZone>
