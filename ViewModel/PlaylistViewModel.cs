@@ -17,7 +17,7 @@ using TuneMusix.ViewModel.Dialog;
 
 namespace TuneMusix.ViewModel
 {
-    class PlaylistViewModel : ViewModelBase, IDragSource
+    class PlaylistViewModel : ViewModelBase, IDragSource,IDropTarget
     {
 
         DataModel dataModel = DataModel.Instance;
@@ -29,11 +29,15 @@ namespace TuneMusix.ViewModel
         public RelayCommand DeletePlaylist { get; set; }
 
         public ObservableCollection<Track> SelectedTracks { get; set; }
+        private bool _isDragging;
+
         private Playlist _selectedPlaylist;
 
         //constructor
         public PlaylistViewModel()
         {
+            IsDragging = false;
+
             SelectedTracks = new ObservableCollection<Track>();
             OpenDialog = new RelayCommand(_openDialog);                    
             SelectPlaylist = new RelayCommand(_selectPlaylist);
@@ -61,6 +65,15 @@ namespace TuneMusix.ViewModel
             {
                 this._selectedPlaylist = value;
                 RaisePropertyChanged("SelectedPlaylist");
+            }
+        }
+        public bool IsDragging
+        {
+            get { return this._isDragging; }
+            set
+            {
+                this._isDragging = value;
+                RaisePropertyChanged("IsDragging");
             }
         }
 
@@ -146,12 +159,12 @@ namespace TuneMusix.ViewModel
         }
 
         /// <summary>
-        /// 
+        /// Gets called when the drag is started and sets the dragging boolean.
         /// </summary>
         /// <param name="dragInfo"></param>
         public void StartDrag(IDragInfo dragInfo)
         {
-
+            IsDragging = true;
             if (SelectedPlaylist != null)
             {
                 dragInfo.Data = dragInfo.SourceItem;
@@ -167,7 +180,7 @@ namespace TuneMusix.ViewModel
 
         public void DragCancelled()
         {
-            
+            IsDragging = false;
         }
 
         public bool TryCatchOccurredException(Exception exception)
@@ -177,7 +190,29 @@ namespace TuneMusix.ViewModel
 
         public void Dropped(IDropInfo dropInfo)
         {
-            throw new NotImplementedException();
+            IsDragging = false;
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.NotHandled = true;
+            Playlist sourceItem = dropInfo.Data as Playlist;
+            if (sourceItem != null)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                dropInfo.Effects = DragDropEffects.Copy;
+            }
+        }
+        /// <summary>
+        /// Is called if the drag ended over a valid dragtarget.
+        /// </summary>
+        /// <param name="dropInfo"></param>
+        public void Drop(IDropInfo dropInfo)
+        {
+            if (dropInfo.VisualTarget.GetType() == typeof(System.Windows.Controls.Button))
+            {
+                _deletePlaylist(null);
+            }
         }
     }
 }

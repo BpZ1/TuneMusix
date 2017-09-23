@@ -27,6 +27,7 @@
                 <TextBlock Text="{Binding Name}" HorizontalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
     <DockPanel x:Name="CurrentPlaylistField">
         <materialDesign:DialogHost Grid.Column="1" Grid.Row="1" Identifier="DialogHost">
@@ -43,7 +44,7 @@
                     </materialDesign:ColorZone>
                     <ListView ScrollViewer.CanContentScroll="True" Grid.Row="1" ItemsSource="{Binding Playlists}" 
                              dd:DragDrop.IsDragSource="True" dd:DragDrop.DragAdornerTemplate="{StaticResource PlaylistDragAdorner}"
-                             dd:DragDrop.IsDropTarget="True"
+                             dd:DragDrop.IsDropTarget="True" dd:DragDrop.DragHandler="{Binding}"
                              SelectionMode="Single" SelectedItem="{Binding SelectedPlaylist}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                         <ListView.ContextMenu>
                             <ContextMenu>
@@ -61,14 +62,20 @@
 
                     </ListView>
 
-                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"                                
                                     Command="{Binding OpenDialog}"
                                     VerticalAlignment="Bottom" HorizontalAlignment="Right" 
-                                    Grid.Row="0" Margin="0 0 28 -20">
+                                    Grid.Row="0" Margin="0 0 28 -20" Visibility="{Binding Path=!IsDragging, Converter={StaticResource BoolToVis}}">
                         <Viewbox Width="22" Height="22">
-                            <Canvas Width="24" Height="24">
-                                <Path Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}" />
-                            </Canvas>
+                            <materialDesign:PackIcon Kind="Plus" />
+                        </Viewbox>
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}"                                
+                                    Command="{Binding OpenDialog}" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
+                                    VerticalAlignment="Bottom" HorizontalAlignment="Right" 
+                                    Grid.Row="0" Margin="0 0 28 -20" Visibility="{Binding Path=IsDragging, Converter={StaticResource BoolToVis}}">
+                        <Viewbox Width="22" Height="22">
+                            <materialDesign:PackIcon Kind="Delete" />
                         </Viewbox>
                     </Button>
                 </Grid>
