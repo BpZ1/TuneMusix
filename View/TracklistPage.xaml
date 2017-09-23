@@ -36,15 +36,13 @@
             <ContextMenu>
                 <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
                 <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
-                    
-                    <MenuItem.ItemTemplate>
-                        <DataTemplate>
-                            <MenuItem  Header="{Binding Path=Name}" Command="{Binding Source={StaticResource TracklistViewModel}, Path=AddToPlaylist}" CommandParameter="{Binding ElementName=PlaylistID}" RenderTransformOrigin="0.5,0.5">
-                                <TextBlock x:Name="PlaylistID" Visibility="Hidden" Text="{Binding Path=ID}"></TextBlock>
-                            </MenuItem>
-                        </DataTemplate>
-                    </MenuItem.ItemTemplate>
-                   
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=MenuItem}, Path=DataContext.AddToPlaylist}" />
+                            <Setter Property="CommandParameter" Value="{Binding}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
                 </MenuItem>
                 <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete"/>
             </ContextMenu>
