@@ -7,71 +7,28 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              >
-    <UserControl.Resources>
-        <ResourceDictionary >
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Card.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.CheckBox.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Flipper.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    <Grid Margin="4">
-        <materialDesign:Flipper Style="{StaticResource MaterialDesignCardFlipper}" Margin="4,4,0,1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
-                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  >
-            <materialDesign:Flipper.FrontContent>
-                <materialDesign:ColorZone Mode="PrimaryDark" Padding="6" VerticalAlignment="Stretch">
-                    <DockPanel>
-                        <Label HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Foreground="White">
-                            <TextBlock DockPanel.Dock="Left" Margin="8 0 0 0" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Path=Name}"
-                                   FontSize="16"/>
-                        </Label>
+    <Grid>
 
-                        <Button DockPanel.Dock="Right" Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                    Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                                    HorizontalAlignment="Right">
-                            <materialDesign:PackIcon Kind="ArrowRight" HorizontalAlignment="Right" VerticalAlignment="Stretch" />
-                        </Button>
-                    </DockPanel>
-                </materialDesign:ColorZone>
-            </materialDesign:Flipper.FrontContent>
-            <materialDesign:Flipper.BackContent>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <materialDesign:ColorZone Mode="PrimaryLight"  Padding="6" VerticalAlignment="Stretch">
-                        <StackPanel Orientation="Horizontal">
-                            <Button Style="{StaticResource MaterialDesignToolForegroundButton}"
-                                    Command="{x:Static materialDesign:Flipper.FlipCommand}"
-                                    HorizontalAlignment="Left">
-                                <materialDesign:PackIcon Kind="ArrowLeft" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                            </Button>
-                            <TextBlock Margin="8 0 0 0" VerticalAlignment="Center" Text="{Binding Path=Name}" FontSize="16"/>
-                        </StackPanel>
-                    </materialDesign:ColorZone>
-                    <Grid Grid.Row="1" Margin="0 6 0 0" HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                  Margin="10" HorizontalContentAlignment="Stretch">
-                            <ListView.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="{Binding RemoveFromPlaylist}" Header="Remove"/>
-                                </ContextMenu>
-                            </ListView.ContextMenu>
-                            <ListView.View>
-                                <GridView AllowsColumnReorder="false"  ColumnHeaderToolTip="Track Information">
-                                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="auto"/>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="auto"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
-                </Grid>
-            </materialDesign:Flipper.BackContent>
-        </materialDesign:Flipper>
+        <Expander >
+            <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                      Margin="10" HorizontalContentAlignment="Stretch">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding RemoveFromPlaylist}" Header="Remove"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+                <ListView.View>
+                    <GridView AllowsColumnReorder="false"  ColumnHeaderToolTip="Track Information">
+                        <GridViewColumn DisplayMemberBinding= "{Binding Title}"  Header="Title" Width="auto"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Interpret}" Header="Interpret" Width="auto"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Expander>
+      
+        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
+            <Label Content="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+        </materialDesign:ColorZone>
     </Grid>
-        
+
 </UserControl>

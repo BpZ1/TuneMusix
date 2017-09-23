@@ -47,7 +47,10 @@ namespace TuneMusix.Data.DataModelOb
             set
             {
                 this._currentPlaylist = value;
-                TrackQueue = value.Tracklist.ToList<Track>();
+                if(value != null)
+                {
+                    TrackQueue = value.Tracklist.ToList<Track>();
+                }            
                 OnCurrentPlaylistChanged();
             }
         }

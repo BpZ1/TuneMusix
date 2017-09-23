@@ -82,7 +82,6 @@ namespace TuneMusix.ViewModel
             Playlist sourceItem = dropInfo.Data as Playlist;
             if (sourceItem != null)
             {
-                Console.WriteLine("Dragging: " + sourceItem.Name );
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
                 dropInfo.Effects = DragDropEffects.Copy;
             }
@@ -90,7 +89,6 @@ namespace TuneMusix.ViewModel
 
         public void Drop(IDropInfo dropInfo)
         {
-            Console.WriteLine("DROPPED");
             Playlist playlist = dropInfo.Data as Playlist;
             dataModel.CurrentPlaylist = playlist;
         }

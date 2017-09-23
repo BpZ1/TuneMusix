@@ -45,7 +45,9 @@ namespace TuneMusix.ViewModel
         {
             if (SelectedTracks == null) return;
             if (SelectedTracks.Count > 0)
-            { 
+            {
+                CurrentPlaylist = null;
+                Console.WriteLine("Count: " + SelectedTracks.Count);
                 TrackQueue = SelectedTracks.ToList<Track>();
             }
         }
@@ -71,8 +73,7 @@ namespace TuneMusix.ViewModel
             if (selectedPlaylist != null)
             {
                 dataModel.AddTracksToPlaylist(SelectedTracks.ToList<Track>(),selectedPlaylist);
-            }
-         
+            }        
         }
 
         public void selectionChanged(object argument)
@@ -81,13 +82,13 @@ namespace TuneMusix.ViewModel
             if (listView == null) return;
 
             SelectedTracks.Clear();
-            dataModel.SelectedFolder = null;
             foreach (Track track in listView.SelectedItems)
             {
-                dataModel.SelectedFolder = null;
                 SelectedTracks.Add(track);
             }
-
         }
+
+
+
     }
 }
