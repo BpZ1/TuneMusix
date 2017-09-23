@@ -76,7 +76,9 @@ namespace TuneMusix.ViewModel
         {
             if (SelectedTrack != null)
             {
-                dataModel.CurrentTrack = SelectedTrack;
+                List<Track> templist = new List<Track>();
+                templist.Add(SelectedTrack);
+                TrackQueue = templist;
             }                
         }
 

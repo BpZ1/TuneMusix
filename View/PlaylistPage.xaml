@@ -65,7 +65,7 @@
                     <Button Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"                                
                                     Command="{Binding OpenDialog}"
                                     VerticalAlignment="Bottom" HorizontalAlignment="Right" 
-                                    Grid.Row="0" Margin="0 0 28 -20" Visibility="{Binding Path=!IsDragging, Converter={StaticResource BoolToVis}}">
+                                    Grid.Row="0" Margin="0 0 28 -20">
                         <Viewbox Width="22" Height="22">
                             <materialDesign:PackIcon Kind="Plus" />
                         </Viewbox>

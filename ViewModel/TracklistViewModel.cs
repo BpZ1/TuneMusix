@@ -47,7 +47,6 @@ namespace TuneMusix.ViewModel
             if (SelectedTracks.Count > 0)
             {
                 CurrentPlaylist = null;
-                Console.WriteLine("Count: " + SelectedTracks.Count);
                 TrackQueue = SelectedTracks.ToList<Track>();
             }
         }

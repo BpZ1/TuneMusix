@@ -139,6 +139,7 @@
     <Compile Include="Data\SQLDatabase\SQLManagerDeletion.cs" />
     <Compile Include="Data\SQLDatabase\SQLManagerInsertion.cs" />
     <Compile Include="Data\SQLDatabase\SQLManagerSelection.cs" />
+    <Compile Include="Helpers\DialogService.cs" />
     <Compile Include="Helpers\Exceptions\ClassNotInitializedException.cs" />
     <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
     <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
@@ -146,6 +147,9 @@
     <Compile Include="Helpers\MediaPlayer\AudioPlayerImpl.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayer.cs" />
+    <Compile Include="Helpers\TextFormatService.cs" />
+    <Compile Include="ViewModel\Dialog\NotificationDialog.cs" />
+    <Compile Include="ViewModel\Dialog\WarningDialog.cs" />
     <Compile Include="Model\PlaylistTrack.cs" />
     <Compile Include="ViewModel\CurrentPlaylistViewModel.cs" />
     <Compile Include="ViewModel\Dialog\AddPlaylistViewModel.cs" />
@@ -161,6 +165,9 @@
     </Compile>
     <Compile Include="View\Dialog\AddPlaylistDialog.xaml.cs">
       <DependentUpon>AddPlaylistDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\WarningDialogWindow.xaml.cs">
+      <DependentUpon>WarningDialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FolderPage.xaml.cs">
       <DependentUpon>FolderPage.xaml</DependentUpon>
@@ -182,6 +189,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Dialog\AddPlaylistDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\WarningDialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

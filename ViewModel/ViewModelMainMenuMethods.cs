@@ -17,7 +17,7 @@ namespace TuneMusix.ViewModel
         /// Opens a File Dialog to select Audio Files
         /// </summary>
         /// <param name="parameter"></param>
-        private void getFiles(object parameter)
+        private void _getFiles(object parameter)
         {
             var ofd = new WinForms.OpenFileDialog();
             ofd.Title = "File Browser";
@@ -41,7 +41,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        public void exitApplication(object argument)
+        public void _exitApplication(object argument)
         {
             loader = new SQLLoader();
             loader.SaveOptions();
@@ -52,8 +52,9 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        public void debugMethod(object argument)
+        public void _debugMethod(object argument)
         {
+  
 
         }
 
@@ -61,7 +62,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        public void addFolder(object argument)
+        public void _addFolder(object argument)
         {
             var folderbrowser = new WinForms.FolderBrowserDialog();
 

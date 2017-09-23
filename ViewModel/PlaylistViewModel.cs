@@ -92,7 +92,7 @@ namespace TuneMusix.ViewModel
             {
                 DataContext = new AddPlaylistViewModel()
             };
-
+           
             //show the dialog
             var result = await DialogHost.Show(view, "DialogHost", OpenedEventHandler, ClosingEventHandler);
 

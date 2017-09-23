@@ -28,6 +28,7 @@
     <Window.Resources>
         <vm:ViewModelMain x:Key="ViewModelMain"/>
     </Window.Resources>
+    <Grid>
     <DockPanel>
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -85,6 +86,7 @@
                 <Frame Source="FolderPage.xaml"/>
             </TabItem>
         </dragablz:TabablzControl>
-
     </DockPanel>
+    <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}"/>
+    </Grid>
 </Window>

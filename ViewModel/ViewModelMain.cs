@@ -4,6 +4,8 @@ using TuneMusix.Model;
 using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Data.DataModelOb;
+using System.Threading.Tasks;
+using MaterialDesignThemes.Wpf;
 
 namespace TuneMusix.ViewModel
 {
@@ -20,6 +22,8 @@ namespace TuneMusix.ViewModel
         Options options = Options.Instance;
         SQLLoader loader;
 
+        public static SnackbarMessageQueue MessageQueue { get; set; }
+
         //constructor
         public ViewModelMain()
         {
@@ -27,14 +31,24 @@ namespace TuneMusix.ViewModel
             loader = new SQLLoader();
             loader.LoadFromDB();
 
+            MessageQueue = new SnackbarMessageQueue();
             dataModel.DataModelChanged += RootFoldersChanged;
 
             //Relaycommands
-            GetFiles = new RelayCommand(getFiles);
-            AddFolder = new RelayCommand(addFolder);
-            DebugMethod = new RelayCommand(debugMethod);
-            ExitApplication = new RelayCommand(exitApplication);       
+            GetFiles = new RelayCommand(_getFiles);
+            AddFolder = new RelayCommand(_addFolder);
+            DebugMethod = new RelayCommand(_debugMethod);
+            ExitApplication = new RelayCommand(_exitApplication);       
         }
+
+
+        private static void Notification(string message)
+        {
+            //the message queue can be called from any thread
+            Task.Factory.StartNew(() => MessageQueue.Enqueue(message));
+        }
+
+
 
         //Getter and setter    
         public string CurrentPlaylistName
