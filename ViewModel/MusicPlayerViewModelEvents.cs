@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Timers;
 using System.Windows.Controls;
 
@@ -45,6 +46,7 @@ namespace TuneMusix.ViewModel
         {
             RaisePropertyChanged("TrackLoaded");
             RaisePropertyChanged("Length");
+            Console.WriteLine("Current track changed");
             RaisePropertyChanged("CurrentTrackName");     
             RaisePropertyChanged("CurrentPosition");
             RaisePropertyChanged("PlayButtonIcon");           
@@ -74,6 +76,10 @@ namespace TuneMusix.ViewModel
         private void _onCurrentPlaylistChanged(object source,object newPlaylist)
         {
             RaisePropertyChanged("CurrentPlaylistName");
+        }
+        private void _onCurrentTrackChanged(object source,object newPlaylist)
+        {
+            RaisePropertyChanged("CurrentTrackName");
         }
         /// <summary>
         /// Gets called when the user has started manipulating the position slider.

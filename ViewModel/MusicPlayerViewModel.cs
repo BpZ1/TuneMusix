@@ -52,6 +52,7 @@ namespace TuneMusix.ViewModel
             audioControls.Stopped += OnStopped;
             audioControls.Paused += OnPaused;
             dataModel.CurrentPlaylistChanged += _onCurrentPlaylistChanged;
+            dataModel.CurrentTrackChanged += _onCurrentTrackChanged;
         }
 
         //Getter and setter  
