@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" FontSize="18.667" TextAlignment="Center">New playlist:</TextBlock>
         <TextBox Text="{Binding TextBoxText}" Grid.Row="1" Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                 Margin="0 8 0 0"
+                 Margin="0 8 0 0"  MaxLength="50"
                  FontSize="16"
                  />
         <Grid Grid.Row="2">

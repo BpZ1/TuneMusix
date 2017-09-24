@@ -36,8 +36,8 @@ namespace TuneMusix.Helpers
             {
                 IDCounter++;
                 DataModel dm = DataModel.Instance;
-                dm.SaveOptions();
-                return IDCounter - 1;
+                dm.SaveOptions(IDCounter);
+                return IDCounter-1;
             }
             throw new ClassNotInitializedException("IDGenerator can only be used after it was initialized.");
         }

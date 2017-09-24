@@ -119,18 +119,15 @@ namespace TuneMusix.ViewModel
 
             //chancel the closing
             eventArgs.Cancel();
-            Console.WriteLine("Before added");
             var content = eventArgs.Session.Content as AddPlaylistDialog;
             eventArgs.Session.UpdateContent(new AddPlaylistDialog());
             var dataContext = content.DataContext as AddPlaylistViewModel;
             if (dataContext != null)
-            {
-                dataModel.AddPlaylist(dataContext.TextBoxText);
+            {     
+                dataModel.AddPlaylist(dataContext.TextBoxText);       
             }
-            Console.WriteLine("After added");
             Task.Factory.StartNew(()=>{}).ContinueWith((t, _) => eventArgs.Session.Close(false), null,
                          TaskScheduler.FromCurrentSynchronizationContext());
-            Console.WriteLine("closed");
 
         }
 
