@@ -17,6 +17,7 @@ namespace TuneMusix.Model
         private long _folderID;
         private string _name;
         private string _url;
+        public bool IsModified { get; set; }
         public Folder Container { get; set; }
         private ObservableCollection<Folder> _folderlist;
         private ObservableCollection<Track> _tracklist;
@@ -118,11 +119,11 @@ namespace TuneMusix.Model
                 if (value != null && value.Length > 0)
                 {
                     this._name = value;
+                    IsModified = true;
                     OnFolderChanged();
                 }
                 else
                 {
-                    //---Need new Exception or maybe no exception
                     throw new InvalidOperationException("Name of a Folder has to be longer then 0");
                 }
             }
@@ -140,6 +141,7 @@ namespace TuneMusix.Model
                     throw new ArgumentNullException("URL mustn't be null.");
                 }
                 this._url = value;
+                IsModified = true;
                 OnFolderChanged();
             }
         }
@@ -153,6 +155,7 @@ namespace TuneMusix.Model
             set
             {
                 _folderID = value;
+                IsModified = true;
                 OnFolderChanged();
             }
         }

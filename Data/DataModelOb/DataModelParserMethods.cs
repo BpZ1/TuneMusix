@@ -44,6 +44,7 @@ namespace TuneMusix.Data.DataModelOb
                     Track mp3 = fileParser.GetAudioData(url);
                     if (mp3 != null)
                     {
+                        mp3.IsModified = false;
                         TrackList.Add(mp3);
                         Tracklist.Add(mp3);
                         OnDataModelChanged();
@@ -84,6 +85,7 @@ namespace TuneMusix.Data.DataModelOb
                 FileParser fileParser = new FileParser();
                 Folder folder = fileParser.GetFolderData(url);
                 folder.FolderID = 1;
+                folder.IsModified = false;
                 AddRootFolder(folder);
                 //Show Popup that the folder was added (a small popup on the side?)
                 if (IsRootFolder && SubFolder != null)

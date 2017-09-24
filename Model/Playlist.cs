@@ -14,6 +14,7 @@ namespace TuneMusix.Model
     {
         private long _id;
         private string _name;
+        public bool IsModified { get; set; }
         public ObservableCollection<Track> Tracklist { get; set; }
 
         //Constructor-------
@@ -62,7 +63,7 @@ namespace TuneMusix.Model
                 else
                 {
                     this._name = value;
-
+                    IsModified = true;
                 }
              }
         }

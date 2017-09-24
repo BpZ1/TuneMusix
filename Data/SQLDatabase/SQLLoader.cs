@@ -58,11 +58,13 @@ namespace TuneMusix.Data.SQLDatabase
             dataModel.AddPlaylistsDB(DBmanager.GetPlaylists());          
             foreach (Playlist playlist in dataModel.Playlists)
             {
+                playlist.IsModified = false;
                 List<PlaylistTrack> playlistTracks = DBmanager.GetPlaylistTracks(playlist);
                 foreach (PlaylistTrack pt in playlistTracks)
                 {
                     foreach (Track track in dataModel.TrackList)
                     {
+                        track.IsModified = false;
                         if (track.ID == pt.TrackID)
                         {
                             dataModel.AddTrackToPlaylistDB(track,playlist);
@@ -80,6 +82,7 @@ namespace TuneMusix.Data.SQLDatabase
             List<Folder> templist = FolderList;
             foreach (Folder a in templist)
             {
+                a.IsModified = false;
                 foreach (Folder b in templist)
                 {
                     if (a.ID == b.FolderID)

@@ -19,6 +19,7 @@ namespace TuneMusix.Model
         private string _comm;
         private string _genre;
         private int _rating;
+        public bool IsModified { get; set; }
         public Folder Container { get; set; }
 
         /// <summary>
@@ -67,51 +68,6 @@ namespace TuneMusix.Model
             }
         }
 
-        public double getMarkerTime(int MarkerNum)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getMarkerName(int MarkerNum)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getAttributeName(int lIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getItemInfo(string bstrItemName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void setItemInfo(string bstrItemName, string bstrVal)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string getItemInfoByAtom(int lAtom)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isMemberOf(IWMPPlaylist pPlaylist)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool isReadOnlyItem(string bstrItemName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool get_isIdentical(IWMPMedia pIWMPMedia)
-        {
-            throw new NotImplementedException();
-        }
-
         //getter and setter
         public long ID
         {
@@ -123,6 +79,7 @@ namespace TuneMusix.Model
             set
             {
                 _folderID = value;
+                IsModified = true;
                 OnTrackChanged();
             }
         }
@@ -141,12 +98,12 @@ namespace TuneMusix.Model
                 if (value != null)
                 {
                     URL = value;
+                    IsModified = true;
                     OnTrackChanged();
                 }
                 throw new ArgumentNullException("URL can't be null");
             }
         }
-
         public string Title
         {
             get
@@ -160,6 +117,7 @@ namespace TuneMusix.Model
             set
             {
                 this._title = value;
+                IsModified = true;
                 OnTrackChanged();
             }
         }
@@ -176,6 +134,7 @@ namespace TuneMusix.Model
             set
             {
                 this._interpret = value;
+                IsModified = true;
                 OnTrackChanged();
             }
         }
@@ -192,6 +151,7 @@ namespace TuneMusix.Model
             set
             {
                 this._album = value;
+                IsModified = true;
                 OnTrackChanged();
             }
         }
@@ -204,6 +164,7 @@ namespace TuneMusix.Model
             set
             {
                 this._year = value;
+                IsModified = true;
                 OnTrackChanged();
             }
         }
@@ -220,6 +181,7 @@ namespace TuneMusix.Model
             set
             {
                 this._comm = value;
+                IsModified = true;
                 OnTrackChanged();
             }
         }
@@ -237,9 +199,11 @@ namespace TuneMusix.Model
             {
 
                 this._genre = value;
+                IsModified = true;
                 OnTrackChanged();
             }
         }
+
         public int Rating
         {
             get
@@ -249,6 +213,7 @@ namespace TuneMusix.Model
             set
             {
                 this._rating = value;
+                IsModified = true;
                 OnTrackChanged();
             }
         }
