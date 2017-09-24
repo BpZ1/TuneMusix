@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Threading;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using WMPLib;
@@ -10,7 +13,7 @@ namespace TuneMusix.Model
     /// <summary>
     /// Class for the Playlist model containing a list of tracks
     /// </summary>
-    public class Playlist
+    public class Playlist : INotifyPropertyChanged
     {
         private long _id;
         private string _name;
@@ -63,6 +66,7 @@ namespace TuneMusix.Model
                 else
                 {
                     this._name = value;
+                    RaisePropertyChanged("Name");
                     IsModified = true;
                 }
              }
@@ -84,7 +88,7 @@ namespace TuneMusix.Model
             {             
                 Tracklist.Add(track);             
             }
-    
+            RaisePropertyChanged("Tracklist");
         }
 
         /// <summary>
@@ -94,7 +98,37 @@ namespace TuneMusix.Model
         public void AddTrack(Track track)
         {
             this.Tracklist.Add(track);
+            RaisePropertyChanged("Tracklist");
         }
-   
+
+
+
+        internal void RaisePropertyChanged(string prop)
+        {
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        bool? _CloseWindowFlag;
+        public bool? CloseWindowFlag
+        {
+            get { return _CloseWindowFlag; }
+            set
+            {
+                _CloseWindowFlag = value;
+                RaisePropertyChanged("CloseWindowFlag");
+            }
+        }
+
+        public virtual void CloseWindow(bool? result = true)
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                CloseWindowFlag = CloseWindowFlag == null
+                    ? true
+                    : !CloseWindowFlag;
+            }));
+        }
     }
 }

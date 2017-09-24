@@ -49,6 +49,7 @@
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Play" Command="{Binding SetPlaylistCurrent}"/>
+                                <MenuItem Header="Rename" Command="{Binding RenamePlaylistDialog}"/>
                                 <MenuItem Header="Delete" Command="{Binding DeletePlaylist}"/>
                             </ContextMenu>
                         </ListView.ContextMenu>

@@ -27,6 +27,7 @@ namespace TuneMusix.ViewModel
         public RelayCommand SelectPlaylist { get; set; }
         public RelayCommand SetPlaylistCurrent { get; set; }
         public RelayCommand DeletePlaylist { get; set; }
+        public RelayCommand RenamePlaylistDialog { get; set; }
 
         public ObservableCollection<Track> SelectedTracks { get; set; }
         private bool _isDragging;
@@ -39,10 +40,11 @@ namespace TuneMusix.ViewModel
             IsDragging = false;
 
             SelectedTracks = new ObservableCollection<Track>();
-            OpenDialog = new RelayCommand(_openDialog);                    
+            OpenDialog = new RelayCommand(_newPlaylistDialog);                    
             SelectPlaylist = new RelayCommand(_selectPlaylist);
             SetPlaylistCurrent = new RelayCommand(_setPlaylistCurrent);
             DeletePlaylist = new RelayCommand(_deletePlaylist);
+            RenamePlaylistDialog = new RelayCommand(_renamePlaylistDialog);
 
             //events
             dataModel.DataModelChanged += OnDataModelChanged;
@@ -76,7 +78,6 @@ namespace TuneMusix.ViewModel
             set
             {
                 this._isDragging = value;
-                Console.WriteLine("IsDragging is: ---------------- " + value);
                 RaisePropertyChanged("IsDragging");
             }
         }
@@ -85,23 +86,63 @@ namespace TuneMusix.ViewModel
         {
             RaisePropertyChanged("Playlists");
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="argument"></param>
+        private async void _renamePlaylistDialog(object argument)
+        {
+            var view = new GetTextDialog
+            {
+                DataContext = new GetTextViewModel("New name:")
+            };
+
+            var result = await DialogHost.Show(view,"DialogHost",OpenedEventHandler, _renamePlaylistDialogClosingHandler);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eventArgs"></param>
+        private void _renamePlaylistDialogClosingHandler(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return;
+
+            //chancel the closing
+            eventArgs.Cancel();
+            var content = eventArgs.Session.Content as GetTextDialog;
+            eventArgs.Session.UpdateContent(new GetTextDialog());
+            var dataContext = content.DataContext as GetTextViewModel;
+            if (dataContext != null)
+            {
+                if (dataContext.TextBoxText.Count<char>() >= 2)
+                {
+                    SelectedPlaylist.Name = dataContext.TextBoxText;
+                }
+                else
+                {
+                    DialogService.NotificationMessage("The name has to be longer than two characters.");
+                }
+            }
+            Task.Factory.StartNew(() => { }).ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                         TaskScheduler.FromCurrentSynchronizationContext());
+            RaisePropertyChanged("Playlists");
+        }
+
 
         /// <summary>
         /// Open the dialog for adding a playlist.
         /// </summary>
-        /// <param name="o"></param>
-        private async void _openDialog(object o)
+        /// <param name="argument"></param>
+        private async void _newPlaylistDialog(object argument)
         {
             var view = new GetTextDialog
             {
-                DataContext = new GetTextViewModel("New Playlist")
+                DataContext = new GetTextViewModel("New playlist")
             };
          
             //show the dialog
-            var result = await DialogHost.Show(view, "DialogHost", OpenedEventHandler, ClosingEventHandler);
-
-            //check the result...
-            Console.WriteLine("Dialog was closed, the CommandParameter used to close it was: " + (result ?? "NULL"));
+            var result = await DialogHost.Show(view, "DialogHost", OpenedEventHandler, _playlistDialogClosingHandler);
         }
         /// <summary>
         /// Intercept the open and affect the dialog using eventArgs.Session.
@@ -117,7 +158,7 @@ namespace TuneMusix.ViewModel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void ClosingEventHandler(object sender, DialogClosingEventArgs eventArgs)
+        private void _playlistDialogClosingHandler(object sender, DialogClosingEventArgs eventArgs)
         {
             if ((bool)eventArgs.Parameter == false) return;
 

@@ -6,12 +6,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
+using System.Windows.Threading;
 using TuneMusix.Helpers;
 
 namespace TuneMusix.Model
 {
-    public class Folder
+    public class Folder : INotifyPropertyChanged
     {
         private long _id;
         private long _folderID;
@@ -84,6 +86,7 @@ namespace TuneMusix.Model
         public void InsertFolder(Folder folder)
         {
             Folderlist.Add(folder);
+            RaisePropertyChanged("Folderlist");
             folder.Container = this;
         }
 
@@ -97,6 +100,7 @@ namespace TuneMusix.Model
                     _tracklist.Add(track);
                     track.FolderID = this.ID;
                     track.Container = this;
+                    RaisePropertyChanged("Tracklist");
                     OnFolderChanged();
                     return true;
                 }
@@ -120,6 +124,7 @@ namespace TuneMusix.Model
                 {
                     this._name = value;
                     IsModified = true;
+                    RaisePropertyChanged("Name");
                     OnFolderChanged();
                 }
                 else
@@ -141,6 +146,7 @@ namespace TuneMusix.Model
                     throw new ArgumentNullException("URL mustn't be null.");
                 }
                 this._url = value;
+                RaisePropertyChanged("URL");
                 IsModified = true;
                 OnFolderChanged();
             }
@@ -156,6 +162,7 @@ namespace TuneMusix.Model
             {
                 _folderID = value;
                 IsModified = true;
+                RaisePropertyChanged("FolderID");
                 OnFolderChanged();
             }
         }
@@ -192,5 +199,33 @@ namespace TuneMusix.Model
             }
         }
 
+
+        internal void RaisePropertyChanged(string prop)
+        {
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        bool? _CloseWindowFlag;
+        public bool? CloseWindowFlag
+        {
+            get { return _CloseWindowFlag; }
+            set
+            {
+                _CloseWindowFlag = value;
+                RaisePropertyChanged("CloseWindowFlag");
+            }
+        }
+
+        public virtual void CloseWindow(bool? result = true)
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                CloseWindowFlag = CloseWindowFlag == null
+                    ? true
+                    : !CloseWindowFlag;
+            }));
+        }
     }
 }

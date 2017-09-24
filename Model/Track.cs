@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WMPLib;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace TuneMusix.Model
 {
-    public class Track :IDisposable
+    public class Track :IDisposable, INotifyPropertyChanged
     {
         private long _id;
         private long _folderID;
@@ -80,6 +82,7 @@ namespace TuneMusix.Model
             {
                 _folderID = value;
                 IsModified = true;
+                RaisePropertyChanged("FolderID");
                 OnTrackChanged();
             }
         }
@@ -99,6 +102,7 @@ namespace TuneMusix.Model
                 {
                     URL = value;
                     IsModified = true;
+                    RaisePropertyChanged("sourceURL");
                     OnTrackChanged();
                 }
                 throw new ArgumentNullException("URL can't be null");
@@ -119,6 +123,8 @@ namespace TuneMusix.Model
                 this._title = value;
                 IsModified = true;
                 OnTrackChanged();
+                RaisePropertyChanged("Title");
+                RaisePropertyChanged("Name");
             }
         }
         public string Interpret
@@ -135,6 +141,8 @@ namespace TuneMusix.Model
             {
                 this._interpret = value;
                 IsModified = true;
+                RaisePropertyChanged("Interpret");
+                RaisePropertyChanged("Name");
                 OnTrackChanged();
             }
         }
@@ -152,6 +160,7 @@ namespace TuneMusix.Model
             {
                 this._album = value;
                 IsModified = true;
+                RaisePropertyChanged("Album");
                 OnTrackChanged();
             }
         }
@@ -165,6 +174,7 @@ namespace TuneMusix.Model
             {
                 this._year = value;
                 IsModified = true;
+                RaisePropertyChanged("Album");
                 OnTrackChanged();
             }
         }
@@ -182,6 +192,7 @@ namespace TuneMusix.Model
             {
                 this._comm = value;
                 IsModified = true;
+                RaisePropertyChanged("Comm");
                 OnTrackChanged();
             }
         }
@@ -200,6 +211,7 @@ namespace TuneMusix.Model
 
                 this._genre = value;
                 IsModified = true;
+                RaisePropertyChanged("Genre");
                 OnTrackChanged();
             }
         }
@@ -214,6 +226,7 @@ namespace TuneMusix.Model
             {
                 this._rating = value;
                 IsModified = true;
+                RaisePropertyChanged("Rating");
                 OnTrackChanged();
             }
         }
@@ -228,6 +241,35 @@ namespace TuneMusix.Model
                 return this.Interpret + " - " + this.Title;
             }
         }
-       
+
+
+
+        internal void RaisePropertyChanged(string prop)
+        {
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        bool? _CloseWindowFlag;
+        public bool? CloseWindowFlag
+        {
+            get { return _CloseWindowFlag; }
+            set
+            {
+                _CloseWindowFlag = value;
+                RaisePropertyChanged("CloseWindowFlag");
+            }
+        }
+
+        public virtual void CloseWindow(bool? result = true)
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                CloseWindowFlag = CloseWindowFlag == null
+                    ? true
+                    : !CloseWindowFlag;
+            }));
+        }
     }
 }

@@ -28,7 +28,7 @@
     <DockPanel LastChildFill="True"  Margin="10,10,0,0"  dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
                 Background="Transparent" AllowDrop="True" >
         <Label DockPanel.Dock="Top" x:Name="label" Content="{Binding CurrentPlaylistName}" FontSize="18.667" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <ListView DockPanel.Dock="Bottom" x:Name="AllTrackList" ItemsSource="{Binding CurrentPlaylistTracks}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+        <ListView DockPanel.Dock="Bottom" x:Name="AllTrackList" ItemsSource="{Binding CurrentPlaylistTracks,UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                     Margin="10">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">

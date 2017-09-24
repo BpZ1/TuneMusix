@@ -1,10 +1,15 @@
-﻿namespace TuneMusix.Model
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Threading;
+
+namespace TuneMusix.Model
 {
     /// <summary>
     /// This class contains all properties that are needed in more parts of the program
     /// and have to be saved to the database.
     /// </summary>
-    public class Options
+    public class Options : INotifyPropertyChanged
     {
         private static Options instance;
 
@@ -115,7 +120,33 @@
         }
 
 
+        internal void RaisePropertyChanged(string prop)
+        {
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+        }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        bool? _CloseWindowFlag;
+        public bool? CloseWindowFlag
+        {
+            get { return _CloseWindowFlag; }
+            set
+            {
+                _CloseWindowFlag = value;
+                RaisePropertyChanged("CloseWindowFlag");
+            }
+        }
+
+        public virtual void CloseWindow(bool? result = true)
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                CloseWindowFlag = CloseWindowFlag == null
+                    ? true
+                    : !CloseWindowFlag;
+            }));
+        }
 
     }
 }
