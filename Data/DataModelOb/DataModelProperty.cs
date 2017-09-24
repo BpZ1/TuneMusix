@@ -25,11 +25,8 @@ namespace TuneMusix.Data.DataModelOb
             get { return this._CurrentTrack; }
             set
             {
-                if (this._CurrentTrack != value)
-                {
-                    this._CurrentTrack = value;
-                    OnCurrentTrackChanged();
-                }
+                this._CurrentTrack = value;
+                OnCurrentTrackChanged();
             }
         }
         public ObservableCollection<Playlist> Playlists
@@ -69,7 +66,11 @@ namespace TuneMusix.Data.DataModelOb
                 if (value.Count > 0)
                 {
                     CurrentTrack = value.First();
-                }            
+                }
+                else
+                {
+                    CurrentTrack = null;
+                }
                 OnTrackQueueChanged();
             }
         }
