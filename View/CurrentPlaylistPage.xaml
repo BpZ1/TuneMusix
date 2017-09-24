@@ -51,6 +51,13 @@
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Album}" Header="Album" Width="auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="auto"/>
+                    <GridViewColumn Header="Rating" Width="Auto">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <materialDesign:RatingBar Value="{Binding Rating,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Foreground="Gold" Margin="0" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
