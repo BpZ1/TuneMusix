@@ -65,6 +65,11 @@ namespace TuneMusix.ViewModel
             }
         }
 
+        public void OnCurrentPlaylistChanged(object source,object newPlaylist)
+        {
+            RaisePropertyChanged("CurrentPlaylistName");
+        }
+
         public void leftMouseDown_Slider(object sender)
         {
             Dragging = true;

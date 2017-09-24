@@ -27,7 +27,7 @@ namespace TuneMusix.Helpers
             try
             {
                 if (url == null) return null;
-                Track track = new Track(url,IDgen.GetID());
+                Track track = new Track(url, IDGenerator.GetID());
                 byte[] b = new byte[128];
 
 
@@ -68,7 +68,7 @@ namespace TuneMusix.Helpers
         {
             //Add new root Folder
             string[] URLs = URL.Split('\\');
-            Folder root = new Folder(URLs.Last(), URL, IDgen.GetID());
+            Folder root = new Folder(URLs.Last(), URL, IDGenerator.GetID());
 
             string[] files = Directory.GetFiles(URL);
             string[] dirs = Directory.GetDirectories(URL);

@@ -43,8 +43,7 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void _exitApplication(object argument)
         {
-            loader = new SQLLoader();
-            loader.SaveOptions();
+            dataModel.SaveOptions();
             audioControls.Dispose();
             System.Windows.Application.Current.Shutdown();
         }
