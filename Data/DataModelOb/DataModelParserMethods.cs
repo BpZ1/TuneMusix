@@ -13,10 +13,8 @@ using TuneMusix.Model;
 namespace TuneMusix.Data.DataModelOb
 {
     /// <summary>
-    /// 
     /// Contains all Methods that call the parser to
     /// create the initial data.
-    /// 
     /// </summary>
     public partial class DataModel
     {
@@ -27,6 +25,8 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="urls"></param>
         public void AddTracksFromFileURLs(List<string> urls)
         {
+            int addedCounter = 0;
+            int notAddedCounter = 0;
             List<Track> Tracklist = new List<Track>();
             foreach (string url in urls)
             {
@@ -36,6 +36,7 @@ namespace TuneMusix.Data.DataModelOb
                     if (track.sourceURL.Equals(url))
                     {
                         contained = true;
+                        notAddedCounter++;
                     }
                 }
                 if (!contained)
@@ -44,6 +45,7 @@ namespace TuneMusix.Data.DataModelOb
                     Track mp3 = fileParser.GetAudioData(url);
                     if (mp3 != null)
                     {
+                        addedCounter++;
                         mp3.IsModified = false;
                         TrackList.Add(mp3);
                         Tracklist.Add(mp3);
@@ -52,6 +54,11 @@ namespace TuneMusix.Data.DataModelOb
                 }
             }
             DBManager.AddAll(Tracklist);
+            DialogService.NotificationMessage(addedCounter + " tracks have been added.");
+            if (notAddedCounter > 0)
+            {
+                DialogService.NotificationMessage(notAddedCounter + "could not be added because they already exist.");
+            }
         }
 
         /// <summary>

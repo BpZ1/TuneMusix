@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
+using TuneMusix.Model;
 using WinForms = System.Windows.Forms;
 
 namespace TuneMusix.ViewModel
@@ -33,12 +36,61 @@ namespace TuneMusix.ViewModel
             }
         }
 
+        private void _openOptionsWindow(object argument)
+        {
+            DialogService.WarnMessage("Not yet implemented","");
+        }
+
+        private void _saveData(object argument)
+        {
+            int count = 0;
+            List<Track> saveTracks = new List<Track>();
+            List<Folder> saveFolders = dataModel.GetAllFolders(true);
+            List<Playlist> savePlaylists = new List<Playlist>();
+            SQLManager dbManager = new SQLManager();
+            //get modified tracks from the datamodel
+            foreach (Track track in dataModel.TrackList)
+            {
+                if (track.IsModified)
+                {
+                    saveTracks.Add(track);
+                    track.IsModified = false;
+                    count++;
+                }
+                
+            }
+            foreach(Playlist playlist in dataModel.Playlists)
+            {
+                if (playlist.IsModified)
+                {
+                    dbManager.AddPlaylist(playlist);
+                    playlist.IsModified = false;
+                    count++;
+                }
+            }      
+            dbManager.AddAll(saveTracks);
+            dbManager.AddAll(saveFolders);
+            count += saveFolders.Count;
+            foreach(Track t in saveTracks)
+            {
+                Console.WriteLine(t.Rating);
+            }
+            if (count > 0)
+            {
+            DialogService.NotificationMessage(count + " files have been saved.");
+            }
+            Debug.WriteLine("Modified files have been saved.");
+        }
+
         /// <summary>
         /// Gets called when the exit button is pressed or the window is closed.
         /// </summary>
         /// <param name="argument"></param>
         public void _exitApplication(object argument)
         {
+            //Ask if data should be saved.
+
+
             //options have to be saved as they are not always saved as they are changed.
             dataModel.SaveOptions(IDGenerator.IDCounter);
             //audiControl has to be disposed to end playing of music.

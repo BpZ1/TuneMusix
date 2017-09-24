@@ -16,6 +16,8 @@ namespace TuneMusix.ViewModel
         public RelayCommand DeleteTracks { get; set; }
         public RelayCommand ExitApplication { get; set; }
         public RelayCommand DebugMethod { get; set; }  
+        public RelayCommand OpenOptionsWindow { get; set; }
+        public RelayCommand SaveData { get; set; }
 
         DataModel dataModel = DataModel.Instance;
         AudioControls audioControls = AudioControls.Instance;
@@ -38,7 +40,9 @@ namespace TuneMusix.ViewModel
             GetFiles = new RelayCommand(_getFiles);
             AddFolder = new RelayCommand(_addFolder);
             DebugMethod = new RelayCommand(_debugMethod);
-            ExitApplication = new RelayCommand(_exitApplication);       
+            ExitApplication = new RelayCommand(_exitApplication);
+            SaveData = new RelayCommand(_saveData);
+            OpenOptionsWindow = new RelayCommand(_openOptionsWindow);      
         }
 
 
