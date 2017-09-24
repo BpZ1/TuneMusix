@@ -56,7 +56,13 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <DockPanel LastChildFill="True">
-                                    <controls:PlaylistItem DockPanel.Dock="Left" Width="Auto"/>
+                                    <controls:PlaylistItem DockPanel.Dock="Left" Width="Auto">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDoubleClick">
+                                                <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ListView}}, Path=DataContext.SetPlaylistCurrent}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </controls:PlaylistItem>
                                 </DockPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>

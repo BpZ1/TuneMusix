@@ -81,8 +81,9 @@ namespace TuneMusix.Helpers
                 {
                     Track mp3 = GetAudioData(url);
                     if(mp3 != null)
-                    {
+                    {                       
                         root.AddTrack(mp3);
+                        mp3.IsModified = false;
                     }               
                 }
             }
@@ -92,6 +93,7 @@ namespace TuneMusix.Helpers
                 //Add subfolder to root folder
                 Folder fold = GetFolderData(dir);
                 root.AddFolder(fold);
+                fold.IsModified = false;
             }
             DataModel.Instance.SaveOptions(IDGenerator.IDCounter);      
             return root;

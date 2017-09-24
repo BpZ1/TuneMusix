@@ -67,6 +67,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="url"></param>
         public void AddFolderFromFileURL(string url)
         {
+            int trackCount = TrackList.Count;
             bool IsSubFolder = false;
             bool IsRootFolder = false;
             Folder SubFolder = null;
@@ -91,9 +92,9 @@ namespace TuneMusix.Data.DataModelOb
             {
                 FileParser fileParser = new FileParser();
                 Folder folder = fileParser.GetFolderData(url);
-                folder.FolderID = 1;
-                folder.IsModified = false;
+                folder.FolderID = 1;                
                 AddRootFolder(folder);
+                folder.IsModified = false;
                 //Show Popup that the folder was added (a small popup on the side?)
                 if (IsRootFolder && SubFolder != null)
                 {
@@ -102,9 +103,12 @@ namespace TuneMusix.Data.DataModelOb
                     //Show Popup that the folder was added and is root to another (a small popup on the side?)
                     // RootFolders.Remove(RootFolder);
                     //folder.AddFolder(RootFolder);        Parse only the data that is not already in the database later?        
-                    OnDataModelChanged();
+                    OnDataModelChanged();                 
                 }
+                DialogService.NotificationMessage(TrackList.Count - trackCount + " tracks have been added.");
             }
         }
+      
+
     }
 }
