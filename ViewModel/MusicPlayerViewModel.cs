@@ -12,9 +12,9 @@ namespace TuneMusix.ViewModel
 {
     partial class MusicPlayerViewModel : ViewModelBase
     {
-        DataModel dataModel = DataModel.Instance;
-        Options options = Options.Instance;
-        AudioControls audioControls = AudioControls.Instance;
+        private DataModel dataModel = DataModel.Instance;
+        private Options options = Options.Instance;
+        private AudioControls audioControls = AudioControls.Instance;
 
         public RelayCommand LeftMouseDown_Slider { get; set; }
         public RelayCommand LeftMouseUp_Slider { get; set; }
@@ -25,33 +25,33 @@ namespace TuneMusix.ViewModel
 
         private double _currentPosition;
         private string _playButtonIcon;
-        private const string playIcon = "PlayCircleOutline";
-        private const string pauseIcon = "PauseCircleOutline";
-        private Timer timer;
-        private bool Dragging;
+        private const string _playIcon = "PlayCircleOutline";
+        private const string _pauseIcon = "PauseCircleOutline";
+        private Timer _timer;
+        private bool _dragging;
 
         //Constructor
         public MusicPlayerViewModel()
         {
-            Dragging = false;
-            timer = new Timer(100);
-            PlayButtonIcon = playIcon;
+            _dragging = false;
+            _timer = new Timer(100);
+            PlayButtonIcon = _playIcon;
 
             //RelayCommands
-            LeftMouseDown_Slider = new RelayCommand(leftMouseDown_Slider);
-            LeftMouseUp_Slider = new RelayCommand(leftMouseUp_Slider);
-            PlayButton = new RelayCommand(playButton);
-            NextTrack = new RelayCommand(nextTrack);
-            PreviousTrack = new RelayCommand(previousTrack);
-            RepeatButton = new RelayCommand(onRepeatButtonClicked);
+            LeftMouseDown_Slider = new RelayCommand(_leftMouseDown_Slider);
+            LeftMouseUp_Slider = new RelayCommand(_leftMouseUp_Slider);
+            PlayButton = new RelayCommand(_playButton);
+            NextTrack = new RelayCommand(_nextTrack);
+            PreviousTrack = new RelayCommand(_previousTrack);
+            RepeatButton = new RelayCommand(_onRepeatButtonClicked);
 
             //Events
-            timer.Elapsed += OnTimeElapsed;
+            _timer.Elapsed += OnTimeElapsed;
             audioControls.TrackChanged += OnTrackChanged;
             audioControls.Playing += OnPlaying;
             audioControls.Stopped += OnStopped;
             audioControls.Paused += OnPaused;
-            dataModel.CurrentPlaylistChanged += OnCurrentPlaylistChanged;
+            dataModel.CurrentPlaylistChanged += _onCurrentPlaylistChanged;
         }
 
         //Getter and setter  
@@ -61,7 +61,7 @@ namespace TuneMusix.ViewModel
             {
                 if (audioControls.IsPlaying)
                 {
-                    _playButtonIcon = pauseIcon;
+                    _playButtonIcon = _pauseIcon;
                 }
                 return _playButtonIcon;        
             }
@@ -111,7 +111,9 @@ namespace TuneMusix.ViewModel
                 }
             }
         }
-
+        /// <summary>
+        /// Returns true if the current AudioPlayer is not null.
+        /// </summary>
         public bool TrackLoaded
         {
             get
@@ -120,6 +122,9 @@ namespace TuneMusix.ViewModel
             }
         }
 
+        /// <summary>
+        /// Changes the balance for playback (not yet implemented!).
+        /// </summary>
         public int Balance
         {
             set { } //Implement
@@ -128,6 +133,9 @@ namespace TuneMusix.ViewModel
         {
             get { return true; } //Implement
         }
+        /// <summary>
+        /// Returns the length of the currently loaded track.
+        /// </summary>
         public double Length
         {
             get

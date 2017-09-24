@@ -148,7 +148,6 @@
     <Compile Include="Helpers\IDGenerator.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayer.cs" />
     <Compile Include="Helpers\TextFormatService.cs" />
-    <Compile Include="ViewModel\Dialog\NotificationDialog.cs" />
     <Compile Include="ViewModel\Dialog\WarningDialog.cs" />
     <Compile Include="Model\PlaylistTrack.cs" />
     <Compile Include="ViewModel\CurrentPlaylistViewModel.cs" />

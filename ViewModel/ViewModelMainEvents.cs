@@ -13,7 +13,7 @@ namespace TuneMusix.ViewModel
 {
     partial class ViewModelMain
     {
-       public void RootFoldersChanged(object source,object obj)
+       private void _onRootFoldersChanged(object source,object obj)
        {
             RaisePropertyChanged("TrackList");
        }

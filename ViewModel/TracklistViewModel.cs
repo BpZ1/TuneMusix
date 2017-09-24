@@ -26,10 +26,10 @@ namespace TuneMusix.ViewModel
             SelectedTracks = new ObservableCollection<Track>();
 
 
-            DeleteSelectedTracks = new RelayCommand(deleteSelectedTracks);
-            AddToPlaylist = new RelayCommand(addToPlaylist);
-            SelectionChanged = new RelayCommand(selectionChanged);
-            PlayTrack = new RelayCommand(playTrack);
+            DeleteSelectedTracks = new RelayCommand(_deleteSelectedTracks);
+            AddToPlaylist = new RelayCommand(_addToPlaylist);
+            SelectionChanged = new RelayCommand(_selectionChanged);
+            PlayTrack = new RelayCommand(_playTrack);
 
             //events
             dataModel.DataModelChanged += OnTrackListChanged;
@@ -41,7 +41,7 @@ namespace TuneMusix.ViewModel
             RaisePropertyChanged("TrackList");
         }
 
-        public void playTrack(object argument)
+        private void _playTrack(object argument)
         {
             if (SelectedTracks == null) return;
             if (SelectedTracks.Count > 0)
@@ -56,7 +56,7 @@ namespace TuneMusix.ViewModel
         /// Deletes all selected tracks from the tracklist.
         /// </summary>
         /// <param name="argument"></param>
-        private void deleteSelectedTracks(object argument)
+        private void _deleteSelectedTracks(object argument)
         {
             dataModel.Delete(SelectedTracks.ToList<Track>());
         }
@@ -65,7 +65,7 @@ namespace TuneMusix.ViewModel
         /// Adds all selected tracks to the playlist with the given id.
         /// </summary>
         /// <param name="argument"></param>
-        private void addToPlaylist(object argument)
+        private void _addToPlaylist(object argument)
         {
             Playlist selectedPlaylist = argument as Playlist;
 
@@ -75,7 +75,7 @@ namespace TuneMusix.ViewModel
             }        
         }
 
-        public void selectionChanged(object argument)
+        private void _selectionChanged(object argument)
         {
             var listView = argument as ListView;
             if (listView == null) return;

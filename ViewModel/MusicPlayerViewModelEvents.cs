@@ -4,14 +4,20 @@ using System.Windows.Controls;
 
 namespace TuneMusix.ViewModel
 {
+    /// <summary>
+    /// DataContext of the MusicPlayer page.
+    /// </summary>
     partial class MusicPlayerViewModel
     {
-
-        public void playButton(object argument)
+        /// <summary>
+        /// Gets called when the playbutton is pressed.
+        /// </summary>
+        /// <param name="argument"></param>
+        public void _playButton(object argument)
         {
             if (audioControls.IsPlaying)
             {
-                timer.Stop();
+                _timer.Stop();
                 audioControls.Pause();
                 RaisePropertyChanged("PlayButtonIcon");
             }
@@ -24,15 +30,15 @@ namespace TuneMusix.ViewModel
 
         private void OnPlaying(object source)
         {
-            PlayButtonIcon = pauseIcon;           
+            PlayButtonIcon = _pauseIcon;           
         }
         private void OnPaused(object source)
         {
-            PlayButtonIcon = playIcon;
+            PlayButtonIcon = _playIcon;
         }
         private void OnStopped(object source)
         {
-            PlayButtonIcon = playIcon;
+            PlayButtonIcon = _playIcon;
         }
 
         private void OnTrackChanged(object e)
@@ -42,7 +48,7 @@ namespace TuneMusix.ViewModel
             RaisePropertyChanged("CurrentTrackName");     
             RaisePropertyChanged("CurrentPosition");
             RaisePropertyChanged("PlayButtonIcon");           
-            timer.Start();
+            _timer.Start();
         }
         /// <summary>
         /// This method gets called every time the time set in the
@@ -52,7 +58,7 @@ namespace TuneMusix.ViewModel
         /// <param name="e"></param>
         public void OnTimeElapsed(object sender, ElapsedEventArgs e)
         {
-            if (!Dragging)
+            if (!_dragging)
             {
                 try
                 {
@@ -65,19 +71,25 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        public void OnCurrentPlaylistChanged(object source,object newPlaylist)
+        private void _onCurrentPlaylistChanged(object source,object newPlaylist)
         {
             RaisePropertyChanged("CurrentPlaylistName");
         }
-
-        public void leftMouseDown_Slider(object sender)
+        /// <summary>
+        /// Gets called when the user has started manipulating the position slider.
+        /// </summary>
+        /// <param name="sender"></param>
+        public void _leftMouseDown_Slider(object sender)
         {
-            Dragging = true;
+            _dragging = true;
         }
-
-        public void leftMouseUp_Slider(object sender)
+        /// <summary>
+        /// Gets called when the user has finished manipulating the position slider.
+        /// </summary>
+        /// <param name="sender"></param>
+        public void _leftMouseUp_Slider(object sender)
         {
-            Dragging = false;
+            _dragging = false;
             var slider = sender as Slider;
             CurrentPosition = slider.Value;
         }
@@ -92,7 +104,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        private void nextTrack(object argument)
+        private void _nextTrack(object argument)
         {
             audioControls.PlayNext();
         }
@@ -100,7 +112,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        private void previousTrack(object argument)
+        private void _previousTrack(object argument)
         {
             audioControls.PlayPrevious();
         }
@@ -108,7 +120,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        private void onRepeatButtonClicked(object argument)
+        private void _onRepeatButtonClicked(object argument)
         {
             if (RepeatTrack+1 > 2)
             {

@@ -24,20 +24,20 @@ namespace TuneMusix.ViewModel
         {
             dataModel = DataModel.Instance;
 
-            DeleteSelected = new RelayCommand(deleteSelected);
-            PlayTrack = new RelayCommand(playTrack);
-            SelectedItemChanged = new RelayCommand(selectedItemChanged);
+            DeleteSelected = new RelayCommand(_deleteSelected);
+            PlayTrack = new RelayCommand(_playTrack);
+            SelectedItemChanged = new RelayCommand(_selectedItemChanged);
 
             //events
-            dataModel.DataModelChanged += OnRootlistChanged;
+            dataModel.DataModelChanged += _onRootlistChanged;
         }
         //method gets called whenever rootfolders in the datamodel change.
-        public void OnRootlistChanged(object source,object obj)
+        public void _onRootlistChanged(object source,object obj)
         {
             RaisePropertyChanged("RootFolders");
         }
 
-        private void deleteSelected(object argument)
+        private void _deleteSelected(object argument)
         {
             if (SelectedFolder != null)
             {
@@ -55,7 +55,7 @@ namespace TuneMusix.ViewModel
         /// changes the selected items in the datamodel.
         /// </summary>
         /// <param name="argument"></param>
-        private void selectedItemChanged(object argument)
+        private void _selectedItemChanged(object argument)
         {
             if (argument != null)
             {
@@ -72,7 +72,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void playTrack(object argument)
+        private void _playTrack(object argument)
         {
             if (SelectedTrack != null)
             {

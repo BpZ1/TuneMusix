@@ -13,6 +13,9 @@ using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
 {
+    /// <summary>
+    /// This class is the datacontext for the page that displays the tracks of the current playlist.
+    /// </summary>
     class CurrentPlaylistViewModel : ViewModelBase, IDropTarget
     {
 
@@ -29,15 +32,18 @@ namespace TuneMusix.ViewModel
         {
 
             SelectedTracks = new ObservableCollection<Track>();
-            SelectionChanged = new RelayCommand(selectionChangedCurrentPlaylist);
-            SetPlaylistIndex = new RelayCommand(newIndex);
-            RemoveFromPlaylist = new RelayCommand(removeFromCurrentPlaylist);
+            SelectionChanged = new RelayCommand(_selectionChanged);
+            SetPlaylistIndex = new RelayCommand(_indexChanged);
+            RemoveFromPlaylist = new RelayCommand(_removeFromCurrentPlaylist);
 
-            dataModel.CurrentPlaylistChanged += OnCurrentPlaylistChanged;
+            dataModel.CurrentPlaylistChanged += _onCurrentPlaylistChanged;
         }
 
-
-        private void selectionChangedCurrentPlaylist(object argument)
+        /// <summary>
+        /// Changes the selection of the playlist.
+        /// </summary>
+        /// <param name="argument"></param>
+        private void _selectionChanged(object argument)
         {
             var listView = argument as ListView;
             if (listView != null)
@@ -50,15 +56,18 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void removeFromCurrentPlaylist(object argument)
+        private void _removeFromCurrentPlaylist(object argument)
         {
             if (SelectedTracks != null && dataModel.CurrentPlaylist != null)
             {
                 dataModel.RemoveTracksFromPlaylist(SelectedTracks.ToList<Track>(), dataModel.CurrentPlaylist);
             }
         }
-
-        private void newIndex(object argument)
+        /// <summary>
+        /// This method changes the index of the trackqueue to the currently selected track.
+        /// </summary>
+        /// <param name="argument"></param>
+        private void _indexChanged(object argument)
         {
             if (SelectedTracks != null && CurrentPlaylist != null)
             {
@@ -68,14 +77,14 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void OnCurrentPlaylistChanged(object source, object newPlaylist)
+        private void _onCurrentPlaylistChanged(object source, object newPlaylist)
         {
             RaisePropertyChanged("CurrentPlaylistName");
             RaisePropertyChanged("CurrentPlaylistTracks");
             SelectedTracks.Clear();
         }
 
-
+        //drag and drop methods
         public void DragOver(IDropInfo dropInfo)
         {
             dropInfo.NotHandled = true;
@@ -93,6 +102,8 @@ namespace TuneMusix.ViewModel
             dataModel.CurrentPlaylist = playlist;
         }
 
+
+        //setter and getter
         public string CurrentPlaylistName
         {
             get
@@ -107,7 +118,6 @@ namespace TuneMusix.ViewModel
                 }
             }
         }
-
         public ObservableCollection<Track> CurrentPlaylistTracks
         {
             get

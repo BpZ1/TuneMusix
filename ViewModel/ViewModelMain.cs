@@ -32,7 +32,7 @@ namespace TuneMusix.ViewModel
             loader.LoadFromDB();
 
             MessageQueue = new SnackbarMessageQueue();
-            dataModel.DataModelChanged += RootFoldersChanged;
+            dataModel.DataModelChanged += _onRootFoldersChanged;
 
             //Relaycommands
             GetFiles = new RelayCommand(_getFiles);

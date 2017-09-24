@@ -10,6 +10,9 @@ using TuneMusix.View.Dialog;
 
 namespace TuneMusix.ViewModel.Dialog
 {
+    /// <summary>
+    /// ViewModel and therefore datacontext for the warning dialog.
+    /// </summary>
     class WarningDialog
     {
         public string Header { get; set; }

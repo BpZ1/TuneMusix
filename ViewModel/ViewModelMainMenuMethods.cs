@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using TuneMusix.Data;
-using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
-using TuneMusix.Model;
 using WinForms = System.Windows.Forms;
 
 namespace TuneMusix.ViewModel
@@ -38,17 +34,19 @@ namespace TuneMusix.ViewModel
         }
 
         /// <summary>
-        /// 
+        /// Gets called when the exit button is pressed or the window is closed.
         /// </summary>
         /// <param name="argument"></param>
         public void _exitApplication(object argument)
         {
+            //options have to be saved as they are not always saved as they are changed.
             dataModel.SaveOptions(IDGenerator.IDCounter);
+            //audiControl has to be disposed to end playing of music.
             audioControls.Dispose();
             System.Windows.Application.Current.Shutdown();
         }
         /// <summary>
-        /// 
+        /// Method used for debugging.
         /// </summary>
         /// <param name="argument"></param>
         public void _debugMethod(object argument)
@@ -58,7 +56,7 @@ namespace TuneMusix.ViewModel
         }
 
         /// <summary>
-        /// 
+        /// Adds the folder via the selected URL to the datamodel and database.
         /// </summary>
         /// <param name="argument"></param>
         public void _addFolder(object argument)

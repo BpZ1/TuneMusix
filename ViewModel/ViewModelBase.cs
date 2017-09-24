@@ -74,7 +74,6 @@ namespace TuneMusix.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        //Extra Stuff, shows why a base ViewModel is useful
         bool? _CloseWindowFlag;
         public bool? CloseWindowFlag
         {

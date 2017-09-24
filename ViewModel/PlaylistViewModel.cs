@@ -20,7 +20,7 @@ namespace TuneMusix.ViewModel
     class PlaylistViewModel : ViewModelBase, IDragSource,IDropTarget
     {
 
-        DataModel dataModel = DataModel.Instance;
+        private DataModel dataModel = DataModel.Instance;
 
         public RelayCommand OpenDialog { get; set; }
         public RelayCommand SelectionChanged { get; set; }
@@ -48,7 +48,10 @@ namespace TuneMusix.ViewModel
             dataModel.DataModelChanged += OnDataModelChanged;
             
         }
-
+        /// <summary>
+        /// sets the given playlist object as selected playlist.
+        /// </summary>
+        /// <param name="argument"></param>
         private void _selectPlaylist(object argument)
         {
             var playlist = argument as Playlist;
@@ -57,7 +60,7 @@ namespace TuneMusix.ViewModel
                 SelectedPlaylist = playlist;
             }
         }
-
+        //getter and setter
         public Playlist SelectedPlaylist
         {
             get { return this._selectedPlaylist; }
@@ -77,7 +80,7 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("IsDragging");
             }
         }
-
+        //updates the Playlists when the datamodel changes.
         private void OnDataModelChanged(object source,object changed)
         {
             RaisePropertyChanged("Playlists");
@@ -203,6 +206,7 @@ namespace TuneMusix.ViewModel
 
         public bool TryCatchOccurredException(Exception exception)
         {
+            Logger.LogException(exception);
             throw exception;
         }
         /// <summary>

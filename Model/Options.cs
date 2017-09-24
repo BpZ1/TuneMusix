@@ -1,5 +1,9 @@
 ﻿namespace TuneMusix.Model
 {
+    /// <summary>
+    /// This class contains all properties that are needed in more parts of the program
+    /// and have to be saved to the database.
+    /// </summary>
     public class Options
     {
         private static Options instance;
@@ -17,13 +21,20 @@
                 return instance;
             }
         }
-
+        //Normal logging is only active when set to true.
         private bool _LoggerActive = false;
+        //volume of the audioplayer
         private int _volume;
+        //tracks in queue will shuffle randomly when set to true.
         public bool Shuffle { get; set; }
+        // 0 = No repeat
+        // 1 = Repeat all
+        // 2 = repeat track
         private int _repeatTrack;
+        //balance of the playback
         private int _balance;
 
+        //events
         public delegate void OptionsEventHandler(object changed);
 
         public event OptionsEventHandler VolumeChanged;
