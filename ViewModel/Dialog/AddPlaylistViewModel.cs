@@ -7,13 +7,26 @@ using TuneMusix.Helpers;
 
 namespace TuneMusix.ViewModel.Dialog
 {
-    class AddPlaylistViewModel
+    class AddPlaylistViewModel : ViewModelBase
     {
-        public string TextBoxText { get; set; }
+        private string textBoxText;
 
         public AddPlaylistViewModel()
         {
+            TextBoxText = "";
+        }
 
+        public string TextBoxText
+        {
+            get
+            {
+                return this.textBoxText;
+            }
+            set
+            {
+                this.textBoxText = value;
+                RaisePropertyChanged("TextBoxText");
+            }
         }
     }
 }

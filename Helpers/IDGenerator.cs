@@ -30,13 +30,13 @@ namespace TuneMusix.Helpers
             IsInit = true;
         }
 
-        public static long GetID()
+        public static long GetID(bool saving)
         {
             if (IsInit)
             {
                 IDCounter++;
                 DataModel dm = DataModel.Instance;
-                dm.SaveOptions(IDCounter);
+                if (saving) dm.SaveOptions(IDCounter);              
                 return IDCounter-1;
             }
             throw new ClassNotInitializedException("IDGenerator can only be used after it was initialized.");

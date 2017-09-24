@@ -59,10 +59,6 @@ namespace TuneMusix.Model
                 {
                     throw new ArgumentNullException("Name can't be null.");
                 }
-                else if (value.Length <= 0)
-                {
-                    throw new ArgumentException("Name has to contain more than 0 symbols");
-                }
                 else
                 {
                     this._name = value;

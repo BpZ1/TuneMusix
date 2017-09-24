@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TuneMusix.Data.DataModelOb;
 using TuneMusix.Model;
 
 namespace TuneMusix.Helpers
@@ -27,7 +28,7 @@ namespace TuneMusix.Helpers
             try
             {
                 if (url == null) return null;
-                Track track = new Track(url, IDGenerator.GetID());
+                Track track = new Track(url, IDGenerator.GetID(false));
                 byte[] b = new byte[128];
 
 
@@ -68,7 +69,7 @@ namespace TuneMusix.Helpers
         {
             //Add new root Folder
             string[] URLs = URL.Split('\\');
-            Folder root = new Folder(URLs.Last(), URL, IDGenerator.GetID());
+            Folder root = new Folder(URLs.Last(), URL, IDGenerator.GetID(false));
 
             string[] files = Directory.GetFiles(URL);
             string[] dirs = Directory.GetDirectories(URL);
@@ -92,6 +93,7 @@ namespace TuneMusix.Helpers
                 Folder fold = GetFolderData(dir);
                 root.AddFolder(fold);
             }
+            DataModel.Instance.SaveOptions(IDGenerator.IDCounter);      
             return root;
         }
 

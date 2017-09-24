@@ -73,6 +73,7 @@ namespace TuneMusix.ViewModel
             set
             {
                 this._isDragging = value;
+                Console.WriteLine("IsDragging is: ---------------- " + value);
                 RaisePropertyChanged("IsDragging");
             }
         }
@@ -92,12 +93,12 @@ namespace TuneMusix.ViewModel
             {
                 DataContext = new AddPlaylistViewModel()
             };
-           
+         
             //show the dialog
             var result = await DialogHost.Show(view, "DialogHost", OpenedEventHandler, ClosingEventHandler);
 
             //check the result...
-            //Console.WriteLine("Dialog was closed, the CommandParameter used to close it was: " + (result ?? "NULL"));
+            Console.WriteLine("Dialog was closed, the CommandParameter used to close it was: " + (result ?? "NULL"));
         }
         /// <summary>
         /// Intercept the open and affect the dialog using eventArgs.Session.
@@ -123,8 +124,15 @@ namespace TuneMusix.ViewModel
             eventArgs.Session.UpdateContent(new AddPlaylistDialog());
             var dataContext = content.DataContext as AddPlaylistViewModel;
             if (dataContext != null)
-            {     
-                dataModel.AddPlaylist(dataContext.TextBoxText);       
+            {
+                if (dataContext.TextBoxText.Count<char>() >= 2)
+                {
+                    dataModel.AddPlaylist(dataContext.TextBoxText);
+                }
+                else
+                {
+                    DialogService.NotificationMessage("The name has to be longer than two characters.");
+                }                  
             }
             Task.Factory.StartNew(()=>{}).ContinueWith((t, _) => eventArgs.Session.Close(false), null,
                          TaskScheduler.FromCurrentSynchronizationContext());
@@ -195,8 +203,7 @@ namespace TuneMusix.ViewModel
 
         public bool TryCatchOccurredException(Exception exception)
         {
-            Logger.LogException(exception);
-            return true;
+            throw exception;
         }
         /// <summary>
         /// Method gets called when the drag has endet and the element was successfully dropped.
