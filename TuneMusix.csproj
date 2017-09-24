@@ -151,7 +151,7 @@
     <Compile Include="ViewModel\Dialog\WarningDialog.cs" />
     <Compile Include="Model\PlaylistTrack.cs" />
     <Compile Include="ViewModel\CurrentPlaylistViewModel.cs" />
-    <Compile Include="ViewModel\Dialog\AddPlaylistViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\GetTextViewModel.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />
@@ -162,8 +162,8 @@
     <Compile Include="View\CurrentPlaylistPage.xaml.cs">
       <DependentUpon>CurrentPlaylistPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Dialog\AddPlaylistDialog.xaml.cs">
-      <DependentUpon>AddPlaylistDialog.xaml</DependentUpon>
+    <Compile Include="View\Dialog\GetTextDialog.xaml.cs">
+      <DependentUpon>GetTextDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Dialog\WarningDialogWindow.xaml.cs">
       <DependentUpon>WarningDialogWindow.xaml</DependentUpon>
@@ -187,7 +187,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Dialog\AddPlaylistDialog.xaml">
+    <Page Include="View\Dialog\GetTextDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -92,9 +92,9 @@ namespace TuneMusix.ViewModel
         /// <param name="o"></param>
         private async void _openDialog(object o)
         {
-            var view = new AddPlaylistDialog
+            var view = new GetTextDialog
             {
-                DataContext = new AddPlaylistViewModel()
+                DataContext = new GetTextViewModel("New Playlist")
             };
          
             //show the dialog
@@ -123,9 +123,9 @@ namespace TuneMusix.ViewModel
 
             //chancel the closing
             eventArgs.Cancel();
-            var content = eventArgs.Session.Content as AddPlaylistDialog;
-            eventArgs.Session.UpdateContent(new AddPlaylistDialog());
-            var dataContext = content.DataContext as AddPlaylistViewModel;
+            var content = eventArgs.Session.Content as GetTextDialog;
+            eventArgs.Session.UpdateContent(new GetTextDialog());
+            var dataContext = content.DataContext as GetTextViewModel;
             if (dataContext != null)
             {
                 if (dataContext.TextBoxText.Count<char>() >= 2)
