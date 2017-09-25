@@ -6,6 +6,7 @@ using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Data.DataModelOb;
 using System.Threading.Tasks;
 using MaterialDesignThemes.Wpf;
+using System.Threading;
 
 namespace TuneMusix.ViewModel
 {
@@ -31,7 +32,8 @@ namespace TuneMusix.ViewModel
         {
             //Load data from database.
             loader = new SQLLoader();
-            loader.LoadFromDB();
+            Thread loadingThread = new Thread(loader.LoadFromDB);
+            loadingThread.Start();          
 
             MessageQueue = new SnackbarMessageQueue();
             dataModel.DataModelChanged += _onRootFoldersChanged;

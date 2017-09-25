@@ -19,7 +19,10 @@ namespace TuneMusix.Data.SQLDatabase
 
         public void LoadFromDB()
         {
-            
+            var watch = new Stopwatch();
+            watch.Start();
+
+
             //Load options         
             long idgen = DBmanager.GetIDCounterStand();
             if (idgen == 0 || idgen == 1)
@@ -72,6 +75,10 @@ namespace TuneMusix.Data.SQLDatabase
             }
             Debug.WriteLine("Playlists loaded!");
             Debug.WriteLine("Loading finished");
+
+            watch.Stop();
+            Debug.WriteLine("Time: "+ watch.ElapsedMilliseconds);
+
         }
 
 

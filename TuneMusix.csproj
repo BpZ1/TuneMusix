@@ -144,14 +144,23 @@
     <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
     <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioControls.cs" />
+    <Compile Include="Helpers\MediaPlayer\AudioEffectControls.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayerImpl.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayer.cs" />
+    <Compile Include="Helpers\MediaPlayer\Effects\EqualizerEffect.cs" />
     <Compile Include="Helpers\TextFormatService.cs" />
+    <Compile Include="Model\OptionEffects.cs" />
     <Compile Include="ViewModel\Dialog\WarningDialog.cs" />
     <Compile Include="Model\PlaylistTrack.cs" />
     <Compile Include="ViewModel\CurrentPlaylistViewModel.cs" />
     <Compile Include="ViewModel\Dialog\GetTextViewModel.cs" />
+    <Compile Include="ViewModel\Effects\ChorusViewModel.cs" />
+    <Compile Include="ViewModel\Effects\CompressorViewModel.cs" />
+    <Compile Include="ViewModel\Effects\DistortionViewModel.cs" />
+    <Compile Include="ViewModel\Effects\EchoViewModel.cs" />
+    <Compile Include="ViewModel\Effects\EqualizerViewModel.cs" />
+    <Compile Include="ViewModel\Effects\FlangerViewModel.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />
@@ -168,6 +177,24 @@
     <Compile Include="View\Dialog\WarningDialogWindow.xaml.cs">
       <DependentUpon>WarningDialogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Effects\ChorusView.xaml.cs">
+      <DependentUpon>ChorusView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Effects\CompressorView.xaml.cs">
+      <DependentUpon>CompressorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Effects\DistortionView.xaml.cs">
+      <DependentUpon>DistortionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Effects\EchoView.xaml.cs">
+      <DependentUpon>EchoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Effects\EqualizerView.xaml.cs">
+      <DependentUpon>EqualizerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Effects\FlangerView.xaml.cs">
+      <DependentUpon>FlangerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\FolderPage.xaml.cs">
       <DependentUpon>FolderPage.xaml</DependentUpon>
     </Compile>
@@ -176,6 +203,12 @@
     </Compile>
     <Compile Include="View\Controls\PlaylistItem.xaml.cs">
       <DependentUpon>PlaylistItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OptionsWindow\EqualizerPage.xaml.cs">
+      <DependentUpon>EqualizerPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OptionsWindow\OptionsWindowView.xaml.cs">
+      <DependentUpon>OptionsWindowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PlaylistPage.xaml.cs">
       <DependentUpon>PlaylistPage.xaml</DependentUpon>
@@ -192,6 +225,30 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Dialog\WarningDialogWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Effects\ChorusView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Effects\CompressorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Effects\DistortionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Effects\EchoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Effects\EqualizerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Effects\FlangerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -226,6 +283,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Controls\PlaylistItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OptionsWindow\EqualizerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OptionsWindow\OptionsWindowView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,32 @@
+﻿<Window x:Class="TuneMusix.View.OptionsWindow.OptionsWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TuneMusix.View"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d"
+        Title="OptionsWindow" Height="500" Width="700">
+    <Grid>
+        <dragablz:TabablzControl >
+            <TabItem Header="Playlists" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Frame Grid.Column="0" Source="CurrentPlaylistPage.xaml" />
+                    <Frame Grid.Column="1" Source="PlaylistPage.xaml" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Trackslist">
+                <Frame Source="TracklistPage.xaml"/>
+            </TabItem>
+            <TabItem Header="Folders">
+                <Frame Source="FolderPage.xaml"/>
+            </TabItem>
+        </dragablz:TabablzControl>
+    </Grid>
+</Window>

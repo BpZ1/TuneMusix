@@ -9,7 +9,7 @@ namespace TuneMusix.Model
     /// This class contains all properties that are needed in more parts of the program
     /// and have to be saved to the database.
     /// </summary>
-    public class Options : INotifyPropertyChanged
+    public partial class Options : INotifyPropertyChanged
     {
         private static Options instance;
 

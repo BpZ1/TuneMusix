@@ -18,6 +18,9 @@ namespace TuneMusix.ViewModel
         /// <param name="parameter"></param>
         private void _getFiles(object parameter)
         {
+            var watch = new Stopwatch();
+            watch.Start();
+
             var ofd = new WinForms.OpenFileDialog();
             ofd.Title = "File Browser";
             ofd.InitialDirectory = @"C:\"; //change to systems default hd
@@ -34,6 +37,9 @@ namespace TuneMusix.ViewModel
                 }
                 dataModel.AddTracksFromFileURLs(URLList);
             }
+
+            watch.Stop();
+            Debug.WriteLine("Time: " + watch.ElapsedMilliseconds);
         }
 
         private void _openOptionsWindow(object argument)
@@ -113,12 +119,18 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void _addFolder(object argument)
         {
+            var watch = new Stopwatch();
+            watch.Start();
+
             var folderbrowser = new WinForms.FolderBrowserDialog();
 
             if (folderbrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderbrowser.SelectedPath))
             {
                 dataModel.AddFolderFromFileURL(folderbrowser.SelectedPath);
-            }           
+            }
+
+            watch.Stop();
+            Debug.WriteLine("Time: " + watch.ElapsedMilliseconds);
         }
 
 
