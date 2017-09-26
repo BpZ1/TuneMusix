@@ -6,6 +6,7 @@ using CSCore.Codecs;
 using CSCore;
 using CSCore.Streams.Effects;
 using TuneMusix.Helpers.MediaPlayer.Effects;
+using TuneMusix.Exceptions;
 
 namespace TuneMusix.Helpers
 {
@@ -31,33 +32,27 @@ namespace TuneMusix.Helpers
         private bool isInitialized;
 
 
-        public AudioPlayerImpl(string url,float volume, int balance,bool isStereo,bool effects,FlangerEffect flanger,EqualizerEffect equalizer)
+        public AudioPlayerImpl(string url,float volume, int balance,bool isStereo,bool effects)
         {
             soundOut = GetSoundOut();
             soundSource = GetSoundSource(url);
-
-            this.flanger = flanger;
-            this.equalizer = equalizer;
-
-
-            //TESTING---------------------------------
-            EqualizerActive = true;
-            //TESTING---------------------------------
 
             if (effects)
             {
                 ApplyEffects();
             }
-
-            soundOut.Initialize(soundSource);
-            soundOut.Volume = volume;
-            if (!isStereo)
+         
+            if(soundSource != null)
             {
-               soundSource.ToMono();
-            }
-            isInitialized = true;
-
-            soundOut.Stopped += PlaybackStopped;
+                soundOut.Initialize(soundSource);
+                soundOut.Volume = volume;
+                isInitialized = true;
+                soundOut.Stopped += PlaybackStopped;
+                if (!isStereo)
+                {
+                    soundSource.ToMono();
+                }
+            }              
         }
         /// <summary>
         /// Checks if Wasapi is supported and then uses that or directsound as ISoundOut.
@@ -79,15 +74,16 @@ namespace TuneMusix.Helpers
 
         private IWaveSource GetSoundSource(string URL)
         {
+            IWaveSource waveSource;
             try
             {
-                return CodecFactory.Instance.GetCodec(URL);
+                waveSource = CodecFactory.Instance.GetCodec(URL);      
             }catch
             {
                 DialogService.WarnMessage("Could not play track","The track '" + URL +"' could not be played.");
                 return null;
             }
-           
+            return waveSource;
         }
 
         private void ApplyEffects()

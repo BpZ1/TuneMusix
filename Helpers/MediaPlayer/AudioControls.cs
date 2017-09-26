@@ -226,10 +226,8 @@ namespace TuneMusix.Helpers.MediaPlayer
                     track.sourceURL,
                     GetFloatVolume((int)options.Volume),
                     options.Balance,
-                    options.IsStereo,
-                    options.EffectsActive,
-                    flanger,
-                    equalizer);
+                    true,
+                    false);
                 Player.PlaybackFinished += OnPlaybackFinished;              
             }
             OnTrackChanged();

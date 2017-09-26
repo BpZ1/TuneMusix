@@ -39,7 +39,6 @@ namespace TuneMusix.ViewModel
             loadingWorker.RunWorkerCompleted += OnLoadingComplete;
             loadingWorker.RunWorkerAsync();
 
-
             //notification
             MessageQueue = new SnackbarMessageQueue();
             dataModel.DataModelChanged += _onRootFoldersChanged;

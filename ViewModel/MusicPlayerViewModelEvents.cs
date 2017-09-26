@@ -60,16 +60,9 @@ namespace TuneMusix.ViewModel
         /// <param name="e"></param>
         public void OnTimeElapsed(object sender, ElapsedEventArgs e)
         {
-            if (!_dragging)
+            if (!_dragging && audioControls.IsLoaded)
             {
-                try
-                {
-                    CurrentSliderPosition = CurrentPosition;
-                }
-                catch
-                {
-
-                }
+                CurrentSliderPosition = CurrentPosition;
             }
         }
 
