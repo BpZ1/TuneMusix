@@ -144,11 +144,13 @@
     <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
     <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioControls.cs" />
-    <Compile Include="Helpers\MediaPlayer\AudioEffectControls.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayerImpl.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayer.cs" />
+    <Compile Include="Helpers\MediaPlayer\Effects\ChorusEffect.cs" />
+    <Compile Include="Helpers\MediaPlayer\Effects\CompressorEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\EqualizerEffect.cs" />
+    <Compile Include="Helpers\MediaPlayer\Effects\FlangerEffect.cs" />
     <Compile Include="Helpers\TextFormatService.cs" />
     <Compile Include="Model\OptionEffects.cs" />
     <Compile Include="ViewModel\Dialog\WarningDialog.cs" />
@@ -204,8 +206,11 @@
     <Compile Include="View\Controls\PlaylistItem.xaml.cs">
       <DependentUpon>PlaylistItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OptionsWindow\EqualizerPage.xaml.cs">
-      <DependentUpon>EqualizerPage.xaml</DependentUpon>
+    <Compile Include="View\OptionsWindow\EffectPage.xaml.cs">
+      <DependentUpon>EffectPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OptionsWindow\EqualizerUserControl.xaml.cs">
+      <DependentUpon>EqualizerUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\OptionsWindow\OptionsWindowView.xaml.cs">
       <DependentUpon>OptionsWindowView.xaml</DependentUpon>
@@ -286,7 +291,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OptionsWindow\EqualizerPage.xaml">
+    <Page Include="View\OptionsWindow\EffectPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OptionsWindow\EqualizerUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

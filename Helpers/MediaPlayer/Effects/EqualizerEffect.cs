@@ -1,27 +1,44 @@
 ﻿using CSCore;
 using CSCore.Streams.Effects;
-
+using TuneMusix.Model;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
-    class EqualizerEffect
+    public class EqualizerEffect
     {
 
         private Equalizer _equalizer;
-        private int[] _channelFilter;
-        
-        public EqualizerEffect() { }
+        private double[] _channelFilter;
+        private Options options = Options.Instance;
 
-        public EqualizerEffect(int[] channelFilter)
+        public EqualizerEffect()
+        {
+            options.ChannelFilterChanged += _onChannelFilterChanged;
+        }
+
+        public EqualizerEffect(double[] channelFilter)
         {
             _channelFilter = channelFilter;
+            options.ChannelFilterChanged += _onChannelFilterChanged;
         }
 
         public IWaveSource Apply(IWaveSource waveSource)
         {
-           return waveSource.ToSampleSource()
-                .AppendSource(Equalizer.Create10BandEqualizer, out _equalizer)
-                .ToWaveSource();
+            return waveSource.ToSampleSource().
+                AppendSource(_createEqualizer).
+                ToWaveSource();
+        }
+
+        private Equalizer _createEqualizer(ISampleSource waveSource)
+        {
+            _equalizer = Equalizer.Create10BandEqualizer(waveSource);
+            int i = 0;
+            foreach(double filter in _channelFilter)
+            {
+                _equalizer.SampleFilters[i].AverageGainDB = _channelFilter[i];
+                i++;
+            }
+            return _equalizer;
         }
 
         public void ChannelFilter(int index,double value)
@@ -33,5 +50,9 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             }
         }
 
+        private void _onChannelFilterChanged(object source)
+        {
+            _channelFilter = source as double[];
+        }
     }
 }

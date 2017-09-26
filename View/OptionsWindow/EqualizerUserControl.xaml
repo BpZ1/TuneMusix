@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="TuneMusix.View.OptionsWindow.EqualizerUserControl"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:vm="clr-namespace:TuneMusix.ViewModel.Effects"
+      xmlns:local="clr-namespace:TuneMusix.View.OptionsWindow"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+      mc:Ignorable="d" 
+      DataContext="{DynamicResource EqualizerViewModel}"
+      d:DesignHeight="300" d:DesignWidth="373">
+    <UserControl.Resources>
+        <vm:EqualizerViewModel x:Key="EqualizerViewModel"/>
+    </UserControl.Resources>
+    <Grid Margin="0,0,0,0">
+        <StackPanel Orientation="Horizontal">
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel1,Mode=TwoWay}"/>
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel2,Mode=TwoWay}"/>
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel3,Mode=TwoWay}"/>
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel4,Mode=TwoWay}"/>
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel5,Mode=TwoWay}"/>
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel6,Mode=TwoWay}"/>
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel7,Mode=TwoWay}"/>
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel8,Mode=TwoWay}"/>
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel9,Mode=TwoWay}"/>
+            <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel10,Mode=TwoWay}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

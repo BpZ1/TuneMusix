@@ -7,6 +7,7 @@ using TuneMusix.Data.DataModelOb;
 using System.Threading.Tasks;
 using MaterialDesignThemes.Wpf;
 using System.Threading;
+using System.ComponentModel;
 
 namespace TuneMusix.ViewModel
 {
@@ -20,10 +21,11 @@ namespace TuneMusix.ViewModel
         public RelayCommand OpenOptionsWindow { get; set; }
         public RelayCommand SaveData { get; set; }
 
-        DataModel dataModel = DataModel.Instance;
-        AudioControls audioControls = AudioControls.Instance;
-        Options options = Options.Instance;
-        SQLLoader loader;
+        private DataModel dataModel = DataModel.Instance;
+        private AudioControls audioControls = AudioControls.Instance;
+        private Options options = Options.Instance;
+        private SQLLoader loader;
+        private BackgroundWorker loadingWorker;
 
         public static SnackbarMessageQueue MessageQueue { get; set; }
 
@@ -32,9 +34,13 @@ namespace TuneMusix.ViewModel
         {
             //Load data from database.
             loader = new SQLLoader();
-            Thread loadingThread = new Thread(loader.LoadFromDB);
-            loadingThread.Start();          
+            loadingWorker = new BackgroundWorker();
+            loadingWorker.DoWork += loader.LoadFromDB;
+            loadingWorker.RunWorkerCompleted += OnLoadingComplete;
+            loadingWorker.RunWorkerAsync();
 
+
+            //notification
             MessageQueue = new SnackbarMessageQueue();
             dataModel.DataModelChanged += _onRootFoldersChanged;
 
@@ -47,6 +53,7 @@ namespace TuneMusix.ViewModel
             OpenOptionsWindow = new RelayCommand(_openOptionsWindow);      
         }
 
+        
 
         public static void Notification(string message)
         {

@@ -10,22 +10,17 @@
         mc:Ignorable="d"
         Title="OptionsWindow" Height="500" Width="700">
     <Grid>
-        <dragablz:TabablzControl >
-            <TabItem Header="Playlists" >
+        <dragablz:TabablzControl TabStripPlacement="Left">
+            <TabItem Header="General" >
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Frame Grid.Column="0" Source="CurrentPlaylistPage.xaml" />
-                    <Frame Grid.Column="1" Source="PlaylistPage.xaml" />
+        
                 </Grid>
             </TabItem>
-            <TabItem Header="Trackslist">
-                <Frame Source="TracklistPage.xaml"/>
+            <TabItem Header="...">
+           
             </TabItem>
-            <TabItem Header="Folders">
-                <Frame Source="FolderPage.xaml"/>
+            <TabItem Header="Effects">
+               <Frame Source="EffectPage.xaml"/>
             </TabItem>
         </dragablz:TabablzControl>
     </Grid>

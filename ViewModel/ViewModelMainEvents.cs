@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Timers;
-using System.Windows.Controls;
-using TuneMusix.Data;
-using TuneMusix.Helpers;
-using TuneMusix.Model;
-using WMPLib;
-using WinForms = System.Windows.Forms;
+using System.ComponentModel;
 
 namespace TuneMusix.ViewModel
 {
     partial class ViewModelMain
     {
-       private void _onRootFoldersChanged(object source,object obj)
-       {
-            RaisePropertyChanged("TrackList");
-       }
-        
-      
+
+        private void _onRootFoldersChanged(object source,object obj)
+        {
+             RaisePropertyChanged("TrackList");
+        }
+
+        private void OnLoadingComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            audioControls.LoadEffects();
+        }
+
     }
 }

@@ -40,7 +40,7 @@ namespace TuneMusix.ViewModel.Effects
             get { return options.FeedbackChorus; }
             set { options.FeedbackChorus = value; }
         }
-        public bool WaveFormChorus
+        public int WaveFormChorus
         {
             get { return options.WaveFormChorus; }
             set { options.WaveFormChorus = value; }
@@ -61,7 +61,7 @@ namespace TuneMusix.ViewModel.Effects
             DelayChorus = 16;
             DepthChorus = 10;
             FeedbackChorus = 25;
-            WaveFormChorus = false;
+            WaveFormChorus = 0;
             FrequencyChorus = 1.1f;
             Wet_DryMixChorus = 50;
     }

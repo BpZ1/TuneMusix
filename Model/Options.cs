@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
+using TuneMusix.Helpers.MediaPlayer.Effects;
 
 namespace TuneMusix.Model
 {
@@ -26,6 +27,9 @@ namespace TuneMusix.Model
                 return instance;
             }
         }
+
+
+        private bool _effectsActive;
         //Normal logging is only active when set to true.
         private bool _LoggerActive = false;
         //volume of the audioplayer
@@ -38,6 +42,8 @@ namespace TuneMusix.Model
         private int _repeatTrack;
         //balance of the playback
         private int _balance;
+        private bool _isStereo;
+
 
         //events
         public delegate void OptionsEventHandler(object changed);
@@ -45,6 +51,8 @@ namespace TuneMusix.Model
         public event OptionsEventHandler VolumeChanged;
         public event OptionsEventHandler RepeatChanged;
         public event OptionsEventHandler BalanceChanged;
+        public event OptionsEventHandler EffectsActiveChanged;
+        public event OptionsEventHandler IsStereoChanged;
 
         protected virtual void OnVolumeChanged()
         {
@@ -67,8 +75,40 @@ namespace TuneMusix.Model
                 BalanceChanged(this.Balance);
             }
         }
+        protected virtual void OnEffectsActiveChanged()
+        {
+            if (EffectsActiveChanged != null)
+            {
+                EffectsActiveChanged(_effectsActive);
+            }
+        }
+        protected virtual void OnIsStereoChanged()
+        {
+            if (IsStereoChanged != null)
+            {
+                IsStereoChanged(_isStereo);
+            }
+        }
 
         //Getter and setter
+        public bool IsStereo
+        {
+            get { return _isStereo; }
+            set
+            {
+                _isStereo = value;
+                OnIsStereoChanged();
+            }
+        }
+        public bool EffectsActive
+        {
+            get { return _effectsActive; }
+            set
+            {
+                _effectsActive = value;
+                OnEffectsActiveChanged();
+            }
+        }
         public int Volume
         {
             get { return this._volume; }

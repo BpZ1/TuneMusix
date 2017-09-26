@@ -15,7 +15,7 @@ namespace TuneMusix.Model
 
         //Equalizer//////////////////////////////
         private bool _equalizer;
-        private float[] _channelFilter;
+        private double[] _channelFilter;
         //getter and setter
         public bool Equalizer
         {
@@ -26,7 +26,7 @@ namespace TuneMusix.Model
                 OnEqualizerChanged();
             }
         }
-        public float[] Channelfilter
+        public double[] Channelfilter
         {
             get { return _channelFilter; }
             set
@@ -35,9 +35,10 @@ namespace TuneMusix.Model
                 OnChannelFilterChanged();
             }
         }
+
         //events
-        event OptionsEventHandler EqualizerChanged;
-        event OptionsEventHandler ChannelFilterChanged;
+        public event OptionsEventHandler EqualizerChanged;
+        public event OptionsEventHandler ChannelFilterChanged;
         protected virtual void OnEqualizerChanged()
         {
             if (EqualizerChanged != null)
@@ -121,12 +122,12 @@ namespace TuneMusix.Model
             }
         }
         //events
-        event OptionsEventHandler DistortionChanged;
-        event OptionsEventHandler EdgeDistortionChanged;
-        event OptionsEventHandler GainDistortionChanged;
-        event OptionsEventHandler BandwidthDistortionChanged;
-        event OptionsEventHandler PostEQCenterDistortionChanged;
-        event OptionsEventHandler PreLowPassDistortionChanged;
+        public event OptionsEventHandler DistortionChanged;
+        public event OptionsEventHandler EdgeDistortionChanged;
+        public event OptionsEventHandler GainDistortionChanged;
+        public event OptionsEventHandler BandwidthDistortionChanged;
+        public event OptionsEventHandler PostEQCenterDistortionChanged;
+        public event OptionsEventHandler PreLowPassDistortionChanged;
         protected virtual void OnDistortionChanged()
         {
             if (DistortionChanged != null)
@@ -251,13 +252,13 @@ namespace TuneMusix.Model
         }
 
         //events
-        event OptionsEventHandler CompressorChanged;
-        event OptionsEventHandler AttackCompressorChanged;
-        event OptionsEventHandler GainCompressorChanged;
-        event OptionsEventHandler PreDelayCompressorChanged;
-        event OptionsEventHandler RatioCompressorChanged;
-        event OptionsEventHandler ReleaseCompressorChanged;
-        event OptionsEventHandler ThreshholdCompressorChanged;
+        public event OptionsEventHandler CompressorChanged;
+        public event OptionsEventHandler AttackCompressorChanged;
+        public event OptionsEventHandler GainCompressorChanged;
+        public event OptionsEventHandler PreDelayCompressorChanged;
+        public event OptionsEventHandler RatioCompressorChanged;
+        public event OptionsEventHandler ReleaseCompressorChanged;
+        public event OptionsEventHandler ThreshholdCompressorChanged;
         protected virtual void OnCompressorChanged()
         {
             if (CompressorChanged != null)
@@ -378,12 +379,12 @@ namespace TuneMusix.Model
         }
 
         //events
-        event OptionsEventHandler FlangerChanged;
-        event OptionsEventHandler DelayFlangerChanged;
-        event OptionsEventHandler DepthFlangerChanged;
-        event OptionsEventHandler FeedbackFlangerChanged;
-        event OptionsEventHandler FrequencyFlangerChanged;
-        event OptionsEventHandler Wet_DryMixFlangerChanged;
+        public event OptionsEventHandler FlangerChanged;
+        public event OptionsEventHandler DelayFlangerChanged;
+        public event OptionsEventHandler DepthFlangerChanged;
+        public event OptionsEventHandler FeedbackFlangerChanged;
+        public event OptionsEventHandler FrequencyFlangerChanged;
+        public event OptionsEventHandler Wet_DryMixFlangerChanged;
         protected virtual void OnFlangerChanged()
         {
             if (FlangerChanged != null)
@@ -436,7 +437,9 @@ namespace TuneMusix.Model
         //def = 25, min = -99, max = 99
         private float _feedbackChorus;
         //def = false, min = 0, max = 1, 1 = sinus, 0 = triangle
-        private bool _waveFormChorus;
+        private int _waveFormChorus;
+        //def = 3, min = 0, max = 4
+        private float _phaseChorus;
         //def = 1.1, min = 0, max = 10
         private float _frequencyChorus;
         //def = 50, min = 0, max = 100
@@ -478,13 +481,22 @@ namespace TuneMusix.Model
                 OnFeedbackChorusChanged();
             }
         }
-        public bool WaveFormChorus
+        public int WaveFormChorus
         {
             get { return _waveFormChorus; }
             set
             {
                 _waveFormChorus = value;
                 OnWaveFormChorusChanged();
+            }
+        }
+        public float PhaseChorus
+        {
+            get { return _phaseChorus; }
+            set
+            {
+                _phaseChorus = value;
+                OnPhaseChorusChanged();
             }
         }
         public float FrequencyChorus
@@ -507,13 +519,14 @@ namespace TuneMusix.Model
         }
 
         //events
-        event OptionsEventHandler ChorusChanged;
-        event OptionsEventHandler DelayChorusChanged;
-        event OptionsEventHandler DepthChorusChanged;
-        event OptionsEventHandler FeedbackChorusChanged;
-        event OptionsEventHandler WaveFormChorusChanged;
-        event OptionsEventHandler FrequencyChorusChanged;
-        event OptionsEventHandler Wet_DryMixChorusChanged;
+        public event OptionsEventHandler ChorusChanged;
+        public event OptionsEventHandler DelayChorusChanged;
+        public event OptionsEventHandler DepthChorusChanged;
+        public event OptionsEventHandler FeedbackChorusChanged;
+        public event OptionsEventHandler WaveFormChorusChanged;
+        public event OptionsEventHandler PhaseChorusChanged;
+        public event OptionsEventHandler FrequencyChorusChanged;
+        public event OptionsEventHandler Wet_DryMixChorusChanged;
         protected virtual void OnChorusChanged()
         {
             if (ChorusChanged != null)
@@ -549,6 +562,13 @@ namespace TuneMusix.Model
                 WaveFormChorusChanged(WaveFormChorus);
             }
         }
+        protected virtual void OnPhaseChorusChanged()
+        {
+            if (PhaseChorusChanged != null)
+            {
+                PhaseChorusChanged(_phaseChorus);
+            }
+        }
         protected virtual void OnFrequencyChorusChanged()
         {
             if (FrequencyChorusChanged != null)
@@ -565,18 +585,123 @@ namespace TuneMusix.Model
         }
 
         //Echo//////////////////////////////////
-        public bool Echo { get; set; }
+        private bool _echo;
         //def = 50, min = 0, max = 100
-        public float FeedbackEcho { get; set; }
+        private float _feedbackEcho;
         //def = 500, min = 1, max = 2000
-        public float LeftDelayEcho { get; set; }
+        private float _leftDelayEcho;
         //def = 500, min = 1, max = 2000
-        public float RightDelayEcho { get; set; }
+        private float _rightDelayEcho;
         //def = false, min = 0, max = 1
-        public bool PanDelayEcho { get; set; }
+        private bool _panDelayEcho;
         //def = 50, min = 0, max = 100
-        public float Wet_DryMixEcho { get; set; }
+        private float _wet_DryMixEcho;
 
+        //getter and setter
+        public bool Echo
+        {
+            get { return _echo; }
+            set
+            {
+                _echo = value;
+                OnEchoChanged();
+            }
+        }
+        public float FeedbackEcho
+        {
+            get { return _feedbackEcho; }
+            set
+            {
+                _feedbackEcho = value;
+                OnFeedbackEchoChanged();
+            }
+        }
+        public float LeftDelayEcho
+        {
+            get { return _leftDelayEcho; }
+            set
+            {
+                _leftDelayEcho = value;
+                OnLeftDelayEchoChanged();
+            }
+        }
+        public float RightDelayEcho
+        {
+            get { return _rightDelayEcho; }
+            set
+            {
+                _rightDelayEcho = value;
+                OnRightDelayEchoChanged();
+            }
+        }
+        public bool PanDelayEcho
+        {
+            get { return _panDelayEcho; }
+            set
+            {
+                _panDelayEcho = value;
+                OnPanDelayEchoChanged();
+            }
+        }
+        public float Wet_DryMixEcho
+        {
+            get { return _wet_DryMixEcho; }
+            set
+            {
+                _wet_DryMixEcho = value;
+                OnWet_DryMixEchoChanged();
+            }
+        }
+
+        //events
+        public event OptionsEventHandler EchoChanged;
+        public event OptionsEventHandler FeedbackEchoChanged;
+        public event OptionsEventHandler LeftDelayEchoChanged;
+        public event OptionsEventHandler RightDelayEchoChanged;
+        public event OptionsEventHandler PandelayEchoChanged;
+        public event OptionsEventHandler Wet_DryMixEchoChanged;
+        protected virtual void OnEchoChanged()
+        {
+            if (EchoChanged != null)
+            {
+                EchoChanged(Echo);
+            }
+        }
+        protected virtual void OnFeedbackEchoChanged()
+        {
+            if (FeedbackEchoChanged != null)
+            {
+                FeedbackEchoChanged(FeedbackEcho);
+            }
+        }
+        protected virtual void OnLeftDelayEchoChanged()
+        {
+            if (LeftDelayEchoChanged != null)
+            {
+                LeftDelayEchoChanged(LeftDelayEcho);
+            }
+        }
+        protected virtual void OnRightDelayEchoChanged()
+        {
+            if (RightDelayEchoChanged != null)
+            {
+                RightDelayEchoChanged(RightDelayEcho);
+            }
+        }
+        protected virtual void OnPanDelayEchoChanged()
+        {
+            if (PandelayEchoChanged != null)
+            {
+                PandelayEchoChanged(PanDelayEcho);
+            }
+        }
+        protected virtual void OnWet_DryMixEchoChanged()
+        {
+            if (Wet_DryMixEchoChanged != null)
+            {
+                Wet_DryMixEchoChanged(Wet_DryMixEcho);
+            }
+        }
 
     }
 }

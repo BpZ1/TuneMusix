@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace TuneMusix.View.OptionsWindow
 {
     /// <summary>
-    /// Interaction logic for EqualizerPage.xaml
+    /// Interaction logic for EffectPage.xaml
     /// </summary>
-    public partial class EqualizerPage : Page
+    public partial class EffectPage : Page
     {
-        public EqualizerPage()
+        public EffectPage()
         {
             InitializeComponent();
         }

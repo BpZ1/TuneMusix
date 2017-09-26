@@ -4,6 +4,7 @@ using System.Diagnostics;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
+using TuneMusix.View.OptionsWindow;
 using WinForms = System.Windows.Forms;
 
 namespace TuneMusix.ViewModel
@@ -44,7 +45,9 @@ namespace TuneMusix.ViewModel
 
         private void _openOptionsWindow(object argument)
         {
-            DialogService.WarnMessage("Not yet implemented","");
+            var win = new OptionsWindowView();
+
+            win.Show();
         }
 
         private void _saveData(object argument)
@@ -109,8 +112,7 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void _debugMethod(object argument)
         {
-  
-
+            options.Wet_DryMixFlanger = 100;
         }
 
         /// <summary>
