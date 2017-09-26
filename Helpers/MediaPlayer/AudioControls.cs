@@ -1,0 +1,391 @@
+﻿using System;
+using System.Diagnostics;
+using TuneMusix.Data;
+using TuneMusix.Data.DataModelOb;
+using TuneMusix.Helpers.MediaPlayer.Effects;
+using TuneMusix.Model;
+
+namespace TuneMusix.Helpers.MediaPlayer
+{
+    partial class AudioControls : IDisposable
+    {
+        private EqualizerEffect equalizer;
+        private FlangerEffect flanger;
+        private ChorusEffect chorus;
+        private CompressorEffect compressor;
+
+        private static AudioControls instance;
+        public static AudioControls Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new AudioControls();
+                }
+                return instance;
+            }
+        }
+
+        private AudioPlayerImpl Player;
+        private DataModel dataModel = DataModel.Instance;
+        private Options options = Options.Instance;
+
+        public void LoadEffects()
+        {
+            Debug.WriteLine("Loading effects...");
+            if (options.Equalizer)
+            {
+                equalizer = new EqualizerEffect(options.Channelfilter);
+            }
+            if (options.Distortion)
+            {
+                Debug.WriteLine("Distortion effect loaded.");
+            }
+            if (options.Flanger)
+            {          
+                flanger = new FlangerEffect(
+                    options.DelayFlanger,
+                    options.DepthFlanger,
+                    options.FeedbackFlanger,
+                    options.FrequencyFlanger,
+                    options.Wet_DryMixFlanger);
+                Debug.WriteLine("Flanger effect loaded.");
+            }
+            if (options.Chorus)
+            {
+                chorus = new ChorusEffect(
+                    options.DelayChorus,
+                    options.DepthChorus, options.FeedbackChorus,
+                    options.FrequencyChorus,
+                    options.PhaseChorus,
+                    options.Wet_DryMixChorus);
+                Debug.WriteLine("Chorus effect loaded.");
+            }
+            if (options.Echo)
+            {
+                Debug.WriteLine("Echo effect loaded.");
+            }
+            if (options.Compressor)
+            {
+                compressor = new CompressorEffect(
+                    options.AttackCompressor,
+                    options.GainCompressor,
+                    options.PreDelayCompressor,
+                    options.RatioCompressor,
+                    options.ReleaseCompressor,
+                    options.TreshholdCompressor);
+                Debug.WriteLine("Compressor effect loaded.");
+            }
+            Debug.WriteLine("Effects loaded.");
+        }
+
+        public AudioControls()
+        {
+           
+           
+           
+
+
+            //Events
+            dataModel.CurrentTrackChanged += OnCurrentTrackChanged;
+            options.BalanceChanged += OnBalanceChanged;
+            options.VolumeChanged += OnVolumeChanged;
+            
+        }
+
+        public delegate void AudioControlsEventHandler(object source);
+
+        public event AudioControlsEventHandler TrackChanged;
+        public event AudioControlsEventHandler Playing;
+        public event AudioControlsEventHandler Stopped;
+        public event AudioControlsEventHandler Paused;
+
+        protected virtual void OnPlaying()
+        {
+            if(Playing != null)
+            {
+                Playing(this);
+            }
+        }
+
+        protected virtual void OnStopped()
+        {
+            if (Stopped != null)
+            {
+                Stopped(this);
+            }
+        }
+
+        protected virtual void OnPaused()
+        {
+            if (Paused != null)
+            {
+                Paused(this);
+            }
+        }
+
+        protected virtual void OnTrackChanged()
+        {
+            if (TrackChanged!= null)
+            {
+                TrackChanged(this);
+            }
+        }
+
+        private void OnPlaybackFinished(object source)
+        {
+            if (options.RepeatTrack == 0)
+            {
+                if (dataModel.QueueIndex+1 < dataModel.TrackQueue.Count)
+                {
+                    PlayNext();
+                }
+            }
+            if (options.RepeatTrack == 1)
+            {
+                if (dataModel.TrackQueue.Count == 1)
+                {
+                    PlayTrack(dataModel.CurrentTrack);
+                }
+                PlayNext();
+            }
+            if (options.RepeatTrack == 2)
+            {
+                PlayTrack(dataModel.CurrentTrack);
+                this.Play();
+            }
+        }
+
+        public void PlayNext()
+        {
+            dataModel.QueueIndex++;
+            if (dataModel.QueueIndex+1 <= dataModel.TrackQueue.Count)
+            {
+                dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
+            }
+            if(dataModel.QueueIndex + 1 > dataModel.TrackQueue.Count)
+            {
+                dataModel.QueueIndex = 0;
+                dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
+            }          
+        }
+
+        public void PlayPrevious()
+        {
+            if (dataModel.QueueIndex > 0)
+            {
+                dataModel.QueueIndex--;
+                dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
+            }
+            else
+            {
+                dataModel.QueueIndex = dataModel.TrackQueue.Count - 1;
+                dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
+            }
+        }
+
+        private float GetFloatVolume(int value)
+        {
+            float newvalue = (float)value;
+            return newvalue / 100;
+        }
+
+        private void OnVolumeChanged(object volume)
+        {
+            if (Player != null) Player.Volume = GetFloatVolume((int)volume);
+        }
+
+        private void OnBalanceChanged(object balance)
+        {
+            var Balance = (int)balance;
+            this.Balance = Balance;
+        }
+
+        private void OnCurrentTrackChanged(object source,object NewCurrentTrack)
+        {
+            Debug.WriteLine("Current Track changed");
+            if (NewCurrentTrack != null)
+            {
+                this.PlayTrack(NewCurrentTrack as Track);
+            }
+            else
+            {
+                Player.Dispose();
+            }
+        }
+        /// <summary>
+        /// Creates
+        /// </summary>
+        /// <param name="track"></param>
+        private void CreatePlayer(Track track)
+        {
+            if(track != null)
+            {
+                Player = new AudioPlayerImpl(
+                    track.sourceURL,
+                    GetFloatVolume((int)options.Volume),
+                    options.Balance,
+                    options.IsStereo,
+                    options.EffectsActive,
+                    flanger,
+                    equalizer);
+                Player.PlaybackFinished += OnPlaybackFinished;              
+            }
+            OnTrackChanged();
+        }
+
+        public void PlayTrack(Track track)
+        {
+            if (Player!=null)
+            {
+                Debug.WriteLine("Player Disposed");
+                Player.Dispose();
+                Player = null;
+            }
+            CreatePlayer(track);
+            this.Play();
+        }
+
+        public bool IsPlaying
+        {
+            get
+            {
+                if(Player != null)
+                {
+                    return Player.IsPlaying();
+                }
+                else
+                {
+                    return false;
+                }
+                
+            }
+        }
+
+        public bool IsLoaded
+        {
+            get
+            {
+                if (Player != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public void Play()
+        {
+            if (Player != null)
+            {
+                Player.Play();
+                OnPlaying();
+            }          
+        }
+
+        public void Pause()
+        {
+            if (Player != null)
+            {
+                Player.Pause();
+                OnPaused();
+            }           
+        }
+
+        public void Resume()
+        {
+            if (Player != null)
+            {
+                Player.Resume();
+                OnPlaying();
+            }         
+        }
+
+        public void Stop()
+        {
+            if (Player != null)
+            {
+                Player.Stop();
+                OnStopped();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (Player != null)
+            {
+                Player.Dispose();
+            }
+        }
+
+        public TimeSpan Length
+        {
+            get
+            {
+                if (Player != null) return Player.Length();
+                else return new TimeSpan();
+            }
+        }
+
+
+        public TimeSpan CurrentPosition
+        {
+            get
+            {
+                return Player.CurrentPosition();
+            }
+            set
+            {
+                Player.SetCurrentPosition(value);
+            }
+        }
+
+        //needs changing
+        public bool Muted
+        {
+            set
+            {
+                if (value)
+                {
+                    Player.Volume = 0;
+                }
+                if (!value)
+                {
+                    Player.Volume = options.Volume;
+                }
+            }
+        }
+        /// <summary>
+        /// sets the Balance from -100 to 100
+        /// </summary>
+        public int Balance
+        {
+            set
+            {
+                Player.SetBalance(value);
+            }
+        }
+
+        public bool TrackLoaded
+        {
+            get
+            {
+                if (Player != null)
+                {
+                    return true;
+                }
+                else
+                { 
+                    return false;
+                }
+            }
+        }
+
+
+
+    }
+}
