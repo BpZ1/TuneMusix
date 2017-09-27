@@ -26,6 +26,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         {
             Func<IWaveSource, IWaveSource> func = flanger.Apply;
             Queue.AddLast(func);
+            OnQueueChanged();
         }
         /// <summary>
         /// Adds an effect of type equalizer at the end of the queue.
@@ -35,6 +36,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         {
             Func<IWaveSource, IWaveSource> func = equalizer.Apply;
             Queue.AddLast(func);
+            OnQueueChanged();
         }
         /// <summary>
         /// Adds an 10 band equalizer at the end of the queue.
@@ -42,6 +44,8 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         public void Add10BandEqualizer()
         {
             Func<IWaveSource, IWaveSource> func = _create10BandEqualizer;
+            Queue.AddLast(func);
+            OnQueueChanged();
         }
         /// <summary>
         /// Adds an effect of type reverb at the end of the queue.
@@ -51,6 +55,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         {
             Func<IWaveSource, IWaveSource> func = reverb.Apply;
             Queue.AddLast(func);
+            OnQueueChanged();
         }
 
         /// <summary>
@@ -61,6 +66,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         {
             Func<IWaveSource, IWaveSource> func = chorus.Apply;
             Queue.AddLast(func);
+            OnQueueChanged();
         }
 
         private IWaveSource _create10BandEqualizer(IWaveSource waveSource)
@@ -79,9 +85,14 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             if(Queue.Count > 0)
             {
                 Queue.RemoveLast();
+                OnQueueChanged();
             }           
         }
 
+        public int Count
+        {
+            get { return Queue.Count; }
+        }
 
 
         /// <summary>
@@ -103,7 +114,10 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         protected virtual void OnQueueChanged()
         {
-
+            if (QueueChanged != null)
+            {
+                QueueChanged(Queue);
+            }
         }
 
     }

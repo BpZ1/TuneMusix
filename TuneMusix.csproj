@@ -150,9 +150,12 @@
     <Compile Include="Helpers\MediaPlayer\Effects\BaseEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\ChorusEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\CompressorEffect.cs" />
+    <Compile Include="Helpers\MediaPlayer\Effects\DistortionEffect.cs" />
+    <Compile Include="Helpers\MediaPlayer\Effects\EchoEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\EffectQueue.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\EqualizerEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\FlangerEffect.cs" />
+    <Compile Include="Helpers\MediaPlayer\Effects\GargleEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\ReverbEffect.cs" />
     <Compile Include="Helpers\TextFormatService.cs" />
     <Compile Include="Model\OptionEffects.cs" />

@@ -34,12 +34,21 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
-            return waveSource.AppendSource(_createFlanger);
+            if (IsActive)
+            {
+                return waveSource.AppendSource(_createFlanger);
+            }
+            else
+            {
+                return waveSource;
+            }
+          
         }
 
         private DmoFlangerEffect _createFlanger(IWaveSource waveSource)
         {
             _flanger = new DmoFlangerEffect(waveSource);
+            _isInitialized = true;
             _flanger.Delay = _delay;
             _flanger.Depth = _depth;
             _flanger.Feedback = _feedback;

@@ -32,12 +32,21 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
-            return waveSource.AppendSource(_createFlanger);
+            if (IsActive)
+            {
+                return waveSource.AppendSource(_createFlanger);
+            }
+            else
+            {
+                return waveSource;
+            }
+          
         }
 
         private DmoWavesReverbEffect _createFlanger(IWaveSource waveSource)
         {
             _reverb = new DmoWavesReverbEffect(waveSource);
+            _isInitialized = true;
             _reverb.HighFrequencyRTRatio = _highFrequencyRTRatio;
             _reverb.InGain = _inGain;
             _reverb.ReverbMix = _reverbMix;

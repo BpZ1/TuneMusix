@@ -43,11 +43,20 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
-            return waveSource.AppendSource(_createCompressor);
+            if (IsActive)
+            {
+                return waveSource.AppendSource(_createCompressor);
+            }
+            else
+            {
+                return waveSource;
+            }
+            
         }
         private DmoCompressorEffect _createCompressor(IWaveSource waveSource)
         {
             _compressor = new DmoCompressorEffect(waveSource);
+            _isInitialized = true;
             _compressor.Attack = _attack;
             _compressor.Gain = _gain;
             _compressor.Predelay = _preDelay;

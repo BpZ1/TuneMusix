@@ -35,7 +35,15 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
-            return waveSource.AppendSource(_createChorus);
+            if (IsActive)
+            {
+                return waveSource.AppendSource(_createChorus);
+            }
+            else
+            {
+                return waveSource;
+            }
+         
         }
 
         private DmoChorusEffect _createChorus(IWaveSource waveSource)
