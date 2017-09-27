@@ -40,9 +40,6 @@ namespace TuneMusix.Helpers.MediaPlayer
         public AudioControls()
         {
            
-           
-           
-
 
             //Events
             dataModel.CurrentTrackChanged += OnCurrentTrackChanged;

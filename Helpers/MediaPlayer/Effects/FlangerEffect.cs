@@ -1,45 +1,38 @@
 ﻿using CSCore;
 using CSCore.Streams.Effects;
-using TuneMusix.Model;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
-    public class FlangerEffect
+    public class FlangerEffect : BaseEffect
     {
 
         private DmoFlangerEffect _flanger;
+        private bool _isInitialized;
         private float _delay = 2;
         private float _depth = 100;
         private float _feedback = -50;
         private float _frequency = 0.25f;
         private float _wet_DryMix = 50;
-        private Options options = Options.Instance;
-
+        private int _waveForm = 1;
+        
         public FlangerEffect()
         {
-            options.DelayFlangerChanged += _onDelayChanged;
-            options.DepthFlangerChanged += _onDepthChanged;
-            options.FeedbackFlangerChanged += _onFeedbackChanged;
-            options.FrequencyFlangerChanged += _onFrequencyChanged;
-            options.Wet_DryMixFlangerChanged += _onWet_DryMixChanged;
+            _isInitialized = false;
+
         }
 
-        public FlangerEffect(float delay,float depth,float feedback,float frequency,float wetDryMix)
+        public FlangerEffect(float delay,float depth,float feedback,float frequency,float wetDryMix,int waveForm)
         {
             _delay = delay;
             _depth = depth;
             _feedback = feedback;
             _frequency = frequency;
             _wet_DryMix = wetDryMix;
-
-            options.DelayFlangerChanged += _onDelayChanged;
-            options.DepthFlangerChanged += _onDepthChanged;
-            options.FeedbackFlangerChanged += _onFeedbackChanged;
-            options.FrequencyFlangerChanged += _onFrequencyChanged;
-            options.Wet_DryMixFlangerChanged += _onWet_DryMixChanged;
+            _waveForm = waveForm;
+            _isInitialized = false;
         }
 
-        public IWaveSource Apply(IWaveSource waveSource)
+        public override IWaveSource Apply(IWaveSource waveSource)
         {
             return waveSource.AppendSource(_createFlanger);
         }
@@ -47,28 +40,80 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         private DmoFlangerEffect _createFlanger(IWaveSource waveSource)
         {
             _flanger = new DmoFlangerEffect(waveSource);
+            _flanger.Delay = _delay;
+            _flanger.Depth = _depth;
+            _flanger.Feedback = _feedback;
+            _flanger.Frequency = _frequency;
+            _flanger.WetDryMix = _wet_DryMix;
+            _flanger.Waveform = (FlangerWaveform)_waveForm;
             return _flanger;
         }
 
-        private void _onDelayChanged(object source)
+        public float Delay
         {
-            _delay = (float)source;
+            get { return _delay; }
+            set
+            {
+                _delay = value;
+                IsModified = true;
+                if (_isInitialized)
+                {
+                    _flanger.Delay = _delay;
+                }
+            }
         }
-        private void _onDepthChanged(object source)
+        public float Depth
         {
-            _depth = (float)source;
+            get { return _depth; }
+            set
+            {
+                _depth = value;
+                IsModified = true;
+                if (_isInitialized)
+                {
+                    _flanger.Depth = _depth;
+                }
+            }
         }
-        private void _onFeedbackChanged(object source)
+        public float Feedback
         {
-            _feedback = (float)source;
+            get { return _feedback; }
+            set
+            {
+                _feedback = value;
+                IsModified = true;
+                if (_isInitialized)
+                {
+                    _flanger.Delay = _feedback;
+                }
+            }
         }
-        private void _onFrequencyChanged(object source)
+        public float Frequency
         {
-            _frequency = (float)source;
+            get { return _frequency; }
+            set
+            {
+                _frequency = value;
+                IsModified = true;
+                if (_isInitialized)
+                {
+                    _flanger.Frequency = _frequency;
+                }
+            }
         }
-        private void _onWet_DryMixChanged(object source)
+        public float Wet_DryMix
         {
-            _wet_DryMix = (float)source;
+            get { return _wet_DryMix; }
+            set
+            {
+                _wet_DryMix = value;
+                IsModified = true;
+                if (_isInitialized)
+                {
+                    _flanger.WetDryMix = _wet_DryMix;
+                }
+            }
         }
+
     }
 }
