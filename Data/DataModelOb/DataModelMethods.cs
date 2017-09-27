@@ -12,7 +12,7 @@ namespace TuneMusix.Data.DataModelOb
     partial class DataModel
     {
         /// <summary>
-        /// Deletes a track from the folder, tracklist and database
+        /// Deletes a track from the folder, tracklist and database.
         /// </summary>
         /// <param name="track"></param>
         public void Delete(List<Track> tracks)
