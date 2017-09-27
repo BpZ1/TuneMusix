@@ -9,7 +9,7 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
-    class CompressorEffect
+    public class CompressorEffect
     {
         private DmoCompressorEffect _compressor;
         private float _attack = 10;

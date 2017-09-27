@@ -19,27 +19,21 @@ namespace TuneMusix.Helpers
     {
       
         public bool Repeat { get; set; }
-        public bool EqualizerActive { get; set; }
-        public bool EchoActive { get; set; }
-        public bool ChorusActive { get; set; }
-        public bool CompressorActive { get; set;}
-        public bool FlangerActive { get; set; }
-        public bool DistortionActive { get; set; }
+       
         private IWaveSource soundSource;
         private ISoundOut soundOut;
-        private FlangerEffect flanger;
-        private EqualizerEffect equalizer;
         private bool isInitialized;
 
 
-        public AudioPlayerImpl(string url,float volume, int balance,bool isStereo,bool effects)
+        public AudioPlayerImpl(string url,float volume, int balance,bool isStereo,EffectQueue effects,bool effectsActive)
         {
             soundOut = GetSoundOut();
             soundSource = GetSoundSource(url);
 
-            if (effects)
+
+            if (effectsActive)
             {
-                ApplyEffects();
+               soundSource = effects.Apply(soundSource);
             }
          
             if(soundSource != null)
@@ -84,35 +78,6 @@ namespace TuneMusix.Helpers
                 return null;
             }
             return waveSource;
-        }
-
-        private void ApplyEffects()
-        {
-            if (EqualizerActive && equalizer != null)
-            {
-                equalizer.Apply(soundSource);
-            }
-            if (EchoActive)
-            {
-               
-            }
-            if (ChorusActive)
-            {
-                
-                
-            }
-            if (DistortionActive)
-            {
-
-            }
-            if (FlangerActive && flanger != null)
-            {
-                soundSource = flanger.Apply(soundSource);
-            }
-            if (CompressorActive)
-            {
-                
-            }
         }
 
         //Eventhandler

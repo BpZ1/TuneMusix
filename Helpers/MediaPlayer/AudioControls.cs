@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSCore.Streams.Effects;
+using System;
 using System.Diagnostics;
 using TuneMusix.Data;
 using TuneMusix.Data.DataModelOb;
@@ -9,10 +10,7 @@ namespace TuneMusix.Helpers.MediaPlayer
 {
     partial class AudioControls : IDisposable
     {
-        private EqualizerEffect equalizer;
-        private FlangerEffect flanger;
-        private ChorusEffect chorus;
-        private CompressorEffect compressor;
+        private EffectQueue _effectQueue;
 
         private static AudioControls instance;
         public static AudioControls Instance
@@ -33,51 +31,10 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         public void LoadEffects()
         {
-            Debug.WriteLine("Loading effects...");
-            if (options.Equalizer)
-            {
-                equalizer = new EqualizerEffect(options.Channelfilter);
-            }
-            if (options.Distortion)
-            {
-                Debug.WriteLine("Distortion effect loaded.");
-            }
-            if (options.Flanger)
-            {          
-                flanger = new FlangerEffect(
-                    options.DelayFlanger,
-                    options.DepthFlanger,
-                    options.FeedbackFlanger,
-                    options.FrequencyFlanger,
-                    options.Wet_DryMixFlanger);
-                Debug.WriteLine("Flanger effect loaded.");
-            }
-            if (options.Chorus)
-            {
-                chorus = new ChorusEffect(
-                    options.DelayChorus,
-                    options.DepthChorus, options.FeedbackChorus,
-                    options.FrequencyChorus,
-                    options.PhaseChorus,
-                    options.Wet_DryMixChorus);
-                Debug.WriteLine("Chorus effect loaded.");
-            }
-            if (options.Echo)
-            {
-                Debug.WriteLine("Echo effect loaded.");
-            }
-            if (options.Compressor)
-            {
-                compressor = new CompressorEffect(
-                    options.AttackCompressor,
-                    options.GainCompressor,
-                    options.PreDelayCompressor,
-                    options.RatioCompressor,
-                    options.ReleaseCompressor,
-                    options.TreshholdCompressor);
-                Debug.WriteLine("Compressor effect loaded.");
-            }
-            Debug.WriteLine("Effects loaded.");
+            //test
+            _effectQueue = new EffectQueue();
+            _effectQueue.AddChorus(new ChorusEffect());
+            _effectQueue.AddFlanger(new FlangerEffect());
         }
 
         public AudioControls()
@@ -227,7 +184,8 @@ namespace TuneMusix.Helpers.MediaPlayer
                     GetFloatVolume((int)options.Volume),
                     options.Balance,
                     true,
-                    false);
+                    _effectQueue,
+                    true);
                 Player.PlaybackFinished += OnPlaybackFinished;              
             }
             OnTrackChanged();
@@ -260,7 +218,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 
             }
         }
-
         public bool IsLoaded
         {
             get
@@ -275,7 +232,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
             }
         }
-
         public void Play()
         {
             if (Player != null)
@@ -284,7 +240,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 OnPlaying();
             }          
         }
-
         public void Pause()
         {
             if (Player != null)
@@ -293,7 +248,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 OnPaused();
             }           
         }
-
         public void Resume()
         {
             if (Player != null)
@@ -302,7 +256,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 OnPlaying();
             }         
         }
-
         public void Stop()
         {
             if (Player != null)
@@ -311,7 +264,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 OnStopped();
             }
         }
-
         public void Dispose()
         {
             if (Player != null)
@@ -319,7 +271,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 Player.Dispose();
             }
         }
-
         public TimeSpan Length
         {
             get
@@ -328,8 +279,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 else return new TimeSpan();
             }
         }
-
-
         public TimeSpan CurrentPosition
         {
             get

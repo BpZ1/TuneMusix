@@ -5,7 +5,7 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
-    class ChorusEffect
+    public class ChorusEffect
     {
         private DmoChorusEffect _chorus;
         private float _delay = 16;

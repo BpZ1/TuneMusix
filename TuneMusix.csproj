@@ -149,6 +149,7 @@
     <Compile Include="Helpers\MediaPlayer\AudioPlayer.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\ChorusEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\CompressorEffect.cs" />
+    <Compile Include="Helpers\MediaPlayer\Effects\EffectQueue.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\EqualizerEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\FlangerEffect.cs" />
     <Compile Include="Helpers\TextFormatService.cs" />
