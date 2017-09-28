@@ -13,7 +13,6 @@ namespace TuneMusix.ViewModel
     {
         DataModel dataModel = DataModel.Instance;
 
-
         //Getter
         public ObservableCollection<Track> TrackList
         {

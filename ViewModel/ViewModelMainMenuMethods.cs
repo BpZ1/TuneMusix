@@ -6,6 +6,7 @@ using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 using TuneMusix.View.OptionsWindow;
+using TuneMusix.ViewModel.Effects;
 using WinForms = System.Windows.Forms;
 
 namespace TuneMusix.ViewModel

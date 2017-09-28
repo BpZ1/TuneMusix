@@ -91,10 +91,12 @@ namespace TuneMusix.Helpers.MediaPlayer
             {
                 _effectQueue.AddEffect(effect);
             }
-
-            TimeSpan lastPosition = CurrentPosition;
-            PlayTrack(dataModel.CurrentTrack);
-            CurrentPosition = lastPosition;
+            if(Player != null)
+            {
+                TimeSpan lastPosition = CurrentPosition;
+                PlayTrack(dataModel.CurrentTrack);
+                CurrentPosition = lastPosition;
+            }      
         }
 
         private void OnPlaybackFinished(object source)
@@ -299,7 +301,11 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             get
             {
-                return Player.CurrentPosition();
+                if(Player != null)
+                {
+                    return Player.CurrentPosition();
+                }
+                return new TimeSpan();
             }
             set
             {

@@ -23,6 +23,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         {
             Func<IWaveSource, IWaveSource> func = effect.Apply;
             Queue.AddLast(func);
+            _modified = true;
             OnQueueChanged();
         }
        
@@ -33,6 +34,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         {
             Func<IWaveSource, IWaveSource> func = _create10BandEqualizer;
             Queue.AddLast(func);
+            _modified = true;
             OnQueueChanged();
         }
 
@@ -52,6 +54,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             if(Queue.Count > 0)
             {
                 Queue.RemoveLast();
+                _modified = true;
                 OnQueueChanged();
             }           
         }
