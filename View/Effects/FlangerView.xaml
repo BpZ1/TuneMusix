@@ -37,6 +37,21 @@
                 </materialDesign:ColorZone>
                 <materialDesign:ColorZone Mode="Light">
                     <StackPanel>
+                        <Label Content="Wave Form" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding WaveForm,Mode=TwoWay}" Maximum="1" ToolTip="{Binding WaveForm}" Minimum="0"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Triangle"/>
+                            <Label Grid.Column="2" Content="Sinus"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
                         <Label Content="Wet-Dry Mix" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding Wet_DryMix,Mode=TwoWay}" Maximum="100" ToolTip="{Binding Wet_DryMix}"/>
                         <Grid>

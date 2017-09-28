@@ -4,9 +4,77 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TuneMusix.View.Effects"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            <Slider Value="{Binding Depth,Mode=TwoWay}" Maximum="100"/>
+        <Expander >
+            <StackPanel>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Delay" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Delay,Mode=TwoWay}" Maximum="20" Minimum="0" ToolTip="{Binding Delay}" />
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel Height="auto">
+                        <Label Content="Depth" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Depth,Mode=TwoWay}" Maximum="100" ToolTip="{Binding Depth}" Minimum="0"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Feedback" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Feedback,Mode=TwoWay}" Maximum="99" ToolTip="{Binding Feedback}" Minimum="-99"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Frequency" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Frequency,Mode=TwoWay}" Maximum="10" ToolTip="{Binding Frequency}" Minimum="0"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Wave Form" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding WaveForm,Mode=TwoWay}" Maximum="1" ToolTip="{Binding WaveForm}" Minimum="0"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Triangle"/>
+                            <Label Grid.Column="2" Content="Sinus"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Phase" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Phase,Mode=TwoWay}" Maximum="4" ToolTip="{Binding Phase}" Minimum="0"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Wet-Dry Mix" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Wet_DryMix,Mode=TwoWay}" Maximum="4" ToolTip="{Binding Wet_DryMix}" Minimum="0"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="Wet"/>
+                            <Label Grid.Column="2" Content="Dry"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+            </StackPanel>
+        </Expander>
+
+        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
+            <Label Content="Chorus" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+        </materialDesign:ColorZone>
     </Grid>
 </UserControl>

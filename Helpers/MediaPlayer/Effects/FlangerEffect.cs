@@ -124,6 +124,19 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
                 }
             }
         }
+        public int WaveForm
+        {
+            get { return _waveForm; }
+            set
+            {
+                _waveForm = value;
+                IsModified = true;
+                if (_isInitialized)
+                {
+                    _flanger.Waveform = (FlangerWaveform)_waveForm;
+                }
+            }
+        }
 
     }
 }
