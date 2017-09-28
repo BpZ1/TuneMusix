@@ -14,60 +14,25 @@
                     <StackPanel>
                         <Label Content="Frequency" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding Frequency,Mode=TwoWay}" Maximum="4" TickFrequency="0.1" ToolTip="{Binding Frequency}"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="8*"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Content="0"/>
-                            <Label Grid.Column="2" Content="10"/>
-                        </Grid>
+                      
                     </StackPanel>
                 </materialDesign:ColorZone>
                 <materialDesign:ColorZone Mode="Light">
                     <StackPanel Height="auto">
                         <Label Content="Delay" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding Delay,Mode=TwoWay}" Maximum="4" TickFrequency="0.1" ToolTip="{Binding Delay}"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="8*"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Content="0"/>
-                            <Label Grid.Column="2" Content="4"/>
-                        </Grid>
                     </StackPanel>
                 </materialDesign:ColorZone>
                 <materialDesign:ColorZone Mode="Light">
                     <StackPanel>
                         <Label Content="Depth" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding Depth,Mode=TwoWay}" Maximum="100" ToolTip="{Binding Depth}"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="8*"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Content="0"/>
-                            <Label Grid.Column="2" Content="100"/>
-                        </Grid>
                     </StackPanel>
                 </materialDesign:ColorZone>
                 <materialDesign:ColorZone Mode="Light">
                     <StackPanel>
                         <Label Content="Feedback" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding Feedback,Mode=TwoWay}" Maximum="4" TickFrequency="0.1" ToolTip="{Binding Feedback}"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="8*"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Content="-99"/>
-                            <Label Grid.Column="2" Content="99"/>
-                        </Grid>
                     </StackPanel>
                 </materialDesign:ColorZone>
                 <materialDesign:ColorZone Mode="Light">
