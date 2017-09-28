@@ -92,8 +92,4 @@
             <Label Content="Flanger" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
         </materialDesign:ColorZone>
     </Grid>
-
-       
-           
-
 </UserControl>

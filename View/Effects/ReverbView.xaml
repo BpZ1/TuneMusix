@@ -5,8 +5,76 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TuneMusix.View.Effects"
              mc:Ignorable="d" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            <Slider />
+        <Expander >
+            <StackPanel>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="High Frequency RT Ratio" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding HighFrequencyRTRatio,Mode=TwoWay}" Maximum="0.999" TickFrequency="0.1" ToolTip="{Binding HighFrequencyRTRatio}" Minimum="0.001"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="0.001"/>
+                            <Label Grid.Column="2" Content="0.999"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel Height="auto">
+                        <Label Content="Gain" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding InGain,Mode=TwoWay}" Maximum="0" TickFrequency="0.1" ToolTip="{Binding InGain}" Minimum="-96"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="-96"/>
+                            <Label Grid.Column="2" Content="0"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Mix" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding ReverbMix,Mode=TwoWay}" Maximum="0" ToolTip="{Binding ReverbMix}" Minimum="-96"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="-96"/>
+                            <Label Grid.Column="2" Content="0"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Time" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding ReverbTime,Mode=TwoWay}" Maximum="3000" ToolTip="{Binding ReverbTime}" Minimum="0.001"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="8*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="1"/>
+                            <Label Grid.Column="2" Content="3000"/>
+                        </Grid>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+            </StackPanel>
+        </Expander>
+
+        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
+            <Label Content="Reverb" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+        </materialDesign:ColorZone>
     </Grid>
 </UserControl>
