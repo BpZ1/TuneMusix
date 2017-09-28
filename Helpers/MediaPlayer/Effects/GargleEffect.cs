@@ -1,5 +1,4 @@
-﻿using System;
-using CSCore;
+﻿using CSCore;
 using CSCore.Streams.Effects;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
@@ -14,10 +13,12 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public GargleEffect()
         {
+            IsActive = true;
             _isInitialized = false;
         }
         public GargleEffect(int rate, int waveShape)
         {
+            IsActive = true;
             _rate = rate;
             _waveShape = waveShape;
         }

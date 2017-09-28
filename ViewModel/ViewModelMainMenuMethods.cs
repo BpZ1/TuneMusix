@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 using TuneMusix.View.OptionsWindow;
 using WinForms = System.Windows.Forms;
@@ -112,7 +113,7 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void _debugMethod(object argument)
         {
-            options.Wet_DryMixFlanger = 100;
+            dataModel.AddEffectToQueue(new FlangerEffect());
         }
 
         /// <summary>

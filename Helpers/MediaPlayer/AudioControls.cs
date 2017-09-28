@@ -1,5 +1,6 @@
 ﻿using CSCore.Streams.Effects;
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using TuneMusix.Data;
 using TuneMusix.Data.DataModelOb;
@@ -27,15 +28,7 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         private AudioPlayerImpl Player;
         private DataModel dataModel = DataModel.Instance;
-        private Options options = Options.Instance;
-
-        public void LoadEffects()
-        {
-            //test
-            _effectQueue = new EffectQueue();
-            _effectQueue.AddChorus(new ChorusEffect());
-            _effectQueue.AddFlanger(new FlangerEffect());
-        }
+        private Options options = Options.Instance;    
 
         public AudioControls()
         {
@@ -62,7 +55,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 Playing(this);
             }
         }
-
         protected virtual void OnStopped()
         {
             if (Stopped != null)
@@ -70,7 +62,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 Stopped(this);
             }
         }
-
         protected virtual void OnPaused()
         {
             if (Paused != null)
@@ -78,13 +69,32 @@ namespace TuneMusix.Helpers.MediaPlayer
                 Paused(this);
             }
         }
-
         protected virtual void OnTrackChanged()
         {
             if (TrackChanged!= null)
             {
                 TrackChanged(this);
             }
+        }
+
+        public void LoadEffects()
+        {
+            _effectQueue = new EffectQueue();
+            dataModel.EffectQueueChanged += OnEffectQueueChanged;
+        }
+
+        private void OnEffectQueueChanged(object source,object queue)
+        {
+            ObservableCollection<BaseEffect> effectQueue = queue as ObservableCollection<BaseEffect>;          
+            _effectQueue = new EffectQueue();
+            foreach (BaseEffect effect in effectQueue)
+            {
+                _effectQueue.AddEffect(effect);
+            }
+
+            TimeSpan lastPosition = CurrentPosition;
+            PlayTrack(dataModel.CurrentTrack);
+            CurrentPosition = lastPosition;
         }
 
         private void OnPlaybackFinished(object source)
@@ -111,32 +121,39 @@ namespace TuneMusix.Helpers.MediaPlayer
             }
         }
 
+
         public void PlayNext()
-        {
-            dataModel.QueueIndex++;
-            if (dataModel.QueueIndex+1 <= dataModel.TrackQueue.Count)
+        {          
+            if(dataModel.TrackQueue.Count > 0)
             {
-                dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
-            }
-            if(dataModel.QueueIndex + 1 > dataModel.TrackQueue.Count)
-            {
-                dataModel.QueueIndex = 0;
-                dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
+                dataModel.QueueIndex++;
+                if (dataModel.QueueIndex + 1 <= dataModel.TrackQueue.Count)
+                {
+                    dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
+                }
+                if (dataModel.QueueIndex + 1 > dataModel.TrackQueue.Count)
+                {
+                    dataModel.QueueIndex = 0;
+                    dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
+                }
             }          
         }
 
         public void PlayPrevious()
         {
-            if (dataModel.QueueIndex > 0)
+            if(dataModel.TrackQueue.Count > 0)
             {
-                dataModel.QueueIndex--;
-                dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
-            }
-            else
-            {
-                dataModel.QueueIndex = dataModel.TrackQueue.Count - 1;
-                dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
-            }
+                if (dataModel.QueueIndex > 0)
+                {
+                    dataModel.QueueIndex--;
+                    dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
+                }
+                else
+                {
+                    dataModel.QueueIndex = dataModel.TrackQueue.Count - 1;
+                    dataModel.CurrentTrack = dataModel.TrackQueue[dataModel.QueueIndex];
+                }
+            }          
         }
 
         private float GetFloatVolume(int value)
@@ -169,9 +186,8 @@ namespace TuneMusix.Helpers.MediaPlayer
             }
         }
         /// <summary>
-        /// Creates
+        /// Private method called by PlayTrack
         /// </summary>
-        /// <param name="track"></param>
         private void CreatePlayer(Track track)
         {
             if(track != null)
@@ -183,11 +199,14 @@ namespace TuneMusix.Helpers.MediaPlayer
                     true,
                     _effectQueue,
                     true);
-                Player.PlaybackFinished += OnPlaybackFinished;              
+                Player.PlaybackFinished += OnPlaybackFinished;
+                OnTrackChanged();
             }
-            OnTrackChanged();
         }
-
+        /// <summary>
+        /// Creates a new Player and disposes of the old one if present.
+        /// </summary>
+        /// <param name="track"></param>
         public void PlayTrack(Track track)
         {
             if (Player!=null)

@@ -22,6 +22,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public CompressorEffect()
         {
+            IsActive = true;
             _isInitialized = false;
         }
         public CompressorEffect(
@@ -31,6 +32,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             float release,
             float trashold)
         {
+            IsActive = true;
             _attack = attack;
             _gain = gain;
             _preDelay = preDelay;

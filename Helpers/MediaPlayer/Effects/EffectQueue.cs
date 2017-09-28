@@ -18,53 +18,20 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         {
             Queue = new LinkedList<Func<IWaveSource, IWaveSource>>();
         }
-        /// <summary>
-        /// Adds an effect of type flanger at the end of the queue.
-        /// </summary>
-        /// <param name="flanger"></param>
-        public void AddFlanger(FlangerEffect flanger)
+
+        public void AddEffect(BaseEffect effect)
         {
-            Func<IWaveSource, IWaveSource> func = flanger.Apply;
+            Func<IWaveSource, IWaveSource> func = effect.Apply;
             Queue.AddLast(func);
             OnQueueChanged();
         }
-        /// <summary>
-        /// Adds an effect of type equalizer at the end of the queue.
-        /// </summary>
-        /// <param name="equalizer"></param>
-        public void AddEqualizer(EqualizerEffect equalizer)
-        {
-            Func<IWaveSource, IWaveSource> func = equalizer.Apply;
-            Queue.AddLast(func);
-            OnQueueChanged();
-        }
+       
         /// <summary>
         /// Adds an 10 band equalizer at the end of the queue.
         /// </summary>
         public void Add10BandEqualizer()
         {
             Func<IWaveSource, IWaveSource> func = _create10BandEqualizer;
-            Queue.AddLast(func);
-            OnQueueChanged();
-        }
-        /// <summary>
-        /// Adds an effect of type reverb at the end of the queue.
-        /// </summary>
-        /// <param name="reverb"></param>
-        public void AddReverb(ReverbEffect reverb)
-        {
-            Func<IWaveSource, IWaveSource> func = reverb.Apply;
-            Queue.AddLast(func);
-            OnQueueChanged();
-        }
-
-        /// <summary>
-        /// Adds an effect of type chorus at the end of the queue.
-        /// </summary>
-        /// <param name="chorus"></param>
-        public void AddChorus(ChorusEffect chorus)
-        {
-            Func<IWaveSource, IWaveSource> func = chorus.Apply;
             Queue.AddLast(func);
             OnQueueChanged();
         }

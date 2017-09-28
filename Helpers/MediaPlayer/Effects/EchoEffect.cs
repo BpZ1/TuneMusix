@@ -1,5 +1,4 @@
-﻿using System;
-using CSCore;
+﻿using CSCore;
 using CSCore.Streams.Effects;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
@@ -17,10 +16,12 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public EchoEffect()
         {
+            IsActive = true;
             _isInitialized = false;
         }
         public EchoEffect(float feedback,float leftDelay,bool panDelay,float wet_DryMix,float rightDelay)
         {
+            IsActive = true;
             _feedback = feedback;
             _leftDelay = leftDelay;
             _panDelay = panDelay;

@@ -17,12 +17,13 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         
         public FlangerEffect()
         {
+            IsActive = true;
             _isInitialized = false;
-
         }
 
         public FlangerEffect(float delay,float depth,float feedback,float frequency,float wetDryMix,int waveForm)
         {
+            IsActive = true;
             _delay = delay;
             _depth = depth;
             _feedback = feedback;

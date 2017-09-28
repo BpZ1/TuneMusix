@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TuneMusix.Attributes;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
 namespace TuneMusix.Data.DataModelOb
@@ -356,6 +357,12 @@ namespace TuneMusix.Data.DataModelOb
             {
                 DBManager.DeletePlaylistTrack(playlist,track);
             }
+        }
+
+        public void AddEffectToQueue(BaseEffect effect)
+        {
+            EffectQueue.Add(effect);
+            OnEffectQueueChanged();
         }
 
     }

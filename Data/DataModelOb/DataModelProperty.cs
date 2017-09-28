@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TuneMusix.Attributes;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
 
@@ -73,6 +74,11 @@ namespace TuneMusix.Data.DataModelOb
                 }
                 OnTrackQueueChanged();
             }
+        }
+
+        public ObservableCollection<BaseEffect> EffectQueue
+        {
+            get { return _effectQueue; }
         }
     }
 }

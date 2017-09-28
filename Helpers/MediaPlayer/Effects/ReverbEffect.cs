@@ -15,6 +15,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public ReverbEffect()
         {
+            IsActive = true;
             _isInitialized = false;
         }
         public ReverbEffect(
@@ -23,6 +24,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             float reverbMix,
             float reverbTime)
         {
+            IsActive = true;
             _highFrequencyRTRatio = highFrequencyRTRatio;
             _inGain = inGain;
             _reverbMix = reverbMix;

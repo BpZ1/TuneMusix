@@ -163,12 +163,7 @@
     <Compile Include="Model\PlaylistTrack.cs" />
     <Compile Include="ViewModel\CurrentPlaylistViewModel.cs" />
     <Compile Include="ViewModel\Dialog\GetTextViewModel.cs" />
-    <Compile Include="ViewModel\Effects\ChorusViewModel.cs" />
-    <Compile Include="ViewModel\Effects\CompressorViewModel.cs" />
-    <Compile Include="ViewModel\Effects\DistortionViewModel.cs" />
-    <Compile Include="ViewModel\Effects\EchoViewModel.cs" />
-    <Compile Include="ViewModel\Effects\EqualizerViewModel.cs" />
-    <Compile Include="ViewModel\Effects\FlangerViewModel.cs" />
+    <Compile Include="ViewModel\Effects\EffectsViewModel.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />

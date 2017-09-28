@@ -30,7 +30,6 @@ namespace TuneMusix.Helpers
             soundOut = GetSoundOut();
             soundSource = GetSoundSource(url);
 
-
             if (effectsActive)
             {
                soundSource = effects.Apply(soundSource);

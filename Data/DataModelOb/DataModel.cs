@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using TuneMusix.Attributes;
 using TuneMusix.Data.SQLDatabase;
+using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
 namespace TuneMusix.Data.DataModelOb
@@ -33,12 +34,13 @@ namespace TuneMusix.Data.DataModelOb
         public double CurrentPosition { get; set; }
         public Folder SelectedFolder { get; set; }
         private Playlist _currentPlaylist = null;
+        private Track _CurrentTrack = null;
         private ObservableCollection<Playlist> _playlists = new ObservableCollection<Playlist>();
         private ObservableCollection<Track> _tracklist = new ObservableCollection<Track>();
-        private Track _CurrentTrack = null;
         private ObservableCollection<Track> _selectedTracks = new ObservableCollection<Track>();
         private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
         private List<Track> _trackQueue = new List<Track>();
+        private ObservableCollection<BaseEffect> _effectQueue = new ObservableCollection<BaseEffect>();
         
    
 
@@ -49,6 +51,7 @@ namespace TuneMusix.Data.DataModelOb
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
         public event DataModelChangedEventHandler DataModelChanged;
         public event DataModelChangedEventHandler TrackQueueChanged;
+        public event DataModelChangedEventHandler EffectQueueChanged;
 
         protected virtual void OnCurrentTrackChanged()
         {
@@ -78,11 +81,18 @@ namespace TuneMusix.Data.DataModelOb
                 TrackQueueChanged(this,TrackQueue);
             }
         }
+        protected virtual void OnEffectQueueChanged()
+        {
+            if(EffectQueueChanged != null)
+            {
+                EffectQueueChanged(this,EffectQueue);
+            }
+        }
         /////////////////////////////////////////////////////////////////////////////////////////////
 
-       
 
-    
+
+
 
     }
 }

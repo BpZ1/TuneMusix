@@ -10,9 +10,6 @@
       mc:Ignorable="d" 
       DataContext="{DynamicResource EqualizerViewModel}"
       d:DesignHeight="300" d:DesignWidth="373">
-    <UserControl.Resources>
-        <vm:EqualizerViewModel x:Key="EqualizerViewModel"/>
-    </UserControl.Resources>
     <Grid Margin="0,0,0,0">
         <StackPanel Orientation="Horizontal">
             <Slider Margin="12,12,12,12" Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding FilterChannel1,Mode=TwoWay}"/>

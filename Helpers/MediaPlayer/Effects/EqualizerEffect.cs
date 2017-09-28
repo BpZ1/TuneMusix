@@ -4,25 +4,27 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
-    public class EqualizerEffect
+    public class EqualizerEffect : BaseEffect
     {
 
         private Equalizer _equalizer;
+        private bool _isInitialized;
         private double[] _channelFilter;
         private Options options = Options.Instance;
 
         public EqualizerEffect()
         {
-            options.ChannelFilterChanged += _onChannelFilterChanged;
+            _isInitialized = false;
         }
 
         public EqualizerEffect(double[] channelFilter)
         {
             _channelFilter = channelFilter;
-            options.ChannelFilterChanged += _onChannelFilterChanged;
+            _isInitialized = false;
+
         }
 
-        public IWaveSource Apply(IWaveSource waveSource)
+        public override IWaveSource Apply(IWaveSource waveSource)
         {
             return waveSource.ToSampleSource().
                 AppendSource(_createEqualizer).
@@ -32,6 +34,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         private Equalizer _createEqualizer(ISampleSource waveSource)
         {
             _equalizer = Equalizer.Create10BandEqualizer(waveSource);
+            _isInitialized = true;
             int i = 0;
             foreach(double filter in _channelFilter)
             {
@@ -43,16 +46,12 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public void ChannelFilter(int index,double value)
         {
-            if (_equalizer != null)
+            if (_isInitialized)
             {
-                EqualizerFilter filter = _equalizer.SampleFilters[index];
-                filter.AverageGainDB = value;
+                _equalizer.SampleFilters[index].AverageGainDB = value;
+                IsModified = true;
             }
         }
 
-        private void _onChannelFilterChanged(object source)
-        {
-            _channelFilter = source as double[];
-        }
     }
 }

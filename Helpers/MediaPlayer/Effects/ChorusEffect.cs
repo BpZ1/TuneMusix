@@ -20,10 +20,12 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public ChorusEffect()
         {
+            IsActive = true;
             _isInitialized = false;
         }
         public ChorusEffect(float delay,float depth,float feedback,float frequency,int phase,float wet_DryMix)
         {
+            IsActive = true;
             _delay = delay;
             _depth = depth;
             _feedback = feedback;
