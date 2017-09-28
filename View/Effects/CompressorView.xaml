@@ -4,9 +4,53 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TuneMusix.View.Effects"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             >
     <Grid>
-            
+        <Expander >
+            <StackPanel>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Attack" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Attack,Mode=TwoWay}" Maximum="500" Minimum="0.01" ToolTip="{Binding Attack}" />
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel Height="auto">
+                        <Label Content="Gain" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Gain,Mode=TwoWay}" Maximum="60" ToolTip="{Binding Gain}" Minimum="-60"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Pre Delay" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Predelay,Mode=TwoWay}" Maximum="4" ToolTip="{Binding Predelay}" Minimum="0"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Ratio" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Ratio,Mode=TwoWay}" Maximum="100" ToolTip="{Binding Ratio}" Minimum="1"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Release" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Release,Mode=TwoWay}" Maximum="3000" ToolTip="{Binding Release}" Minimum="50"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+                <materialDesign:ColorZone Mode="Light">
+                    <StackPanel>
+                        <Label Content="Treshold" FontWeight="Bold"/>
+                        <Slider Grid.Column="1" Value="{Binding Treshold,Mode=TwoWay}" Maximum="0" ToolTip="{Binding Treshold}" Minimum="-60"/>
+                    </StackPanel>
+                </materialDesign:ColorZone>
+            </StackPanel>
+        </Expander>
+
+        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
+            <Label Content="Compressor" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+        </materialDesign:ColorZone>
     </Grid>
 </UserControl>

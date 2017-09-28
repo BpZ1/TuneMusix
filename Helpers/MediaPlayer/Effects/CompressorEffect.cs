@@ -133,7 +133,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
                 }
             }
         }
-        public float Treshhold
+        public float Treshold
         {
             get { return _treshold; }
             set
