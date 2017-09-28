@@ -8,7 +8,6 @@
              mc:Ignorable="d" 
              >
     <Grid>
-
         <Expander >
             <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                                       Margin="10" HorizontalContentAlignment="Stretch">

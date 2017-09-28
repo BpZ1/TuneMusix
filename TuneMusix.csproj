@@ -198,6 +198,12 @@
     <Compile Include="View\Effects\FlangerView.xaml.cs">
       <DependentUpon>FlangerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Effects\GargleView.xaml.cs">
+      <DependentUpon>GargleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Effects\ReverbView.xaml.cs">
+      <DependentUpon>ReverbView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\FolderPage.xaml.cs">
       <DependentUpon>FolderPage.xaml</DependentUpon>
     </Compile>
@@ -255,6 +261,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Effects\FlangerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Effects\GargleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Effects\ReverbView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

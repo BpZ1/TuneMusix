@@ -31,10 +31,6 @@ namespace TuneMusix.ViewModel.Effects
         private void OnEffectQueueChanged(object source,object queue)
         {
             RaisePropertyChanged("EffectList");
-            foreach(BaseEffect effect in Effectlist)
-            {
-                Console.WriteLine("Effect type: " + effect.GetType().ToString());
-            }
         }
 
         private void _addEffect(object argument)

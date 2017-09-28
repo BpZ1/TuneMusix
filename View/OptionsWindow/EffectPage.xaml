@@ -16,14 +16,39 @@
     <Page.Resources>
         <vm:EffectsViewModel x:Key="EffectsViewModel"/>
     </Page.Resources>
-    <DockPanel>
-        <Label DockPanel.Dock="Top" Content="Effectqueue:"></Label>
-        <ListView DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Effectlist,UpdateSourceTrigger=PropertyChanged}">
-            <ListView.Resources>
-                <DataTemplate DataType="{x:Type effects:FlangerEffect}">
-                    <effectsView:FlangerView/>
-                </DataTemplate>
-            </ListView.Resources>
-        </ListView>
-    </DockPanel>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="0">
+            <Label DockPanel.Dock="Top" Content="Effectqueue:"></Label>
+            <ListView DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Effectlist,UpdateSourceTrigger=PropertyChanged}">
+                <ListView.Resources>
+                    <DataTemplate DataType="{x:Type effects:FlangerEffect}">
+                        <effectsView:FlangerView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type effects:ChorusEffect}">
+                        <effectsView:ChorusView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type effects:CompressorEffect}">
+                        <effectsView:CompressorView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type effects:DistortionEffect}">
+                        <effectsView:DistortionView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type effects:EchoEffect}">
+                        <effectsView:EchoView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type effects:GargleEffect}">
+                        <effectsView:GargleView/>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type effects:ReverbEffect}">
+                        <effectsView:ReverbView/>
+                    </DataTemplate>
+                </ListView.Resources>
+            </ListView>
+        </DockPanel>
+    </Grid>
 </Page>
