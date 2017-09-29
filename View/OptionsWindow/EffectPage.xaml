@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
       xmlns:vm="clr-namespace:TuneMusix.ViewModel.Effects"
       xmlns:effectsView="clr-namespace:TuneMusix.View.Effects"
       xmlns:effects="clr-namespace:TuneMusix.Helpers.MediaPlayer.Effects"
@@ -20,11 +21,20 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="0">
-            <Label DockPanel.Dock="Top" Content="Effectqueue:"></Label>
-            <ListView DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Effectlist,UpdateSourceTrigger=PropertyChanged}">
+            <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
+                <Label  Content="Effectqueue:" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,7" Background="{x:Null}" Foreground="#DDFFFFFF"></Label>
+            </materialDesign:ColorZone>
+            <ListView DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Effectlist,UpdateSourceTrigger=PropertyChanged}"
+                      SelectedItem="{Binding SelectedItem}" SelectionMode="Single">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Remove" Command="{Binding RemoveEffect}"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
                 <ListView.Resources>
                     <DataTemplate DataType="{x:Type effects:EqualizerEffect}">
                         <effectsView:EqualizerView/>
@@ -52,6 +62,27 @@
                     </DataTemplate>
                 </ListView.Resources>
             </ListView>
+        </DockPanel>
+        <Separator Grid.Column="1" BorderThickness="1,0" Background="Black"/>
+        <DockPanel Grid.Column="2">
+            <Grid>
+               
+                <Expander Header="Add Effect" DockPanel.Dock="Top">
+                    <ListView dd:DragDrop.IsDragSource="True">
+                        <ListViewItem>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                <Label Content="Distortion"/>
+                            </StackPanel>
+                        </ListViewItem>
+
+                    </ListView>
+                </Expander>
+                <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid" BorderThickness="0" Margin="0,0,50,0">
+                    <Label  Content="Add Effect" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,7" Background="{x:Null}" Foreground="#DDFFFFFF"></Label>
+                </materialDesign:ColorZone>
+            </Grid>
+           
         </DockPanel>
     </Grid>
 </Page>

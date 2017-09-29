@@ -24,6 +24,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             Func<IWaveSource, IWaveSource> func = effect.Apply;
             Queue.AddLast(func);
             _modified = true;
+            effect.EffectActivated += OnQueueChanged;
             OnQueueChanged();
         }
        

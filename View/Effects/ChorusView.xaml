@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Expander >
+        <Expander>
             <StackPanel>
                 <materialDesign:ColorZone Mode="Light">
                     <StackPanel>
@@ -74,7 +74,10 @@
         </Expander>
 
         <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
-            <Label Content="Chorus" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}"/>
+                <Label Content="Chorus" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+            </StackPanel>
         </materialDesign:ColorZone>
     </Grid>
 </UserControl>

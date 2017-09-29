@@ -38,7 +38,10 @@
         </Expander>
 
         <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
-            <Label Content="Equalizer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}"/>
+                <Label Content="Equalizer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+            </StackPanel>
         </materialDesign:ColorZone>
     </Grid>
 </UserControl>

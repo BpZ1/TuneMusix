@@ -11,19 +11,23 @@ namespace TuneMusix.ViewModel.Effects
 {
     class EffectsViewModel : INotifyPropertyChanged
     {
+        public BaseEffect SelectedItem { get; set; }
+
+        private DataModel dataModel = DataModel.Instance;
+        public RelayCommand AddEffect { get; set; }
+        public RelayCommand RemoveEffect { get; set; }
 
         public ObservableCollection<BaseEffect> Effectlist
         {
             get { return dataModel.EffectQueue; }
         }
 
-        private DataModel dataModel = DataModel.Instance;
-
-        public RelayCommand AddEffect { get; set; }
+        
 
         public EffectsViewModel()
         {
             AddEffect = new RelayCommand(_addEffect);
+            RemoveEffect = new RelayCommand(_removeEffect);
 
             dataModel.EffectQueueChanged += OnEffectQueueChanged;
         }
@@ -37,7 +41,10 @@ namespace TuneMusix.ViewModel.Effects
         {
             dataModel.AddEffectToQueue(argument as BaseEffect);
         }
-
+        private void _removeEffect(object argument)
+        {
+            dataModel.RemoveEffectFromQueue(SelectedItem);
+        }
 
         internal void RaisePropertyChanged(string prop)
         {

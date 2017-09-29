@@ -32,14 +32,14 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public abstract IWaveSource Apply(IWaveSource waveSource);
 
-        public delegate void EffectChangedEventHandler(object source);
+        public delegate void EffectChangedEventHandler();
         public event EffectChangedEventHandler EffectActivated;
 
         protected virtual void OnEffectActivated()
         {
             if(EffectActivated != null)
             {
-                EffectActivated(this);
+                EffectActivated();
             }
         }
     }

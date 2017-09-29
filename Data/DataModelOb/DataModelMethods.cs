@@ -102,7 +102,7 @@ namespace TuneMusix.Data.DataModelOb
                 DeleteFolderTracks(f);
             }
         }
-
+        #region database methods
         //////////////////////////database methods///////////////////////////////////////
         ///DataBaseMethods should only be used to load tracks into the DataModel when////
         ///initializing the prorgam as they avoid all checks for duplicates etc./////////
@@ -163,6 +163,7 @@ namespace TuneMusix.Data.DataModelOb
         }
 
         //////////////////////////////////////////////////////////////////////////////
+        #endregion
 
         /// <summary>
         /// Adds a Track to the Tracklist after checking if it is already contained.
@@ -358,10 +359,33 @@ namespace TuneMusix.Data.DataModelOb
                 DBManager.DeletePlaylistTrack(playlist,track);
             }
         }
-
+        /// <summary>
+        /// Adds an effect to the effectqueue.
+        /// </summary>
+        /// <param name="effect"></param>
         public void AddEffectToQueue(BaseEffect effect)
         {
             EffectQueue.Add(effect);
+            effect.EffectActivated += OnEffectQueueItemChanged;
+            OnEffectQueueChanged();
+        }
+        /// <summary>
+        /// Removes an effect from the effectqueue.
+        /// </summary>
+        /// <param name="effect"></param>
+        public void RemoveEffectFromQueue(BaseEffect effect)
+        {
+            if (EffectQueue.Remove(effect))
+            {
+                effect.EffectActivated -= OnEffectQueueChanged;
+                OnEffectQueueChanged();
+            }
+        }
+        /// <summary>
+        /// Called when an effect changes in a way that requires new loading of the queue.
+        /// </summary>
+        private void OnEffectQueueItemChanged()
+        {
             OnEffectQueueChanged();
         }
 
