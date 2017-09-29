@@ -114,7 +114,7 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void _debugMethod(object argument)
         {
-            dataModel.AddEffectToQueue(new EchoEffect());
+            dataModel.AddEffectToQueue(new EqualizerEffect());          
         }
 
         /// <summary>

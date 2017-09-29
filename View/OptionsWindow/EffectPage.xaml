@@ -26,6 +26,9 @@
             <Label DockPanel.Dock="Top" Content="Effectqueue:"></Label>
             <ListView DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Effectlist,UpdateSourceTrigger=PropertyChanged}">
                 <ListView.Resources>
+                    <DataTemplate DataType="{x:Type effects:EqualizerEffect}">
+                        <effectsView:EqualizerView/>
+                    </DataTemplate>
                     <DataTemplate DataType="{x:Type effects:FlangerEffect}">
                         <effectsView:FlangerView/>
                     </DataTemplate>

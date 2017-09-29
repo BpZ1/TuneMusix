@@ -4,9 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TuneMusix.View.Effects"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            
+        <Expander >
+            <materialDesign:ColorZone Mode="Light">
+                <Grid Height="250">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider Grid.Column="0" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter0,Mode=TwoWay}" Margin="4,6" />
+                    <Slider Grid.Column="1" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter1,Mode=TwoWay}" Margin="4,6"/>
+                    <Slider Grid.Column="2" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter2,Mode=TwoWay}" Margin="4,6"/>
+                    <Slider Grid.Column="3" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter3,Mode=TwoWay}" Margin="4,6"/>
+                    <Slider Grid.Column="4" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter4,Mode=TwoWay}" Margin="4,6"/>
+                    <Slider Grid.Column="5" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter5,Mode=TwoWay}" Margin="4,6"/>
+                    <Slider Grid.Column="6" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter6,Mode=TwoWay}" Margin="4,6"/>
+                    <Slider Grid.Column="7" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter7,Mode=TwoWay}" Margin="4,6"/>
+                    <Slider Grid.Column="8" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter8,Mode=TwoWay}" Margin="4,6"/>
+                    <Slider Grid.Column="9" Orientation="Vertical"  Maximum="20" Minimum="-20" TickFrequency="0.5" Value="{Binding ChannelFilter9,Mode=TwoWay}" Margin="4,6"/>
+                </Grid>
+            </materialDesign:ColorZone>
+        </Expander>
+
+        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
+            <Label Content="Equalizer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+        </materialDesign:ColorZone>
     </Grid>
 </UserControl>

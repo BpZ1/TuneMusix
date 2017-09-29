@@ -90,5 +90,14 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             }
         }
 
+        public bool IsModified
+        {
+            get { return _modified; }
+            set
+            {
+                _modified = value;
+            }
+        }
+
     }
 }

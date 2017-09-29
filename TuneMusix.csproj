@@ -216,9 +216,6 @@
     <Compile Include="View\OptionsWindow\EffectPage.xaml.cs">
       <DependentUpon>EffectPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OptionsWindow\EqualizerUserControl.xaml.cs">
-      <DependentUpon>EqualizerUserControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\OptionsWindow\OptionsWindowView.xaml.cs">
       <DependentUpon>OptionsWindowView.xaml</DependentUpon>
     </Compile>
@@ -307,10 +304,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\OptionsWindow\EffectPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\OptionsWindow\EqualizerUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
