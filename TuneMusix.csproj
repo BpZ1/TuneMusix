@@ -163,6 +163,7 @@
     <Compile Include="Model\PlaylistTrack.cs" />
     <Compile Include="ViewModel\CurrentPlaylistViewModel.cs" />
     <Compile Include="ViewModel\Dialog\GetTextViewModel.cs" />
+    <Compile Include="ViewModel\Effects\AddEffectsViewModel.cs" />
     <Compile Include="ViewModel\Effects\EffectsViewModel.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
@@ -212,6 +213,9 @@
     </Compile>
     <Compile Include="View\Controls\PlaylistItem.xaml.cs">
       <DependentUpon>PlaylistItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OptionsWindow\AddEffectsPage.xaml.cs">
+      <DependentUpon>AddEffectsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\OptionsWindow\EffectPage.xaml.cs">
       <DependentUpon>EffectPage.xaml</DependentUpon>
@@ -300,6 +304,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Controls\PlaylistItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OptionsWindow\AddEffectsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

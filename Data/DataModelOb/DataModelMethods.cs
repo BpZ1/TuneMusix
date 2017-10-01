@@ -384,7 +384,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <summary>
         /// Called when an effect changes in a way that requires new loading of the queue.
         /// </summary>
-        private void OnEffectQueueItemChanged()
+        public void OnEffectQueueItemChanged()
         {
             OnEffectQueueChanged();
         }

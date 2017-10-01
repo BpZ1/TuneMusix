@@ -9,13 +9,17 @@
       xmlns:effects="clr-namespace:TuneMusix.Helpers.MediaPlayer.Effects"
       xmlns:local="clr-namespace:TuneMusix.View.OptionsWindow"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
       mc:Ignorable="d" 
       DataContext="{DynamicResource EffectsViewModel}"
       d:DesignHeight="300" d:DesignWidth="300"
       Title="EffectPage">
     <Page.Resources>
         <vm:EffectsViewModel x:Key="EffectsViewModel"/>
+        <DataTemplate x:Key="EffectDragAdorner">
+            <StackPanel>
+                <materialDesign:PackIcon Kind="Plus" />
+            </StackPanel>
+        </DataTemplate>
     </Page.Resources>
 
     <Grid>
@@ -28,8 +32,9 @@
             <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid">
                 <Label  Content="Effectqueue:" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,7" Background="{x:Null}" Foreground="#DDFFFFFF"></Label>
             </materialDesign:ColorZone>
-            <ListView DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Effectlist,UpdateSourceTrigger=PropertyChanged}"
-                      SelectedItem="{Binding SelectedItem}" SelectionMode="Single">
+            <ListView DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Effectlist,UpdateSourceTrigger=PropertyChanged}" dd:DragDrop.IsDragSource="True"
+                      dd:DragDrop.IsDropTarget="True" dd:DragDrop.DragHandler="{Binding}" dd:DragDrop.DropHandler="{Binding}" ScrollViewer.CanContentScroll="False"
+                      SelectedItem="{Binding SelectedItem}" SelectionMode="Single" >
                 <ListView.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Remove" Command="{Binding RemoveEffect}"/>
@@ -64,25 +69,7 @@
             </ListView>
         </DockPanel>
         <Separator Grid.Column="1" BorderThickness="1,0" Background="Black"/>
-        <DockPanel Grid.Column="2">
-            <Grid>
-               
-                <Expander Header="Add Effect" DockPanel.Dock="Top">
-                    <ListView dd:DragDrop.IsDragSource="True">
-                        <ListViewItem>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                                <Label Content="Distortion"/>
-                            </StackPanel>
-                        </ListViewItem>
+        <Frame Source="AddEffectsPage.xaml" Grid.Column="2"/>
 
-                    </ListView>
-                </Expander>
-                <materialDesign:ColorZone DockPanel.Dock="Top" Mode="PrimaryMid" BorderThickness="0" Margin="0,0,50,0">
-                    <Label  Content="Add Effect" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,7" Background="{x:Null}" Foreground="#DDFFFFFF"></Label>
-                </materialDesign:ColorZone>
-            </Grid>
-           
-        </DockPanel>
     </Grid>
 </Page>

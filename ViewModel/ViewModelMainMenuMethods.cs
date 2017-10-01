@@ -114,7 +114,9 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         public void _debugMethod(object argument)
         {
-            dataModel.AddEffectToQueue(new ChorusEffect());          
+            dataModel.AddEffectToQueue(new ChorusEffect());
+            dataModel.AddEffectToQueue(new FlangerEffect());
+            dataModel.AddEffectToQueue(new ReverbEffect());
         }
 
         /// <summary>

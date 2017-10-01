@@ -279,7 +279,7 @@ namespace TuneMusix.ViewModel
         /// <param name="dropInfo"></param>
         public void Drop(IDropInfo dropInfo)
         {
-            if (dropInfo.VisualTarget.GetType() == typeof(System.Windows.Controls.Button))
+            if (dropInfo.VisualTarget.GetType() == typeof(Button))
             {
                 _deletePlaylist(null);
             }

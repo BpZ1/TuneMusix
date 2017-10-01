@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GongSolutions.Wpf.DragDrop;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
@@ -9,7 +10,7 @@ using TuneMusix.Helpers.MediaPlayer.Effects;
 
 namespace TuneMusix.ViewModel.Effects
 {
-    class EffectsViewModel : INotifyPropertyChanged
+    class EffectsViewModel : INotifyPropertyChanged,IDragSource,IDropTarget
     {
         public BaseEffect SelectedItem { get; set; }
 
@@ -22,7 +23,7 @@ namespace TuneMusix.ViewModel.Effects
             get { return dataModel.EffectQueue; }
         }
 
-        
+        private bool isDragging = false;
 
         public EffectsViewModel()
         {
@@ -72,6 +73,55 @@ namespace TuneMusix.ViewModel.Effects
                     ? true
                     : !CloseWindowFlag;
             }));
+        }
+        #endregion
+
+        #region dragdrop
+        public void StartDrag(IDragInfo dragInfo)
+        {
+            isDragging = true;
+
+            dragInfo.Data = dragInfo.SourceItem;
+            dragInfo.Effects = DragDropEffects.Copy;
+        }
+
+        public bool CanStartDrag(IDragInfo dragInfo)
+        {
+            if (dragInfo != null) return true;
+            else return false;
+        }
+
+        public void Dropped(IDropInfo dropInfo)
+        {
+            isDragging = false;
+        }
+
+        public void DragCancelled()
+        {
+            isDragging = false;
+        }
+
+        public bool TryCatchOccurredException(Exception exception)
+        {
+            Logger.LogException(exception);
+            throw exception;
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.NotHandled = true;
+            var sourceItem = dropInfo.Data;
+            if (sourceItem != null)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                dropInfo.Effects = DragDropEffects.Copy;
+            }
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            Console.WriteLine("Item was DROPPED");
+            Console.WriteLine(dropInfo.DragInfo.Data.GetType().ToString());
         }
         #endregion
     }

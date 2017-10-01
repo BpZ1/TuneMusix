@@ -47,6 +47,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             return _echo;
         }
 
+        #region properties
         public float Feedback
         {
             get { return _feedback; }
@@ -112,6 +113,6 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
                 }
             }
         }
-
+        #endregion
     }
 }

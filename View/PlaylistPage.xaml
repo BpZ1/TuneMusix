@@ -42,9 +42,9 @@
                     <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" >
                         <TextBlock Margin="16" Text="Playlists" FontWeight="DemiBold" FontSize="18" FontFamily="Segoe UI"/>
                     </materialDesign:ColorZone>
-                    <ListView ScrollViewer.CanContentScroll="True" Grid.Row="1" ItemsSource="{Binding Playlists}" 
+                    <ListView ScrollViewer.CanContentScroll="False" Grid.Row="1" ItemsSource="{Binding Playlists}" 
                              dd:DragDrop.IsDragSource="True" dd:DragDrop.DragAdornerTemplate="{StaticResource PlaylistDragAdorner}"
-                             dd:DragDrop.IsDropTarget="True" dd:DragDrop.DragHandler="{Binding}"
+                             dd:DragDrop.IsDropTarget="True" dd:DragDrop.DragHandler="{Binding}" 
                              SelectionMode="Single" SelectedItem="{Binding SelectedPlaylist}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                         <ListView.ContextMenu>
                             <ContextMenu>
