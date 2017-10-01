@@ -120,8 +120,14 @@ namespace TuneMusix.ViewModel.Effects
 
         public void Drop(IDropInfo dropInfo)
         {
-            Console.WriteLine("Item was DROPPED");
-            Console.WriteLine(dropInfo.DragInfo.Data.GetType().ToString());
+            Console.WriteLine("Dropposition: " + dropInfo.InsertIndex);
+            Console.WriteLine("Dropposition filtered: " + dropInfo.UnfilteredInsertIndex);
+            BaseEffect effect = dropInfo.Data as BaseEffect;
+            if (effect != null && dropInfo != null)
+            {
+                dataModel.ChangeEffectListPosition(effect, dropInfo.UnfilteredInsertIndex);
+            }
+          
         }
         #endregion
     }

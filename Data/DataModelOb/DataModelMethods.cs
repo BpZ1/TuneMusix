@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -381,6 +382,23 @@ namespace TuneMusix.Data.DataModelOb
                 OnEffectQueueChanged();
             }
         }
+
+        public void ChangeEffectListPosition(BaseEffect effect,int position)
+        {
+            if (EffectQueue.Contains(effect))
+            {
+                int pos1 = EffectQueue.IndexOf(effect);
+                Logger.Log("Moved effect from queue position " + pos1 + " to position " + position + ".");
+                EffectQueue.Move(pos1,position-1);            
+            }
+            else
+            {
+                Logger.Log("Added effect on queue position " + position + ".");
+                EffectQueue.Insert(position, effect);              
+            }
+            OnEffectQueueChanged();
+        }
+
         /// <summary>
         /// Called when an effect changes in a way that requires new loading of the queue.
         /// </summary>
