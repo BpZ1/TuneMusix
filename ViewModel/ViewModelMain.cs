@@ -31,9 +31,10 @@ namespace TuneMusix.ViewModel
 
         //constructor
         public ViewModelMain()
-        {
+        {        
             //Load data from database.
             loader = new SQLLoader();
+            loader.CreateDatabase();
             loadingWorker = new BackgroundWorker();
             loadingWorker.DoWork += loader.LoadFromDB;
             loadingWorker.RunWorkerCompleted += OnLoadingComplete;

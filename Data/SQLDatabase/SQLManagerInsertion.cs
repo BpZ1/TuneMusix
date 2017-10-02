@@ -175,7 +175,10 @@ namespace TuneMusix.Data.SQLDatabase
             }
             Debug.WriteLine("Folders were added to DB");
         }
-
+        /// <summary>
+        /// Adds a playlist to the database.
+        /// </summary>
+        /// <param name="playlist"></param>
         public void AddPlaylist(Playlist playlist)
         {
             Logger.Log("Playlist: '" + playlist.Name + "' added to database");
@@ -199,7 +202,11 @@ namespace TuneMusix.Data.SQLDatabase
             }
             Debug.WriteLine("Playlist was added to DB: " + playlist.Name);
         }
-
+        /// <summary>
+        /// Adds a track to a given playlist via the connecting PlaylistTrack table.
+        /// </summary>
+        /// <param name="track"></param>
+        /// <param name="playlist"></param>
         public void AddPlaylistTrack(Track track,Playlist playlist)
         {
             SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttracks(trackID," +
@@ -252,10 +259,14 @@ namespace TuneMusix.Data.SQLDatabase
                 CloseDBConnection();
             }
         }
-
+        /// <summary>
+        /// Clears the options table and updates it with new values.
+        /// </summary>
+        /// <param name="IDGenStand"></param>
+        /// <param name="options"></param>
         public void UpdateOptions(long IDGenStand, Options options)
         {
-            SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM options", dbConnection);
+            SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM options",dbConnection);
             SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",dbConnection);
             SQLiteCommand sqlAddCommand = new SQLiteCommand("INSERT INTO options (IDgen,volume,shuffle,repeatTrack) VALUES (@IDgen,@volume,@shuffle,@repeatTrack);", dbConnection);
             sqlAddCommand.Parameters.AddWithValue("IDgen", IDGenStand);
@@ -268,9 +279,10 @@ namespace TuneMusix.Data.SQLDatabase
             OpenDBConnection();
             try
             {
-                BeginCommand.ExecuteNonQuery();
                 sqlClearCommand.ExecuteNonQuery();
                 sqlVacuum.ExecuteNonQuery();
+
+                BeginCommand.ExecuteNonQuery();             
                 sqlAddCommand.ExecuteNonQuery();
                 EndCommand.ExecuteNonQuery();
             }
@@ -279,24 +291,29 @@ namespace TuneMusix.Data.SQLDatabase
                 CloseDBConnection();
             }
         }
-
+        /// <summary>
+        /// Clears the effect queue table and updates it with new values.
+        /// </summary>
+        /// <param name="effectQueue"></param>
         public void UpdateEffectQueue(List<BaseEffect> effectQueue)
         {
 
-            SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM effectsqueue", dbConnection);
-            SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM", dbConnection);
-            List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
+            SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM effectsqueue",dbConnection);
+            SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",dbConnection);
+            List<SQLiteCommand> effectInsertCommands = new List<SQLiteCommand>();
+            List<SQLiteCommand> effectQueueInsertCommands = new List<SQLiteCommand>();
             foreach (BaseEffect effect in effectQueue)
             {
                 //choose which kind of effect has to be inserted.
                 int i = 1;
-                SQLiteCommand queueCommand = new SQLiteCommand("INSERT INTO effectsqueue (index) VALUES(@Index)", dbConnection);
+                SQLiteCommand queueCommand = new SQLiteCommand("INSERT INTO effectsqueue (queueindex) VALUES(@Index)", dbConnection);
                 queueCommand.Parameters.AddWithValue("Index",i);
-
+                effectQueueInsertCommands.Add(queueCommand);
+                #region effects
                 if (effect.GetType() == typeof(ChorusEffect))
                 {
                     ChorusEffect currentEffect = effect as ChorusEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO choruseffect (index,"+
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO choruseffect (queueindex," +
                                                                                         "isactive,"+
                                                                                         "delay,"+
                                                                                         "depth,"+
@@ -322,12 +339,12 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue("Phase", currentEffect.Phase);
                     command.Parameters.AddWithValue("Wetdrymix", currentEffect.Wet_DryMix);
                     command.Parameters.AddWithValue("waveform", currentEffect.WaveForm);
-                    commandlist.Add(command);
+                    effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(CompressorEffect))
                 {
                     CompressorEffect currentEffect = effect as CompressorEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO compressoreffect (index," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO compressoreffect (queueindex," +
                                                                                             "isactive,"+
                                                                                             "attack," +
                                                                                             "gain," +
@@ -353,12 +370,12 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue("Ratio", currentEffect.Ratio);
                     command.Parameters.AddWithValue("Release", currentEffect.Release);
                     command.Parameters.AddWithValue("Treshold", currentEffect.Treshold);
-                    commandlist.Add(command);
+                    effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(EchoEffect))
                 {
                     EchoEffect currentEffect = effect as EchoEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO echoeffect (index," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO echoeffect (queueindex," +
                                                                                       "isactive," +
                                                                                       "feedback," +
                                                                                       "leftdelay," +
@@ -382,12 +399,12 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue("Wetdrymix", currentEffect.WetDryMix);
                     if (currentEffect.PanDelay) command.Parameters.AddWithValue("Pandelay", 1);
                     else command.Parameters.AddWithValue("Pandelay", 0);                  
-                    commandlist.Add(command);
+                    effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(FlangerEffect))
                 {
                     FlangerEffect currentEffect = effect as FlangerEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO flangereffect (index," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO flangereffect (queueindex," +
                                                                                          "isactive," +
                                                                                          "delay," +
                                                                                          "depth," +
@@ -414,12 +431,12 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue("Frequency", currentEffect.Frequency);
                     command.Parameters.AddWithValue("Wetdrymix", currentEffect.Wet_DryMix);
                     command.Parameters.AddWithValue("Waveform", currentEffect.WaveForm);
-                    commandlist.Add(command);
+                    effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(DistortionEffect))
                 {
                     DistortionEffect currentEffect = effect as DistortionEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO distortioneffect (index," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO distortioneffect (queueindex," +
                                                                                             "isactive," +
                                                                                             "edge," +
                                                                                             "gain," +
@@ -442,12 +459,12 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue("Posteqbandwidth", currentEffect.PostEQBandwidth);
                     command.Parameters.AddWithValue("Posteqcenter", currentEffect.PostEQCenterFrequency);
                     command.Parameters.AddWithValue("Prelowpasscutoff", currentEffect.PreLowPassCutoff);
-                    commandlist.Add(command);
+                    effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(ReverbEffect))
                 {
                     ReverbEffect currentEffect = effect as ReverbEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO reverbeffect (index," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO reverbeffect (queueindex," +
                                                                                         "isactive," +
                                                                                         "highfrequencyrtratio," +
                                                                                         "ingain," +
@@ -468,12 +485,12 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue("Ingain", currentEffect.InGain);
                     command.Parameters.AddWithValue("Reverbmix", currentEffect.ReverbMix);
                     command.Parameters.AddWithValue("Reverbtime", currentEffect.ReverbTime);
-                    commandlist.Add(command);
+                    effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(EqualizerEffect))
                 {
                     EqualizerEffect currentEffect = effect as EqualizerEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO equalizereffect (index," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO equalizereffect (queueindex," +
                                                                                            "filter1," +
                                                                                            "filter2," +
                                                                                            "filter3," +
@@ -509,12 +526,12 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue("Filter8", currentEffect.ChannelFilter7);
                     command.Parameters.AddWithValue("Filter9", currentEffect.ChannelFilter8);
                     command.Parameters.AddWithValue("Filter10", currentEffect.ChannelFilter9);
-                    commandlist.Add(command);
+                    effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(GargleEffect))
                 {
                     GargleEffect currentEffect = effect as GargleEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO gargleeffect (index," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO gargleeffect (queueindex," +
                                                                                         "isactive," +
                                                                                         "rate," +
                                                                                         "waveshape)" +
@@ -529,18 +546,24 @@ namespace TuneMusix.Data.SQLDatabase
                     else command.Parameters.AddWithValue("Isactive", 0);
                     command.Parameters.AddWithValue("Rate", currentEffect.Rate);
                     command.Parameters.AddWithValue("Waveshape", currentEffect.WaveShape);
-                    commandlist.Add(command);
+                    effectInsertCommands.Add(command);
                 }
+#endregion
                 i++;
             }
 
             OpenDBConnection();
             try
-            {
-                BeginCommand.ExecuteNonQuery();
+            {            
                 sqlClearCommand.ExecuteNonQuery();
                 sqlVacuum.ExecuteNonQuery();
-                foreach (SQLiteCommand command in commandlist)
+
+                BeginCommand.ExecuteNonQuery();
+                foreach(SQLiteCommand command in effectQueueInsertCommands)
+                {
+                    command.ExecuteNonQuery();
+                }
+                foreach (SQLiteCommand command in effectInsertCommands)
                 {
                     command.ExecuteNonQuery();
                 }

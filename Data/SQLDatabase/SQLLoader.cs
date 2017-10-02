@@ -13,10 +13,10 @@ namespace TuneMusix.Data.SQLDatabase
 {
     public class SQLLoader
     {
-        DataModel dataModel = DataModel.Instance;
-        Options options = Options.Instance;
-        SQLManager DBmanager = new SQLManager();
-        IDGenerator IDgen = IDGenerator.Instance;
+        private DataModel dataModel = DataModel.Instance;
+        private Options options = Options.Instance;
+        private SQLManager DBmanager = new SQLManager();
+        private IDGenerator IDgen = IDGenerator.Instance;
 
         public void LoadFromDB(object sender, DoWorkEventArgs e)
         {
@@ -116,5 +116,9 @@ namespace TuneMusix.Data.SQLDatabase
             return tempFolderList;
         }
      
+        public void CreateDatabase()
+        {
+            DBmanager.CreateDatabase();
+        }
     }
 }

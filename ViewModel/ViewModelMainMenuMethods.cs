@@ -49,7 +49,7 @@ namespace TuneMusix.ViewModel
         {
             var win = new OptionsWindowView();
 
-            win.Show();
+            win.ShowDialog();
         }
 
         private void _saveData(object argument)

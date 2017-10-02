@@ -7,8 +7,10 @@
         xmlns:local="clr-namespace:TuneMusix.View"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+        DataContext="{DynamicResource OptionsOverviewViewModel}"  
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
+        Name="OptionsWindow"
         Title="OptionsWindow" Height="500" Width="700">
     <Window.Resources>
         <vm:OptionsOverviewViewModel x:Key="OptionsOverviewViewModel"/>
@@ -33,8 +35,8 @@
     </Grid>
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Apply"/>
-                <Button Content="Cancel"/>
+                <Button Content="Apply" Command="{Binding Apply}" CommandParameter="{Binding ElementName=OptionsWindow}"/>
+                <Button Content="Cancel" Command="{Binding Cancel}" CommandParameter="{Binding ElementName=OptionsWindow}"/>
             </StackPanel>
         </Grid>
     </Grid>
