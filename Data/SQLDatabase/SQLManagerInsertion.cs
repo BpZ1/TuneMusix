@@ -318,15 +318,15 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                         "delay,"+
                                                                                         "depth,"+
                                                                                         "frequency,"+
-                                                                                        "phase"+
+                                                                                        "phase,"+
                                                                                         "wetdrymix,"+
                                                                                         "waveform) "+
                                                                                 "VALUES(@Index,"+
-                                                                                       "@Isactive"+
+                                                                                       "@Isactive,"+
                                                                                        "@Delay,"+
                                                                                        "@Depth,"+
                                                                                        "@Frequency,"+
-                                                                                       "@Phase"+
+                                                                                       "@Phase,"+
                                                                                        "@Wetdrymix,"+
                                                                                        "@waveform);"
                                                                                        ,dbConnection);
@@ -349,15 +349,15 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                             "attack," +
                                                                                             "gain," +
                                                                                             "predelay," +
-                                                                                            "ratio" +
+                                                                                            "ratio," +
                                                                                             "release," +
                                                                                             "treshold) " +
                                                                                     "VALUES(@Index," +
-                                                                                           "@Isactive" +
+                                                                                           "@Isactive," +
                                                                                            "@Attack," +
                                                                                            "@Gain," +
                                                                                            "@Predelay," +
-                                                                                           "@Ratio" +
+                                                                                           "@Ratio," +
                                                                                            "@Release," +
                                                                                            "@Treshold);"
                                                                                            ,dbConnection);
@@ -380,14 +380,14 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                       "feedback," +
                                                                                       "leftdelay," +
                                                                                       "rightdelay," +
-                                                                                      "wetdrymix" +
-                                                                                      "pandelay," +
+                                                                                      "wetdrymix," +
+                                                                                      "pandelay) " +
                                                                               "VALUES(@Index," +
                                                                                      "@Isactive," +
                                                                                      "@Feedback," +
                                                                                      "@Leftdelay," +
                                                                                      "@Rightdelay," +
-                                                                                     "@Wetdrymix" +
+                                                                                     "@Wetdrymix," +
                                                                                      "@Pandelay);"
                                                                                      ,dbConnection);
                     command.Parameters.AddWithValue("Index", i);
@@ -410,14 +410,14 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                          "depth," +
                                                                                          "feedback," +
                                                                                          "frequency," +
-                                                                                         "wetdrymix" +
-                                                                                         "waveform)" +
+                                                                                         "wetdrymix," +
+                                                                                         "waveform) " +
                                                                                  "VALUES(@Index," +
-                                                                                        "@Isactive" +
+                                                                                        "@Isactive," +
                                                                                         "@Delay," +
                                                                                         "@Depth," +
                                                                                         "@Feedback," +
-                                                                                        "@Frequency" +
+                                                                                        "@Frequency," +
                                                                                         "@Wetdrymix," +
                                                                                         "@Waveform);"
                                                                                         ,dbConnection);
@@ -441,14 +441,14 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                             "edge," +
                                                                                             "gain," +
                                                                                             "posteqbandwidth," +
-                                                                                            "posteqcenter" +
-                                                                                            "prelowpasscutoff)" +
+                                                                                            "posteqcenter," +
+                                                                                            "prelowpasscutoff) " +
                                                                                     "VALUES(@Index," +
-                                                                                           "@Isactive" +
+                                                                                           "@Isactive," +
                                                                                            "@Edge," +
                                                                                            "@Gain," +
                                                                                            "@Posteqbandwidth," +
-                                                                                           "@Posteqcenter" +
+                                                                                           "@Posteqcenter," +
                                                                                            "@Prelowpasscutoff);"
                                                                                            ,dbConnection);
                     command.Parameters.AddWithValue("Index", i);
@@ -469,9 +469,9 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                         "highfrequencyrtratio," +
                                                                                         "ingain," +
                                                                                         "reverbmix," +
-                                                                                        "reverbtime)" +
+                                                                                        "reverbtime) " +
                                                                                 "VALUES(@Index," +
-                                                                                       "@Isactive" +
+                                                                                       "@Isactive," +
                                                                                        "@Highfrequencyrtratio," +
                                                                                        "@Ingain," +
                                                                                        "@Reverbmix," +
@@ -497,20 +497,20 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                            "filter4," +
                                                                                            "filter5," +
                                                                                            "filter6," +
-                                                                                           "filter7"  +
+                                                                                           "filter7,"  +
                                                                                            "filter8," +
                                                                                            "filter9," +
-                                                                                           "filter10)" +
+                                                                                           "filter10) " +
                                                                                    "VALUES(@Index," +
-                                                                                          "@Filter1" +
-                                                                                          "@Filter2" +
-                                                                                          "@Filter3" +
-                                                                                          "@Filter4" +
-                                                                                          "@Filter5" +
-                                                                                          "@Filter6" +
-                                                                                          "@Filter7" +
-                                                                                          "@Filter8" +
-                                                                                          "@Filter9" +
+                                                                                          "@Filter1," +
+                                                                                          "@Filter2," +
+                                                                                          "@Filter3," +
+                                                                                          "@Filter4," +
+                                                                                          "@Filter5," +
+                                                                                          "@Filter6," +
+                                                                                          "@Filter7," +
+                                                                                          "@Filter8," +
+                                                                                          "@Filter9," +
                                                                                           "@Filter10);"
                                                                                           ,dbConnection);
                     command.Parameters.AddWithValue("Index", i);
@@ -534,9 +534,9 @@ namespace TuneMusix.Data.SQLDatabase
                     SQLiteCommand command = new SQLiteCommand("INSERT INTO gargleeffect (queueindex," +
                                                                                         "isactive," +
                                                                                         "rate," +
-                                                                                        "waveshape)" +
+                                                                                        "waveshape) " +
                                                                                 "VALUES(@Index," +
-                                                                                       "@Isactive" +
+                                                                                       "@Isactive," +
                                                                                        "@Rate," +
                                                                                        "@Waveshape);"
                                                                                        ,dbConnection);

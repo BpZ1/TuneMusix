@@ -92,7 +92,8 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                           "feedback REAL," +
                                                                                                           "frequency REAL," +
                                                                                                           "phase INT," +
-                                                                                                          "wetdrymix REAL," +
+                                                                                                          "wetdrymix REAL,"+
+                                                                                                          "waveform INT," +
                                                                                                           "FOREIGN KEY(queueindex) " +
                                                                                                           "REFERENCES effectsqueue(queueindex) " +
                                                                                                           "ON DELETE CASCADE);"
@@ -159,8 +160,8 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                          "isactive INT," +
                                                                                                          "highfrequencyrtratio REAL," +
                                                                                                          "ingain REAL," +
-                                                                                                         "reverbmix REAL" +
-                                                                                                         "reverbtime," +
+                                                                                                         "reverbmix REAL," +
+                                                                                                         "reverbtime REAL," +
                                                                                                          "FOREIGN KEY(queueindex) " +
                                                                                                          "REFERENCES effectsqueue(queueindex) " +
                                                                                                          "ON DELETE CASCADE);"

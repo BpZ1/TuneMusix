@@ -385,6 +385,7 @@ namespace TuneMusix.Data.DataModelOb
 
         public void ChangeEffectListPosition(BaseEffect effect,int position)
         {
+            Console.WriteLine("POSITION: " + position);
             if (EffectQueue.Contains(effect))
             {
                 int pos1 = EffectQueue.IndexOf(effect);
