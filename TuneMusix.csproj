@@ -168,6 +168,9 @@
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
     <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />
+    <Compile Include="ViewModel\OptionsViewModel\AudioOptionsViewModel.cs" />
+    <Compile Include="ViewModel\OptionsViewModel\GeneralOptionsViewModel.cs" />
+    <Compile Include="ViewModel\OptionsViewModel\OptionsOverviewViewModel.cs" />
     <Compile Include="ViewModel\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\TracklistViewModel.cs" />
     <Compile Include="ViewModel\ViewModelMainEvents.cs" />
@@ -217,8 +220,14 @@
     <Compile Include="View\OptionsWindow\AddEffectsPage.xaml.cs">
       <DependentUpon>AddEffectsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\OptionsWindow\AudioOptionsPage.xaml.cs">
+      <DependentUpon>AudioOptionsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\OptionsWindow\EffectPage.xaml.cs">
       <DependentUpon>EffectPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OptionsWindow\GeneralOptionsPage.xaml.cs">
+      <DependentUpon>GeneralOptionsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\OptionsWindow\OptionsWindowView.xaml.cs">
       <DependentUpon>OptionsWindowView.xaml</DependentUpon>
@@ -311,7 +320,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\OptionsWindow\AudioOptionsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\OptionsWindow\EffectPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OptionsWindow\GeneralOptionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

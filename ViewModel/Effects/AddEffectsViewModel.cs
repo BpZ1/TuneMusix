@@ -13,7 +13,6 @@ namespace TuneMusix.ViewModel.Effects
 {
     class AddEffectsViewModel : IDragSource
     {
-        private bool isDragging = false;
 
         bool IDragSource.CanStartDrag(IDragInfo dragInfo)
         {
@@ -23,17 +22,16 @@ namespace TuneMusix.ViewModel.Effects
 
         void IDragSource.DragCancelled()
         {
-            isDragging = false;
+
         }
 
         void IDragSource.Dropped(IDropInfo dropInfo)
         {
-            isDragging = false;
+
         }
 
         void IDragSource.StartDrag(IDragInfo dragInfo)
         {
-            isDragging = true;
             ListViewItem item = dragInfo.SourceItem as ListViewItem;
             if(item != null)
             {

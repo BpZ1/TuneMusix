@@ -7,15 +7,15 @@ using System.Windows.Threading;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer.Effects;
+using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel.Effects
 {
     class EffectsViewModel : INotifyPropertyChanged,IDragSource,IDropTarget
     {
         public BaseEffect SelectedItem { get; set; }
-
+        private Options options = Options.Instance;
         private DataModel dataModel = DataModel.Instance;
-        public RelayCommand AddEffect { get; set; }
         public RelayCommand RemoveEffect { get; set; }
 
         public ObservableCollection<BaseEffect> Effectlist
@@ -23,13 +23,9 @@ namespace TuneMusix.ViewModel.Effects
             get { return dataModel.EffectQueue; }
         }
 
-        private bool isDragging = false;
-
         public EffectsViewModel()
         {
-            AddEffect = new RelayCommand(_addEffect);
             RemoveEffect = new RelayCommand(_removeEffect);
-
             dataModel.EffectQueueChanged += OnEffectQueueChanged;
         }
 
@@ -38,13 +34,10 @@ namespace TuneMusix.ViewModel.Effects
             RaisePropertyChanged("EffectList");
         }
 
-        private void _addEffect(object argument)
-        {
-            dataModel.AddEffectToQueue(argument as BaseEffect);
-        }
         private void _removeEffect(object argument)
         {
             dataModel.RemoveEffectFromQueue(SelectedItem);
+            options.IsModified = true;
         }
 
         internal void RaisePropertyChanged(string prop)
@@ -79,8 +72,6 @@ namespace TuneMusix.ViewModel.Effects
         #region dragdrop
         public void StartDrag(IDragInfo dragInfo)
         {
-            isDragging = true;
-
             dragInfo.Data = dragInfo.SourceItem;
             dragInfo.Effects = DragDropEffects.Copy;
         }
@@ -93,12 +84,10 @@ namespace TuneMusix.ViewModel.Effects
 
         public void Dropped(IDropInfo dropInfo)
         {
-            isDragging = false;
         }
 
         public void DragCancelled()
         {
-            isDragging = false;
         }
 
         public bool TryCatchOccurredException(Exception exception)
@@ -120,14 +109,12 @@ namespace TuneMusix.ViewModel.Effects
 
         public void Drop(IDropInfo dropInfo)
         {
-            Console.WriteLine("Dropposition: " + dropInfo.InsertIndex);
-            Console.WriteLine("Dropposition filtered: " + dropInfo.UnfilteredInsertIndex);
             BaseEffect effect = dropInfo.Data as BaseEffect;
             if (effect != null && dropInfo != null)
             {
                 dataModel.ChangeEffectListPosition(effect, dropInfo.UnfilteredInsertIndex);
             }
-          
+            options.IsModified = true;
         }
         #endregion
     }

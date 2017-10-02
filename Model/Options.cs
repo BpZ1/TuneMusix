@@ -28,7 +28,7 @@ namespace TuneMusix.Model
             }
         }
 
-
+        public bool IsModified { get; set; } = false;
         private bool _effectsActive;
         //Normal logging is only active when set to true.
         private bool _LoggerActive = false;

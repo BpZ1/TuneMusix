@@ -3,25 +3,39 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:TuneMusix.ViewModel.OptionsViewModel"
         xmlns:local="clr-namespace:TuneMusix.View"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Title="OptionsWindow" Height="500" Width="700">
+    <Window.Resources>
+        <vm:OptionsOverviewViewModel x:Key="OptionsOverviewViewModel"/>
+    </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+    <Grid Grid.Row="0">
         <dragablz:TabablzControl TabStripPlacement="Left">
             <TabItem Header="General" >
-                <Grid>
-        
-                </Grid>
+                <Frame Source="GeneralOptionsPage.xaml"/>
             </TabItem>
-            <TabItem Header="...">
-           
+            <TabItem Header="Audio">
+                <Frame Source="AudioOptionsPage.xaml"/>
             </TabItem>
             <TabItem Header="Effects">
                <Frame Source="EffectPage.xaml"/>
             </TabItem>
         </dragablz:TabablzControl>
+    </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Apply"/>
+                <Button Content="Cancel"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

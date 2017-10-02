@@ -64,9 +64,68 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                                    "REFERENCES playlists(ID) "+
                                                                                                                    "ON DELETE CASCADE);"
                                                                                                                    ,dbConnection);
-
-            //Only needed if foreign key exists
-            //SQLiteCommand sqlFolderInit = new SQLiteCommand("INSERT INTO folders(ID, folderID, URL, name) VALUES(-1, -1,'Nothing','Nothing'",dbConnection);
+            SQLiteCommand sqlCreateEffectsQueueTable = new SQLiteCommand("CREATE TABLE if not exists effectsqueue(index INT UNIQUE UNSIGNED NOT NULL"
+                                                                                                                 ,dbConnection);
+            SQLiteCommand sqlCreateFlangerTable = new SQLiteCommand("CREATE TABLE if not exist flangereffect(index INT," +
+                                                                                                            "delay REAL," +
+                                                                                                            "depth REAL,"+
+                                                                                                            "feedback REAL,"+
+                                                                                                            "frequency REAL,"+
+                                                                                                            "wetdrymix REAL,"+
+                                                                                                            "waveform INT)",
+                                                                                                            dbConnection);
+            SQLiteCommand sqlCreateChorusTable = new SQLiteCommand("CREATE TABLE if not exist choruseffect(index INT," +
+                                                                                                          "delay REAL," +
+                                                                                                          "depth REAL,"+
+                                                                                                          "feedback REAL,"+
+                                                                                                          "frequency REAL,"+
+                                                                                                          "phase REAL,"+
+                                                                                                          "wetdrymix REAL)"
+                                                                                                          ,dbConnection);
+            SQLiteCommand sqlCreateCompressorTable = new SQLiteCommand("CREATE TABLE if not exist compressoreffect(index INT,"+
+                                                                                                                  "attack REAL,"+
+                                                                                                                  "gain REAL,"+
+                                                                                                                  "predelay REAL,"+
+                                                                                                                  "ratio REAL,"+
+                                                                                                                  "release REAL,"+
+                                                                                                                  "treshold REAL)"
+                                                                                                                  ,dbConnection);
+            SQLiteCommand sqlCreateDistortionTable = new SQLiteCommand("CREATE TABLE if not exist distortioneffect(index INT,"+
+                                                                                                                  "edge REAL,"+
+                                                                                                                  "gain REAL,"+
+                                                                                                                  "posteqbandwidth REAL,"+
+                                                                                                                  "posteqcenter REAL,"+
+                                                                                                                  "prelowpasscutoff INT)"
+                                                                                                                  ,dbConnection);
+            SQLiteCommand sqlCreateEchoTable = new SQLiteCommand("CREATE TABLE if not exist echoeffect(index INT," +
+                                                                                                      "feedback REAL," +
+                                                                                                      "leftdelay REAL," +
+                                                                                                      "rightdelay REAL," +
+                                                                                                      "wetdrymix REAL," +
+                                                                                                      "pandelay INT)"
+                                                                                                      ,dbConnection);
+            SQLiteCommand sqlCreateEqualizerTable = new SQLiteCommand("CREATE TABLE if not exist equalizereffect(index INT," +
+                                                                                                                "filter1 REAL," +
+                                                                                                                "filter2 REAL," +
+                                                                                                                "filter3 REAL," +
+                                                                                                                "filter4 REAL," +
+                                                                                                                "filter5 REAL," +
+                                                                                                                "filter6 REAL," +
+                                                                                                                "filter7 REAL," +
+                                                                                                                "filter8 REAL," +
+                                                                                                                "filter9 REAL," +
+                                                                                                                "filter10 REAL)"
+                                                                                                                ,dbConnection);
+            SQLiteCommand sqlCreateGargleTable = new SQLiteCommand("CREATE TABLE if not exist gargleeffect(index INT," +
+                                                                                                          "rate REAL," +
+                                                                                                          "waveshape INT)"
+                                                                                                          ,dbConnection);
+            SQLiteCommand sqlCreateReverbTable = new SQLiteCommand("CREATE TABLE if not exist reverbtable(index INT," +
+                                                                                                         "highfrequencyrtratio REAL," +
+                                                                                                         "ingain REAL,"+
+                                                                                                         "reverbmix REAL"+
+                                                                                                         "reverbtime)"
+                                                                                                         ,dbConnection);
             dbConnection.Open();
             try
             {
