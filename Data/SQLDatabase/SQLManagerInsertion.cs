@@ -301,207 +301,348 @@ namespace TuneMusix.Data.SQLDatabase
             SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM effectsqueue",dbConnection);
             SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",dbConnection);
             List<SQLiteCommand> effectInsertCommands = new List<SQLiteCommand>();
-            List<SQLiteCommand> effectQueueInsertCommands = new List<SQLiteCommand>();
             foreach (BaseEffect effect in effectQueue)
             {
                 //choose which kind of effect has to be inserted.
-                int i = 1;
-                SQLiteCommand queueCommand = new SQLiteCommand("INSERT INTO effectsqueue (queueindex) VALUES(@Index)", dbConnection);
-                queueCommand.Parameters.AddWithValue("Index",i);
-                effectQueueInsertCommands.Add(queueCommand);
+                int i = 1;       
+
                 #region effects
                 if (effect.GetType() == typeof(ChorusEffect))
                 {
                     ChorusEffect currentEffect = effect as ChorusEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO choruseffect (queueindex," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
+                                                                                        "effecttype," +
                                                                                         "isactive,"+
-                                                                                        "delay,"+
-                                                                                        "depth,"+
-                                                                                        "frequency,"+
-                                                                                        "phase,"+
-                                                                                        "wetdrymix,"+
-                                                                                        "waveform) "+
+                                                                                        "value0,"+
+                                                                                        "value1,"+
+                                                                                        "value2," +
+                                                                                        "value3," +
+                                                                                        "value4," +
+                                                                                        "value5," +
+                                                                                        "value6," +
+                                                                                        "value7," +
+                                                                                        "value8," +
+                                                                                        "value9," + 
+                                                                                        "value10," +
+                                                                                        "value11) "+
                                                                                 "VALUES(@Index,"+
+                                                                                       "@Effecttype,"+
                                                                                        "@Isactive,"+
                                                                                        "@Delay,"+
                                                                                        "@Depth,"+
-                                                                                       "@Frequency,"+
-                                                                                       "@Phase,"+
+                                                                                       "@Feedback," +
+                                                                                       "@Frequency," +                                                                                       
                                                                                        "@Wetdrymix,"+
+                                                                                       "@Value5," +                                                                         
+                                                                                       "@Value6," +
+                                                                                       "@Value7," +
+                                                                                       "@Value8," +
+                                                                                       "@Value9," +
+                                                                                       "@Phase," +
                                                                                        "@waveform);"
                                                                                        ,dbConnection);
                     command.Parameters.AddWithValue("Index",i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
+                    command.Parameters.AddWithValue("Effecttype","chorus");
                     command.Parameters.AddWithValue("Delay", currentEffect.Delay);
                     command.Parameters.AddWithValue("Depth", currentEffect.Depth);
-                    command.Parameters.AddWithValue("Frequency", currentEffect.Frequency);
-                    command.Parameters.AddWithValue("Phase", currentEffect.Phase);
+                    command.Parameters.AddWithValue("Feedback",currentEffect.Feedback);
+                    command.Parameters.AddWithValue("Frequency", currentEffect.Frequency);          
                     command.Parameters.AddWithValue("Wetdrymix", currentEffect.Wet_DryMix);
+                    command.Parameters.AddWithValue("Value5", null);
+                    command.Parameters.AddWithValue("Value6", null);
+                    command.Parameters.AddWithValue("Value7", null);
+                    command.Parameters.AddWithValue("Value8", null);
+                    command.Parameters.AddWithValue("Value9", null);
+                    command.Parameters.AddWithValue("Phase", currentEffect.Phase);
                     command.Parameters.AddWithValue("waveform", currentEffect.WaveForm);
                     effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(CompressorEffect))
                 {
                     CompressorEffect currentEffect = effect as CompressorEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO compressoreffect (queueindex," +
-                                                                                            "isactive,"+
-                                                                                            "attack," +
-                                                                                            "gain," +
-                                                                                            "predelay," +
-                                                                                            "ratio," +
-                                                                                            "release," +
-                                                                                            "treshold) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
+                                                                                        "effecttype," +
+                                                                                        "isactive," +
+                                                                                        "value0," +
+                                                                                        "value1," +
+                                                                                        "value2," +
+                                                                                        "value3," +
+                                                                                        "value4," +
+                                                                                        "value5," +
+                                                                                        "value6," +
+                                                                                        "value7," +
+                                                                                        "value8," +
+                                                                                        "value9," +
+                                                                                        "value10," +
+                                                                                        "value11) " +
                                                                                     "VALUES(@Index," +
+                                                                                           "@Effecttype," +
                                                                                            "@Isactive," +
                                                                                            "@Attack," +
                                                                                            "@Gain," +
                                                                                            "@Predelay," +
                                                                                            "@Ratio," +
                                                                                            "@Release," +
-                                                                                           "@Treshold);"
+                                                                                           "@Treshold," +
+                                                                                           "@Value6," +
+                                                                                           "@Value7," +
+                                                                                           "@Value8," +
+                                                                                           "@Value9," +
+                                                                                           "@Value10," +
+                                                                                           "@Value11);"
                                                                                            ,dbConnection);
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else  command.Parameters.AddWithValue("Isactive", 0);
+                    command.Parameters.AddWithValue("Effecttype", "compressor");
                     command.Parameters.AddWithValue("Attack", currentEffect.Attack);
                     command.Parameters.AddWithValue("Gain", currentEffect.Gain);
                     command.Parameters.AddWithValue("Predelay", currentEffect.Predelay);
                     command.Parameters.AddWithValue("Ratio", currentEffect.Ratio);
                     command.Parameters.AddWithValue("Release", currentEffect.Release);
                     command.Parameters.AddWithValue("Treshold", currentEffect.Treshold);
+                    command.Parameters.AddWithValue("Value6", null);
+                    command.Parameters.AddWithValue("Value7", null);
+                    command.Parameters.AddWithValue("Value8", null);
+                    command.Parameters.AddWithValue("Value9", null);
+                    command.Parameters.AddWithValue("Value10", null);
+                    command.Parameters.AddWithValue("Value11", null);
                     effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(EchoEffect))
                 {
                     EchoEffect currentEffect = effect as EchoEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO echoeffect (queueindex," +
-                                                                                      "isactive," +
-                                                                                      "feedback," +
-                                                                                      "leftdelay," +
-                                                                                      "rightdelay," +
-                                                                                      "wetdrymix," +
-                                                                                      "pandelay) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
+                                                                                        "effecttype," +
+                                                                                        "isactive," +
+                                                                                        "value0," +
+                                                                                        "value1," +
+                                                                                        "value2," +
+                                                                                        "value3," +
+                                                                                        "value4," +
+                                                                                        "value5," +
+                                                                                        "value6," +
+                                                                                        "value7," +
+                                                                                        "value8," +
+                                                                                        "value9," +
+                                                                                        "value10," +
+                                                                                        "value11) " +
                                                                               "VALUES(@Index," +
+                                                                                     "@Effecttype," +
                                                                                      "@Isactive," +
                                                                                      "@Feedback," +
                                                                                      "@Leftdelay," +
                                                                                      "@Rightdelay," +
                                                                                      "@Wetdrymix," +
-                                                                                     "@Pandelay);"
+                                                                                     "@Value4," +
+                                                                                     "@Value5," +
+                                                                                     "@Value6," +
+                                                                                     "@Value7," +
+                                                                                     "@Value8," +
+                                                                                     "@Value9," +
+                                                                                     "@Pandelay,"+
+                                                                                     "@Value11);"
                                                                                      ,dbConnection);
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
+                    command.Parameters.AddWithValue("Effecttype", "echo");
                     command.Parameters.AddWithValue("Feedback", currentEffect.Feedback);
                     command.Parameters.AddWithValue("Leftdelay", currentEffect.LeftDelay);
                     command.Parameters.AddWithValue("Rightdelay", currentEffect.RightDelay);
                     command.Parameters.AddWithValue("Wetdrymix", currentEffect.WetDryMix);
+                    command.Parameters.AddWithValue("Value4", null);
+                    command.Parameters.AddWithValue("Value5", null);
+                    command.Parameters.AddWithValue("Value6", null);
+                    command.Parameters.AddWithValue("Value7", null);
+                    command.Parameters.AddWithValue("Value8", null);
+                    command.Parameters.AddWithValue("Value9", null);
                     if (currentEffect.PanDelay) command.Parameters.AddWithValue("Pandelay", 1);
-                    else command.Parameters.AddWithValue("Pandelay", 0);                  
+                    else command.Parameters.AddWithValue("Pandelay", 0);
+                    command.Parameters.AddWithValue("Value11", null);                         
                     effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(FlangerEffect))
                 {
                     FlangerEffect currentEffect = effect as FlangerEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO flangereffect (queueindex," +
-                                                                                         "isactive," +
-                                                                                         "delay," +
-                                                                                         "depth," +
-                                                                                         "feedback," +
-                                                                                         "frequency," +
-                                                                                         "wetdrymix," +
-                                                                                         "waveform) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
+                                                                                        "effecttype," +
+                                                                                        "isactive," +
+                                                                                        "value0," +
+                                                                                        "value1," +
+                                                                                        "value2," +
+                                                                                        "value3," +
+                                                                                        "value4," +
+                                                                                        "value5," +
+                                                                                        "value6," +
+                                                                                        "value7," +
+                                                                                        "value8," +
+                                                                                        "value9," +
+                                                                                        "value10," +
+                                                                                        "value11) " +
                                                                                  "VALUES(@Index," +
+                                                                                        "@Effecttype," +
                                                                                         "@Isactive," +
                                                                                         "@Delay," +
                                                                                         "@Depth," +
                                                                                         "@Feedback," +
                                                                                         "@Frequency," +
                                                                                         "@Wetdrymix," +
-                                                                                        "@Waveform);"
+                                                                                        "@Value5," +
+                                                                                        "@Value6," +
+                                                                                        "@Value7," +
+                                                                                        "@Value8," +
+                                                                                        "@Value9," +
+                                                                                        "@Waveform,"+
+                                                                                        "@Value11);"
                                                                                         ,dbConnection);
 
                    command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
+                    command.Parameters.AddWithValue("Effecttype", "flanger");
                     command.Parameters.AddWithValue("Delay", currentEffect.Delay);
                     command.Parameters.AddWithValue("Depth", currentEffect.Depth);
                     command.Parameters.AddWithValue("Feedback", currentEffect.Feedback);
                     command.Parameters.AddWithValue("Frequency", currentEffect.Frequency);
                     command.Parameters.AddWithValue("Wetdrymix", currentEffect.Wet_DryMix);
+                    command.Parameters.AddWithValue("Value5", null);
+                    command.Parameters.AddWithValue("Value6", null);
+                    command.Parameters.AddWithValue("Value7", null);
+                    command.Parameters.AddWithValue("Value8", null);
+                    command.Parameters.AddWithValue("Value9", null);
                     command.Parameters.AddWithValue("Waveform", currentEffect.WaveForm);
+                    command.Parameters.AddWithValue("Value11", null);
                     effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(DistortionEffect))
                 {
                     DistortionEffect currentEffect = effect as DistortionEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO distortioneffect (queueindex," +
-                                                                                            "isactive," +
-                                                                                            "edge," +
-                                                                                            "gain," +
-                                                                                            "posteqbandwidth," +
-                                                                                            "posteqcenter," +
-                                                                                            "prelowpasscutoff) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
+                                                                                        "effecttype," +
+                                                                                        "isactive," +
+                                                                                        "value0," +
+                                                                                        "value1," +
+                                                                                        "value2," +
+                                                                                        "value3," +
+                                                                                        "value4," +
+                                                                                        "value5," +
+                                                                                        "value6," +
+                                                                                        "value7," +
+                                                                                        "value8," +
+                                                                                        "value9," +
+                                                                                        "value10," +
+                                                                                        "value11) " +
                                                                                     "VALUES(@Index," +
+                                                                                           "@Effecttype," +
                                                                                            "@Isactive," +
                                                                                            "@Edge," +
                                                                                            "@Gain," +
                                                                                            "@Posteqbandwidth," +
                                                                                            "@Posteqcenter," +
-                                                                                           "@Prelowpasscutoff);"
-                                                                                           ,dbConnection);
+                                                                                           "@Prelowpasscutoff,"+
+                                                                                           "@Value5," +
+                                                                                           "@Value6," +
+                                                                                           "@Value7," +
+                                                                                           "@Value8," +
+                                                                                           "@Value9," +
+                                                                                           "@Value10," +
+                                                                                           "@Value11);"
+                                                                                           , dbConnection);
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
+                    command.Parameters.AddWithValue("Effecttype", "distortion");
                     command.Parameters.AddWithValue("Edge", currentEffect.Edge);
                     command.Parameters.AddWithValue("Gain", currentEffect.Gain);
                     command.Parameters.AddWithValue("Posteqbandwidth", currentEffect.PostEQBandwidth);
                     command.Parameters.AddWithValue("Posteqcenter", currentEffect.PostEQCenterFrequency);
                     command.Parameters.AddWithValue("Prelowpasscutoff", currentEffect.PreLowPassCutoff);
+                    command.Parameters.AddWithValue("Value5", null);
+                    command.Parameters.AddWithValue("Value6", null);
+                    command.Parameters.AddWithValue("Value7", null);
+                    command.Parameters.AddWithValue("Value8", null);
+                    command.Parameters.AddWithValue("Value9", null);
+                    command.Parameters.AddWithValue("Value10", null);
+                    command.Parameters.AddWithValue("Value11", null);
                     effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(ReverbEffect))
                 {
                     ReverbEffect currentEffect = effect as ReverbEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO reverbeffect (queueindex," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
+                                                                                        "effecttype," +
                                                                                         "isactive," +
-                                                                                        "highfrequencyrtratio," +
-                                                                                        "ingain," +
-                                                                                        "reverbmix," +
-                                                                                        "reverbtime) " +
+                                                                                        "value0," +
+                                                                                        "value1," +
+                                                                                        "value2," +
+                                                                                        "value3," +
+                                                                                        "value4," +
+                                                                                        "value5," +
+                                                                                        "value6," +
+                                                                                        "value7," +
+                                                                                        "value8," +
+                                                                                        "value9," +
+                                                                                        "value10," +
+                                                                                        "value11) " +
                                                                                 "VALUES(@Index," +
+                                                                                       "@Effecttype," +
                                                                                        "@Isactive," +
                                                                                        "@Highfrequencyrtratio," +
                                                                                        "@Ingain," +
                                                                                        "@Reverbmix," +
-                                                                                       "@Reverbtime);"
+                                                                                       "@Reverbtime," +
+                                                                                       "@Value4," +
+                                                                                       "@Value5," +
+                                                                                       "@Value6," +
+                                                                                       "@Value7," +
+                                                                                       "@Value8," +
+                                                                                       "@Value9," +
+                                                                                       "@Value10," +
+                                                                                       "@Value11);"
                                                                                        ,dbConnection);
 
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
+                    command.Parameters.AddWithValue("Effecttype", "reverb");
                     command.Parameters.AddWithValue("Highfrequencyrtratio", currentEffect.HighFrequencyRTRatio);
                     command.Parameters.AddWithValue("Ingain", currentEffect.InGain);
                     command.Parameters.AddWithValue("Reverbmix", currentEffect.ReverbMix);
                     command.Parameters.AddWithValue("Reverbtime", currentEffect.ReverbTime);
+                    command.Parameters.AddWithValue("Value4", null);
+                    command.Parameters.AddWithValue("Value5", null);
+                    command.Parameters.AddWithValue("Value6", null);
+                    command.Parameters.AddWithValue("Value7", null);
+                    command.Parameters.AddWithValue("Value8", null);
+                    command.Parameters.AddWithValue("Value9", null);
+                    command.Parameters.AddWithValue("Value10", null);
+                    command.Parameters.AddWithValue("Value11", null);
                     effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(EqualizerEffect))
                 {
                     EqualizerEffect currentEffect = effect as EqualizerEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO equalizereffect (queueindex," +
-                                                                                           "filter1," +
-                                                                                           "filter2," +
-                                                                                           "filter3," +
-                                                                                           "filter4," +
-                                                                                           "filter5," +
-                                                                                           "filter6," +
-                                                                                           "filter7,"  +
-                                                                                           "filter8," +
-                                                                                           "filter9," +
-                                                                                           "filter10) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
+                                                                                           "effecttype," +
+                                                                                           "isactive," +
+                                                                                           "value0," +
+                                                                                           "value1," +
+                                                                                           "value2," +
+                                                                                           "value3," +
+                                                                                           "value4," +
+                                                                                           "value5," +
+                                                                                           "value6," +
+                                                                                           "value7," +
+                                                                                           "value8," +
+                                                                                           "value9," +
+                                                                                           "value10," +
+                                                                                           "value11) " +
                                                                                    "VALUES(@Index," +
+                                                                                          "@Effecttype," +
+                                                                                          "@Isactive," +
                                                                                           "@Filter1," +
                                                                                           "@Filter2," +
                                                                                           "@Filter3," +
@@ -511,11 +652,14 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                           "@Filter7," +
                                                                                           "@Filter8," +
                                                                                           "@Filter9," +
-                                                                                          "@Filter10);"
+                                                                                          "@Filter10," +
+                                                                                          "@Value10," +
+                                                                                          "@Value11);"
                                                                                           ,dbConnection);
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
+                    command.Parameters.AddWithValue("Effecttype", "equalizer");
                     command.Parameters.AddWithValue("Filter1", currentEffect.ChannelFilter0);
                     command.Parameters.AddWithValue("Filter2", currentEffect.ChannelFilter1);
                     command.Parameters.AddWithValue("Filter3", currentEffect.ChannelFilter2);
@@ -526,17 +670,41 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue("Filter8", currentEffect.ChannelFilter7);
                     command.Parameters.AddWithValue("Filter9", currentEffect.ChannelFilter8);
                     command.Parameters.AddWithValue("Filter10", currentEffect.ChannelFilter9);
+                    command.Parameters.AddWithValue("Value10",null);
+                    command.Parameters.AddWithValue("Value11",null);
                     effectInsertCommands.Add(command);
                 }
                 if (effect.GetType() == typeof(GargleEffect))
                 {
                     GargleEffect currentEffect = effect as GargleEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO gargleeffect (queueindex," +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
+                                                                                        "effecttype," +
                                                                                         "isactive," +
-                                                                                        "rate," +
-                                                                                        "waveshape) " +
-                                                                                "VALUES(@Index," +
+                                                                                        "value0,"+
+                                                                                        "value1," +
+                                                                                        "value2," +
+                                                                                        "value3," +
+                                                                                        "value4," +
+                                                                                        "value5," +
+                                                                                        "value6," +
+                                                                                        "value7," +
+                                                                                        "value8," +
+                                                                                        "value9," +
+                                                                                        "value10," +
+                                                                                        "value11) " +
+                                                                                "VALUES(@Index," +                                                                                     
+                                                                                       "@Effecttype," +
                                                                                        "@Isactive," +
+                                                                                       "@Value0," +
+                                                                                       "@Value1," +
+                                                                                       "@Value2," +
+                                                                                       "@Value3," +
+                                                                                       "@Value4," +
+                                                                                       "@Value5," +
+                                                                                       "@Value6," +
+                                                                                       "@Value7," +
+                                                                                       "@Value8," +
+                                                                                       "@Value9," +
                                                                                        "@Rate," +
                                                                                        "@Waveshape);"
                                                                                        ,dbConnection);
@@ -544,11 +712,22 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
+                    command.Parameters.AddWithValue("Effecttype", "gargle");
+                    command.Parameters.AddWithValue("Value0",null);
+                    command.Parameters.AddWithValue("Value1", null);
+                    command.Parameters.AddWithValue("Value2", null);
+                    command.Parameters.AddWithValue("Value3", null);
+                    command.Parameters.AddWithValue("Value4", null);
+                    command.Parameters.AddWithValue("Value5", null);
+                    command.Parameters.AddWithValue("Value6", null);
+                    command.Parameters.AddWithValue("Value7", null);
+                    command.Parameters.AddWithValue("Value8", null);
+                    command.Parameters.AddWithValue("Value9", null);
                     command.Parameters.AddWithValue("Rate", currentEffect.Rate);
                     command.Parameters.AddWithValue("Waveshape", currentEffect.WaveShape);
                     effectInsertCommands.Add(command);
                 }
-#endregion
+                #endregion
                 i++;
             }
 
@@ -559,10 +738,6 @@ namespace TuneMusix.Data.SQLDatabase
                 sqlVacuum.ExecuteNonQuery();
 
                 BeginCommand.ExecuteNonQuery();
-                foreach(SQLiteCommand command in effectQueueInsertCommands)
-                {
-                    command.ExecuteNonQuery();
-                }
                 foreach (SQLiteCommand command in effectInsertCommands)
                 {
                     command.ExecuteNonQuery();

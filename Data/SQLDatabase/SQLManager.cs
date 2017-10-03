@@ -54,7 +54,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                        "ON DELETE CASCADE);"
                                                                                                        ,dbConnection);
             SQLiteCommand sqlCreatePlaylistTable = new SQLiteCommand("CREATE TABLE if not exists playlists (ID INT NOT NULL," +
-                                                                                                           "name VARCHAR (30)," +
+                                                                                                           "name VARCHAR(30)," +
                                                                                                            "PRIMARY KEY(ID))",
                                                                                                            dbConnection);
             SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL," +
@@ -71,113 +71,27 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                                    "REFERENCES playlists(ID) " +
                                                                                                                    "ON DELETE CASCADE);"
                                                                                                                    ,dbConnection);
-            SQLiteCommand sqlCreateEffectsQueueTable = new SQLiteCommand("CREATE TABLE if not exists effectsqueue (queueindex INT UNSIGNED NOT NULL);",
+            SQLiteCommand sqlCreateEffectsQueueTable = new SQLiteCommand("CREATE TABLE if not exists effectsqueue (queueindex INT UNSIGNED NOT NULL," +
+                                                                                                                  "effecttype VARCHAR(20),"+
+                                                                                                                  "isactive INT,"+
+                                                                                                                  "value0 REAL,"+
+                                                                                                                  "value1 REAL," +
+                                                                                                                  "value2 REAL," +
+                                                                                                                  "value3 REAL," +
+                                                                                                                  "value4 REAL," +
+                                                                                                                  "value5 REAL," +
+                                                                                                                  "value6 REAL," +
+                                                                                                                  "value7 REAL," +
+                                                                                                                  "value8 REAL," +
+                                                                                                                  "value9 REAL," +
+                                                                                                                  "value10 int," +
+                                                                                                                  "value11 int);",
                                                                                                                   dbConnection);
-            SQLiteCommand sqlCreateFlangerTable = new SQLiteCommand("CREATE TABLE if not exists flangereffect (queueindex INT," +
-                                                                                                            "isactive INT," +
-                                                                                                            "delay REAL," +
-                                                                                                            "depth REAL," +
-                                                                                                            "feedback REAL," +
-                                                                                                            "frequency REAL," +
-                                                                                                            "wetdrymix REAL," +
-                                                                                                            "waveform INT," +
-                                                                                                            "FOREIGN KEY(queueindex) " +
-                                                                                                            "REFERENCES effectsqueue(queueindex) " +
-                                                                                                            "ON DELETE CASCADE);"
-                                                                                                            ,dbConnection);
-            SQLiteCommand sqlCreateChorusTable = new SQLiteCommand("CREATE TABLE if not exists choruseffect (queueindex INT," +
-                                                                                                          "isactive INT," +
-                                                                                                          "delay REAL," +
-                                                                                                          "depth REAL," +
-                                                                                                          "feedback REAL," +
-                                                                                                          "frequency REAL," +
-                                                                                                          "phase INT," +
-                                                                                                          "wetdrymix REAL,"+
-                                                                                                          "waveform INT," +
-                                                                                                          "FOREIGN KEY(queueindex) " +
-                                                                                                          "REFERENCES effectsqueue(queueindex) " +
-                                                                                                          "ON DELETE CASCADE);"
-                                                                                                           ,dbConnection);
-            SQLiteCommand sqlCreateCompressorTable = new SQLiteCommand("CREATE TABLE if not exists compressoreffect (queueindex INT," +
-                                                                                                                  "isactive INT," +
-                                                                                                                  "attack REAL," +
-                                                                                                                  "gain REAL," +
-                                                                                                                  "predelay REAL," +
-                                                                                                                  "ratio REAL," +
-                                                                                                                  "release REAL," +
-                                                                                                                  "treshold REAL," +
-                                                                                                                  "FOREIGN KEY(queueindex) " +
-                                                                                                                  "REFERENCES effectsqueue(queueindex) " +
-                                                                                                                  "ON DELETE CASCADE);"
-                                                                                                                  ,dbConnection);
-            SQLiteCommand sqlCreateDistortionTable = new SQLiteCommand("CREATE TABLE if not exists distortioneffect (queueindex INT," +
-                                                                                                                  "isactive INT," +
-                                                                                                                  "edge REAL," +
-                                                                                                                  "gain REAL," +
-                                                                                                                  "posteqbandwidth REAL," +
-                                                                                                                  "posteqcenter REAL," +
-                                                                                                                  "prelowpasscutoff INT," +
-                                                                                                                  "FOREIGN KEY(queueindex) " +
-                                                                                                                  "REFERENCES effectsqueue(queueindex) " +
-                                                                                                                  "ON DELETE CASCADE);"
-                                                                                                                  ,dbConnection);
-            SQLiteCommand sqlCreateEchoTable = new SQLiteCommand("CREATE TABLE if not exists echoeffect (queueindex INT," +
-                                                                                                      "isactive INT," +
-                                                                                                      "feedback REAL," +
-                                                                                                      "leftdelay REAL," +
-                                                                                                      "rightdelay REAL," +
-                                                                                                      "wetdrymix REAL," +
-                                                                                                      "pandelay INT," +
-                                                                                                      "FOREIGN KEY(queueindex) " +
-                                                                                                      "REFERENCES effectsqueue(queueindex) " +
-                                                                                                      "ON DELETE CASCADE);"
-                                                                                                      ,dbConnection);
-            SQLiteCommand sqlCreateEqualizerTable = new SQLiteCommand("CREATE TABLE if not exists equalizereffect (queueindex INT," +
-                                                                                                                "isactive INT," +
-                                                                                                                "filter1 REAL," +
-                                                                                                                "filter2 REAL," +
-                                                                                                                "filter3 REAL," +
-                                                                                                                "filter4 REAL," +
-                                                                                                                "filter5 REAL," +
-                                                                                                                "filter6 REAL," +
-                                                                                                                "filter7 REAL," +
-                                                                                                                "filter8 REAL," +
-                                                                                                                "filter9 REAL," +
-                                                                                                                "filter10 REAL," +
-                                                                                                                "FOREIGN KEY(queueindex) " +
-                                                                                                                "REFERENCES effectsqueue(queueindex) " +
-                                                                                                                "ON DELETE CASCADE);"
-                                                                                                                ,dbConnection);
-            SQLiteCommand sqlCreateGargleTable = new SQLiteCommand("CREATE TABLE if not exists gargleeffect (queueindex INT," +
-                                                                                                          "isactive INT," +
-                                                                                                          "rate REAL," +
-                                                                                                          "waveshape INT," +
-                                                                                                          "FOREIGN KEY(queueindex) " +
-                                                                                                          "REFERENCES effectsqueue(queueindex) " +
-                                                                                                          "ON DELETE CASCADE);"
-                                                                                                          ,dbConnection);
-            SQLiteCommand sqlCreateReverbTable = new SQLiteCommand("CREATE TABLE if not exists reverbeffect (queueindex INT," +
-                                                                                                         "isactive INT," +
-                                                                                                         "highfrequencyrtratio REAL," +
-                                                                                                         "ingain REAL," +
-                                                                                                         "reverbmix REAL," +
-                                                                                                         "reverbtime REAL," +
-                                                                                                         "FOREIGN KEY(queueindex) " +
-                                                                                                         "REFERENCES effectsqueue(queueindex) " +
-                                                                                                         "ON DELETE CASCADE);"
-                                                                                                         ,dbConnection);
+      
             dbConnection.Open();
             try
             {
                 sqlCreateEffectsQueueTable.ExecuteNonQuery();
-                sqlCreateChorusTable.ExecuteNonQuery();         
-                sqlCreateCompressorTable.ExecuteNonQuery();
-                sqlCreateDistortionTable.ExecuteNonQuery();
-                sqlCreateEchoTable.ExecuteNonQuery();
-                sqlCreateEqualizerTable.ExecuteNonQuery();
-                sqlCreateFlangerTable.ExecuteNonQuery();
-                sqlCreateGargleTable.ExecuteNonQuery();
-                sqlCreateReverbTable.ExecuteNonQuery();
                 sqlCreateTrackTable.ExecuteNonQuery();
                 sqlCreateFolderTable.ExecuteNonQuery();
                 sqlCreatePlaylistTable.ExecuteNonQuery();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
 namespace TuneMusix.Data.SQLDatabase
@@ -239,6 +240,199 @@ namespace TuneMusix.Data.SQLDatabase
             }
             return playlistTrackList;
         }
-    
+
+        public List<BaseEffect> GetEffectQueue()
+        {
+            List<BaseEffect> effectQueue = new List<BaseEffect>();          
+            SQLiteCommand command = new SQLiteCommand("SELECT * " +
+                                                    "FROM effectsqueue;"
+                                                    ,dbConnection);
+
+            OpenDBConnection();
+            dbReader = command.ExecuteReader();
+            try
+            {
+                while (dbReader.Read())
+                {
+                    string type = dbReader.GetString(1);
+                    bool isActive;
+                    float value0 = 0;
+                    float value1 = 0;
+                    float value2 = 0;
+                    float value3 = 0;
+                    float value4 = 0;
+                    float value5 = 0;
+                    float value6 = 0;
+                    float value7 = 0;
+                    float value8 = 0;
+                    float value9 = 0;
+                    int value10 = 0;
+                    int value11 = 0;
+                    if (dbReader.GetInt32(2) == 1) isActive = true;
+                    else isActive = false;
+                    if (!dbReader.IsDBNull(3))
+                    {
+                        value0 = dbReader.GetFloat(3);
+                    }
+                    if (!dbReader.IsDBNull(4))
+                    {
+                        value1 = dbReader.GetFloat(4);
+                    }
+                    if (!dbReader.IsDBNull(5))
+                    {
+                        value2 = dbReader.GetFloat(5);
+                    }
+                    if (!dbReader.IsDBNull(6))
+                    {
+                        value3 = dbReader.GetFloat(6);
+                    }
+                    if (!dbReader.IsDBNull(7))
+                    {
+                        value4 = dbReader.GetFloat(7);
+                    }
+                    if (!dbReader.IsDBNull(8))
+                    {
+                        value5 = dbReader.GetFloat(8);
+                    }
+                    if (!dbReader.IsDBNull(9))
+                    {
+                        value6 = dbReader.GetFloat(9);
+                    }
+                    if (!dbReader.IsDBNull(10))
+                    {
+                        value7 = dbReader.GetFloat(10);
+                    }
+                    if (!dbReader.IsDBNull(11))
+                    {
+                        value8 = dbReader.GetFloat(11);
+                    }
+                    if (!dbReader.IsDBNull(12))
+                    {
+                        value9 = dbReader.GetFloat(12);
+                    }
+                    if (!dbReader.IsDBNull(13))
+                    {
+                        value10 = dbReader.GetInt32(13);
+                    }
+                    if (!dbReader.IsDBNull(14))
+                    {
+                        value11 = dbReader.GetInt32(14);
+                    }
+
+
+                    if (type.Equals("distortion"))
+                    {
+                        DistortionEffect effect = new DistortionEffect();
+                        effect.IsActive = isActive;
+                        effect.Edge = value0;
+                        effect.Gain = value1;
+                        effect.PostEQBandwidth = value2;
+                        effect.PostEQCenterFrequency = value3;
+                        effect.PreLowPassCutoff = value4;
+                        effectQueue.Add(effect);
+                    }
+                    if (type.Equals("echo"))
+                    {
+                        EchoEffect effect = new EchoEffect();
+                        effect.IsActive = isActive;
+                        effect.Feedback = value0;
+                        effect.LeftDelay = value1;
+                        effect.RightDelay = value2;
+                        effect.WetDryMix = value3;
+                        if (value10 == 1) effect.PanDelay = true;
+                        else effect.PanDelay = false;
+                        effectQueue.Add(effect);
+
+                    }
+                    if (type.Equals("reverb"))
+                    {
+                        ReverbEffect effect = new ReverbEffect();
+                        effect.IsActive = isActive;
+                        effect.HighFrequencyRTRatio = value0;
+                        effect.InGain = value1;
+                        effect.ReverbMix = value2;
+                        effect.ReverbTime = value3;
+                        effectQueue.Add(effect);
+
+                    }
+                    if (type.Equals("equalizer"))
+                    {
+                        EqualizerEffect effect = new EqualizerEffect();
+                        effect.IsActive = isActive;
+                        effect.ChannelFilter0 = value0;
+                        effect.ChannelFilter1 = value1;
+                        effect.ChannelFilter2 = value2;
+                        effect.ChannelFilter3 = value3;
+                        effect.ChannelFilter4 = value4;
+                        effect.ChannelFilter5 = value5;
+                        effect.ChannelFilter6 = value6;
+                        effect.ChannelFilter7 = value7;
+                        effect.ChannelFilter8 = value8;
+                        effect.ChannelFilter9 = value9;
+                        effectQueue.Add(effect);
+
+                    }
+                    if (type.Equals("gargle"))
+                    {
+                        GargleEffect effect = new GargleEffect();
+                        effect.IsActive = isActive;
+                        effect.Rate = value10;
+                        effect.WaveShape = value11;
+                        effectQueue.Add(effect);
+
+                    }
+                    if (type.Equals("compressor"))
+                    {
+                        CompressorEffect effect = new CompressorEffect();
+                        effect.IsActive = isActive;
+                        effect.Attack = value0;
+                        effect.Gain = value1;
+                        effect.Predelay = value2;
+                        effect.Ratio = value3;
+                        effect.Release = value4;
+                        effect.Treshold = value5;
+                        effectQueue.Add(effect);
+
+                    }
+                    if (type.Equals("flanger"))
+                    {
+                        FlangerEffect effect = new FlangerEffect();
+                        effect.IsActive = isActive;
+                        effect.Delay = value0;
+                        effect.Depth = value1;
+                        effect.Feedback = value2;
+                        effect.Frequency = value3;
+                        effect.Wet_DryMix = value4;
+                        effect.WaveForm = value10;
+                        effectQueue.Add(effect);
+
+                    }
+                    if (type.Equals("chorus"))
+                    {
+                        ChorusEffect effect = new ChorusEffect();
+                        effect.IsActive = isActive;                    
+                        effect.Delay = value0;
+                        effect.Depth = value1;
+                        effect.Feedback = value2;
+                        effect.Frequency = value3;
+                        effect.Phase = value10;
+                        effect.WaveForm = value11;
+                        effectQueue.Add(effect);
+
+                    }
+
+                }
+            }
+            finally
+            {
+                CloseDBConnection();
+                dbConnection.Close();
+            }
+
+            return effectQueue;
+
+        }
+
+
     }
 }

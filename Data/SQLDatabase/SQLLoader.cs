@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
 namespace TuneMusix.Data.SQLDatabase
@@ -75,6 +76,11 @@ namespace TuneMusix.Data.SQLDatabase
                 }
             }
             Debug.WriteLine("Playlists loaded!");
+            Debug.WriteLine("Loading effects...");
+            List<BaseEffect> effectlist = DBmanager.GetEffectQueue();
+            dataModel.AddEffectsToQueueDB(effectlist);
+
+            Debug.WriteLine(effectlist.Count +  " Effects loaded!");
             Debug.WriteLine("Loading finished");
 
             watch.Stop();

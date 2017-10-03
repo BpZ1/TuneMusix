@@ -151,6 +151,15 @@ namespace TuneMusix.Data.DataModelOb
             }
             OnDataModelChanged();
         }
+        [DatabaseMethod]
+        public void AddEffectsToQueueDB(List<BaseEffect> effectList)
+        {
+            foreach (BaseEffect effect in effectList)
+            {
+                EffectQueue.Add(effect);
+            }
+            OnEffectQueueChanged();
+        }
         /// <summary>
         /// Adds a track to a playlist and triggers the event.
         /// </summary>
