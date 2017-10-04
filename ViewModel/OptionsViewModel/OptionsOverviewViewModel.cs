@@ -28,19 +28,23 @@ namespace TuneMusix.ViewModel.OptionsViewModel
 
         private void _apply(object argument)
         {           
-            if (options.IsModified)
+            if (_isModified())
             {
                 SQLManager manager = new SQLManager();               
                 manager.UpdateOptions(IDGenerator.GetID(false),options);
                 manager.UpdateEffectQueue(dataModel.EffectQueue.ToList<BaseEffect>());
                 options.IsModified = false;
+                foreach (BaseEffect effect in dataModel.EffectQueue)
+                {
+                    effect.IsModified = false;
+                }
             }
         }
 
         private void _cancel(object argument)
         {
             OptionsWindowView optionsWindow = argument as OptionsWindowView;
-            if (options.IsModified)
+            if (_isModified())
             {
 
                 //open window to ask if sure.
@@ -50,5 +54,19 @@ namespace TuneMusix.ViewModel.OptionsViewModel
                 optionsWindow.Close();
             }
         }
+
+
+        private bool _isModified()
+        {
+            if (options.IsModified) return true;
+            foreach (BaseEffect effect in dataModel.EffectQueue)
+            {
+                if (effect.IsModified) return true;
+                else return false;
+            }
+            return false;
+        }
+
+
     }
 }

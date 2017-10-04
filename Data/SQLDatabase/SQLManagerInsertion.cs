@@ -301,11 +301,10 @@ namespace TuneMusix.Data.SQLDatabase
             SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM effectsqueue",dbConnection);
             SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",dbConnection);
             List<SQLiteCommand> effectInsertCommands = new List<SQLiteCommand>();
+            int i = 1;
             foreach (BaseEffect effect in effectQueue)
             {
-                //choose which kind of effect has to be inserted.
-                int i = 1;       
-
+                //choose which kind of effect has to be inserted.                 
                 #region effects
                 if (effect.GetType() == typeof(ChorusEffect))
                 {

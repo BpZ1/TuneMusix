@@ -152,7 +152,6 @@ namespace TuneMusix.Data.SQLDatabase
                 dbConnection.Close();
             }
 
-
         }
 
         /// <summary>
