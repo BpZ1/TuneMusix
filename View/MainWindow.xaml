@@ -31,7 +31,7 @@
     <Grid>
     <DockPanel>
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
-            <MenuItem Header="_File">
+            <MenuItem Header="System">
                 <MenuItem Header="Load" InputGestureText="Ctrl+D">
                     <MenuItem Header="Add Files" IsCheckable="false" Command="{Binding GetFiles}" />
                     <MenuItem Header="Add Folder" IsCheckable="False" Command="{Binding AddFolder}"/>

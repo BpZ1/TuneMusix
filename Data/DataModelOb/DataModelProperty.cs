@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TuneMusix.Attributes;
-using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
@@ -46,6 +48,7 @@ namespace TuneMusix.ViewModel.OptionsViewModel
             OptionsWindowView optionsWindow = argument as OptionsWindowView;
             if (_isModified())
             {
+                MessageBoxResult test = MessageBox.Show("Hallo");
 
                 //open window to ask if sure.
             }
