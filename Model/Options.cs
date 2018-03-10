@@ -1,7 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using TuneMusix.Data.DataModelOb;
+using TuneMusix.Data.SQLDatabase;
+using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 
 namespace TuneMusix.Model
@@ -10,7 +14,7 @@ namespace TuneMusix.Model
     /// This class contains all properties that are needed in more parts of the program
     /// and have to be saved to the database.
     /// </summary>
-    public partial class Options : INotifyPropertyChanged
+    public partial class Options
     {
         private static Options instance;
 
@@ -28,7 +32,13 @@ namespace TuneMusix.Model
             }
         }
 
-        public bool IsModified { get; set; } = false;
+        private bool modified = false;
+        public bool Modified
+        {
+            private get { return modified; }
+            set { modified = value; }
+        }
+
         private bool _effectsActive;
         //Normal logging is only active when set to true.
         private bool _LoggerActive = false;
@@ -90,6 +100,8 @@ namespace TuneMusix.Model
             }
         }
 
+
+        #region getter and setter
         //Getter and setter
         public bool IsStereo
         {
@@ -158,35 +170,42 @@ namespace TuneMusix.Model
                 OnRepeatChanged();
             }
         }
-
-
-        internal void RaisePropertyChanged(string prop)
+        #endregion
+  
+        /// <summary>
+        /// Returns true if any value in options or the effectqueue has changed.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsModified()
         {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+            if (Modified)
+                return true;
+
+            foreach(BaseEffect effect in DataModel.Instance.EffectQueue)
+            {
+                if (effect.IsModified)
+                    return true;
+            }
+            return false;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        bool? _CloseWindowFlag;
-        public bool? CloseWindowFlag
+        public void Save()
         {
-            get { return _CloseWindowFlag; }
-            set
+            if (IsModified())
             {
-                _CloseWindowFlag = value;
-                RaisePropertyChanged("CloseWindowFlag");
+                DataModel dataModel = DataModel.Instance;
+                SQLManager manager = new SQLManager();
+                manager.UpdateOptions(IDGenerator.GetID(false), this);
+                manager.UpdateEffectQueue(dataModel.EffectQueue.ToList<BaseEffect>());
+                Modified = false;
+                foreach (BaseEffect effect in dataModel.EffectQueue)
+                {
+                    effect.IsModified = false;
+                }
             }
         }
 
-        public virtual void CloseWindow(bool? result = true)
-        {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
-            {
-                CloseWindowFlag = CloseWindowFlag == null
-                    ? true
-                    : !CloseWindowFlag;
-            }));
-        }
+
 
     }
 }

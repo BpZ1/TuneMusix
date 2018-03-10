@@ -1,16 +1,14 @@
 ﻿using MaterialDesignThemes.Wpf;
 using GongSolutions.Wpf.DragDrop;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
 using TuneMusix.View.Dialog;
 using TuneMusix.ViewModel.Dialog;

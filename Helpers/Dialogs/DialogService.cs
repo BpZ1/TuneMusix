@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using TuneMusix.Helpers.Dialogs;
 using TuneMusix.View.Dialog;
 using TuneMusix.ViewModel;
 using TuneMusix.ViewModel.Dialog;
 
-namespace TuneMusix.Helpers
+namespace TuneMusix.Helpers.Dialogs
 {
     public static class DialogService
     {
@@ -28,18 +29,27 @@ namespace TuneMusix.Helpers
         /// <param name="body"></param>
         public static void WarnMessage(string header, string body)
         {
-
             if (header.Count<char>()>35)
-            {
                 throw new ArgumentException("Header for warning messages can only be 35 characters or less.");
-            }
-            var win = new WarningDialogWindow
-            {
-                DataContext = new WarningDialog(header,body),
-            };
+            
+            var win = new WarningDialogWindow { DataContext = new WarningDialog(header,body), };
         
             win.Show();
         }
 
+        /// <summary>
+        /// Opens a dialog waiting for user confirmation and returns the result as <see cref="DialogResult"/>
+        /// </summary>
+        /// <param name="DialogViewModelBase"></param>
+        /// <returns><see cref="DialogResult"/></returns>
+        public static DialogResult OpenDialog(DialogViewModelBase vm)
+        {
+            DialogWindow win = new DialogWindow();
+            win.DataContext = vm;
+            win.ShowDialog();
+            DialogResult result = (win.DataContext as DialogViewModelBase).UserDialogResult;
+            return result;
+        }
+        
     }
 }

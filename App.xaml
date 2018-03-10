@@ -3,6 +3,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:TuneMusix"
+             xmlns:confirmationDialog="clr-namespace:TuneMusix.ViewModel.Dialog"
+             xmlns:dialogControl="clr-namespace:TuneMusix.View.Controls"
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
@@ -48,7 +50,9 @@
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/Themes/materialdesign.xaml"/>               
               
             </ResourceDictionary.MergedDictionaries>
-
+            <DataTemplate DataType="{x:Type confirmationDialog:ConfirmationDialogViewModel}">
+                <dialogControl:YesNoDialogControl></dialogControl:YesNoDialogControl>
+            </DataTemplate>
             <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MaterialDesignTabablzControlStyle}" />
 
         </ResourceDictionary>

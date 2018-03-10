@@ -4,9 +4,8 @@ using TuneMusix.Helpers.MediaPlayer;
 using CSCore.SoundOut;
 using CSCore.Codecs;
 using CSCore;
-using CSCore.Streams.Effects;
+using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
-using TuneMusix.Exceptions;
 
 namespace TuneMusix.Helpers
 {

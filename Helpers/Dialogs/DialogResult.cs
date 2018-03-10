@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TuneMusix.Model
+namespace TuneMusix.Helpers.Dialogs
 {
-    public partial class Options
+    public enum DialogResult
     {
-
- 
-     
-
+        Yes,
+        No,
+        Undefined
     }
 }

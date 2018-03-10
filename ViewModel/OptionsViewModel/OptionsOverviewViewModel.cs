@@ -8,9 +8,11 @@ using System.Windows.Controls;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 using TuneMusix.View.OptionsWindow;
+using TuneMusix.ViewModel.Dialog;
 
 namespace TuneMusix.ViewModel.OptionsViewModel
 {
@@ -24,33 +26,46 @@ namespace TuneMusix.ViewModel.OptionsViewModel
 
         public OptionsOverviewViewModel()
         {
-            Apply = new RelayCommand(_apply);
-            Cancel = new RelayCommand(_cancel);
+            Apply = new RelayCommand(apply);
+            Cancel = new RelayCommand(cancel);
         }
-
-        private void _apply(object argument)
+        /// <summary>
+        /// Saves the options
+        /// </summary>
+        /// <param name="argument"></param>
+        private void apply(object argument)
         {           
-            if (_isModified())
+            if (options.IsModified())
             {
-                SQLManager manager = new SQLManager();               
-                manager.UpdateOptions(IDGenerator.GetID(false),options);
-                manager.UpdateEffectQueue(dataModel.EffectQueue.ToList<BaseEffect>());
-                options.IsModified = false;
-                foreach (BaseEffect effect in dataModel.EffectQueue)
-                {
-                    effect.IsModified = false;
-                }
+                options.Save();
             }
         }
 
-        private void _cancel(object argument)
+        private void cancel(object argument)
         {
             OptionsWindowView optionsWindow = argument as OptionsWindowView;
-            if (_isModified())
+            if (options.IsModified())
             {
-                MessageBoxResult test = MessageBox.Show("Hallo");
+                //Open a confirmation dialog to check if the user wants to save his changes.
+                DialogResult result = openDialog();
+       
+                if(result == DialogResult.Yes)
+                {
+                    options.Save();
+                    optionsWindow.Close();
+                }
+                else if(result == DialogResult.No)
+                {
+                    Console.Out.WriteLine("NO was pressed");
+                    //Restoring previous settings
+                    SQLLoader loader = new SQLLoader();
+                    loader.LoadOptions();
+                    optionsWindow.Close();
+                }
+                else if(result == DialogResult.Undefined)
+                {
 
-                //open window to ask if sure.
+                }
             }
             else
             {
@@ -58,18 +73,12 @@ namespace TuneMusix.ViewModel.OptionsViewModel
             }
         }
 
-
-        private bool _isModified()
+        private DialogResult openDialog()
         {
-            if (options.IsModified) return true;
-            foreach (BaseEffect effect in dataModel.EffectQueue)
-            {
-                if (effect.IsModified) return true;
-                else return false;
-            }
-            return false;
+            DialogViewModelBase vm = new ConfirmationDialogViewModel();
+            DialogResult result = DialogService.OpenDialog(vm);
+            return result;
         }
-
 
     }
 }

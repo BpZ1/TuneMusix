@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TuneMusix.Attributes;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
@@ -394,12 +391,18 @@ namespace TuneMusix.Data.DataModelOb
 
         public void ChangeEffectListPosition(BaseEffect effect,int position)
         {
-            Console.WriteLine("POSITION: " + position);
             if (EffectQueue.Contains(effect))
             {
                 int pos1 = EffectQueue.IndexOf(effect);
                 Logger.Log("Moved effect from queue position " + pos1 + " to position " + position + ".");
-                EffectQueue.Move(pos1,position-1);            
+                if(position == EffectQueue.Count)
+                {
+                    EffectQueue.Move(pos1, position-1);
+                }
+                else
+                {
+                    EffectQueue.Move(pos1, position);
+                }                    
             }
             else
             {

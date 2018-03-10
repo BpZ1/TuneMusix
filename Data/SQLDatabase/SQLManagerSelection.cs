@@ -91,7 +91,7 @@ namespace TuneMusix.Data.SQLDatabase
             return folderlist;
         }
 
-        public void GetOptions()
+        public void LoadOptions()
         {
             Options options = Options.Instance;
 

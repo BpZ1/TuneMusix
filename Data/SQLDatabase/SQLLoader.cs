@@ -19,6 +19,11 @@ namespace TuneMusix.Data.SQLDatabase
         private SQLManager DBmanager = new SQLManager();
         private IDGenerator IDgen = IDGenerator.Instance;
 
+        /// <summary>
+        /// Loads all data from the database and 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void LoadFromDB(object sender, DoWorkEventArgs e)
         {
             var watch = new Stopwatch();
@@ -33,7 +38,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
             IDgen.Initialize(idgen);
             Debug.WriteLine("Options loading...");
-            DBmanager.GetOptions();
+            DBmanager.LoadOptions();
             Debug.WriteLine("Options loaded!");
           
             //Load folders
@@ -88,6 +93,16 @@ namespace TuneMusix.Data.SQLDatabase
 
         }
 
+        /// <summary>
+        /// Loads options and EffectQueue from the database.
+        /// </summary>
+        public void LoadOptions()
+        {
+            DBmanager.LoadOptions();
+            List<BaseEffect> effectlist = DBmanager.GetEffectQueue();
+            dataModel.EffectQueue.Clear();
+            dataModel.AddEffectsToQueueDB(effectlist);
+        }
 
         private List<Folder> FolderSort(List<Folder> FolderList)
         {

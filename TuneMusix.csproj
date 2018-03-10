@@ -139,7 +139,8 @@
     <Compile Include="Data\SQLDatabase\SQLManagerDeletion.cs" />
     <Compile Include="Data\SQLDatabase\SQLManagerInsertion.cs" />
     <Compile Include="Data\SQLDatabase\SQLManagerSelection.cs" />
-    <Compile Include="Helpers\DialogService.cs" />
+    <Compile Include="Helpers\Dialogs\DialogResult.cs" />
+    <Compile Include="Helpers\Dialogs\DialogService.cs" />
     <Compile Include="Helpers\Exceptions\ClassNotInitializedException.cs" />
     <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
     <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
@@ -158,7 +159,8 @@
     <Compile Include="Helpers\MediaPlayer\Effects\GargleEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\ReverbEffect.cs" />
     <Compile Include="Helpers\TextFormatService.cs" />
-    <Compile Include="Model\OptionEffects.cs" />
+    <Compile Include="ViewModel\Dialog\ConfirmationDialogViewModel.cs" />
+    <Compile Include="ViewModel\Dialog\DialogViewModelBase.cs" />
     <Compile Include="ViewModel\Dialog\WarningDialog.cs" />
     <Compile Include="Model\PlaylistTrack.cs" />
     <Compile Include="ViewModel\CurrentPlaylistViewModel.cs" />
@@ -175,8 +177,14 @@
     <Compile Include="ViewModel\TracklistViewModel.cs" />
     <Compile Include="ViewModel\ViewModelMainEvents.cs" />
     <Compile Include="ViewModel\ViewModelMainMenuMethods.cs" />
+    <Compile Include="View\Controls\YesNoDialogControl.xaml.cs">
+      <DependentUpon>YesNoDialogControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CurrentPlaylistPage.xaml.cs">
       <DependentUpon>CurrentPlaylistPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\DialogWindow.xaml.cs">
+      <DependentUpon>DialogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Dialog\GetTextDialog.xaml.cs">
       <DependentUpon>GetTextDialog.xaml</DependentUpon>
@@ -238,7 +246,15 @@
     <Compile Include="View\TracklistPage.xaml.cs">
       <DependentUpon>TracklistPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\Controls\YesNoDialogControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\CurrentPlaylistPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dialog\DialogWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

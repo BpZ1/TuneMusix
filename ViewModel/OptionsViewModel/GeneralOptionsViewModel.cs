@@ -16,7 +16,7 @@ namespace TuneMusix.ViewModel.OptionsViewModel
             set
             {
                 options.LoggerActive = value;
-                options.IsModified = true;
+                options.Modified = true;
             }
         }
     }

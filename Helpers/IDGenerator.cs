@@ -30,6 +30,11 @@ namespace TuneMusix.Helpers
             IsInit = true;
         }
 
+        /// <summary>
+        /// Returns a unique ID 
+        /// </summary>
+        /// <param name="saving">Set to true if the current ID should be permanently saved</param>
+        /// <returns></returns>
         public static long GetID(bool saving)
         {
             if (IsInit)

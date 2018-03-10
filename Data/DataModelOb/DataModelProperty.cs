@@ -72,6 +72,7 @@ namespace TuneMusix.Data.DataModelOb
         public ObservableCollection<BaseEffect> EffectQueue
         {
             get { return _effectQueue; }
+            set { EffectQueue = value; }
         }
     }
 }

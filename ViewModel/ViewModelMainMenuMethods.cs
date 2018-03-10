@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 using TuneMusix.View.OptionsWindow;

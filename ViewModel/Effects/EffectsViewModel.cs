@@ -37,7 +37,7 @@ namespace TuneMusix.ViewModel.Effects
         private void _removeEffect(object argument)
         {
             dataModel.RemoveEffectFromQueue(SelectedItem);
-            options.IsModified = true;
+            options.Modified = true;
         }
 
         internal void RaisePropertyChanged(string prop)
@@ -114,7 +114,7 @@ namespace TuneMusix.ViewModel.Effects
             {
                 dataModel.ChangeEffectListPosition(effect, dropInfo.UnfilteredInsertIndex);
             }
-            options.IsModified = true;
+            options.Modified = true;
         }
         #endregion
     }
