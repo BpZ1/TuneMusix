@@ -18,7 +18,11 @@
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
-        FontFamily="{DynamicResource MaterialDesignFont}" Width="1300" Height="796"
+        FontFamily="{DynamicResource MaterialDesignFont}" 
+        WindowState="Maximized"
+        MinHeight="300"
+        MinWidth="500"
+        Width="1300" Height="796"
         >
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">

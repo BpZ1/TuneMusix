@@ -32,8 +32,6 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         public AudioControls()
         {
-           
-
             //Events
             dataModel.CurrentTrackChanged += OnCurrentTrackChanged;
             options.BalanceChanged += OnBalanceChanged;
@@ -82,7 +80,6 @@ namespace TuneMusix.Helpers.MediaPlayer
             _effectQueue = new EffectQueue();
             dataModel.EffectQueueChanged += OnEffectQueueChanged;
         }
-
         private void OnEffectQueueChanged(object source,object queue)
         {
             ObservableCollection<BaseEffect> effectQueue = queue as ObservableCollection<BaseEffect>;          
@@ -98,7 +95,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 CurrentPosition = lastPosition;
             }      
         }
-
         private void OnPlaybackFinished(object source)
         {
             if (options.RepeatTrack == 0)
@@ -122,8 +118,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 this.Play();
             }
         }
-
-
         public void PlayNext()
         {          
             if(dataModel.TrackQueue.Count > 0)
@@ -140,7 +134,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
             }          
         }
-
         public void PlayPrevious()
         {
             if(dataModel.TrackQueue.Count > 0)
@@ -157,13 +150,11 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
             }          
         }
-
         private float GetFloatVolume(int value)
         {
             float newvalue = (float)value;
             return newvalue / 100;
         }
-
         private void OnVolumeChanged(object volume)
         {
             if (Player != null) Player.Volume = GetFloatVolume((int)volume);
@@ -194,9 +185,19 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             if(track != null)
             {
+                int volume = 0;
+                if (options.Muted)
+                {
+                    volume = 0;
+                }
+                else
+                {
+                    volume = options.Volume;
+                }
+
                 Player = new AudioPlayerImpl(
                     track.sourceURL,
-                    GetFloatVolume((int)options.Volume),
+                    GetFloatVolume(volume),
                     options.Balance,
                     true,
                     _effectQueue,
@@ -312,21 +313,24 @@ namespace TuneMusix.Helpers.MediaPlayer
                 Player.SetCurrentPosition(value);
             }
         }
-
-        //needs changing
-        public bool Muted
+        public bool Mute
         {
             set
             {
                 if (value)
                 {
-                    Player.Volume = 0;
+                    if(IsLoaded)
+                        Player.Volume = 0;
+
+                    options.Muted = true;
                 }
                 if (!value)
                 {
-                    Player.Volume = options.Volume;
+                    Player.Volume = GetFloatVolume(options.Volume);
+                    options.Muted = false;
                 }
             }
+            get { return options.Muted; }
         }
         /// <summary>
         /// sets the Balance from -100 to 100

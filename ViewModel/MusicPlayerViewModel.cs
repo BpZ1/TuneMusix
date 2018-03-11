@@ -12,22 +12,33 @@ namespace TuneMusix.ViewModel
 {
     partial class MusicPlayerViewModel : ViewModelBase
     {
+        //------------Objects----------------------------------
         private DataModel dataModel = DataModel.Instance;
         private Options options = Options.Instance;
         private AudioControls audioControls = AudioControls.Instance;
 
+        //-------------RelayCommands----------------------------------------
         public RelayCommand LeftMouseDown_Slider { get; set; }
         public RelayCommand LeftMouseUp_Slider { get; set; }
         public RelayCommand PlayButton { get; set; }
         public RelayCommand NextTrack { get; set; }
         public RelayCommand PreviousTrack { get; set; }
         public RelayCommand RepeatButton { get; set; }
+        public RelayCommand VolumeButton { get; set; }
 
-        private double _currentPosition;
-        private string _playButtonIcon;
-        private const string _playIcon = "PlayCircleOutline";
-        private const string _pauseIcon = "PauseCircleOutline";
+       //---------------Constants----------------------------------
+        private const string PLAY_ICON = "PlayCircleOutline";
+        private const string PAUS_ICON = "PauseCircleOutline";
+        private const string VOLUME_HIGH_ICON = "VolumeHigh";
+        private const string VOLUME_OFF_ICON = "VolumeOff";
+        private const string VOLUME_LOW_ICON = "VolumeLow";
+        private const string VOLUME_MEDIUM_ICON = "VolumeMedium";
+
+        //-------------Fields----------------------------------
         private Timer _timer;
+        private double currentPosition;
+        private string playButtonIcon;
+        private string volumeButtonIcon;
         private bool _dragging;
 
         //Constructor
@@ -35,15 +46,16 @@ namespace TuneMusix.ViewModel
         {
             _dragging = false;
             _timer = new Timer(100);
-            PlayButtonIcon = _playIcon;
+            PlayButtonIcon = PLAY_ICON;
 
             //RelayCommands
-            LeftMouseDown_Slider = new RelayCommand(_leftMouseDown_Slider);
-            LeftMouseUp_Slider = new RelayCommand(_leftMouseUp_Slider);
-            PlayButton = new RelayCommand(_playButton);
-            NextTrack = new RelayCommand(_nextTrack);
-            PreviousTrack = new RelayCommand(_previousTrack);
-            RepeatButton = new RelayCommand(_onRepeatButtonClicked);
+            LeftMouseDown_Slider = new RelayCommand(leftMouseDown_Slider);
+            LeftMouseUp_Slider = new RelayCommand(leftMouseUp_Slider);
+            PlayButton = new RelayCommand(playButton);
+            NextTrack = new RelayCommand(nextTrack);
+            PreviousTrack = new RelayCommand(previousTrack);
+            RepeatButton = new RelayCommand(onRepeatButtonClicked);
+            VolumeButton = new RelayCommand(onVolumeButtonClicked);
 
             //Events
             _timer.Elapsed += OnTimeElapsed;
@@ -51,10 +63,10 @@ namespace TuneMusix.ViewModel
             audioControls.Playing += OnPlaying;
             audioControls.Stopped += OnStopped;
             audioControls.Paused += OnPaused;
-            dataModel.CurrentPlaylistChanged += _onCurrentPlaylistChanged;
-            dataModel.CurrentTrackChanged += _onCurrentTrackChanged;
+            dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
         }
 
+        #region getter and setter
         //Getter and setter  
         public string PlayButtonIcon
         {
@@ -62,14 +74,44 @@ namespace TuneMusix.ViewModel
             {
                 if (audioControls.IsPlaying)
                 {
-                    _playButtonIcon = _pauseIcon;
+                    playButtonIcon = PAUS_ICON;
                 }
-                return _playButtonIcon;        
+                return playButtonIcon;        
             }
             set
             {
-                _playButtonIcon = value;
+                playButtonIcon = value;
                 RaisePropertyChanged("PlayButtonIcon");
+            }
+        }
+        //Returns the string for the volume button icon
+        public string VolumeButtonIcon
+        {
+            get
+            {
+                if (audioControls.Mute)
+                {
+                    return VOLUME_OFF_ICON;
+                }
+                else
+                {
+                    int vol = Volume;
+                    if (vol >= 60)
+                        return VOLUME_HIGH_ICON;
+
+                    if (vol < 60 && vol >= 30)
+                        return VOLUME_MEDIUM_ICON;
+
+                    if (vol > 0 && vol < 30)
+                        return VOLUME_LOW_ICON;
+
+                    return VOLUME_OFF_ICON;
+                }        
+            }
+            set
+            {
+                volumeButtonIcon = value;
+                RaisePropertyChanged("VolumeButtonIcon");
             }
         }
 
@@ -78,15 +120,14 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                return this._currentPosition;
+                return this.currentPosition;
             }
             set
             {
-                _currentPosition = value;
+                currentPosition = value;
                 RaisePropertyChanged("CurrentSliderPosition");
             }
         }
-
         public double CurrentPosition
         {
             get
@@ -98,7 +139,6 @@ namespace TuneMusix.ViewModel
                 audioControls.CurrentPosition = TimeSpan.FromSeconds(value);
             }
         }
-
         public string CurrentPlaylistName
         {
             get
@@ -130,10 +170,7 @@ namespace TuneMusix.ViewModel
         {
             set { } //Implement
         }
-        public bool Muted
-        {
-            get { return true; } //Implement
-        }
+
         /// <summary>
         /// Returns the length of the currently loaded track.
         /// </summary>
@@ -144,6 +181,8 @@ namespace TuneMusix.ViewModel
                 return audioControls.Length.TotalSeconds;
             }
         }
+
+        //Value of the volume slider
         public int Volume
         {
             get
@@ -153,8 +192,11 @@ namespace TuneMusix.ViewModel
             set
             {
                 options.Volume = value;
+                RaisePropertyChanged("VolumeButtonIcon");
             }
         }
+
+        //Position of the current track playback
         public string CurrentTrackName
         {
             get
@@ -211,6 +253,6 @@ namespace TuneMusix.ViewModel
                 }
             }
         }
-
+        #endregion
     }
 }

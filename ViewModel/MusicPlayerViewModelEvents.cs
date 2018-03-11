@@ -14,7 +14,7 @@ namespace TuneMusix.ViewModel
         /// Gets called when the playbutton is pressed.
         /// </summary>
         /// <param name="argument"></param>
-        public void _playButton(object argument)
+        private void playButton(object argument)
         {
             if (audioControls.IsPlaying)
             {
@@ -31,15 +31,15 @@ namespace TuneMusix.ViewModel
 
         private void OnPlaying(object source)
         {
-            PlayButtonIcon = _pauseIcon;           
+            PlayButtonIcon = PAUS_ICON;           
         }
         private void OnPaused(object source)
         {
-            PlayButtonIcon = _playIcon;
+            PlayButtonIcon = PLAY_ICON;
         }
         private void OnStopped(object source)
         {
-            PlayButtonIcon = _playIcon;
+            PlayButtonIcon = PLAY_ICON;
         }
 
         private void OnTrackChanged(object e)
@@ -66,19 +66,16 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void _onCurrentPlaylistChanged(object source,object newPlaylist)
+        private void onCurrentPlaylistChanged(object source,object newPlaylist)
         {
             RaisePropertyChanged("CurrentPlaylistName");
         }
-        private void _onCurrentTrackChanged(object source,object newPlaylist)
-        {
-            RaisePropertyChanged("CurrentTrackName");
-        }
+
         /// <summary>
         /// Gets called when the user has started manipulating the position slider.
         /// </summary>
         /// <param name="sender"></param>
-        public void _leftMouseDown_Slider(object sender)
+        public void leftMouseDown_Slider(object sender)
         {
             _dragging = true;
         }
@@ -86,14 +83,14 @@ namespace TuneMusix.ViewModel
         /// Gets called when the user has finished manipulating the position slider.
         /// </summary>
         /// <param name="sender"></param>
-        public void _leftMouseUp_Slider(object sender)
+        private void leftMouseUp_Slider(object sender)
         {
             _dragging = false;
             var slider = sender as Slider;
             CurrentPosition = slider.Value;
         }
 
-        public void OnCurrentTrackChanged(object source,object newCurrentTrack)
+        private void onCurrentTrackChanged(object source,object newCurrentTrack)
         {
             RaisePropertyChanged("CurrentSliderPosition");
             RaisePropertyChanged("Length");
@@ -103,23 +100,35 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        private void _nextTrack(object argument)
+        private void nextTrack(object argument)
         {
             audioControls.PlayNext();
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="argument"></param>
-        private void _previousTrack(object argument)
+        
+        //Plays the previous track
+        private void previousTrack(object argument)
         {
             audioControls.PlayPrevious();
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="argument"></param>
-        private void _onRepeatButtonClicked(object argument)
+
+        private void onVolumeButtonClicked(object argument)
+        {
+            if(!audioControls.Mute)
+            {
+                //Mute playback
+                audioControls.Mute = true;
+                RaisePropertyChanged("VolumeButtonIcon");
+            }
+            else
+            {
+                //unmute playback
+                audioControls.Mute = false;
+                RaisePropertyChanged("VolumeButtonIcon");
+            }
+        }
+
+        //Changes the state of the repeating functionality
+        private void onRepeatButtonClicked(object argument)
         {
             if (RepeatTrack+1 > 2)
             {

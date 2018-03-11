@@ -11,7 +11,7 @@ using TuneMusix.Helpers.MediaPlayer.Effects;
 namespace TuneMusix.Model
 {
     /// <summary>
-    /// This class contains all properties that are needed in more parts of the program
+    /// This class contains all properties that are needed in almost all parts of the program
     /// and have to be saved to the database.
     /// </summary>
     public partial class Options
@@ -43,17 +43,36 @@ namespace TuneMusix.Model
         //Normal logging is only active when set to true.
         private bool _LoggerActive = false;
         //volume of the audioplayer
-        private int _volume;
+        private int volume;
         //tracks in queue will shuffle randomly when set to true.
-        public bool Shuffle { get; set; }
+        private bool shuffle;
+        public bool Shuffle
+        {
+            get { return shuffle; }
+            set
+            {
+                shuffle = value;
+                //TODO save to database
+            }
+        }
         // 0 = No repeat
         // 1 = Repeat all
         // 2 = repeat track
-        private int _repeatTrack;
+        private int repeatTrack;
         //balance of the playback
-        private int _balance;
-        private bool _isStereo;
-
+        private int balance;
+        private bool isStereo;
+       
+        private bool muted = false;
+        public bool Muted
+        {
+            get { return muted; }
+            set
+            {
+                muted = value;
+                //TODO save to database
+            }
+        }
 
         //events
         public delegate void OptionsEventHandler(object changed);
@@ -96,7 +115,7 @@ namespace TuneMusix.Model
         {
             if (IsStereoChanged != null)
             {
-                IsStereoChanged(_isStereo);
+                IsStereoChanged(isStereo);
             }
         }
 
@@ -105,10 +124,10 @@ namespace TuneMusix.Model
         //Getter and setter
         public bool IsStereo
         {
-            get { return _isStereo; }
+            get { return isStereo; }
             set
             {
-                _isStereo = value;
+                isStereo = value;
                 OnIsStereoChanged();
             }
         }
@@ -123,17 +142,17 @@ namespace TuneMusix.Model
         }
         public int Volume
         {
-            get { return this._volume; }
+            get { return this.volume; }
             set
             {
                 if (value > 100)
                 {                    
-                    this._volume = 100;
+                    this.volume = 100;
                     OnVolumeChanged();
                 }
                 else
                 {
-                    this._volume = value;
+                    this.volume = value;
                     OnVolumeChanged();
                 }
 
@@ -141,10 +160,10 @@ namespace TuneMusix.Model
         }
         public int Balance
         {
-            get { return this._balance; }
+            get { return this.balance; }
             set
             {
-                this._balance = value;
+                this.balance = value;
                 OnBalanceChanged();
             }
         }
@@ -162,11 +181,11 @@ namespace TuneMusix.Model
         {
             get
             {
-                return this._repeatTrack;
+                return this.repeatTrack;
             }
             set
             {
-                this._repeatTrack = value;
+                this.repeatTrack = value;
                 OnRepeatChanged();
             }
         }
@@ -188,7 +207,9 @@ namespace TuneMusix.Model
             }
             return false;
         }
-
+        /// <summary>
+        /// Saves all options to the database.
+        /// </summary>
         public void Save()
         {
             if (IsModified())
@@ -204,8 +225,13 @@ namespace TuneMusix.Model
                 }
             }
         }
+        /// <summary>
+        /// Saves the volume value to the database
+        /// </summary>
+        public void SaveVolume()
+        {
 
-
+        }
 
     }
 }
