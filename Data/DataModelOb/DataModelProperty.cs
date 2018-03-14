@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using TuneMusix.Helpers.MediaPlayer.Effects;
@@ -12,32 +13,32 @@ namespace TuneMusix.Data.DataModelOb
 
         public ObservableCollection<Track> TrackList
         {
-            get { return this._tracklist; }
+            get { return this.tracklist; }
         }
         public Track CurrentTrack
         {
-            get { return this._CurrentTrack; }
+            get { return this.currentTrack; }
             set
             {
-                this._CurrentTrack = value;
+                this.currentTrack = value;
                 OnCurrentTrackChanged();
             }
         }
         public ObservableCollection<Playlist> Playlists
         {
-            get { return this._playlists; }
+            get { return this.playlists; }
             set
             {
-                this._playlists = value;
+                this.playlists = value;
                 OnDataModelChanged();
             }
         }
         public Playlist CurrentPlaylist
         {
-            get { return this._currentPlaylist; }
+            get { return this.currentPlaylist; }
             set
             {
-                this._currentPlaylist = value;
+                this.currentPlaylist = value;
                 if(value != null)
                 {
                     TrackQueue = value.Tracklist.ToList<Track>();
@@ -47,15 +48,15 @@ namespace TuneMusix.Data.DataModelOb
         }
         public ObservableCollection<Folder> RootFolders
         {
-            get { return this._rootFolders; }
+            get { return this.rootFolders; }
         }
 
         public List<Track> TrackQueue
         {
-            get { return this._trackQueue; }
+            get { return this.trackQueue; }
             set
             {
-                this._trackQueue = value;
+                this.trackQueue = value;
                 this.QueueIndex = 0;
                 if (value.Count > 0)
                 {
@@ -71,7 +72,7 @@ namespace TuneMusix.Data.DataModelOb
 
         public ObservableCollection<BaseEffect> EffectQueue
         {
-            get { return _effectQueue; }
+            get { return effectQueue; }
             set { EffectQueue = value; }
         }
     }

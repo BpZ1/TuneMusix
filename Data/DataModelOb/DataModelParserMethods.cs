@@ -2,6 +2,12 @@
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
+using System.Linq;
+using System.Diagnostics;
+using System;
+using System.Threading;
+using System.ComponentModel;
+using System.Collections.Concurrent;
 
 namespace TuneMusix.Data.DataModelOb
 {
@@ -11,7 +17,51 @@ namespace TuneMusix.Data.DataModelOb
     /// </summary>
     public partial class DataModel
     {
-        
+        private Stopwatch sw = new Stopwatch();
+
+        /// <summary>
+        /// Adds Tracks from their url to the datamodel and database.
+        /// </summary>
+        /// <param name="urls"></param>
+        public void AddTracksFromFileURLs(List<string> urls)
+        {
+            FileParser fp = new FileParser();
+            BackgroundWorker worker = new BackgroundWorker();
+            worker.RunWorkerCompleted += onTracksAdded_Completed;
+            worker.ProgressChanged += onTracksAdded_ProgressChanged;
+            worker.DoWork += new DoWorkEventHandler(fp.CreateTracks);
+            worker.RunWorkerAsync(urls);
+        }
+    
+        //is called when the backgroundworker completed his work
+        private void onTracksAdded_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Debug.WriteLine("Loading of tracks completed.");
+            if(e.Error != null)
+            {
+                //error thrown
+            }
+            else if (e.Cancelled)
+            {
+
+            }
+            else
+            {
+                List<Track> tracks = (List<Track>)e.Result;
+                if (tracks != null)
+                {
+                    AddTracks(tracks);
+                }                  
+            }                    
+        }
+
+        private void onTracksAdded_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //TODO update loading bar
+        }
+       
+
+        /*
         /// <summary>
         /// Adds a list of tracks from their URLs to the datamodel and the database.
         /// </summary>
@@ -60,6 +110,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="url"></param>
         public void AddFolderFromFileURL(string url)
         {
+            sw.Start();
             int trackCount = TrackList.Count;
             bool IsSubFolder = false;
             bool IsRootFolder = false;
@@ -100,8 +151,10 @@ namespace TuneMusix.Data.DataModelOb
                 }
                 DialogService.NotificationMessage(TrackList.Count - trackCount + " tracks have been added.");
             }
+            sw.Stop();
+            Console.Out.WriteLine("Elapsed time: {0}",sw.Elapsed);
         }
       
-
+        */
     }
 }

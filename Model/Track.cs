@@ -94,7 +94,7 @@ namespace TuneMusix.Model
                 {
                     return URL;
                 }
-                throw new NullReferenceException("URL");
+                throw new ArgumentNullException("URL");
             }
             set
             {

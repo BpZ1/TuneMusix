@@ -76,8 +76,7 @@
         </Menu>
 
        <Frame DockPanel.Dock="Top" Source="MusicPlayerPage.xaml"/>
-
-        <dragablz:TabablzControl DockPanel.Dock="Bottom">
+        <dragablz:TabablzControl DockPanel.Dock="Bottom" SelectionChanged="TabablzControl_SelectionChanged">
             <TabItem Header="Playlists" >
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -91,10 +90,10 @@
             <TabItem Header="Trackslist">
                 <Frame Source="TracklistPage.xaml"/>
             </TabItem>
-            <TabItem Header="Folders">
-                <Frame Source="FolderPage.xaml"/>
-            </TabItem>
-        </dragablz:TabablzControl>
+                <TabItem Header="Folders">
+                    <Frame Source="FolderPage.xaml"/>
+                </TabItem>
+            </dragablz:TabablzControl>
     </DockPanel>
     <materialDesign:Snackbar MessageQueue="{Binding MessageQueue}"/>
     </Grid>

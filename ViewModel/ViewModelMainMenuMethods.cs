@@ -20,7 +20,7 @@ namespace TuneMusix.ViewModel
         /// Opens a File Dialog to select Audio Files
         /// </summary>
         /// <param name="parameter"></param>
-        private void _getFiles(object parameter)
+        private void getFiles(object parameter)
         {
             var watch = new Stopwatch();
             watch.Start();
@@ -46,14 +46,14 @@ namespace TuneMusix.ViewModel
             Debug.WriteLine("Time: " + watch.ElapsedMilliseconds);
         }
 
-        private void _openOptionsWindow(object argument)
+        private void openOptionsWindow(object argument)
         {
             var win = new OptionsWindowView();
 
             win.ShowDialog();
         }
 
-        private void _saveData(object argument)
+        private void saveData(object argument)
         {
             int count = 0;
             List<Track> saveTracks = new List<Track>();
@@ -83,14 +83,10 @@ namespace TuneMusix.ViewModel
             dbManager.AddAll(saveTracks);
             dbManager.AddAll(saveFolders);
             count += saveFolders.Count;
-            foreach(Track t in saveTracks)
-            {
-                Console.WriteLine(t.Rating);
-            }
             if (count > 0)
-            {
-            DialogService.NotificationMessage(count + " files have been saved.");
-            }
+                DialogService.NotificationMessage(count + " files have been saved.");
+
+            
             Debug.WriteLine("Modified files have been saved.");
         }
 
@@ -98,7 +94,7 @@ namespace TuneMusix.ViewModel
         /// Gets called when the exit button is pressed or the window is closed.
         /// </summary>
         /// <param name="argument"></param>
-        public void _exitApplication(object argument)
+        public void exitApplication(object argument)
         {
             //Ask if data should be saved.
 
@@ -113,18 +109,16 @@ namespace TuneMusix.ViewModel
         /// Method used for debugging.
         /// </summary>
         /// <param name="argument"></param>
-        public void _debugMethod(object argument)
+        public void debugMethod(object argument)
         {
-            dataModel.AddEffectToQueue(new ChorusEffect());
-            dataModel.AddEffectToQueue(new FlangerEffect());
-            dataModel.AddEffectToQueue(new ReverbEffect());
+
         }
 
         /// <summary>
         /// Adds the folder via the selected URL to the datamodel and database.
         /// </summary>
         /// <param name="argument"></param>
-        public void _addFolder(object argument)
+        public void addFolder(object argument)
         {
             var watch = new Stopwatch();
             watch.Start();
@@ -133,7 +127,7 @@ namespace TuneMusix.ViewModel
 
             if (folderbrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderbrowser.SelectedPath))
             {
-                dataModel.AddFolderFromFileURL(folderbrowser.SelectedPath);
+               // dataModel.AddFolderFromFileURL(folderbrowser.SelectedPath);
             }
 
             watch.Stop();

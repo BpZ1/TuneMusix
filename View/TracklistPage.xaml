@@ -23,46 +23,71 @@
     <Page.Resources>
         <vm:TracklistViewModel x:Key="TracklistViewModel"/>
     </Page.Resources>
-    <ListView Name="AllTrackList" ItemsSource="{Binding TrackList}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-              Margin="10" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
-        <i:Interaction.Triggers>
-            <i:EventTrigger EventName="MouseDoubleClick">
-                <i:InvokeCommandAction Command="{Binding PlayTrack}"  CommandParameter="{Binding ElementName=AllTrackList}"/>
-            </i:EventTrigger>
-            <i:EventTrigger EventName="SelectionChanged">
-                <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
-            </i:EventTrigger>
-        </i:Interaction.Triggers>
-        <ListView.ContextMenu>
-            <ContextMenu>
-                <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
-                <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
-                    <MenuItem.ItemContainerStyle>
-                        <Style TargetType="MenuItem">
-                            <Setter Property="Header" Value="{Binding Name}"/>
-                            <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=MenuItem}, Path=DataContext.AddToPlaylist}" />
-                            <Setter Property="CommandParameter" Value="{Binding}" />
-                        </Style>
-                    </MenuItem.ItemContainerStyle>
-                </MenuItem>
-                <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete"/>
-            </ContextMenu>
-        </ListView.ContextMenu>
-        <ListView.View>
-            <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="300"/>
-                <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="auto"/>
-                <GridViewColumn DisplayMemberBinding= "{Binding Path=Album}" Header="Album" Width="Auto"/>
-                <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="Auto"/>
-                <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="Auto"/>
-                <GridViewColumn Header="Rating" Width="150">
-                    <GridViewColumn.CellTemplate>
-                        <DataTemplate>
-                            <materialDesign:RatingBar Value="{Binding Rating,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Foreground="Gold" Margin="0" />
-                        </DataTemplate>
-                    </GridViewColumn.CellTemplate>
-                </GridViewColumn>
-            </GridView>
-        </ListView.View>
-    </ListView>
+    <DockPanel>
+        <materialDesign:ColorZone Mode="PrimaryLight" DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <TextBox Width="400" Margin="10,2,0,2" HorizontalAlignment="Left" Text="Search" x:Name="searchBox">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding SearchChanged}" CommandParameter="{Binding Text, ElementName=searchBox}"></i:InvokeCommandAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding DeleteSearch}" x:Name="SeachDeleteButton">
+                    <materialDesign:PackIcon Kind="CloseCircleOutline" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                        <materialDesign:PackIcon.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
+                </Button>
+            </StackPanel>
+        </materialDesign:ColorZone>
+        <ListView Name="AllTrackList" ItemsSource="{Binding FilteredTracks}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+              Margin="10" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" DockPanel.Dock="Top">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding PlayTrack}"  CommandParameter="{Binding ElementName=AllTrackList}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
+                    <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Header" Value="{Binding Name}"/>
+                                <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=MenuItem}, Path=DataContext.AddToPlaylist}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                    <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
+                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="300"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="auto"/>
+                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Album}" Header="Album" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="Auto"/>
+                    <GridViewColumn Header="Rating" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <materialDesign:RatingBar Value="{Binding Rating,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Foreground="Gold" Margin="0" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
 </Page>

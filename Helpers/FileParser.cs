@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Model;
 
@@ -11,12 +12,80 @@ namespace TuneMusix.Helpers
 {
     public class FileParser
     {
-        IDGenerator IDgen;
+
+        private bool workDone = false;
+        private int size;
+        private const int SPLITNUMBER = 50; //Number of tracks per thread
+        private ConcurrentBag<Track> trackList;
 
         public FileParser()
         {
-            IDgen = IDGenerator.Instance;
+            trackList = new ConcurrentBag<Track>();
         }
+
+        private void StartTrackCreation(List<string> urls)
+        {
+            
+            List<Track> tempTrackList = new List<Track>();
+            //Callback called by the thread once it did its work
+            Action<List<Track>> resultCallback = (result) =>
+            {
+                foreach (Track t in result)
+                {
+                    this.trackList.Add(t);
+                }
+                if (trackList.Count == this.size)
+                {
+                    tempTrackList = trackList.ToList<Track>();
+                    workDone = true;
+                }
+            };
+
+            //workload for the threadpool
+            WaitCallback createTracks = (data) =>
+            {
+                List<Track> tracks = new List<Track>();
+                List<string> urlData = (List<string>)data;
+                Console.WriteLine("Working thread: " + Thread.CurrentThread.ManagedThreadId);
+                foreach (string url in urlData)
+                {
+                    tracks.Add(GetAudioData(url));
+                }
+                resultCallback(tracks);
+            };
+            ThreadPool.QueueUserWorkItem(createTracks, urls);
+        }
+
+        public void CreateTracks(object sender, DoWorkEventArgs e)
+        {
+            Console.WriteLine("Starting on Thread: " + Thread.CurrentThread.ManagedThreadId);
+            List<string> urls = (List<string>)e.Argument;
+            this.size = urls.Count;
+            //If size is too big, list is split
+            if (size > SPLITNUMBER)
+            {
+                IEnumerable<List<string>> splitLists = ListUtil.SplitList(urls, SPLITNUMBER);
+                foreach (List<string> list in splitLists)
+                {
+                    StartTrackCreation(list);
+                }
+                while (!workDone)
+                {
+                    Thread.Sleep(100);
+                }
+                e.Result = this.trackList.ToList<Track>();
+            }
+            else
+            {
+                List<Track> resultList = new List<Track>();
+                foreach (string s in urls)
+                {
+                    resultList.Add(GetAudioData(s));
+                }
+                e.Result = resultList;
+            }
+        }
+
 
         /// <summary>
         /// Reads the Data from a given URL for Audiofiles
@@ -25,13 +94,13 @@ namespace TuneMusix.Helpers
         /// <returns>Track</returns>
         public Track GetAudioData(string url)
         {
+            IDGenerator IDgen = IDGenerator.Instance;
+
             try
             {
                 if (url == null) return null;
                 Track track = new Track(url, IDGenerator.GetID(false));
                 byte[] b = new byte[128];
-
-
 
                 TagLib.File f = TagLib.File.Create(url);
                 track.Title = f.Tag.Title;
@@ -79,11 +148,11 @@ namespace TuneMusix.Helpers
                 string extention = Path.GetExtension(url);
                 if (extention.Equals(".mp3"))
                 {
-                    Track mp3 = GetAudioData(url);
-                    if(mp3 != null)
+                    Track track = GetAudioData(url);
+                    if(track != null)
                     {                       
-                        root.AddTrack(mp3);
-                        mp3.IsModified = false;
+                        root.AddTrack(track);
+                        track.IsModified = false;
                     }               
                 }
             }

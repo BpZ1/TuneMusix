@@ -45,12 +45,12 @@ namespace TuneMusix.ViewModel
             dataModel.DataModelChanged += _onRootFoldersChanged;
 
             //Relaycommands
-            GetFiles = new RelayCommand(_getFiles);
-            AddFolder = new RelayCommand(_addFolder);
-            DebugMethod = new RelayCommand(_debugMethod);
-            ExitApplication = new RelayCommand(_exitApplication);
-            SaveData = new RelayCommand(_saveData);
-            OpenOptionsWindow = new RelayCommand(_openOptionsWindow);      
+            GetFiles = new RelayCommand(getFiles);
+            AddFolder = new RelayCommand(addFolder);
+            DebugMethod = new RelayCommand(debugMethod);
+            ExitApplication = new RelayCommand(exitApplication);
+            SaveData = new RelayCommand(saveData);
+            OpenOptionsWindow = new RelayCommand(openOptionsWindow);      
         }
 
         

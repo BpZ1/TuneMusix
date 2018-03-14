@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
@@ -13,35 +15,61 @@ namespace TuneMusix.ViewModel
 
         DataModel dataModel = DataModel.Instance;
 
+        public ObservableCollection<Track> SelectedTracks { get; set; }
+        private string searchText;
+
         //Relaycommands
         public RelayCommand PlayTrack { get; set; }
         public RelayCommand DeleteSelectedTracks { get; set; }
         public RelayCommand AddToPlaylist { get; set; }
         public RelayCommand SelectionChanged { get; set; }
-        public ObservableCollection<Track> SelectedTracks { get; set; }
+        public RelayCommand SearchChanged { get; set; }
+        public RelayCommand DeleteSearch { get; set; }
+
 
         //Constructor
         public TracklistViewModel()
         {
+            searchText = "";
             SelectedTracks = new ObservableCollection<Track>();
 
 
-            DeleteSelectedTracks = new RelayCommand(_deleteSelectedTracks);
-            AddToPlaylist = new RelayCommand(_addToPlaylist);
-            SelectionChanged = new RelayCommand(_selectionChanged);
-            PlayTrack = new RelayCommand(_playTrack);
+            DeleteSelectedTracks = new RelayCommand(deleteSelectedTracks);
+            AddToPlaylist = new RelayCommand(addToPlaylist);
+            SelectionChanged = new RelayCommand(selectionChanged);
+            PlayTrack = new RelayCommand(playTrack);
+            SearchChanged = new RelayCommand(searchChanged);
+            DeleteSearch = new RelayCommand(deleteSearch);
 
             //events
             dataModel.DataModelChanged += OnTrackListChanged;
 
         }
 
-        public void OnTrackListChanged(object source,object obj)
+        public List<Track> FilteredTracks
         {
-            RaisePropertyChanged("TrackList");
+            get
+            {
+                if (!searchText.Equals(""))
+                {
+                    IEnumerable<Track> result = TrackList.Where(t => TrackService.Contrains(t, searchText, false));
+                    return result.ToList<Track>();
+                }
+                else
+                {
+                    return TrackList.ToList<Track>();
+                }
+            
+            }
         }
 
-        private void _playTrack(object argument)
+        #region methods
+        public void OnTrackListChanged(object source,object obj)
+        {
+            RaisePropertyChanged("FilteredTracks");
+        }
+
+        private void playTrack(object argument)
         {
             if (SelectedTracks == null) return;
             if (SelectedTracks.Count > 0)
@@ -56,7 +84,7 @@ namespace TuneMusix.ViewModel
         /// Deletes all selected tracks from the tracklist.
         /// </summary>
         /// <param name="argument"></param>
-        private void _deleteSelectedTracks(object argument)
+        private void deleteSelectedTracks(object argument)
         {
             dataModel.Delete(SelectedTracks.ToList<Track>());
         }
@@ -65,7 +93,7 @@ namespace TuneMusix.ViewModel
         /// Adds all selected tracks to the playlist with the given id.
         /// </summary>
         /// <param name="argument"></param>
-        private void _addToPlaylist(object argument)
+        private void addToPlaylist(object argument)
         {
             Playlist selectedPlaylist = argument as Playlist;
 
@@ -75,7 +103,7 @@ namespace TuneMusix.ViewModel
             }        
         }
 
-        private void _selectionChanged(object argument)
+        private void selectionChanged(object argument)
         {
             var listView = argument as ListView;
             if (listView == null) return;
@@ -87,7 +115,25 @@ namespace TuneMusix.ViewModel
             }
         }
 
+        //Called every time the text in the textbox changes
+        private void searchChanged(object argument)
+        {
+            if (((string)argument).Equals(searchText))
+                return;
 
+            searchText = (string)argument;
+            RaisePropertyChanged("FilteredTracks");
+        }
 
+        //called if the button for the deletion of the textbox is clicked
+        private void deleteSearch(object argument)
+        {
+            if (searchText.Equals(""))
+                return;
+
+            searchText = "";
+            RaisePropertyChanged("FilteredTracks");
+        }
+        #endregion
     }
 }

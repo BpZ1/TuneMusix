@@ -55,8 +55,34 @@ namespace TuneMusix.Data.DataModelOb
                 }
             }        
         }
-
-
+        /// <summary>
+        /// Checks if the track is already contained in the model.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public bool Contains(Track track)
+        {
+            foreach (Track t in TrackList)
+            {
+                if (track.sourceURL.Equals(t.sourceURL))
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Checks if the folder is already contained in the model.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        public bool Contains(Folder folder)
+        {
+            foreach (Folder f in RootFolders)
+            {
+                if (f.URL.Equals(folder.URL))
+                    return true;
+            }
+            return false;
+        }
         /// <summary>
         ///  Deletes a folder and all of its content from the datamodel/database
         /// </summary>
@@ -100,6 +126,7 @@ namespace TuneMusix.Data.DataModelOb
                 DeleteFolderTracks(f);
             }
         }
+
         #region database methods
         //////////////////////////database methods///////////////////////////////////////
         ///DataBaseMethods should only be used to load tracks into the DataModel when////
@@ -174,20 +201,13 @@ namespace TuneMusix.Data.DataModelOb
 
         /// <summary>
         /// Adds a Track to the Tracklist after checking if it is already contained.
+        /// Should only be used for small quantities.
         /// </summary>
         /// <param name="track"></param>
         /// <returns></returns>
-        public bool AddTrack(Track track)
+        public bool AddTrack(Track track) //NO DATABASE INSERTION
         {
-            bool contained = false;
-            foreach (Track t in TrackList)
-            {
-                if (track.sourceURL.Equals(t.sourceURL))
-                {
-                    contained = true;
-                }
-            }
-            if (!contained)
+            if (!Contains(track))
             {
                 TrackList.Add(track);
                 OnDataModelChanged();
@@ -201,6 +221,42 @@ namespace TuneMusix.Data.DataModelOb
             DBManager.UpdateOptions(IDGenerator.IDCounter++, Options.Instance);
         }
 
+        #region insertion methods
+        /// <summary>
+        /// Adds all tracks to the model and database.
+        /// Should be used for large quantities.
+        /// Returns the number of successfully added tracks.
+        /// </summary>
+        /// <param name="trackList"></param>
+        public int AddTracks(List<Track> trackList)
+        {
+            int trackCount = trackList.Count;
+            int added = 0;
+            List<Track> uniqueTracks = new List<Track>();
+            foreach (Track t in trackList)
+            {
+                //Check if Track is already loaded
+                if (!Contains(t))
+                {
+                    TrackList.Add(t);
+                    uniqueTracks.Add(t);
+                    added++;
+                }
+            }
+            if (added > 0)
+            {
+                DBManager.AddAll(uniqueTracks);
+                OnDataModelChanged();
+                DialogService.NotificationMessage(added + " tracks have been added.");
+            }
+            if(trackCount > added)
+                DialogService.NotificationMessage((trackCount - added) + "could not be added because they already exist.");
+
+            return added;
+        }
+
+        #endregion
+
         /// <summary>
         /// Checks if a folder is already contained in the list, or if it
         /// is a parent/child of an existing folder.
@@ -209,7 +265,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <returns></returns>
         public void AddRootFolder(Folder folder)
         {
-            if (!RootFolders.Contains(folder))
+            if (!Contains(folder))
             {
                 RootFolders.Add(folder);
 
@@ -333,7 +389,7 @@ namespace TuneMusix.Data.DataModelOb
             }
             return subFolders;
         }
-
+        #region effect methods
         /// <summary>
         /// Removes a list of tracks from a playlist.
         /// </summary>
@@ -419,6 +475,6 @@ namespace TuneMusix.Data.DataModelOb
         {
             OnEffectQueueChanged();
         }
-
+        #endregion
     }
 }

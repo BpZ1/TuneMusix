@@ -144,6 +144,7 @@
     <Compile Include="Helpers\Exceptions\ClassNotInitializedException.cs" />
     <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
     <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
+    <Compile Include="Helpers\ListUtil.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioControls.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayerImpl.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Helpers\MediaPlayer\Effects\GargleEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\ReverbEffect.cs" />
     <Compile Include="Helpers\TextFormatService.cs" />
+    <Compile Include="Helpers\TrackService.cs" />
     <Compile Include="ViewModel\Dialog\ConfirmationDialogViewModel.cs" />
     <Compile Include="ViewModel\Dialog\DialogViewModelBase.cs" />
     <Compile Include="ViewModel\Dialog\WarningDialog.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TuneMusix.Attributes;
 using TuneMusix.Data.SQLDatabase;
@@ -33,16 +34,16 @@ namespace TuneMusix.Data.DataModelOb
         public int QueueIndex { get; set; }
         public double CurrentPosition { get; set; }
         public Folder SelectedFolder { get; set; }
-        private Playlist _currentPlaylist = null;
-        private Track _CurrentTrack = null;
-        private ObservableCollection<Playlist> _playlists = new ObservableCollection<Playlist>();
-        private ObservableCollection<Track> _tracklist = new ObservableCollection<Track>();
-        private ObservableCollection<Track> _selectedTracks = new ObservableCollection<Track>();
-        private ObservableCollection<Folder> _rootFolders = new ObservableCollection<Folder>();
-        private List<Track> _trackQueue = new List<Track>();
-        private ObservableCollection<BaseEffect> _effectQueue = new ObservableCollection<BaseEffect>();
+        private Playlist currentPlaylist = null;
+        private Track currentTrack = null;
+        private ObservableCollection<Playlist> playlists = new ObservableCollection<Playlist>();
+        private ObservableCollection<Track> tracklist = new ObservableCollection<Track>();
+        private ObservableCollection<Track> selectedTracks = new ObservableCollection<Track>();
+        private ObservableCollection<Folder> rootFolders = new ObservableCollection<Folder>();
+        private List<Track> trackQueue = new List<Track>();
+        private ObservableCollection<BaseEffect> effectQueue = new ObservableCollection<BaseEffect>();
         
-   
+  
 
         //events/////////////////////////////////////////////////////////////////////////////////
         public delegate void DataModelChangedEventHandler(object source,object changedObject);
