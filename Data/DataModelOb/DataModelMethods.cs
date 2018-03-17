@@ -5,6 +5,7 @@ using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
+using System.Linq;
 
 namespace TuneMusix.Data.DataModelOb
 {
@@ -56,34 +57,6 @@ namespace TuneMusix.Data.DataModelOb
             }        
         }
         /// <summary>
-        /// Checks if the track is already contained in the model.
-        /// </summary>
-        /// <param name="t"></param>
-        /// <returns></returns>
-        public bool Contains(Track track)
-        {
-            foreach (Track t in TrackList)
-            {
-                if (track.sourceURL.Equals(t.sourceURL))
-                    return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// Checks if the folder is already contained in the model.
-        /// </summary>
-        /// <param name="folder"></param>
-        /// <returns></returns>
-        public bool Contains(Folder folder)
-        {
-            foreach (Folder f in RootFolders)
-            {
-                if (f.URL.Equals(folder.URL))
-                    return true;
-            }
-            return false;
-        }
-        /// <summary>
         ///  Deletes a folder and all of its content from the datamodel/database
         /// </summary>
         /// <param name="folder"></param>
@@ -103,7 +76,6 @@ namespace TuneMusix.Data.DataModelOb
             }
             OnDataModelChanged();
         }
-
         /// <summary>
         /// Recursive method for deletion of tracks in folders.
         /// </summary>
@@ -126,6 +98,34 @@ namespace TuneMusix.Data.DataModelOb
                 DeleteFolderTracks(f);
             }
         }
+        /// <summary>
+        /// Checks if the folder is already contained in the model.
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        public bool Contains(Folder folder)
+        {
+            foreach (Folder f in RootFolders)
+            {
+                if (f.URL.Equals(folder.URL))
+                    return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// Checks if the track is already contained in the model.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public bool Contains(Track track)
+        {
+            foreach (Track t in TrackList)
+            {
+                if (track.sourceURL.Equals(t.sourceURL))
+                    return true;
+            }
+            return false;
+        }
 
         #region database methods
         //////////////////////////database methods///////////////////////////////////////
@@ -134,17 +134,25 @@ namespace TuneMusix.Data.DataModelOb
         /////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
-        /// DatabaseMethod for adding tracks.
-        /// Should only be used for loading from the database as it avoids all checks
+        /// Inserts a list of tracks into the datamodel.
+        /// If boolean is set to false, duplicate checks are avoided.
         /// </summary>
         /// <param name="tracks"></param>
         [DatabaseMethod]
-        public void AddTracksDB(List<Track> tracks)
+        public void AddTracks_NoDatabase(List<Track> tracks, bool check)
         {
             foreach (Track track in tracks)
             {
-                track.IsModified = false;
-                TrackList.Add(track);
+                if (check)
+                {
+                    if (!Contains(track))
+                        TrackList.Add(track);
+                }
+                else
+                {
+                    track.IsModified = false;
+                    TrackList.Add(track);
+                }          
             }
             OnDataModelChanged();
         }
@@ -153,7 +161,7 @@ namespace TuneMusix.Data.DataModelOb
         /// </summary>
         /// <param name="folders"></param>
         [DatabaseMethod]
-        public void AddRootFoldersDB(List<Folder> folders)
+        public void AddRootFolders_NoDatabase(List<Folder> folders)
         {
             foreach (Folder folder in folders)
             {
@@ -166,7 +174,7 @@ namespace TuneMusix.Data.DataModelOb
         /// </summary>
         /// <param name="playlists"></param>
         [DatabaseMethod]
-        public void AddPlaylistsDB(List<Playlist> playlists)
+        public void AddPlaylists_NoDatabase(List<Playlist> playlists)
         {
             foreach (Playlist playlist in playlists)
             {
@@ -176,7 +184,7 @@ namespace TuneMusix.Data.DataModelOb
             OnDataModelChanged();
         }
         [DatabaseMethod]
-        public void AddEffectsToQueueDB(List<BaseEffect> effectList)
+        public void AddEffectsToQueue_NoDatabase(List<BaseEffect> effectList)
         {
             foreach (BaseEffect effect in effectList)
             {
@@ -190,7 +198,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="track"></param>
         /// <param name="playlist"></param>
         [DatabaseMethod]
-        public void AddTrackToPlaylistDB(Track track,Playlist playlist)
+        public void AddTrackToPlaylist_NoDatabase(Track track,Playlist playlist)
         {
             playlist.AddTrack(track);
             OnDataModelChanged();
@@ -205,11 +213,14 @@ namespace TuneMusix.Data.DataModelOb
         /// </summary>
         /// <param name="track"></param>
         /// <returns></returns>
-        public bool AddTrack(Track track) //NO DATABASE INSERTION
+        public bool Add(Track track) //NO DATABASE INSERTION
         {
             if (!Contains(track))
             {
+                List<Track> trackList = new List<Track>();
+                trackList.Add(track);
                 TrackList.Add(track);
+                DBManager.Insert(trackList);
                 OnDataModelChanged();
                 return true;
             }
@@ -228,7 +239,7 @@ namespace TuneMusix.Data.DataModelOb
         /// Returns the number of successfully added tracks.
         /// </summary>
         /// <param name="trackList"></param>
-        public int AddTracks(List<Track> trackList)
+        public int Add(List<Track> trackList)
         {
             int trackCount = trackList.Count;
             int added = 0;
@@ -245,7 +256,7 @@ namespace TuneMusix.Data.DataModelOb
             }
             if (added > 0)
             {
-                DBManager.AddAll(uniqueTracks);
+                DBManager.Insert(uniqueTracks);
                 OnDataModelChanged();
                 DialogService.NotificationMessage(added + " tracks have been added.");
             }
@@ -255,54 +266,47 @@ namespace TuneMusix.Data.DataModelOb
             return added;
         }
 
-        #endregion
-
         /// <summary>
         /// Checks if a folder is already contained in the list, or if it
         /// is a parent/child of an existing folder.
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        public void AddRootFolder(Folder folder)
+        public void Add(Folder folder)
         {
             if (!Contains(folder))
             {
-                RootFolders.Add(folder);
-
-                TempFolderList = new List<Folder>();
-                TempTrackList = new List<Track>();
-                TempFolderList.Add(folder);
-                AddFolderContent(folder);
-                OnDataModelChanged();
-                DBManager.AddAll(TempFolderList);
-                DBManager.AddAll(TempTrackList);
-                TempFolderList = null;
-                TempTrackList = null;
+                bool isSubfolder = false;
+                foreach(Folder f in RootFolders)
+                {
+                    if (folder.URL.Contains(f.URL))
+                        isSubfolder = true;
+                }
+                if (!isSubfolder)
+                {
+                    List<Track> tracks = new List<Track>();
+                    List<Folder> folders = GetSubFolders(folder, false);
+                    folders.Add(folder);
+                    foreach (Folder f in folders)
+                    {
+                        tracks.AddRange(f.Tracklist);
+                    }
+                    Console.WriteLine("Tracks added: " + tracks.Count);
+                    DBManager.Insert(folders);
+                    RootFolders.Add(folder);
+                    Add(tracks);
+                }
+                else
+                {
+                    DialogService.NotificationMessage("This folder is already contained in another folder.");
+                }            
+            }
+            else
+            {
+                DialogService.NotificationMessage("Folder already exists.");
             }
         }
 
-        //Lists used by the AddFolderContent Method to
-        //add their content to the database/datamodel.
-        private List<Folder> TempFolderList;
-        private List<Track> TempTrackList;
-
-        /// <summary>
-        /// A method to get all the content from a folder.
-        /// </summary>
-        /// <param name="folder"></param>
-        private void AddFolderContent(Folder folder)
-        {
-            foreach (Track t in folder.Tracklist)
-            {
-                this.AddTrack(t);
-                this.TempTrackList.Add(t);
-            }
-            foreach (Folder f in folder.Folderlist)
-            {
-                this.AddFolderContent(f);
-                this.TempFolderList.Add(f);
-            }
-        }
         /// <summary>
         /// Adds a playlist to the datamodel and the database.
         /// </summary>
@@ -322,7 +326,7 @@ namespace TuneMusix.Data.DataModelOb
 
                 Playlist playlist = new Playlist(name,IDGenerator.GetID(true));
                 Playlists.Add(playlist);
-                DBManager.AddPlaylist(playlist);
+                DBManager.Insert(playlist);
             }
             else
             {
@@ -345,9 +349,11 @@ namespace TuneMusix.Data.DataModelOb
                     checkedTracks.Add(track);
                 }
             }
-            DBManager.AddAllPlaylistTracks(playlist,tracklist);
+            DBManager.InsertAllPlaylistTracks(playlist,tracklist);
             playlist.AddTracks(checkedTracks);
         }
+        #endregion
+
         /// <summary>
         /// Returns a list of all folders.
         /// If bool is set to true it will only return modified folders.

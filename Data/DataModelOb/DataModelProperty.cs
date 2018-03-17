@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
@@ -11,6 +12,15 @@ namespace TuneMusix.Data.DataModelOb
     public partial class DataModel
     {
 
+        public int Progress
+        {
+            get { return progress; }
+            set
+            {
+                progress = value;
+                OnProgressChanged();
+            }
+        }
         public ObservableCollection<Track> TrackList
         {
             get { return this.tracklist; }
@@ -50,7 +60,6 @@ namespace TuneMusix.Data.DataModelOb
         {
             get { return this.rootFolders; }
         }
-
         public List<Track> TrackQueue
         {
             get { return this.trackQueue; }
@@ -69,7 +78,6 @@ namespace TuneMusix.Data.DataModelOb
                 OnTrackQueueChanged();
             }
         }
-
         public ObservableCollection<BaseEffect> EffectQueue
         {
             get { return effectQueue; }

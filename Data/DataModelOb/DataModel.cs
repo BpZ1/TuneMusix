@@ -13,6 +13,7 @@ namespace TuneMusix.Data.DataModelOb
 
         private static DataModel _instance;
         SQLManager DBManager;
+        
         private DataModel()
         {
             DBManager = new SQLManager();
@@ -31,6 +32,7 @@ namespace TuneMusix.Data.DataModelOb
             }
         }
 
+        private static int progress;
         public int QueueIndex { get; set; }
         public double CurrentPosition { get; set; }
         public Folder SelectedFolder { get; set; }
@@ -53,41 +55,37 @@ namespace TuneMusix.Data.DataModelOb
         public event DataModelChangedEventHandler DataModelChanged;
         public event DataModelChangedEventHandler TrackQueueChanged;
         public event DataModelChangedEventHandler EffectQueueChanged;
+        public event DataModelChangedEventHandler ProgressChanged;
 
         protected virtual void OnCurrentTrackChanged()
         {
             if(CurrentTrackChanged != null)
-            {
                 CurrentTrackChanged(this,CurrentTrack);
-            }
         }
         protected virtual void OnCurrentPlaylistChanged()
         {
             if (CurrentPlaylistChanged != null)
-            {
                 CurrentPlaylistChanged(this, CurrentPlaylist);
-            }
         }
         protected virtual void OnDataModelChanged()
         {
             if (DataModelChanged != null)
-            {
                 DataModelChanged(this,TrackList);
-            }
         }
         protected virtual void OnTrackQueueChanged()
         {
             if (TrackQueueChanged != null)
-            {
                 TrackQueueChanged(this,TrackQueue);
-            }
         }
         protected virtual void OnEffectQueueChanged()
         {
-            if(EffectQueueChanged != null)
-            {
+            if(EffectQueueChanged != null)          
                 EffectQueueChanged(this,EffectQueue);
-            }
+        }
+        protected virtual void OnProgressChanged()
+        {
+            if (ProgressChanged != null)
+                ProgressChanged(this, Progress);
         }
         /////////////////////////////////////////////////////////////////////////////////////////////
 

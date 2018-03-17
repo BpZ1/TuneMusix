@@ -27,6 +27,11 @@ namespace TuneMusix.ViewModel
         private SQLLoader loader;
         private BackgroundWorker loadingWorker;
 
+        private bool infoTextVisible = false;
+        private bool progressVisible = false;
+        private int progress;
+        private string infoText;
+
         public static SnackbarMessageQueue MessageQueue { get; set; }
 
         //constructor
@@ -37,12 +42,13 @@ namespace TuneMusix.ViewModel
             loader.CreateDatabase();
             loadingWorker = new BackgroundWorker();
             loadingWorker.DoWork += loader.LoadFromDB;
-            loadingWorker.RunWorkerCompleted += OnLoadingComplete;
+            loadingWorker.RunWorkerCompleted += onLoadingComplete;
             loadingWorker.RunWorkerAsync();
 
             //notification
             MessageQueue = new SnackbarMessageQueue();
-            dataModel.DataModelChanged += _onRootFoldersChanged;
+            dataModel.DataModelChanged += onRootFoldersChanged;
+            dataModel.ProgressChanged += onProgressChanged;
 
             //Relaycommands
             GetFiles = new RelayCommand(getFiles);
@@ -53,7 +59,6 @@ namespace TuneMusix.ViewModel
             OpenOptionsWindow = new RelayCommand(openOptionsWindow);      
         }
 
-        
 
         public static void Notification(string message)
         {
@@ -83,6 +88,47 @@ namespace TuneMusix.ViewModel
             get
             {
                 return audioControls.TrackLoaded;
+            }
+        }
+        public bool ProgressVisible
+        {
+            get { return progressVisible; }
+            set
+            {
+                progressVisible = value;
+                RaisePropertyChanged("ProgressVisible");
+            }
+        }
+        public bool InfoTextVisible
+        {
+            get { return infoTextVisible; }
+            set
+            {
+                infoTextVisible = value;
+                RaisePropertyChanged("InfoTextVisible");
+            }
+        }
+        public int ProgressBarProgress
+        {
+            get { return progress; }
+            set
+            {
+                progress = value;
+                RaisePropertyChanged("ProgressBarProgress");
+                RaisePropertyChanged("ProgressBarText");
+            }
+        }
+        public string ProgressBarText
+        {
+            get { return (progress + "%"); }
+        }
+        public string InfoText
+        {
+            get { return infoText; }
+            set
+            {
+                infoText = value;
+                RaisePropertyChanged("InfoText");
             }
         }
     }

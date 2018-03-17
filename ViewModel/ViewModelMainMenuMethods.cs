@@ -13,8 +13,7 @@ using WinForms = System.Windows.Forms;
 namespace TuneMusix.ViewModel
 {
     partial class ViewModelMain
-    {   
-        
+    {         
 
         /// <summary>
         /// Opens a File Dialog to select Audio Files
@@ -39,7 +38,7 @@ namespace TuneMusix.ViewModel
                 {
                     URLList.Add(url);
                 }
-                dataModel.AddTracksFromFileURLs(URLList);
+                dataModel.AddTracks(URLList);
             }
 
             watch.Stop();
@@ -75,13 +74,13 @@ namespace TuneMusix.ViewModel
             {
                 if (playlist.IsModified)
                 {
-                    dbManager.AddPlaylist(playlist);
+                    dbManager.Insert(playlist);
                     playlist.IsModified = false;
                     count++;
                 }
             }      
-            dbManager.AddAll(saveTracks);
-            dbManager.AddAll(saveFolders);
+            dbManager.Insert(saveTracks);
+            dbManager.Insert(saveFolders);
             count += saveFolders.Count;
             if (count > 0)
                 DialogService.NotificationMessage(count + " files have been saved.");
@@ -127,7 +126,8 @@ namespace TuneMusix.ViewModel
 
             if (folderbrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderbrowser.SelectedPath))
             {
-               // dataModel.AddFolderFromFileURL(folderbrowser.SelectedPath);
+                
+                dataModel.AddTracks(folderbrowser.SelectedPath);
             }
 
             watch.Stop();

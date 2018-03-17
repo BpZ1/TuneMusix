@@ -15,7 +15,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// Adds a given Track to the Database.
         /// </summary>
         /// <param name="track"></param>
-        private void AddTrack(Track track)
+        private void Insert(Track track)
         {
             Logger.Log("Track: '" + track.sourceURL + "' added to database");
             SQLiteCommand sqlcommand = new SQLiteCommand("INSERT OR REPLACE INTO tracks (ID," +
@@ -68,7 +68,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
         }
 
-        public void AddAll(List<Track> tracklist)
+        public void Insert(List<Track> tracklist)
         {
             List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
             
@@ -132,7 +132,7 @@ namespace TuneMusix.Data.SQLDatabase
             Debug.WriteLine("Tracks were added to DB");
         }
 
-        public void AddAll(List<Folder> folders)
+        public void Insert(List<Folder> folders)
         {
             List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
             foreach (Folder f in folders)
@@ -179,7 +179,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// Adds a playlist to the database.
         /// </summary>
         /// <param name="playlist"></param>
-        public void AddPlaylist(Playlist playlist)
+        public void Insert(Playlist playlist)
         {
             Logger.Log("Playlist: '" + playlist.Name + "' added to database");
             SQLiteCommand sqlcommand = new SQLiteCommand("INSERT OR REPLACE INTO playlists (ID," +
@@ -207,7 +207,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         /// <param name="track"></param>
         /// <param name="playlist"></param>
-        public void AddPlaylistTrack(Track track,Playlist playlist)
+        public void InsertPlaylistTrack(Track track,Playlist playlist)
         {
             SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttracks(trackID," +
                                                                                             "playlistID) " +
@@ -230,7 +230,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
         }
 
-        public void AddAllPlaylistTracks(Playlist playlist,List<Track> tracklist)
+        public void InsertAllPlaylistTracks(Playlist playlist,List<Track> tracklist)
         {
             List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
             foreach (Track track in tracklist)

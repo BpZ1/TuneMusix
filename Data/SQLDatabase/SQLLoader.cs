@@ -29,7 +29,6 @@ namespace TuneMusix.Data.SQLDatabase
             var watch = new Stopwatch();
             watch.Start();
 
-
             //Load options         
             long idgen = DBmanager.GetIDCounterStand();
             if (idgen == 0 || idgen == 1)
@@ -50,7 +49,7 @@ namespace TuneMusix.Data.SQLDatabase
             //load tracks
             Debug.WriteLine("Loading Tracks...");
             List<Track> tracklist = DBmanager.GetTracks();
-            dataModel.AddTracksDB(tracklist);
+            dataModel.AddTracks_NoDatabase(tracklist, false);
             Debug.WriteLine("Tracks loaded!");
             FolderSort(FolderList);
             TrackSort(FolderList);
@@ -61,11 +60,11 @@ namespace TuneMusix.Data.SQLDatabase
                     RootList.Add(folder);
                 }
             }
-            dataModel.AddRootFoldersDB(RootList);
+            dataModel.AddRootFolders_NoDatabase(RootList);
 
             //load playlists
             Debug.WriteLine("Loading Playlists...");
-            dataModel.AddPlaylistsDB(DBmanager.GetPlaylists());          
+            dataModel.AddPlaylists_NoDatabase(DBmanager.GetPlaylists());          
             foreach (Playlist playlist in dataModel.Playlists)
             {
                 List<PlaylistTrack> playlistTracks = DBmanager.GetPlaylistTracks(playlist);
@@ -75,7 +74,7 @@ namespace TuneMusix.Data.SQLDatabase
                     {
                         if (track.ID == pt.TrackID)
                         {
-                            dataModel.AddTrackToPlaylistDB(track,playlist);
+                            dataModel.AddTrackToPlaylist_NoDatabase(track,playlist);
                         }
                     }
                 }
@@ -83,7 +82,7 @@ namespace TuneMusix.Data.SQLDatabase
             Debug.WriteLine("Playlists loaded!");
             Debug.WriteLine("Loading effects...");
             List<BaseEffect> effectlist = DBmanager.GetEffectQueue();
-            dataModel.AddEffectsToQueueDB(effectlist);
+            dataModel.AddEffectsToQueue_NoDatabase(effectlist);
 
             Debug.WriteLine(effectlist.Count +  " Effects loaded!");
             Debug.WriteLine("Loading finished");
@@ -101,7 +100,7 @@ namespace TuneMusix.Data.SQLDatabase
             DBmanager.LoadOptions();
             List<BaseEffect> effectlist = DBmanager.GetEffectQueue();
             dataModel.EffectQueue.Clear();
-            dataModel.AddEffectsToQueueDB(effectlist);
+            dataModel.AddEffectsToQueue_NoDatabase(effectlist);
         }
 
         private List<Folder> FolderSort(List<Folder> FolderList)
