@@ -126,7 +126,20 @@ namespace TuneMusix.Data.DataModelOb
             }
             return false;
         }
-
+        /// <summary>
+        /// Checks for a given url if the folder is already contained as root folder.
+        /// </summary>
+        /// <param name="folderUrl"></param>
+        /// <returns></returns>
+        public bool Contains(string folderUrl)
+        {
+            foreach (Folder f in RootFolders)
+            {
+                if (f.URL.Equals(folderUrl))
+                    return true;
+            }
+            return false;
+        }
         #region database methods
         //////////////////////////database methods///////////////////////////////////////
         ///DataBaseMethods should only be used to load tracks into the DataModel when////
@@ -207,6 +220,14 @@ namespace TuneMusix.Data.DataModelOb
         //////////////////////////////////////////////////////////////////////////////
         #endregion
 
+ 
+
+        public void SaveOptions(double IDgenStand)
+        {
+            DBManager.UpdateOptions(IDGenerator.IDCounter++, Options.Instance);
+        }
+
+        #region insertion methods
         /// <summary>
         /// Adds a Track to the Tracklist after checking if it is already contained.
         /// Should only be used for small quantities.
@@ -226,13 +247,6 @@ namespace TuneMusix.Data.DataModelOb
             }
             return false;
         }
-
-        public void SaveOptions(double IDgenStand)
-        {
-            DBManager.UpdateOptions(IDGenerator.IDCounter++, Options.Instance);
-        }
-
-        #region insertion methods
         /// <summary>
         /// Adds all tracks to the model and database.
         /// Should be used for large quantities.
@@ -450,7 +464,6 @@ namespace TuneMusix.Data.DataModelOb
                 OnEffectQueueChanged();
             }
         }
-
         public void ChangeEffectListPosition(BaseEffect effect,int position)
         {
             if (EffectQueue.Contains(effect))
@@ -473,7 +486,6 @@ namespace TuneMusix.Data.DataModelOb
             }
             OnEffectQueueChanged();
         }
-
         /// <summary>
         /// Called when an effect changes in a way that requires new loading of the queue.
         /// </summary>

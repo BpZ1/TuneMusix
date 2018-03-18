@@ -33,20 +33,29 @@ namespace TuneMusix.Data.DataModelOb
             worker.WorkerReportsProgress = true;
             worker.DoWork += new DoWorkEventHandler(fp.CreateTracks);
             worker.RunWorkerAsync(urls);
+            OnLoadingStarted();
         }
 
         public void AddTracks(string folderUrl)
         {
-            sw.Start();
-            FileParser fp = new FileParser();
-            BackgroundWorker worker = new BackgroundWorker();
-            worker.RunWorkerCompleted += onTracksAdded_Completed;
-            worker.ProgressChanged += onTracksAdded_ProgressChanged;
-            worker.WorkerReportsProgress = true;
-            worker.DoWork += new DoWorkEventHandler(fp.CreateFolder);
-            worker.RunWorkerAsync(folderUrl);
+            if (!Contains(folderUrl))
+            {
+                sw.Start();
+                FileParser fp = new FileParser();
+                BackgroundWorker worker = new BackgroundWorker();
+                worker.RunWorkerCompleted += onTracksAdded_Completed;
+                worker.ProgressChanged += onTracksAdded_ProgressChanged;
+                worker.WorkerReportsProgress = true;
+                worker.DoWork += new DoWorkEventHandler(fp.CreateFolder);
+                worker.RunWorkerAsync(folderUrl);
+                OnLoadingStarted();
+            }
+            else
+            {
+                DialogService.NotificationMessage("The folder is already loaded.");
+            }
         }
-    
+
         //is called when the backgroundworker completed his work
         private void onTracksAdded_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -77,7 +86,8 @@ namespace TuneMusix.Data.DataModelOb
                     Add(folder);
                 }
                   
-            }                    
+            }
+            OnLoadingFinished();              
         }
 
         private void onTracksAdded_ProgressChanged(object sender, ProgressChangedEventArgs e)

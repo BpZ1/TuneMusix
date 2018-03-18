@@ -56,6 +56,8 @@ namespace TuneMusix.Data.DataModelOb
         public event DataModelChangedEventHandler TrackQueueChanged;
         public event DataModelChangedEventHandler EffectQueueChanged;
         public event DataModelChangedEventHandler ProgressChanged;
+        public event DataModelChangedEventHandler LoadingStarted;
+        public event DataModelChangedEventHandler LoadingFinished;
 
         protected virtual void OnCurrentTrackChanged()
         {
@@ -86,6 +88,16 @@ namespace TuneMusix.Data.DataModelOb
         {
             if (ProgressChanged != null)
                 ProgressChanged(this, Progress);
+        }
+        protected virtual void OnLoadingStarted()
+        {
+            if (LoadingStarted != null)
+                LoadingStarted(this, null);
+        }
+        protected virtual void OnLoadingFinished()
+        {
+            if (LoadingFinished != null)
+                LoadingFinished(this, null);
         }
         /////////////////////////////////////////////////////////////////////////////////////////////
 

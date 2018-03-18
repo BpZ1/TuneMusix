@@ -49,6 +49,8 @@ namespace TuneMusix.ViewModel
             MessageQueue = new SnackbarMessageQueue();
             dataModel.DataModelChanged += onRootFoldersChanged;
             dataModel.ProgressChanged += onProgressChanged;
+            dataModel.LoadingStarted += onLoadingStarted;
+            dataModel.LoadingFinished += onLoadingFinished;
 
             //Relaycommands
             GetFiles = new RelayCommand(getFiles);
@@ -67,8 +69,7 @@ namespace TuneMusix.ViewModel
         }
 
 
-
-        //Getter and setter    
+        #region getter and setter 
         public string CurrentPlaylistName
         {
             get
@@ -90,6 +91,7 @@ namespace TuneMusix.ViewModel
                 return audioControls.TrackLoaded;
             }
         }
+        //visibility state of the progress bar and its text
         public bool ProgressVisible
         {
             get { return progressVisible; }
@@ -99,6 +101,7 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("ProgressVisible");
             }
         }
+        //visiblity state of the info text
         public bool InfoTextVisible
         {
             get { return infoTextVisible; }
@@ -108,6 +111,7 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("InfoTextVisible");
             }
         }
+        //progress bar that shows the loading progress
         public int ProgressBarProgress
         {
             get { return progress; }
@@ -118,10 +122,12 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("ProgressBarText");
             }
         }
+        //Text displayed on the progress bar
         public string ProgressBarText
         {
             get { return (progress + "%"); }
         }
+        //Info text shown besides the loading bar
         public string InfoText
         {
             get { return infoText; }
@@ -131,5 +137,6 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("InfoText");
             }
         }
+        #endregion
     }
 }

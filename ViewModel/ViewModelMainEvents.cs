@@ -11,6 +11,7 @@ namespace TuneMusix.ViewModel
              RaisePropertyChanged("TrackList");
         }
 
+        //Loading of tracks is finished
         private void onLoadingComplete(object sender, RunWorkerCompletedEventArgs e)
         {
             audioControls.LoadEffects();
@@ -19,19 +20,20 @@ namespace TuneMusix.ViewModel
         private void onProgressChanged(object source, object obj)
         {
             int progress = (int)obj;
+            ProgressBarProgress = progress;             
+        } 
+
+        private void onLoadingStarted(object sender, object obj)
+        {
             ProgressVisible = true;
             InfoTextVisible = true;
             InfoText = "Loading tracks...";
-            ProgressBarProgress = progress;
-            Console.WriteLine("Progress = " + progress + "%");
-            if (progress == 100)
-            {
-                ProgressVisible = false;
-                InfoTextVisible = false;
-                InfoText = "";
-            }
-                
-            
-        } 
+        }
+        private void onLoadingFinished(object sender, object obj)
+        {
+            ProgressVisible = false;
+            InfoTextVisible = false;
+            InfoText = "";
+        }
     }
 }

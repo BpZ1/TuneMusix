@@ -10,30 +10,49 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Helpers
 {
+    /// <summary>
+    /// This class contains methods that serve as workload for a BackgroundWorker
+    /// to create the tracks and folders.
+    /// </summary>
     public class FileParser
     {
 
         private bool workDone = false;
-        private int size;
-        private const int SPLITNUMBER = 50; //Number of tracks per thread
-        private ConcurrentBag<Track> trackList;
+        private int SPLITNUMBER = 50; //Number of tracks per thread
 
-        public FileParser()
+        public FileParser(){ }
+
+        public FileParser(int splitSize)
         {
-            trackList = new ConcurrentBag<Track>();
+            SPLITNUMBER = splitSize;
         }
 
-        private void StartTrackCreation(List<string> urls)
+        /// <summary>
+        /// This method is a workload for a backgroundworker and 
+        /// sets the result to a list of tracks of the urls given as argument.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void CreateTracks(object sender, DoWorkEventArgs e)
         {
+            BackgroundWorker worker = (BackgroundWorker)sender;
+            ConcurrentBag<Track> resultList = new ConcurrentBag<Track>();
+            List<string> urls = (List<string>)e.Argument;
+            int size = urls.Count;
+            
+            //split the list in parts of a given size
+            IEnumerable<List<string>> splitLists = ListUtil.SplitList(urls, SPLITNUMBER);
+            int listCount = splitLists.Count<List<string>>();
+            int progressCounter = 0;
 
             //Callback called by the thread once it did its work
             Action<List<Track>> resultCallback = (result) =>
             {
                 foreach (Track t in result)
                 {
-                    this.trackList.Add(t);
+                    resultList.Add(t);
                 }
-                if (trackList.Count == this.size)
+                if (resultList.Count == urls.Count)
                     workDone = true;
             };
 
@@ -42,47 +61,36 @@ namespace TuneMusix.Helpers
             {
                 List<Track> tracks = new List<Track>();
                 List<string> urlData = (List<string>)data;
-                Console.WriteLine("Working thread: " + Thread.CurrentThread.ManagedThreadId);
                 foreach (string url in urlData)
                 {
                     tracks.Add(GetAudioData(url));
                 }
+                float progress = (float)Interlocked.Increment(ref progressCounter) / (float)listCount * 100;
+                worker.ReportProgress((int)Math.Round(progress));
                 resultCallback(tracks);
             };
-            ThreadPool.QueueUserWorkItem(createTracks, urls);
+
+            //start the threads
+            foreach(List<string> list in splitLists)
+            {
+                ThreadPool.QueueUserWorkItem(createTracks, list);
+            }
+
+            //wait for the threads to finish
+            while (!workDone)
+            {
+                Thread.Sleep(100);
+            }
+            DataModel.Instance.SaveOptions(IDGenerator.IDCounter);
+            e.Result = resultList.ToList<Track>();
         }
 
-        public void CreateTracks(object sender, DoWorkEventArgs e)
-        {
-            Console.WriteLine("Starting on Thread: " + Thread.CurrentThread.ManagedThreadId);
-            Console.WriteLine("Sender is of type: " + sender.GetType().ToString());
-            List<string> urls = (List<string>)e.Argument;
-            this.size = urls.Count;
-            //If size is too big, list is split
-            if (size > SPLITNUMBER)
-            {
-                IEnumerable<List<string>> splitLists = ListUtil.SplitList(urls, SPLITNUMBER);
-                foreach (List<string> list in splitLists)
-                {
-                    StartTrackCreation(list);
-                }
-                while (!workDone)
-                {
-                    Thread.Sleep(100);
-                }
-                e.Result = this.trackList.ToList<Track>();
-            }
-            else
-            {
-                List<Track> resultList = new List<Track>();
-                foreach (string s in urls)
-                {
-                    resultList.Add(GetAudioData(s));
-                }
-                e.Result = resultList;
-            }
-        }
-
+        /// <summary>
+        /// This method is a workload for a backgroundworker and 
+        /// sets the result to the folder of the url given as argument.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void CreateFolder(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = (BackgroundWorker)sender;
@@ -102,7 +110,6 @@ namespace TuneMusix.Helpers
             {
                 folderList.Add(result);
                 float progress = (float)Interlocked.Increment(ref folderLoadCounter) / (float)folderCount * 100;
-                Console.WriteLine("Reported: " + progress);
                 worker.ReportProgress((int)Math.Round(progress));
                 if (folderList.Count == directoryUrls.Count)
                     workDone = true;
@@ -131,12 +138,12 @@ namespace TuneMusix.Helpers
                 }
                 resultCallback(folder);
             };
-
+            //start the threads
             foreach (string dirUrl in directoryUrls)
             {
                 ThreadPool.QueueUserWorkItem(folderCreation, dirUrl);
             }
-
+            //wait for all threads to finish their work
             while (!workDone)
             {
                 Thread.Sleep(100);
@@ -153,7 +160,6 @@ namespace TuneMusix.Helpers
         private Track GetAudioData(string url)
         {
             IDGenerator IDgen = IDGenerator.Instance;
-
             try
             {
                 if (url == null) return null;
