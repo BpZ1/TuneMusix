@@ -1,7 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using TuneMusix.Attributes;
+using System.Collections.Specialized;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
@@ -11,43 +11,60 @@ namespace TuneMusix.Data.DataModelOb
     public partial class DataModel
     {
 
-        private static DataModel _instance;
-        SQLManager DBManager;
-        
-        private DataModel()
-        {
-            DBManager = new SQLManager();
-            QueueIndex = 0;
-        }
-
-        public static DataModel Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new DataModel();
-                }
-                return _instance;
-            }
-        }
+        private Database database = Database.Instance;
+        private SQLLoader loader;
 
         private static int progress;
         public int QueueIndex { get; set; }
         public double CurrentPosition { get; set; }
         public Folder SelectedFolder { get; set; }
-        private Playlist currentPlaylist = null;
-        private Track currentTrack = null;
+        private Playlist currentPlaylist;
+        private Track currentTrack;
         private ObservableCollection<Playlist> playlists = new ObservableCollection<Playlist>();
         private ObservableCollection<Track> tracklist = new ObservableCollection<Track>();
         private ObservableCollection<Track> selectedTracks = new ObservableCollection<Track>();
         private ObservableCollection<Folder> rootFolders = new ObservableCollection<Folder>();
         private List<Track> trackQueue = new List<Track>();
         private ObservableCollection<BaseEffect> effectQueue = new ObservableCollection<BaseEffect>();
-        
-  
 
-        //events/////////////////////////////////////////////////////////////////////////////////
+        #region constructor and instance accessor
+
+        private static volatile DataModel instance;
+
+        private static object lockObject = new Object();
+
+        public static DataModel Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (lockObject)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new DataModel();
+                        }
+                    }
+                }
+                return instance;
+            }
+        }
+
+
+        private DataModel()
+        {
+            QueueIndex = 0;
+            tracklist.CollectionChanged += dataModelChanged;
+            playlists.CollectionChanged += dataModelChanged;
+            rootFolders.CollectionChanged += dataModelChanged;
+            effectQueue.CollectionChanged += dataModelChanged;
+        }
+        #endregion
+
+
+
+        #region events
         public delegate void DataModelChangedEventHandler(object source,object changedObject);
 
         public event DataModelChangedEventHandler CurrentTrackChanged;
@@ -72,7 +89,12 @@ namespace TuneMusix.Data.DataModelOb
         protected virtual void OnDataModelChanged()
         {
             if (DataModelChanged != null)
+            {
                 DataModelChanged(this,TrackList);
+                RaisePropertyChanged("Playlists");
+                RaisePropertyChanged("RootFolders");
+                RaisePropertyChanged("TrackList");
+            }
         }
         protected virtual void OnTrackQueueChanged()
         {
@@ -99,11 +121,13 @@ namespace TuneMusix.Data.DataModelOb
             if (LoadingFinished != null)
                 LoadingFinished(this, null);
         }
-        /////////////////////////////////////////////////////////////////////////////////////////////
 
+        #endregion
 
-
-
+        private void dataModelChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnDataModelChanged();
+        }
 
     }
 }
