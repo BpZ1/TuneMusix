@@ -25,6 +25,7 @@ namespace TuneMusix.ViewModel
         public RelayCommand PreviousTrack { get; set; }
         public RelayCommand RepeatButton { get; set; }
         public RelayCommand VolumeButton { get; set; }
+        public RelayCommand ShuffleButton { get; set; }
 
        //---------------Constants----------------------------------
         private const string PLAY_ICON = "PlayCircleOutline";
@@ -33,20 +34,22 @@ namespace TuneMusix.ViewModel
         private const string VOLUME_OFF_ICON = "VolumeOff";
         private const string VOLUME_LOW_ICON = "VolumeLow";
         private const string VOLUME_MEDIUM_ICON = "VolumeMedium";
+        private const string SHUFFLE_ON_ICON = "ShuffleDisabled";
+        private const string SHUFFLE_OFF_ICON = "Shuffle";
+        private const string REPEAT_ICON = "repeat";
+        private const string REPEAT_ONCE_ICON = "repeatonce";
+        private const string REPEAT_OFF_ICON = "repeatoff";
 
         //-------------Fields----------------------------------
-        private Timer _timer;
+        private Timer timer;
         private double currentPosition;
-        private string playButtonIcon;
-        private string volumeButtonIcon;
         private bool _dragging;
 
         //Constructor
         public MusicPlayerViewModel()
         {
             _dragging = false;
-            _timer = new Timer(100);
-            PlayButtonIcon = PLAY_ICON;
+            timer = new Timer(100);
 
             //RelayCommands
             LeftMouseDown_Slider = new RelayCommand(leftMouseDown_Slider);
@@ -56,13 +59,12 @@ namespace TuneMusix.ViewModel
             PreviousTrack = new RelayCommand(previousTrack);
             RepeatButton = new RelayCommand(onRepeatButtonClicked);
             VolumeButton = new RelayCommand(onVolumeButtonClicked);
+            ShuffleButton = new RelayCommand(shuffleButton);
 
             //Events
-            _timer.Elapsed += OnTimeElapsed;
+            timer.Elapsed += OnTimeElapsed;
             audioControls.TrackChanged += OnTrackChanged;
-            audioControls.Playing += OnPlaying;
-            audioControls.Stopped += OnStopped;
-            audioControls.Paused += OnPaused;
+            audioControls.PlaystateChanged += onPlaystateChanged;
             dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
         }
 
@@ -74,14 +76,9 @@ namespace TuneMusix.ViewModel
             {
                 if (audioControls.IsPlaying)
                 {
-                    playButtonIcon = PAUS_ICON;
+                    return PAUS_ICON;
                 }
-                return playButtonIcon;        
-            }
-            set
-            {
-                playButtonIcon = value;
-                RaisePropertyChanged("PlayButtonIcon");
+                return PLAY_ICON;        
             }
         }
         //Returns the string for the volume button icon
@@ -107,11 +104,6 @@ namespace TuneMusix.ViewModel
 
                     return VOLUME_OFF_ICON;
                 }        
-            }
-            set
-            {
-                volumeButtonIcon = value;
-                RaisePropertyChanged("VolumeButtonIcon");
             }
         }
 
@@ -211,15 +203,22 @@ namespace TuneMusix.ViewModel
                 }
             }
         }
-        public bool Shuffle
+
+        public string ShuffleButtonIcon
         {
-            get { return options.Shuffle; }
-            set
+            get
             {
-                options.Shuffle = value;
-                RaisePropertyChanged("Shuffle");
+                if (options.Shuffle)
+                {
+                    return SHUFFLE_ON_ICON;
+                }
+                else
+                {
+                    return SHUFFLE_OFF_ICON;
+                }
             }
         }
+
         /// <summary>
         /// 0 = No repeat
         /// 1 = Repeat all
@@ -241,15 +240,15 @@ namespace TuneMusix.ViewModel
             {
                 if (RepeatTrack == 0)
                 {
-                    return "repeatoff";
+                    return REPEAT_OFF_ICON;
                 }
                 else if (RepeatTrack == 1)
                 {
-                    return "repeat";
+                    return REPEAT_ICON;
                 }
                 else
                 {
-                    return "repeatonce";
+                    return REPEAT_ONCE_ICON;
                 }
             }
         }

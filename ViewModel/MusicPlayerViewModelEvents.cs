@@ -18,7 +18,7 @@ namespace TuneMusix.ViewModel
         {
             if (audioControls.IsPlaying)
             {
-                _timer.Stop();
+                timer.Stop();
                 audioControls.Pause();
                 RaisePropertyChanged("PlayButtonIcon");
             }
@@ -29,17 +29,9 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void OnPlaying(object source)
+        private void onPlaystateChanged(object argument)
         {
-            PlayButtonIcon = PAUS_ICON;           
-        }
-        private void OnPaused(object source)
-        {
-            PlayButtonIcon = PLAY_ICON;
-        }
-        private void OnStopped(object source)
-        {
-            PlayButtonIcon = PLAY_ICON;
+            RaisePropertyChanged("PlayButtonIcon");
         }
 
         private void OnTrackChanged(object e)
@@ -50,7 +42,7 @@ namespace TuneMusix.ViewModel
             RaisePropertyChanged("CurrentTrackName");     
             RaisePropertyChanged("CurrentPosition");
             RaisePropertyChanged("PlayButtonIcon");           
-            _timer.Start();
+            timer.Start();
         }
         /// <summary>
         /// This method gets called every time the time set in the
@@ -139,6 +131,12 @@ namespace TuneMusix.ViewModel
                 RepeatTrack++;
             }                   
             RaisePropertyChanged("RepeatButtonIcon");
+        }
+
+        private void shuffleButton(object argument)
+        {
+            audioControls.ShuffleChanged();
+            RaisePropertyChanged("ShuffleButtonIcon");
         }
     }
 }
