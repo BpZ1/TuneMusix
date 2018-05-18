@@ -52,7 +52,7 @@ namespace TuneMusix.ViewModel
             {
                 if (!searchText.Equals(""))
                 {
-                    IEnumerable<Track> result = TrackList.Where(t => TrackService.Contrains(t, searchText, false));
+                    IEnumerable<Track> result = TrackList.Where(t => TrackService.Contains(t, searchText, false));
                     return result.ToList<Track>();
                 }
                 else
