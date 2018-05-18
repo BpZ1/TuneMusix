@@ -11,6 +11,7 @@ namespace TuneMusix.ViewModel
 {
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
+
         DataModel dataModel = DataModel.Instance;
 
         //Getter
@@ -65,7 +66,7 @@ namespace TuneMusix.ViewModel
             get { return dataModel.QueueIndex; }
             set { dataModel.QueueIndex = value; }
         }
-        //basic ViewModelBase
+        
         internal void RaisePropertyChanged(string prop)
         {
             if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
