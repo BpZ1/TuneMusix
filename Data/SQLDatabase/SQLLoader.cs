@@ -12,11 +12,14 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Data.SQLDatabase
 {
+    /// <summary>
+    /// This class contains methods for loading all data from the database on the 
+    /// start of the program.
+    /// </summary>
     public class SQLLoader
     {
         private DataModel dataModel = DataModel.Instance;
-        private Options options = Options.Instance;
-        private SQLManager DBmanager = new SQLManager();
+        private Database database = Database.Instance;
         private IDGenerator IDgen = IDGenerator.Instance;
 
         /// <summary>
@@ -24,31 +27,31 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void LoadFromDB(object sender, DoWorkEventArgs e)
+        public void LoadFromDB()
         {
             var watch = new Stopwatch();
             watch.Start();
 
             //Load options         
-            long idgen = DBmanager.GetIDCounterStand();
+            long idgen = database.GetIDCounterStand();
             if (idgen == 0 || idgen == 1)
             {
                 idgen = 2;
             }
             IDgen.Initialize(idgen);
             Debug.WriteLine("Options loading...");
-            DBmanager.LoadOptions();
+            database.LoadOptions();
             Debug.WriteLine("Options loaded!");
           
             //Load folders
             Debug.WriteLine("Folders loading...");
-            List<Folder> FolderList = DBmanager.GetFolders();
+            List<Folder> FolderList = database.GetFolders();
             List<Folder> RootList = new List<Folder>();
             Debug.WriteLine("Folders loaded");
 
             //load tracks
             Debug.WriteLine("Loading Tracks...");
-            List<Track> tracklist = DBmanager.GetTracks();
+            List<Track> tracklist = database.GetTracks();
             dataModel.AddTracks_NoDatabase(tracklist, false);
             Debug.WriteLine("Tracks loaded!");
             FolderSort(FolderList);
@@ -64,10 +67,10 @@ namespace TuneMusix.Data.SQLDatabase
 
             //load playlists
             Debug.WriteLine("Loading Playlists...");
-            dataModel.AddPlaylists_NoDatabase(DBmanager.GetPlaylists());          
+            dataModel.AddPlaylists_NoDatabase(database.GetPlaylists());          
             foreach (Playlist playlist in dataModel.Playlists)
             {
-                List<PlaylistTrack> playlistTracks = DBmanager.GetPlaylistTracks(playlist);
+                List<PlaylistTrack> playlistTracks = database.GetPlaylistTracks(playlist);
                 foreach (PlaylistTrack pt in playlistTracks)
                 {
                     foreach (Track track in dataModel.TrackList)
@@ -81,7 +84,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
             Debug.WriteLine("Playlists loaded!");
             Debug.WriteLine("Loading effects...");
-            List<BaseEffect> effectlist = DBmanager.GetEffectQueue();
+            List<BaseEffect> effectlist = database.GetEffects();
             dataModel.AddEffectsToQueue_NoDatabase(effectlist);
 
             Debug.WriteLine(effectlist.Count +  " Effects loaded!");
@@ -97,8 +100,8 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         public void LoadOptions()
         {
-            DBmanager.LoadOptions();
-            List<BaseEffect> effectlist = DBmanager.GetEffectQueue();
+            database.LoadOptions();
+            List<BaseEffect> effectlist = database.GetEffects();
             dataModel.EffectQueue.Clear();
             dataModel.AddEffectsToQueue_NoDatabase(effectlist);
         }
@@ -136,9 +139,5 @@ namespace TuneMusix.Data.SQLDatabase
             return tempFolderList;
         }
      
-        public void CreateDatabase()
-        {
-            DBmanager.CreateDatabase();
-        }
     }
 }
