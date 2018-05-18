@@ -1,7 +1,9 @@
 ﻿using CSCore.Streams.Effects;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using TuneMusix.Data;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers.MediaPlayer.Effects;
@@ -9,6 +11,10 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Helpers.MediaPlayer
 {
+    /// <summary>
+    /// This class contains all control elements for the audio player.
+    /// The methods in this class connect the viewmodels with the audioplayer implementation.
+    /// </summary>
     partial class AudioControls : IDisposable
     {
         private EffectQueue _effectQueue;
@@ -33,9 +39,9 @@ namespace TuneMusix.Helpers.MediaPlayer
         public AudioControls()
         {
             //Events
-            dataModel.CurrentTrackChanged += OnCurrentTrackChanged;
-            options.BalanceChanged += OnBalanceChanged;
-            options.VolumeChanged += OnVolumeChanged;
+            dataModel.CurrentTrackChanged += onCurrentTrackChanged;
+            options.BalanceChanged += onBalanceChanged;
+            options.VolumeChanged += onVolumeChanged;
             
         }
 
@@ -45,12 +51,14 @@ namespace TuneMusix.Helpers.MediaPlayer
         public event AudioControlsEventHandler Playing;
         public event AudioControlsEventHandler Stopped;
         public event AudioControlsEventHandler Paused;
+        public event AudioControlsEventHandler PlaystateChanged;
 
         protected virtual void OnPlaying()
         {
             if(Playing != null)
             {
                 Playing(this);
+                PlaystateChanged(this);
             }
         }
         protected virtual void OnStopped()
@@ -58,6 +66,7 @@ namespace TuneMusix.Helpers.MediaPlayer
             if (Stopped != null)
             {
                 Stopped(this);
+                PlaystateChanged(this);
             }
         }
         protected virtual void OnPaused()
@@ -65,6 +74,7 @@ namespace TuneMusix.Helpers.MediaPlayer
             if (Paused != null)
             {
                 Paused(this);
+                PlaystateChanged(this);
             }
         }
         protected virtual void OnTrackChanged()
@@ -75,12 +85,15 @@ namespace TuneMusix.Helpers.MediaPlayer
             }
         }
 
+        /// <summary>
+        /// called on program start to create the effect queue.
+        /// </summary>
         public void LoadEffects()
         {
             _effectQueue = new EffectQueue();
-            dataModel.EffectQueueChanged += OnEffectQueueChanged;
+            dataModel.EffectQueueChanged += onEffectQueueChanged;
         }
-        private void OnEffectQueueChanged(object source,object queue)
+        private void onEffectQueueChanged(object source,object queue)
         {
             ObservableCollection<BaseEffect> effectQueue = queue as ObservableCollection<BaseEffect>;          
             _effectQueue = new EffectQueue();
@@ -95,7 +108,7 @@ namespace TuneMusix.Helpers.MediaPlayer
                 CurrentPosition = lastPosition;
             }      
         }
-        private void OnPlaybackFinished(object source)
+        private void onPlaybackFinished(object source)
         {
             if (options.RepeatTrack == 0)
             {
@@ -150,23 +163,23 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
             }          
         }
-        private float GetFloatVolume(int value)
+        private float getFloatVolume(int value)
         {
             float newvalue = (float)value;
             return newvalue / 100;
         }
-        private void OnVolumeChanged(object volume)
+        private void onVolumeChanged(object volume)
         {
-            if (Player != null) Player.Volume = GetFloatVolume((int)volume);
+            if (Player != null) Player.Volume = getFloatVolume((int)volume);
         }
 
-        private void OnBalanceChanged(object balance)
+        private void onBalanceChanged(object balance)
         {
             var Balance = (int)balance;
             this.Balance = Balance;
         }
 
-        private void OnCurrentTrackChanged(object source,object NewCurrentTrack)
+        private void onCurrentTrackChanged(object source,object NewCurrentTrack)
         {
             Debug.WriteLine("Current Track changed");
             if (NewCurrentTrack != null)
@@ -175,13 +188,14 @@ namespace TuneMusix.Helpers.MediaPlayer
             }
             else
             {
-                Player.Dispose();
+                if(Player != null)
+                    Player.Dispose();
             }
         }
         /// <summary>
         /// Private method called by PlayTrack
         /// </summary>
-        private void CreatePlayer(Track track)
+        private void createPlayer(Track track)
         {
             if(track != null)
             {
@@ -197,12 +211,12 @@ namespace TuneMusix.Helpers.MediaPlayer
 
                 Player = new AudioPlayerImpl(
                     track.sourceURL,
-                    GetFloatVolume(volume),
+                    getFloatVolume(volume),
                     options.Balance,
                     true,
                     _effectQueue,
                     true);
-                Player.PlaybackFinished += OnPlaybackFinished;
+                Player.PlaybackFinished += onPlaybackFinished;
                 OnTrackChanged();
             }
         }
@@ -218,7 +232,7 @@ namespace TuneMusix.Helpers.MediaPlayer
                 Player.Dispose();
                 Player = null;
             }
-            CreatePlayer(track);
+            createPlayer(track);
             this.Play();
         }
 
@@ -326,7 +340,7 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
                 if (!value)
                 {
-                    Player.Volume = GetFloatVolume(options.Volume);
+                    Player.Volume = getFloatVolume(options.Volume);
                     options.Muted = false;
                 }
             }
@@ -358,7 +372,61 @@ namespace TuneMusix.Helpers.MediaPlayer
             }
         }
 
+        /// <summary>
+        /// Shuffles the trackqueue when called.
+        /// Also changes the state of shuffle.
+        /// If the trackqueue is already shuffled it will be unshuffled and
+        /// sorted again.
+        /// </summary>
+        public void ShuffleChanged()
+        {
+            Console.WriteLine("-------------Shuffle-------------");
+            Console.WriteLine("");
 
+            Track oldTrack = null;
+            TimeSpan oldPosition = new TimeSpan();
+
+            //If a track is currently playing backup the track and position
+            bool hasCurrentTrack = false;
+            if (dataModel.CurrentTrack != null)
+                hasCurrentTrack = true;
+
+            if(hasCurrentTrack)
+            {
+                oldTrack = dataModel.CurrentTrack;
+                oldPosition = CurrentPosition;
+            }
+
+            if (!options.Shuffle)
+            {
+                //Shuffle the list
+                dataModel.ShuffleTrackQueue();
+
+                //Change state
+                options.Shuffle = true;
+                dataModel.SaveOptions();
+            }
+            else
+            {
+                //Unshuffle the list
+                dataModel.UnShuffleTrackQueue();
+
+                //Change state
+                options.Shuffle = false;
+                dataModel.SaveOptions();
+            }
+
+            //Restore backup of track and position
+            if (hasCurrentTrack)
+            {
+                dataModel.CurrentTrack = oldTrack;
+                CurrentPosition = oldPosition;
+            }
+            foreach (Track track in dataModel.TrackQueue)
+            {
+                Console.WriteLine(track.Title + "     ---   " + track.Index);
+            }
+        }
 
     }
 }

@@ -11,18 +11,20 @@ namespace TuneMusix.Model
 {
     public class Track :IDisposable, INotifyPropertyChanged
     {
-        private long _id;
-        private long _folderID;
-        private string URL;
-        private string _title;
-        private string _interpret;
-        private string _album;
-        private int _year;
-        private string _comm;
-        private string _genre;
-        private int _rating;
+        private long id;
+        private long folderID;
+        private string url;
+        private string title;
+        private string interpret;
+        private string album;
+        private int year;
+        private string comm;
+        private string genre;
+        private int rating;
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
+
+        private int index; //original position in the trackqueue
 
         /// <summary>
         /// Constructor for Track
@@ -30,17 +32,17 @@ namespace TuneMusix.Model
         /// <param name="URL"></param> 
         public Track(string URL,long ID)
         {
-            this._id = ID;
-            this._folderID = 0;
-            this.URL = URL;
+            this.id = ID;
+            this.folderID = 0;
+            this.url = URL;
             Rating = 0;
         }
 
         public Track(string URL, long ID,long folderID)
         {
-            this._id = ID;
-            this._folderID = folderID;
-            this.URL = URL;
+            this.id = ID;
+            this.folderID = folderID;
+            this.url = URL;
             Rating = 0;
         }
 
@@ -73,14 +75,14 @@ namespace TuneMusix.Model
         //getter and setter
         public long ID
         {
-            get { return this._id; }
+            get { return this.id; }
         }
         public long FolderID
         {
-            get { return this._folderID; }
+            get { return this.folderID; }
             set
             {
-                _folderID = value;
+                folderID = value;
                 IsModified = true;
                 RaisePropertyChanged("FolderID");
                 OnTrackChanged();
@@ -90,9 +92,9 @@ namespace TuneMusix.Model
         {
             get
             {
-                if (URL != null)
+                if (url != null)
                 {
-                    return URL;
+                    return url;
                 }
                 throw new ArgumentNullException("URL");
             }
@@ -100,7 +102,7 @@ namespace TuneMusix.Model
             {
                 if (value != null)
                 {
-                    URL = value;
+                    url = value;
                     IsModified = true;
                     RaisePropertyChanged("sourceURL");
                     OnTrackChanged();
@@ -112,15 +114,15 @@ namespace TuneMusix.Model
         {
             get
             {
-                if(this._title != null)
+                if(this.title != null)
                 {
-                    return this._title;
+                    return this.title;
                 }
                 return "";
             }
             set
             {
-                this._title = value;
+                this.title = value;
                 IsModified = true;
                 OnTrackChanged();
                 RaisePropertyChanged("Title");
@@ -131,15 +133,15 @@ namespace TuneMusix.Model
         {
             get
             {
-                if (this._interpret != null)
+                if (this.interpret != null)
                 {
-                    return this._interpret;
+                    return this.interpret;
                 }
                 return "";
             }
             set
             {
-                this._interpret = value;
+                this.interpret = value;
                 IsModified = true;
                 RaisePropertyChanged("Interpret");
                 RaisePropertyChanged("Name");
@@ -150,15 +152,15 @@ namespace TuneMusix.Model
         {
             get
             {
-                if (this._album != null)
+                if (this.album != null)
                 {
-                    return this._album;
+                    return this.album;
                 }
                 return "";
             }
             set
             {
-                this._album = value;
+                this.album = value;
                 IsModified = true;
                 RaisePropertyChanged("Album");
                 OnTrackChanged();
@@ -168,11 +170,11 @@ namespace TuneMusix.Model
         {
             get
             {  
-                return this._year;             
+                return this.year;             
             }
             set
             {
-                this._year = value;
+                this.year = value;
                 IsModified = true;
                 RaisePropertyChanged("Album");
                 OnTrackChanged();
@@ -182,15 +184,15 @@ namespace TuneMusix.Model
         {
             get
             {
-                if (this._comm != null)
+                if (this.comm != null)
                 {
-                    return this._comm;
+                    return this.comm;
                 }
                 return "";
             }
             set
             {
-                this._comm = value;
+                this.comm = value;
                 IsModified = true;
                 RaisePropertyChanged("Comm");
                 OnTrackChanged();
@@ -200,16 +202,16 @@ namespace TuneMusix.Model
         {
             get
             {
-                if (this._genre != null)
+                if (this.genre != null)
                 {
-                    return this._genre;
+                    return this.genre;
                 }
                 return "";
             }
             set
             {
 
-                this._genre = value;
+                this.genre = value;
                 IsModified = true;
                 RaisePropertyChanged("Genre");
                 OnTrackChanged();
@@ -220,11 +222,11 @@ namespace TuneMusix.Model
         {
             get
             {
-                return this._rating;
+                return this.rating;
             }
             set
             {
-                this._rating = value;
+                this.rating = value;
                 IsModified = true;
                 RaisePropertyChanged("Rating");
                 OnTrackChanged();
@@ -240,6 +242,12 @@ namespace TuneMusix.Model
                 }
                 return this.Interpret + " - " + this.Title;
             }
+        }
+
+        public int Index
+        {
+            get { return this.index; }
+            set { this.index = value; }
         }
 
 

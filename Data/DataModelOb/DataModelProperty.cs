@@ -73,6 +73,12 @@ namespace TuneMusix.Data.DataModelOb
             {
                 this.trackQueue = value;
                 this.QueueIndex = 0;
+
+                if (Options.Instance.Shuffle)
+                {
+                    ShuffleTrackQueue();
+                }
+
                 if (value.Count > 0)
                 {
                     CurrentTrack = value.First();
