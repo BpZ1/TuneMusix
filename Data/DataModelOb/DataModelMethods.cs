@@ -1,16 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using TuneMusix.Attributes;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 using System.Linq;
+using System.ComponentModel;
+using System.Windows.Threading;
+using System.Windows;
+using TuneMusix.Data.SQLDatabase;
+using TuneMusix.Helpers.MediaPlayer;
 
 namespace TuneMusix.Data.DataModelOb
 {
     partial class DataModel
     {
+        /// <summary>
+        /// Loads data from the database in a backgroundworker.
+        /// Creates the database if it does not exist
+        /// </summary>
+        public void DatabaseStartupLoading()
+        {
+            loader = new SQLLoader();
+            loader.LoadFromDB();
+            OnDataModelChanged();
+            AudioControls.Instance.LoadEffects();
+        }
+
         /// <summary>
         /// Deletes a track from the folder, tracklist and database.
         /// </summary>
@@ -39,8 +55,9 @@ namespace TuneMusix.Data.DataModelOb
                 track.Dispose();
                 OnDataModelChanged();
             }
-            DBManager.Delete(tracks);
+            database.Delete(tracks);
         }
+
         /// <summary>
         /// Deletes a single Playlist. The tracks will not be deleted.
         /// </summary>
@@ -49,7 +66,7 @@ namespace TuneMusix.Data.DataModelOb
         {         
             if(Playlists.Remove(playlist))
             {
-                DBManager.Delete(playlist);
+                database.Delete(playlist);
                 if (CurrentPlaylist == playlist)
                 {
                     CurrentPlaylist = null;
@@ -62,7 +79,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="folder"></param>
         public void Delete(Folder folder)
         {
-            DBManager.Delete(folder);
+            database.Delete(folder);
             DeleteFolderTracks(folder);
 
             //Delete reference from container
@@ -140,7 +157,7 @@ namespace TuneMusix.Data.DataModelOb
             }
             return false;
         }
-        #region database methods
+        #region database loading methods
         //////////////////////////database methods///////////////////////////////////////
         ///DataBaseMethods should only be used to load tracks into the DataModel when////
         ///initializing the prorgam as they avoid all checks for duplicates etc./////////
@@ -151,7 +168,6 @@ namespace TuneMusix.Data.DataModelOb
         /// If boolean is set to false, duplicate checks are avoided.
         /// </summary>
         /// <param name="tracks"></param>
-        [DatabaseMethod]
         public void AddTracks_NoDatabase(List<Track> tracks, bool check)
         {
             foreach (Track track in tracks)
@@ -173,7 +189,6 @@ namespace TuneMusix.Data.DataModelOb
         /// DatabaseMethod for Inserting Folders into the DataModel.
         /// </summary>
         /// <param name="folders"></param>
-        [DatabaseMethod]
         public void AddRootFolders_NoDatabase(List<Folder> folders)
         {
             foreach (Folder folder in folders)
@@ -186,7 +201,6 @@ namespace TuneMusix.Data.DataModelOb
         /// DatabaseMethod for Inserting Playlists into the DataModel.
         /// </summary>
         /// <param name="playlists"></param>
-        [DatabaseMethod]
         public void AddPlaylists_NoDatabase(List<Playlist> playlists)
         {
             foreach (Playlist playlist in playlists)
@@ -196,7 +210,6 @@ namespace TuneMusix.Data.DataModelOb
             }
             OnDataModelChanged();
         }
-        [DatabaseMethod]
         public void AddEffectsToQueue_NoDatabase(List<BaseEffect> effectList)
         {
             foreach (BaseEffect effect in effectList)
@@ -210,7 +223,6 @@ namespace TuneMusix.Data.DataModelOb
         /// </summary>
         /// <param name="track"></param>
         /// <param name="playlist"></param>
-        [DatabaseMethod]
         public void AddTrackToPlaylist_NoDatabase(Track track,Playlist playlist)
         {
             playlist.AddTrack(track);
@@ -220,11 +232,13 @@ namespace TuneMusix.Data.DataModelOb
         //////////////////////////////////////////////////////////////////////////////
         #endregion
 
- 
-
-        public void SaveOptions(double IDgenStand)
+        /// <summary>
+        /// Saves the options object in the database
+        /// </summary>
+        public void SaveOptions()
         {
-            DBManager.UpdateOptions(IDGenerator.IDCounter++, Options.Instance);
+            database.UpdateOptions(IDGenerator.IDCounter++, Options.Instance);
+            Logger.Log("Options saved to database");
         }
 
         #region insertion methods
@@ -234,19 +248,18 @@ namespace TuneMusix.Data.DataModelOb
         /// </summary>
         /// <param name="track"></param>
         /// <returns></returns>
-        public bool Add(Track track) //NO DATABASE INSERTION
+        public bool Add(Track track)
         {
             if (!Contains(track))
             {
-                List<Track> trackList = new List<Track>();
-                trackList.Add(track);
                 TrackList.Add(track);
-                DBManager.Insert(trackList);
+                database.Insert(track);
                 OnDataModelChanged();
                 return true;
             }
             return false;
         }
+
         /// <summary>
         /// Adds all tracks to the model and database.
         /// Should be used for large quantities.
@@ -263,14 +276,15 @@ namespace TuneMusix.Data.DataModelOb
                 //Check if Track is already loaded
                 if (!Contains(t))
                 {
-                    TrackList.Add(t);
+                    TrackList.Add(t); //add track to model
                     uniqueTracks.Add(t);
                     added++;
                 }
             }
             if (added > 0)
             {
-                DBManager.Insert(uniqueTracks);
+                //Add tracks to database
+                database.Insert(uniqueTracks);
                 OnDataModelChanged();
                 DialogService.NotificationMessage(added + " tracks have been added.");
             }
@@ -306,7 +320,7 @@ namespace TuneMusix.Data.DataModelOb
                         tracks.AddRange(f.Tracklist);
                     }
                     Console.WriteLine("Tracks added: " + tracks.Count);
-                    DBManager.Insert(folders);
+                    database.Insert(folders);
                     RootFolders.Add(folder);
                     Add(tracks);
                 }
@@ -340,7 +354,7 @@ namespace TuneMusix.Data.DataModelOb
 
                 Playlist playlist = new Playlist(name,IDGenerator.GetID(true));
                 Playlists.Add(playlist);
-                DBManager.Insert(playlist);
+                database.Insert(playlist);
             }
             else
             {
@@ -363,8 +377,11 @@ namespace TuneMusix.Data.DataModelOb
                     checkedTracks.Add(track);
                 }
             }
-            DBManager.InsertAllPlaylistTracks(playlist,tracklist);
-            playlist.AddTracks(checkedTracks);
+            if(checkedTracks.Count > 0)
+            {
+                database.Insert(playlist, checkedTracks);
+                playlist.AddTracks(checkedTracks);
+            }  
         }
         #endregion
 
@@ -409,6 +426,7 @@ namespace TuneMusix.Data.DataModelOb
             }
             return subFolders;
         }
+
         #region effect methods
         /// <summary>
         /// Removes a list of tracks from a playlist.
@@ -428,7 +446,7 @@ namespace TuneMusix.Data.DataModelOb
                     tracklist.Remove(track);
                 }
             }
-            DBManager.DeletePlaylistTracks(playlist,tracklist);
+            database.Delete(playlist,tracklist);
         }
         /// <summary>
         /// Removes the track from the playlist and the connection of both from the database.
@@ -439,7 +457,7 @@ namespace TuneMusix.Data.DataModelOb
         {
             if (playlist.Tracklist.Remove(track))
             {
-                DBManager.DeletePlaylistTrack(playlist,track);
+                database.Delete(playlist,track);
             }
         }
         /// <summary>
@@ -492,6 +510,75 @@ namespace TuneMusix.Data.DataModelOb
         public void OnEffectQueueItemChanged()
         {
             OnEffectQueueChanged();
+        }
+        #endregion
+
+        
+
+        /// <summary>
+        /// Shuffles the current trackqueue without notify. 
+        /// </summary>
+        public void ShuffleTrackQueue()
+        {
+            //Set the index of the tracks, to remember the original position             
+            if (trackQueue == null) return;
+            int index = 0;
+            foreach (Track track in trackQueue)
+            {
+                track.Index = index;
+                index++;
+            }
+
+            //Shuffle the queue
+            ListUtil.Shuffle<Track>(trackQueue);
+
+            RaisePropertyChanged("TrackQueue");
+            OnTrackQueueChanged();
+        }
+
+        public void UnShuffleTrackQueue()
+        {
+            //Get the current queue
+            List<Track> tempList = TrackQueue.ToList<Track>();
+            //sort the queue after index
+            IEnumerable<Track> sortedList =
+                from track in tempList
+                orderby track.Index
+                select track;
+            //Set queue to the sorted list
+            TrackQueue = sortedList.ToList<Track>();
+
+            RaisePropertyChanged("TrackQueue");
+            OnTrackQueueChanged();
+        }
+
+        #region propertychanged
+        internal void RaisePropertyChanged(string prop)
+        {
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        bool? _CloseWindowFlag;
+        public bool? CloseWindowFlag
+        {
+            get { return _CloseWindowFlag; }
+            set
+            {
+                _CloseWindowFlag = value;
+                RaisePropertyChanged("CloseWindowFlag");
+            }
+        }
+
+        public virtual void CloseWindow(bool? result = true)
+        {
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                CloseWindowFlag = CloseWindowFlag == null
+                    ? true
+                    : !CloseWindowFlag;
+            }));
         }
         #endregion
     }
