@@ -11,24 +11,50 @@ using System.Diagnostics;
 
 namespace TuneMusix.Data.SQLDatabase
 {
-    partial class SQLManager
+    /// <summary>
+    /// This class contains methods for interaction with the database.
+    /// </summary>
+    public sealed partial class Database
     {
 
         SQLiteConnection dbConnection;
         SQLiteDataReader dbReader;
-        SQLiteCommand BeginCommand;
-        SQLiteCommand EndCommand;
+        SQLiteCommand beginCommand;
+        SQLiteCommand endCommand;
 
-        public SQLManager()
+        private static volatile Database instance;
+        private static object lockObject = new Object();
+
+        public static Database Instance
         {
-            //SQLiteConnection.CreateFile("musixDB.db");
-            dbConnection = new SQLiteConnection("Data Source=musixDB.db;Version=3;");           
-            BeginCommand = new SQLiteCommand("begin",dbConnection);
-            EndCommand = new SQLiteCommand("end",dbConnection);
+            get
+            {
+                if(instance == null)
+                {
+                    lock (lockObject)
+                    {
+                        if(instance == null)
+                        {
+                            instance = new Database();
+                        }
+                    }                  
+                }
+                return instance;
+            }
         }
 
-        public void CreateDatabase()
+        private Database()
         {
+            dbConnection = new SQLiteConnection("Data Source=musixDB.db;Version=3;");
+            beginCommand = new SQLiteCommand("begin", dbConnection);
+            endCommand = new SQLiteCommand("end", dbConnection);
+
+            createDatabase();
+        }
+
+        private void createDatabase()
+        {
+            #region sqlcommands
             //Initial SQL Querys
             SQLiteCommand sqlCreateTrackTable = new SQLiteCommand("CREATE TABLE if not exists tracks (ID INT UNSIGNED UNIQUE NOT NULL," +
                                                                                                      "folderID INT UNSIGNED," +
@@ -87,8 +113,10 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                                   "value10 int," +
                                                                                                                   "value11 int);",
                                                                                                                   dbConnection);
-      
-            dbConnection.Open();
+
+            #endregion
+
+            OpenDBConnection();
             try
             {
                 sqlCreateEffectsQueueTable.ExecuteNonQuery();
@@ -100,7 +128,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
             finally
             {
-                dbConnection.Close();
+                CloseDBConnection();
             }
             Debug.WriteLine("Database tables were created.");
         }
@@ -119,7 +147,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
             else
             {
-                throw new ConnectionNotSetException("Connection is not null");
+                throw new ConnectionNotSetException("Connection is null");
             }    
         }
         /// <summary>
@@ -136,7 +164,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
             else
             {
-                throw new ConnectionNotSetException("Connection is not null");
+                throw new ConnectionNotSetException("Connection is null");
             }
         }    
     }
