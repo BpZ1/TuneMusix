@@ -32,18 +32,18 @@ namespace TuneMusix.ViewModel
         {
 
             SelectedTracks = new ObservableCollection<Track>();
-            SelectionChanged = new RelayCommand(_selectionChanged);
-            SetPlaylistIndex = new RelayCommand(_indexChanged);
-            RemoveFromPlaylist = new RelayCommand(_removeFromCurrentPlaylist);
+            SelectionChanged = new RelayCommand(selectionChanged);
+            SetPlaylistIndex = new RelayCommand(indexChanged);
+            RemoveFromPlaylist = new RelayCommand(removeFromCurrentPlaylist);
 
-            dataModel.CurrentPlaylistChanged += _onCurrentPlaylistChanged;
+            dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
         }
 
         /// <summary>
         /// Changes the selection of the playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private void _selectionChanged(object argument)
+        private void selectionChanged(object argument)
         {
             var listView = argument as ListView;
             if (listView != null)
@@ -56,7 +56,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void _removeFromCurrentPlaylist(object argument)
+        private void removeFromCurrentPlaylist(object argument)
         {
             if (SelectedTracks != null && dataModel.CurrentPlaylist != null)
             {
@@ -67,7 +67,7 @@ namespace TuneMusix.ViewModel
         /// This method changes the index of the trackqueue to the currently selected track.
         /// </summary>
         /// <param name="argument"></param>
-        private void _indexChanged(object argument)
+        private void indexChanged(object argument)
         {
             if (SelectedTracks != null && CurrentPlaylist != null)
             {
@@ -77,7 +77,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void _onCurrentPlaylistChanged(object source, object newPlaylist)
+        private void onCurrentPlaylistChanged(object source, object newPlaylist)
         {
             RaisePropertyChanged("CurrentPlaylistName");
             RaisePropertyChanged("CurrentPlaylistTracks");

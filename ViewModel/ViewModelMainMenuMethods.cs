@@ -58,7 +58,7 @@ namespace TuneMusix.ViewModel
             List<Track> saveTracks = new List<Track>();
             List<Folder> saveFolders = dataModel.GetAllFolders(true);
             List<Playlist> savePlaylists = new List<Playlist>();
-            SQLManager dbManager = new SQLManager();
+            Database dbManager = Database.Instance;
             //get modified tracks from the datamodel
             foreach (Track track in dataModel.TrackList)
             {
@@ -99,7 +99,7 @@ namespace TuneMusix.ViewModel
 
 
             //options have to be saved as they are not always saved as they are changed.
-            dataModel.SaveOptions(IDGenerator.IDCounter);
+            dataModel.SaveOptions();
             //audiControl has to be disposed to end playing of music.
             audioControls.Dispose();
             System.Windows.Application.Current.Shutdown();
