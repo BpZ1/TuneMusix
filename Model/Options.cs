@@ -16,9 +16,10 @@ namespace TuneMusix.Model
     /// </summary>
     public partial class Options
     {
-        private static Options instance;
 
-        private Options() { }
+        
+        private static volatile Options instance;
+        private static object lockObject = new Object();
 
         public static Options Instance
         {
@@ -26,11 +27,19 @@ namespace TuneMusix.Model
             {
                 if (instance == null)
                 {
-                    instance = new Options();
+                    lock (lockObject)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new Options();
+                        }
+                    }
                 }
                 return instance;
             }
         }
+
+        private Options() { }
 
         private bool modified = false;
         public bool Modified
@@ -41,7 +50,7 @@ namespace TuneMusix.Model
 
         private bool _effectsActive;
         //Normal logging is only active when set to true.
-        private bool _LoggerActive = false;
+        private bool _LoggerActive;
         //volume of the audioplayer
         private int volume;
         //tracks in queue will shuffle randomly when set to true.
@@ -52,7 +61,6 @@ namespace TuneMusix.Model
             set
             {
                 shuffle = value;
-                //TODO save to database
             }
         }
         // 0 = No repeat
@@ -215,7 +223,7 @@ namespace TuneMusix.Model
             if (IsModified())
             {
                 DataModel dataModel = DataModel.Instance;
-                SQLManager manager = new SQLManager();
+                Database manager = Database.Instance;
                 manager.UpdateOptions(IDGenerator.GetID(false), this);
                 manager.UpdateEffectQueue(dataModel.EffectQueue.ToList<BaseEffect>());
                 Modified = false;
