@@ -130,15 +130,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\DataModelOb\DataModelMethods.cs" />
+    <Compile Include="Data\SQLDatabase\IDatabase.cs" />
     <Compile Include="Data\SQLDatabase\SQLLoader.cs" />
-    <Compile Include="Helpers\Attributes\DatabaseMethodAttribute.cs" />
     <Compile Include="Data\DataModelOb\DataModel.cs" />
     <Compile Include="Data\DataModelOb\DataModelParserMethods.cs" />
     <Compile Include="Data\DataModelOb\DataModelProperty.cs" />
-    <Compile Include="Data\SQLDatabase\SQLManager.cs" />
-    <Compile Include="Data\SQLDatabase\SQLManagerDeletion.cs" />
-    <Compile Include="Data\SQLDatabase\SQLManagerInsertion.cs" />
-    <Compile Include="Data\SQLDatabase\SQLManagerSelection.cs" />
+    <Compile Include="Data\SQLDatabase\Database.cs" />
+    <Compile Include="Data\SQLDatabase\DatabaseDeletion.cs" />
+    <Compile Include="Data\SQLDatabase\DatabaseInsertion.cs" />
+    <Compile Include="Data\SQLDatabase\DatabaseSelection.cs" />
+    <Compile Include="Helpers\Container\OptionsIDContainer.cs" />
     <Compile Include="Helpers\Dialogs\DialogResult.cs" />
     <Compile Include="Helpers\Dialogs\DialogService.cs" />
     <Compile Include="Helpers\Exceptions\ClassNotInitializedException.cs" />
