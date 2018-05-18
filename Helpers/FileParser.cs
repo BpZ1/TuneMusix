@@ -19,6 +19,7 @@ namespace TuneMusix.Helpers
 
         private bool workDone = false;
         private int SPLITNUMBER = 50; //Number of tracks per thread
+        private DataModel dataModel = DataModel.Instance;
 
         public FileParser(){ }
 
@@ -81,7 +82,7 @@ namespace TuneMusix.Helpers
             {
                 Thread.Sleep(100);
             }
-            DataModel.Instance.SaveOptions(IDGenerator.IDCounter);
+            dataModel.SaveOptions();
             e.Result = resultList.ToList<Track>();
         }
 
@@ -148,7 +149,7 @@ namespace TuneMusix.Helpers
             {
                 Thread.Sleep(100);
             }
-            DataModel.Instance.SaveOptions(IDGenerator.IDCounter);
+            dataModel.SaveOptions();
             e.Result = folderSort(url, folderList.ToList<Folder>());
         }
 
