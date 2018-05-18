@@ -5,6 +5,9 @@ using TuneMusix.Exceptions;
 
 namespace TuneMusix.Helpers
 {
+    /// <summary>
+    /// Class for generation of unique ids.
+    /// </summary>
     public class IDGenerator
     {
         public static long IDCounter;
@@ -24,7 +27,6 @@ namespace TuneMusix.Helpers
                 return instance;
             }
         }
-
 
         public void Initialize(long init)
         {
@@ -49,7 +51,7 @@ namespace TuneMusix.Helpers
                 {
                     long id = Interlocked.Increment(ref IDCounter);
                     DataModel dm = DataModel.Instance;
-                    dm.SaveOptions(IDCounter);
+                    dm.SaveOptions();
                     return id - 1;
                 }
             }
