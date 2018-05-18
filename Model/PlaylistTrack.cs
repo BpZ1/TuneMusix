@@ -3,7 +3,7 @@
     /// <summary>
     /// This class is only used to rebuild playlists after reading from the database
     /// </summary>
-    class PlaylistTrack
+    public class PlaylistTrack
     {
         public PlaylistTrack(long TrackID,long PlaylistID)
         {
