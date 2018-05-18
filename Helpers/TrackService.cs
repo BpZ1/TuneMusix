@@ -17,7 +17,7 @@ namespace TuneMusix.Helpers
         /// <param name="s">string to be looked up</param>
         /// <param name="caseSensitive">Case sensitive</param>
         /// <returns></returns>
-        public static bool Contrains(Track t, string s,bool caseSensitive)
+        public static bool Contains(Track t, string s,bool caseSensitive)
         {
             if (caseSensitive)
             {
@@ -44,8 +44,7 @@ namespace TuneMusix.Helpers
                     return true;
 
                 return false;
-            }
-           
+            }    
         }
 
 
