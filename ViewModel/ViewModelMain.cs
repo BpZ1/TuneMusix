@@ -2,12 +2,10 @@
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 using TuneMusix.Helpers.MediaPlayer;
-using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Data.DataModelOb;
 using System.Threading.Tasks;
 using MaterialDesignThemes.Wpf;
-using System.Threading;
-using System.ComponentModel;
+
 
 namespace TuneMusix.ViewModel
 {
@@ -24,8 +22,6 @@ namespace TuneMusix.ViewModel
         private DataModel dataModel = DataModel.Instance;
         private AudioControls audioControls = AudioControls.Instance;
         private Options options = Options.Instance;
-        private SQLLoader loader;
-        private BackgroundWorker loadingWorker;
 
         private bool infoTextVisible = false;
         private bool progressVisible = false;
@@ -36,15 +32,10 @@ namespace TuneMusix.ViewModel
 
         //constructor
         public ViewModelMain()
-        {        
-            //Load data from database.
-            loader = new SQLLoader();
-            loader.CreateDatabase();
-            loadingWorker = new BackgroundWorker();
-            loadingWorker.DoWork += loader.LoadFromDB;
-            loadingWorker.RunWorkerCompleted += onLoadingComplete;
-            loadingWorker.RunWorkerAsync();
-
+        {
+            //Startup loading
+            dataModel.DatabaseStartupLoading();
+            
             //notification
             MessageQueue = new SnackbarMessageQueue();
             dataModel.DataModelChanged += onRootFoldersChanged;
