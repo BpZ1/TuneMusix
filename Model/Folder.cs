@@ -15,10 +15,10 @@ namespace TuneMusix.Model
 {
     public class Folder : INotifyPropertyChanged
     {
-        private long _id;
-        private long _folderID;
-        private string _name;
-        private string _url;
+        private long id;
+        private long folderID;
+        private string name;
+        private string url;
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
         private ObservableCollection<Folder> _folderlist;
@@ -28,7 +28,7 @@ namespace TuneMusix.Model
         {
             this.Name = name;
             this.URL = url;
-            this._id = ID;
+            this.id = ID;
             _folderlist = new ObservableCollection<Folder>();
             _tracklist = new ObservableCollection<Track>();
         }
@@ -37,8 +37,8 @@ namespace TuneMusix.Model
         {
             this.Name = name;
             this.URL = url;
-            this._id = ID;
-            this._folderID = folderID;
+            this.id = ID;
+            this.folderID = folderID;
             _folderlist = new ObservableCollection<Folder>();
             _tracklist = new ObservableCollection<Track>();
         }
@@ -67,7 +67,7 @@ namespace TuneMusix.Model
             ValidationUtil<Folder> valiUtil = new ValidationUtil<Folder>();
             if(folder != null)
             {
-                if (valiUtil.insertValidation(folder._name, this._name, folder, _folderlist))
+                if (valiUtil.insertValidation(folder.name, this.name, folder, _folderlist))
                 {
                     _folderlist.Add(folder);
                     folder.FolderID = this.ID;
@@ -95,7 +95,7 @@ namespace TuneMusix.Model
             ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
             if(track != null)
             {
-                if (valiUtil.insertValidation(track.Title, this._name, track, _tracklist))
+                if (valiUtil.insertValidation(track.Title, this.name, track, _tracklist))
                 {
                     _tracklist.Add(track);
                     track.FolderID = this.ID;
@@ -117,12 +117,12 @@ namespace TuneMusix.Model
         // Setter and Getter for the name of the Container
         public string Name
         {
-            get { return this._name; }
+            get { return this.name; }
             set
             {
                 if (value != null && value.Length > 0)
                 {
-                    this._name = value;
+                    this.name = value;
                     IsModified = true;
                     RaisePropertyChanged("Name");
                     OnFolderChanged();
@@ -137,7 +137,7 @@ namespace TuneMusix.Model
         {
             get
             {
-                return this._url;
+                return this.url;
             }
             set
             {
@@ -145,7 +145,7 @@ namespace TuneMusix.Model
                 {
                     throw new ArgumentNullException("URL mustn't be null.");
                 }
-                this._url = value;
+                this.url = value;
                 RaisePropertyChanged("URL");
                 IsModified = true;
                 OnFolderChanged();
@@ -153,14 +153,14 @@ namespace TuneMusix.Model
         }
         public long ID
         {
-            get { return this._id; }
+            get { return this.id; }
         }
         public long FolderID
         {
-            get { return this._folderID; }
+            get { return this.folderID; }
             set
             {
-                _folderID = value;
+                folderID = value;
                 IsModified = true;
                 RaisePropertyChanged("FolderID");
                 OnFolderChanged();

@@ -15,8 +15,8 @@ namespace TuneMusix.Model
     /// </summary>
     public class Playlist : INotifyPropertyChanged
     {
-        private long _id;
-        private string _name;
+        private long id;
+        private string name;
         public bool IsModified { get; set; }
         public ObservableCollection<Track> Tracklist { get; set; }
 
@@ -24,14 +24,14 @@ namespace TuneMusix.Model
         public Playlist(string name,long ID)
         {
             this.Name = name;
-            this._id = ID;
+            this.id = ID;
             Tracklist = new ObservableCollection<Track>();
         }
         //Constructor-------
         public Playlist(string name,Track track,long ID)
         {
             this.Name = name;
-            this._id = ID;
+            this.id = ID;
             Tracklist = new ObservableCollection<Track>();
             if (track != null)
             {
@@ -42,7 +42,7 @@ namespace TuneMusix.Model
         public Playlist(string name,List<Track> tracks,long ID)
         {
             this.Name = name;
-            this._id = ID;
+            this.id = ID;
             Tracklist = new ObservableCollection<Track>();
             foreach (Track track in tracks)
             {
@@ -56,7 +56,7 @@ namespace TuneMusix.Model
         //Getter and setter
         public string Name
         {
-            get { return this._name; }
+            get { return this.name; }
             set
             {
                 if (value == null)
@@ -65,7 +65,7 @@ namespace TuneMusix.Model
                 }
                 else
                 {
-                    this._name = value;
+                    this.name = value;
                     RaisePropertyChanged("Name");
                     IsModified = true;
                 }
@@ -74,7 +74,7 @@ namespace TuneMusix.Model
 
         public long ID
         {
-            get { return this._id; }
+            get { return this.id; }
         }
 
         /// <summary>
