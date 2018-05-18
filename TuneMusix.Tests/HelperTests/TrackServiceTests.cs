@@ -42,23 +42,23 @@ namespace TuneMusix.Tests.HelperTests
             setTracks();
 
             //test of album search
-            Assert.IsTrue(TrackService.Contrains(track1, "thomas", false));
-            Assert.IsTrue(TrackService.Contrains(track1, "mas", false));
-            Assert.IsFalse(TrackService.Contrains(track2, "udo", false));
-            Assert.IsFalse(TrackService.Contrains(track2, "do", false));
+            Assert.IsTrue(TrackService.Contains(track1, "thomas", false));
+            Assert.IsTrue(TrackService.Contains(track1, "mas", false));
+            Assert.IsFalse(TrackService.Contains(track2, "udo", false));
+            Assert.IsFalse(TrackService.Contains(track2, "do", false));
 
 
             //test of title seach
-            Assert.IsTrue(TrackService.Contrains(track3, "richard", false));
-            Assert.IsTrue(TrackService.Contrains(track4, "one", false));
-            Assert.IsFalse(TrackService.Contrains(track3, "peter", false));
-            Assert.IsFalse(TrackService.Contrains(track4, "ter", false));
+            Assert.IsTrue(TrackService.Contains(track3, "richard", false));
+            Assert.IsTrue(TrackService.Contains(track4, "one", false));
+            Assert.IsFalse(TrackService.Contains(track3, "peter", false));
+            Assert.IsFalse(TrackService.Contains(track4, "ter", false));
 
             //test of interpret search
-            Assert.IsTrue(TrackService.Contrains(track1, "thomas", false));
-            Assert.IsTrue(TrackService.Contrains(track3, "anz", false));
-            Assert.IsFalse(TrackService.Contrains(track1, "thomasioni", false));
-            Assert.IsFalse(TrackService.Contrains(track3, "chart", false));
+            Assert.IsTrue(TrackService.Contains(track1, "thomas", false));
+            Assert.IsTrue(TrackService.Contains(track3, "anz", false));
+            Assert.IsFalse(TrackService.Contains(track1, "thomasioni", false));
+            Assert.IsFalse(TrackService.Contains(track3, "chart", false));
 
         }
     }
