@@ -2,12 +2,8 @@
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
-using System.Linq;
 using System.Diagnostics;
-using System;
-using System.Threading;
 using System.ComponentModel;
-using System.Collections.Concurrent;
 
 namespace TuneMusix.Data.DataModelOb
 {
