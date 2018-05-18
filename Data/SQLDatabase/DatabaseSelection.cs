@@ -7,13 +7,9 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Data.SQLDatabase
 {
-    partial class SQLManager
+    public sealed partial class Database : IDatabase
     {
 
-        /// <summary>
-        /// Returns all Tracks contained in the Database.
-        /// </summary>
-        /// <returns></returns>
         public List<Track> GetTracks()
         {
             List<Track> tracklist = new List<Track>();
@@ -53,10 +49,6 @@ namespace TuneMusix.Data.SQLDatabase
             return tracklist;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public List<Folder> GetFolders()
         {
             List<Folder> folderlist = new List<Folder>();
@@ -96,7 +88,6 @@ namespace TuneMusix.Data.SQLDatabase
             Options options = Options.Instance;
 
             SQLiteCommand command = new SQLiteCommand("SELECT volume,shuffle,repeatTrack FROM options;",dbConnection);
-
 
             OpenDBConnection();
             dbReader = command.ExecuteReader();
@@ -144,20 +135,14 @@ namespace TuneMusix.Data.SQLDatabase
                     options.Shuffle = false;
                     options.RepeatTrack = 0;
                 }
-
             }                    
             finally
             {
                 CloseDBConnection();
                 dbConnection.Close();
             }
-
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public long GetIDCounterStand()
         {
             long IDCounter = 0;
@@ -194,7 +179,6 @@ namespace TuneMusix.Data.SQLDatabase
             dbReader = command.ExecuteReader();
             try
             {
- 
                 while (dbReader.Read())
                 {
                     Playlist playlist = new Playlist(dbReader.GetString(1), dbReader.GetInt32(0));
@@ -208,11 +192,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
             return playlistList;
         }
-        /// <summary>
-        /// returns all PlaylistTrack objects for a given Playlist.
-        /// </summary>
-        /// <param name="playlist"></param>
-        /// <returns></returns>
+
         public List<PlaylistTrack> GetPlaylistTracks(Playlist playlist)
         {
             List<PlaylistTrack> playlistTrackList = new List<PlaylistTrack>();
@@ -225,7 +205,6 @@ namespace TuneMusix.Data.SQLDatabase
             dbReader = command.ExecuteReader();
             try
             {
-
                 while (dbReader.Read())
                 {
                     PlaylistTrack playlistTrack = new PlaylistTrack(dbReader.GetInt32(0), dbReader.GetInt32(1));
@@ -240,7 +219,7 @@ namespace TuneMusix.Data.SQLDatabase
             return playlistTrackList;
         }
 
-        public List<BaseEffect> GetEffectQueue()
+        public List<BaseEffect> GetEffects()
         {
             List<BaseEffect> effectQueue = new List<BaseEffect>();          
             SQLiteCommand command = new SQLiteCommand("SELECT * " +
@@ -318,7 +297,6 @@ namespace TuneMusix.Data.SQLDatabase
                         value11 = dbReader.GetInt32(14);
                     }
 
-
                     if (type.Equals("distortion"))
                     {
                         DistortionEffect effect = new DistortionEffect();
@@ -341,7 +319,6 @@ namespace TuneMusix.Data.SQLDatabase
                         if (value10 == 1) effect.PanDelay = true;
                         else effect.PanDelay = false;
                         effectQueue.Add(effect);
-
                     }
                     if (type.Equals("reverb"))
                     {
@@ -352,7 +329,6 @@ namespace TuneMusix.Data.SQLDatabase
                         effect.ReverbMix = value2;
                         effect.ReverbTime = value3;
                         effectQueue.Add(effect);
-
                     }
                     if (type.Equals("equalizer"))
                     {
@@ -369,7 +345,6 @@ namespace TuneMusix.Data.SQLDatabase
                         effect.ChannelFilter8 = value8;
                         effect.ChannelFilter9 = value9;
                         effectQueue.Add(effect);
-
                     }
                     if (type.Equals("gargle"))
                     {
@@ -378,7 +353,6 @@ namespace TuneMusix.Data.SQLDatabase
                         effect.Rate = value10;
                         effect.WaveShape = value11;
                         effectQueue.Add(effect);
-
                     }
                     if (type.Equals("compressor"))
                     {
@@ -391,7 +365,6 @@ namespace TuneMusix.Data.SQLDatabase
                         effect.Release = value4;
                         effect.Treshold = value5;
                         effectQueue.Add(effect);
-
                     }
                     if (type.Equals("flanger"))
                     {
@@ -404,7 +377,6 @@ namespace TuneMusix.Data.SQLDatabase
                         effect.Wet_DryMix = value4;
                         effect.WaveForm = value10;
                         effectQueue.Add(effect);
-
                     }
                     if (type.Equals("chorus"))
                     {
@@ -417,7 +389,6 @@ namespace TuneMusix.Data.SQLDatabase
                         effect.Phase = value10;
                         effect.WaveForm = value11;
                         effectQueue.Add(effect);
-
                     }
 
                 }
@@ -427,11 +398,7 @@ namespace TuneMusix.Data.SQLDatabase
                 CloseDBConnection();
                 dbConnection.Close();
             }
-
             return effectQueue;
-
         }
-
-
     }
 }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SQLite;
-using TuneMusix.Helpers;
 using TuneMusix.Model;
 
 namespace TuneMusix.Data.SQLDatabase
 {
-    partial class SQLManager
+    public sealed partial class Database : IDatabase
     {
-
         public void Delete(List<Track> tracks)
         {
             List<SQLiteCommand> commands = new List<SQLiteCommand>();
@@ -22,22 +19,19 @@ namespace TuneMusix.Data.SQLDatabase
             OpenDBConnection();
             try
             {
-                BeginCommand.ExecuteNonQuery();
+                beginCommand.ExecuteNonQuery();
                 foreach (SQLiteCommand command in commands)
                 {
                     command.ExecuteNonQuery();
                 }
-                EndCommand.ExecuteNonQuery();
+                endCommand.ExecuteNonQuery();
             }
             finally
             {
                 CloseDBConnection();
             }
         }
-        /// <summary>
-        /// deletes a track from the tracks database table.
-        /// </summary>
-        /// <param name="track"></param>
+       
         public void Delete(Track track)
         {
             SQLiteCommand com = new SQLiteCommand("DELETE FROM tracks WHERE ID=@ID;", dbConnection);
@@ -45,19 +39,41 @@ namespace TuneMusix.Data.SQLDatabase
             OpenDBConnection();
             try
             {
-                BeginCommand.ExecuteNonQuery();
+                beginCommand.ExecuteNonQuery();
                 com.ExecuteNonQuery();
-                EndCommand.ExecuteNonQuery();
+                endCommand.ExecuteNonQuery();
             }
             finally
             {
                 CloseDBConnection();
             }
-        }   
-        /// <summary>
-        /// Deletes a folder from the folders database table.
-        /// </summary>
-        /// <param name="folder"></param>
+        }
+        public void Delete(List<Folder> folders)
+        {
+            List<SQLiteCommand> commands = new List<SQLiteCommand>();
+            foreach (Folder folder in folders)
+            {
+                SQLiteCommand com = new SQLiteCommand("DELETE FROM folders WHERE ID=@ID;", dbConnection);
+                com.Parameters.AddWithValue("ID", folder.ID);
+                commands.Add(com);
+            }
+
+            OpenDBConnection();
+            try
+            {
+                beginCommand.ExecuteNonQuery();
+                foreach (SQLiteCommand command in commands)
+                {
+                    command.ExecuteNonQuery();
+                }
+                endCommand.ExecuteNonQuery();
+            }
+            finally
+            {
+                CloseDBConnection();
+            }
+        }
+        
         public void Delete(Folder folder)
         {
             SQLiteCommand command = new SQLiteCommand("DELETE FROM folders WHERE ID=@ID;",dbConnection);
@@ -65,20 +81,16 @@ namespace TuneMusix.Data.SQLDatabase
             OpenDBConnection();
             try
             {
-                BeginCommand.ExecuteNonQuery();
+                beginCommand.ExecuteNonQuery();
                 command.ExecuteNonQuery();
-                EndCommand.ExecuteNonQuery();
+                endCommand.ExecuteNonQuery();
             }
             finally
             {
                 CloseDBConnection();
             }
         }
-
-        /// <summary>
-        /// Deletes a playlist from the playlists database table.
-        /// </summary>
-        /// <param name="playlist"></param>
+       
         public void Delete(Playlist playlist)
         {
             SQLiteCommand command = new SQLiteCommand("DELETE FROM playlists WHERE ID=@ID;", dbConnection);
@@ -86,68 +98,73 @@ namespace TuneMusix.Data.SQLDatabase
             OpenDBConnection();
             try
             {
-                BeginCommand.ExecuteNonQuery();
+                beginCommand.ExecuteNonQuery();
                 command.ExecuteNonQuery();
-                EndCommand.ExecuteNonQuery();
+                endCommand.ExecuteNonQuery();
             }
             finally
             {
                 CloseDBConnection();
             }
         }
-        /// <summary>
-        /// Deletes a list of Tracks from the playlistTracks database table.
-        /// </summary>
-        /// <param name="playlist"></param>
-        /// <param name="tracklist"></param>
-        public void DeletePlaylistTracks(Playlist playlist,List<Track> tracklist)
+       
+        public void Delete(Playlist playlist, List<Track> tracks)
+        {
+            List<PlaylistTrack> playlistTracks = new List<PlaylistTrack>();
+            foreach (Track track in tracks)
+            {
+                playlistTracks.Add(new PlaylistTrack(track.ID, playlist.ID));
+            }
+            this.delete(playlistTracks);
+        }
+
+        private void delete(List<PlaylistTrack> playlistTracks)
         {
             List<SQLiteCommand> commandList = new List<SQLiteCommand>();
-            foreach (Track track in tracklist)
+            foreach (PlaylistTrack track in playlistTracks)
             {
                 SQLiteCommand command = new SQLiteCommand("DELETE FROM playlisttracks WHERE trackID=@trackID,playlistID=@playlistID;", dbConnection);
-                command.Parameters.AddWithValue("trackID",track.ID);
-                command.Parameters.AddWithValue("playlistID",playlist.ID);
+                command.Parameters.AddWithValue("trackID", track.TrackID);
+                command.Parameters.AddWithValue("playlistID", track.PlaylistID);
                 commandList.Add(command);
             }
             try
             {
-                BeginCommand.ExecuteNonQuery();
+                beginCommand.ExecuteNonQuery();
                 foreach (SQLiteCommand command in commandList)
                 {
                     command.ExecuteNonQuery();
                 }
-                EndCommand.ExecuteNonQuery();
+                endCommand.ExecuteNonQuery();
             }
             finally
             {
                 CloseDBConnection();
             }
-
         }
-        /// <summary>
-        /// Deletes a single Track from the playlistTracks database table.
-        /// </summary>
-        /// <param name="playlist"></param>
-        /// <param name="track"></param>
-        public void DeletePlaylistTrack(Playlist playlist, Track track)
+       
+        public void Delete(Playlist playlist, Track track)
         {
+            PlaylistTrack playlistTrack = new PlaylistTrack(track.ID, playlist.ID);
+            this.delete(playlistTrack);
+        }
 
+        private void delete(PlaylistTrack playlistTrack)
+        {
             SQLiteCommand command = new SQLiteCommand("DELETE FROM playlisttracks WHERE trackID=@trackID,playlistID=@playlistID;", dbConnection);
-            command.Parameters.AddWithValue("trackID", track.ID);
-            command.Parameters.AddWithValue("playlistID", playlist.ID);           
+            command.Parameters.AddWithValue("trackID", playlistTrack.TrackID);
+            command.Parameters.AddWithValue("playlistID", playlistTrack.PlaylistID);           
             try
             {
-                BeginCommand.ExecuteNonQuery();
+                beginCommand.ExecuteNonQuery();
                 command.ExecuteNonQuery();              
-                EndCommand.ExecuteNonQuery();
+                endCommand.ExecuteNonQuery();
             }
             finally
             {
                 CloseDBConnection();
             }
-
         }
-
+        
     }
 }
