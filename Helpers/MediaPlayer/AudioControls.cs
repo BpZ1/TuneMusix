@@ -56,33 +56,35 @@ namespace TuneMusix.Helpers.MediaPlayer
         protected virtual void OnPlaying()
         {
             if(Playing != null)
-            {
                 Playing(this);
+
+            if (PlaystateChanged != null)
                 PlaystateChanged(this);
-            }
+
         }
         protected virtual void OnStopped()
         {
             if (Stopped != null)
-            {
                 Stopped(this);
+
+            if (PlaystateChanged != null)
                 PlaystateChanged(this);
-            }
         }
         protected virtual void OnPaused()
         {
             if (Paused != null)
-            {
                 Paused(this);
+
+            if (PlaystateChanged != null)
                 PlaystateChanged(this);
-            }
         }
         protected virtual void OnTrackChanged()
         {
             if (TrackChanged!= null)
-            {
                 TrackChanged(this);
-            }
+
+            if (PlaystateChanged != null)
+                PlaystateChanged(this);
         }
 
         /// <summary>
@@ -190,10 +192,10 @@ namespace TuneMusix.Helpers.MediaPlayer
             {
                 if(Player != null)
                     Player.Dispose();
-            }
+            }         
         }
         /// <summary>
-        /// Private method called by PlayTrack
+        /// Private method called by PlayTrack to create a new player
         /// </summary>
         private void createPlayer(Track track)
         {
@@ -219,6 +221,10 @@ namespace TuneMusix.Helpers.MediaPlayer
                 Player.PlaybackFinished += onPlaybackFinished;
                 OnTrackChanged();
             }
+            else
+            {
+                throw new ArgumentNullException("The given track when creating a player can't be null");
+            }
         }
         /// <summary>
         /// Creates a new Player and disposes of the old one if present.
@@ -227,10 +233,10 @@ namespace TuneMusix.Helpers.MediaPlayer
         public void PlayTrack(Track track)
         {
             if (Player!=null)
-            {
-                Debug.WriteLine("Player Disposed");
+            {              
                 Player.Dispose();
                 Player = null;
+                Debug.WriteLine("Player Disposed");
             }
             createPlayer(track);
             this.Play();
@@ -269,9 +275,10 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             if (Player != null)
             {
+                Console.WriteLine("Player not null");
                 Player.Play();
                 OnPlaying();
-            }          
+            }
         }
         public void Pause()
         {
