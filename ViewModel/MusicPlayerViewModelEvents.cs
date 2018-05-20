@@ -38,10 +38,8 @@ namespace TuneMusix.ViewModel
         {
             RaisePropertyChanged("TrackLoaded");
             RaisePropertyChanged("Length");
-            Console.WriteLine("Current track changed");
             RaisePropertyChanged("CurrentTrackName");     
-            RaisePropertyChanged("CurrentPosition");
-            RaisePropertyChanged("PlayButtonIcon");           
+            RaisePropertyChanged("CurrentPosition");        
             timer.Start();
         }
         /// <summary>
