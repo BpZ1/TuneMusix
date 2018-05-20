@@ -34,8 +34,8 @@ namespace TuneMusix.ViewModel
         private const string VOLUME_OFF_ICON = "VolumeOff";
         private const string VOLUME_LOW_ICON = "VolumeLow";
         private const string VOLUME_MEDIUM_ICON = "VolumeMedium";
-        private const string SHUFFLE_ON_ICON = "ShuffleDisabled";
-        private const string SHUFFLE_OFF_ICON = "Shuffle";
+        private const string SHUFFLE_ON_ICON = "Shuffle";
+        private const string SHUFFLE_OFF_ICON = "ShuffleDisabled";
         private const string REPEAT_ICON = "repeat";
         private const string REPEAT_ONCE_ICON = "repeatonce";
         private const string REPEAT_OFF_ICON = "repeatoff";
