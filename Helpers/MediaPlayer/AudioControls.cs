@@ -17,7 +17,7 @@ namespace TuneMusix.Helpers.MediaPlayer
     /// </summary>
     partial class AudioControls : IDisposable
     {
-        private EffectQueue _effectQueue;
+        private EffectQueue effectQueue;
 
         private static AudioControls instance;
         public static AudioControls Instance
@@ -34,7 +34,8 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         private AudioPlayerImpl Player;
         private DataModel dataModel = DataModel.Instance;
-        private Options options = Options.Instance;    
+        private Options options = Options.Instance;
+        private bool isPlaying;  
 
         public AudioControls()
         {
@@ -55,6 +56,8 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         protected virtual void OnPlaying()
         {
+            isPlaying = true;
+
             if(Playing != null)
                 Playing(this);
 
@@ -64,6 +67,8 @@ namespace TuneMusix.Helpers.MediaPlayer
         }
         protected virtual void OnStopped()
         {
+            isPlaying = false;
+
             if (Stopped != null)
                 Stopped(this);
 
@@ -72,6 +77,8 @@ namespace TuneMusix.Helpers.MediaPlayer
         }
         protected virtual void OnPaused()
         {
+            isPlaying = false;
+
             if (Paused != null)
                 Paused(this);
 
@@ -92,16 +99,16 @@ namespace TuneMusix.Helpers.MediaPlayer
         /// </summary>
         public void LoadEffects()
         {
-            _effectQueue = new EffectQueue();
+            effectQueue = new EffectQueue();
             dataModel.EffectQueueChanged += onEffectQueueChanged;
         }
         private void onEffectQueueChanged(object source,object queue)
         {
             ObservableCollection<BaseEffect> effectQueue = queue as ObservableCollection<BaseEffect>;          
-            _effectQueue = new EffectQueue();
+            this.effectQueue = new EffectQueue();
             foreach (BaseEffect effect in effectQueue)
             {
-                _effectQueue.AddEffect(effect);
+                this.effectQueue.AddEffect(effect);
             }
             if(Player != null)
             {
@@ -133,6 +140,9 @@ namespace TuneMusix.Helpers.MediaPlayer
                 this.Play();
             }
         }
+        /// <summary>
+        /// Plays the next song in the track queue.
+        /// </summary>
         public void PlayNext()
         {          
             if(dataModel.TrackQueue.Count > 0)
@@ -180,7 +190,11 @@ namespace TuneMusix.Helpers.MediaPlayer
             var Balance = (int)balance;
             this.Balance = Balance;
         }
-
+        /// <summary>
+        /// Sets the new current track after it was changed.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="NewCurrentTrack"></param>
         private void onCurrentTrackChanged(object source,object NewCurrentTrack)
         {
             Debug.WriteLine("Current Track changed");
@@ -192,6 +206,19 @@ namespace TuneMusix.Helpers.MediaPlayer
             {
                 if(Player != null)
                     Player.Dispose();
+
+                dataModel.QueueIndex--; //Correct queue index because of removed element
+                //If the track was playing before it was set to null play next track
+                if (IsPlaying)
+                {
+                    PlayNext();
+                }
+                else //If the track was deleted but not playing, just go to the next track.
+                {
+                    PlayNext();
+                    Pause();
+                }
+                               
             }         
         }
         /// <summary>
@@ -216,7 +243,7 @@ namespace TuneMusix.Helpers.MediaPlayer
                     getFloatVolume(volume),
                     options.Balance,
                     true,
-                    _effectQueue,
+                    effectQueue,
                     true);
                 Player.PlaybackFinished += onPlaybackFinished;
                 OnTrackChanged();
@@ -244,18 +271,7 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         public bool IsPlaying
         {
-            get
-            {
-                if(Player != null)
-                {
-                    return Player.IsPlaying();
-                }
-                else
-                {
-                    return false;
-                }
-                
-            }
+            get{ return isPlaying; }
         }
         public bool IsLoaded
         {
@@ -275,7 +291,6 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             if (Player != null)
             {
-                Console.WriteLine("Player not null");
                 Player.Play();
                 OnPlaying();
             }
@@ -308,6 +323,7 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             if (Player != null)
             {
+                isPlaying = false;
                 Player.Dispose();
             }
         }
@@ -387,17 +403,16 @@ namespace TuneMusix.Helpers.MediaPlayer
         /// </summary>
         public void ShuffleChanged()
         {
-            Console.WriteLine("-------------Shuffle-------------");
-            Console.WriteLine("");
-
             Track oldTrack = null;
             TimeSpan oldPosition = new TimeSpan();
-
+            bool playing = IsPlaying;
+            
             //If a track is currently playing backup the track and position
             bool hasCurrentTrack = false;
             if (dataModel.CurrentTrack != null)
                 hasCurrentTrack = true;
 
+            //Backup old track data
             if(hasCurrentTrack)
             {
                 oldTrack = dataModel.CurrentTrack;
@@ -405,22 +420,22 @@ namespace TuneMusix.Helpers.MediaPlayer
             }
 
             if (!options.Shuffle)
-            {
+            {             
                 //Shuffle the list
                 dataModel.ShuffleTrackQueue();
 
-                //Change state
+                //Change state after shuffling to avoid shuffle loop in setter of TrackQueue
                 options.Shuffle = true;
                 dataModel.SaveOptions();
             }
             else
             {
-                //Unshuffle the list
-                dataModel.UnShuffleTrackQueue();
-
-                //Change state
+                //Change state before unshuffling to avoid shuffling in setter of TrackQueue.
                 options.Shuffle = false;
                 dataModel.SaveOptions();
+
+                //Unshuffle the list
+                dataModel.UnShuffleTrackQueue();            
             }
 
             //Restore backup of track and position
@@ -428,10 +443,15 @@ namespace TuneMusix.Helpers.MediaPlayer
             {
                 dataModel.CurrentTrack = oldTrack;
                 CurrentPosition = oldPosition;
-            }
-            foreach (Track track in dataModel.TrackQueue)
-            {
-                Console.WriteLine(track.Title + "     ---   " + track.Index);
+                dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(dataModel.CurrentTrack);
+                if (playing)
+                {
+                    Play();
+                }
+                else
+                {
+                    Pause();
+                }
             }
         }
 
