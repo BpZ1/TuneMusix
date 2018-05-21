@@ -93,6 +93,16 @@
             </Menu>
             
             <Frame DockPanel.Dock="Top" Source="MusicPlayerPage.xaml"/>
+            
+            <Expander ExpandDirection="Right" DockPanel.Dock="Right">
+                <Expander.Header>
+                    <materialDesign:PackIcon Kind="PlaylistPlay" />
+                </Expander.Header>
+                <DockPanel TextBlock.Foreground="{DynamicResource MaterialDesignBody}" Margin="8,24,16,24" LastChildFill="True">
+                    <Frame  Source="TrackQueuePage.xaml" DockPanel.Dock="Top" />                   
+                </DockPanel>
+            </Expander>
+
             <dragablz:TabablzControl DockPanel.Dock="Top" SelectionChanged="TabablzControl_SelectionChanged">
                 <TabItem Header="Playlists" >
                     <Grid>
