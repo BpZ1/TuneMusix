@@ -20,11 +20,12 @@ namespace TuneMusix.Data.DataModelOb
         public Folder SelectedFolder { get; set; }
         private Playlist currentPlaylist;
         private Track currentTrack;
+        private bool trackQueueIsShuffled;
         private ObservableCollection<Playlist> playlists = new ObservableCollection<Playlist>();
         private ObservableCollection<Track> tracklist = new ObservableCollection<Track>();
         private ObservableCollection<Track> selectedTracks = new ObservableCollection<Track>();
         private ObservableCollection<Folder> rootFolders = new ObservableCollection<Folder>();
-        private List<Track> trackQueue = new List<Track>();
+        private ObservableCollection<Track> trackQueue = new ObservableCollection<Track>();
         private ObservableCollection<BaseEffect> effectQueue = new ObservableCollection<BaseEffect>();
 
         #region constructor and instance accessor
@@ -89,12 +90,7 @@ namespace TuneMusix.Data.DataModelOb
         protected virtual void OnDataModelChanged()
         {
             if (DataModelChanged != null)
-            {
-                DataModelChanged(this,TrackList);
-                RaisePropertyChanged("Playlists");
-                RaisePropertyChanged("RootFolders");
-                RaisePropertyChanged("TrackList");
-            }
+                DataModelChanged(this,TrackList);        
         }
         protected virtual void OnTrackQueueChanged()
         {

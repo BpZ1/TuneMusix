@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
@@ -55,10 +56,15 @@ namespace TuneMusix.Data.DataModelOb
                 this.currentPlaylist = value;
                 if(value != null)
                 {
-                    TrackQueue = value.Tracklist.ToList<Track>();
+                    TrackQueue = value.Tracklist;
                 }            
                 OnCurrentPlaylistChanged();
             }
+        }
+        //Returns true if the current trackqueue is shuffled
+        public bool TrackQueueIsShuffled
+        {
+            get { return trackQueueIsShuffled; }
         }
         //list of all root folders
         public ObservableCollection<Folder> RootFolders
@@ -66,27 +72,37 @@ namespace TuneMusix.Data.DataModelOb
             get { return this.rootFolders; }
         }
         //list of the tracks that are in the playing queue
-        public List<Track> TrackQueue
+        public ObservableCollection<Track> TrackQueue
         {
             get { return this.trackQueue; }
             set
             {
+                if(value != null)
+                {
+                    if(trackQueue != null)
+                    {
+                        if (!ListUtil.UnorderedEqual<Track>(value, trackQueue))
+                            trackQueueIsShuffled = false;
+                    }
+                       
+                    //Shuffle track queue if shuffle is activated
+                    if (Options.Instance.Shuffle && !trackQueueIsShuffled)
+                        ShuffleTrackQueue();
+
+                    if (value.Count > 0)
+                    {
+                        CurrentTrack = value.First();
+                    }
+                    else
+                    {
+                        CurrentTrack = null;
+                    }
+                }
+                 
                 this.trackQueue = value;
                 this.QueueIndex = 0;
-
-                if (Options.Instance.Shuffle)
-                {
-                    ShuffleTrackQueue();
-                }
-
-                if (value.Count > 0)
-                {
-                    CurrentTrack = value.First();
-                }
-                else
-                {
-                    CurrentTrack = null;
-                }
+               
+               
                 OnTrackQueueChanged();
             }
         }

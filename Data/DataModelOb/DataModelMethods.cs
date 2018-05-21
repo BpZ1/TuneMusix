@@ -10,6 +10,8 @@ using System.Windows.Threading;
 using System.Windows;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers.MediaPlayer;
+using System.Diagnostics;
+using System.Collections.ObjectModel;
 
 namespace TuneMusix.Data.DataModelOb
 {
@@ -27,12 +29,23 @@ namespace TuneMusix.Data.DataModelOb
             AudioControls.Instance.LoadEffects();
         }
 
+        public void RemoveTrackFromQueue(Track track)
+        {
+            //If the track is currently playing
+            if(CurrentTrack == track)
+                AudioControls.Instance.PlayNext();
+
+            TrackQueue.Remove(track);
+        }
+
         /// <summary>
         /// Deletes a track from the folder, tracklist and database.
         /// </summary>
         /// <param name="track"></param>
         public void Delete(List<Track> tracks)
         {
+            bool queueChanged = false;
+
             foreach (Track track in tracks)
             {
                 if (TrackQueue != null)
@@ -44,6 +57,7 @@ namespace TuneMusix.Data.DataModelOb
                         {
                             CurrentTrack = null;
                         }
+                        queueChanged = true;
                     }
                 }
                 TrackList.Remove(track);
@@ -55,6 +69,10 @@ namespace TuneMusix.Data.DataModelOb
                 track.Dispose();
                 OnDataModelChanged();
             }
+            //Notify that queue has changed
+            if (queueChanged)
+                OnTrackQueueChanged();
+
             database.Delete(tracks);
         }
 
@@ -99,17 +117,27 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="folder"></param>
         private void DeleteFolderTracks(Folder folder)
         {
+            bool queueChanged = false;
+
             foreach (Track track in folder.Tracklist)
             {
                 TrackList.Remove(track);
-                if (TrackQueue.Remove(track))
+                if(TrackQueue != null)
                 {
-                    if (CurrentTrack == track)
+                    //check if the track is in the current queue
+                    if (TrackQueue.Remove(track))
                     {
-                        CurrentTrack = null;
+                        if (CurrentTrack == track)
+                        {
+                            CurrentTrack = null;
+                        }
+                        queueChanged = true;
                     }
-                }
+                }             
             }
+            if (queueChanged)
+                OnTrackQueueChanged();
+
             foreach (Folder f in folder.Folderlist)
             {
                 DeleteFolderTracks(f);
@@ -516,10 +544,12 @@ namespace TuneMusix.Data.DataModelOb
         
 
         /// <summary>
-        /// Shuffles the current trackqueue without notify. 
+        /// Shuffles the current trackqueue. 
         /// </summary>
         public void ShuffleTrackQueue()
         {
+            Debug.WriteLine("Shuffling");
+            trackQueueIsShuffled = true; //has to be set before setting the queue to avoid loop.
             //Set the index of the tracks, to remember the original position             
             if (trackQueue == null) return;
             int index = 0;
@@ -530,14 +560,17 @@ namespace TuneMusix.Data.DataModelOb
             }
 
             //Shuffle the queue
-            ListUtil.Shuffle<Track>(trackQueue);
-
-            RaisePropertyChanged("TrackQueue");
-            OnTrackQueueChanged();
+            List<Track> shuffledQueue = TrackQueue.ToList<Track>();
+            ListUtil.Shuffle<Track>(shuffledQueue);
+            TrackQueue = new ObservableCollection<Track>(shuffledQueue);    
         }
-
+        /// <summary>
+        /// Unshuffles the tracks by returning them to their original order.
+        /// </summary>
         public void UnShuffleTrackQueue()
         {
+            Debug.WriteLine("Unshuffling");
+            trackQueueIsShuffled = false;//has to be set before setting the queue to avoid loop.
             //Get the current queue
             List<Track> tempList = TrackQueue.ToList<Track>();
             //sort the queue after index
@@ -546,40 +579,8 @@ namespace TuneMusix.Data.DataModelOb
                 orderby track.Index
                 select track;
             //Set queue to the sorted list
-            TrackQueue = sortedList.ToList<Track>();
-
-            RaisePropertyChanged("TrackQueue");
-            OnTrackQueueChanged();
+            TrackQueue = new ObservableCollection<Track>(sortedList);     
         }
 
-        #region propertychanged
-        internal void RaisePropertyChanged(string prop)
-        {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        bool? _CloseWindowFlag;
-        public bool? CloseWindowFlag
-        {
-            get { return _CloseWindowFlag; }
-            set
-            {
-                _CloseWindowFlag = value;
-                RaisePropertyChanged("CloseWindowFlag");
-            }
-        }
-
-        public virtual void CloseWindow(bool? result = true)
-        {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
-            {
-                CloseWindowFlag = CloseWindowFlag == null
-                    ? true
-                    : !CloseWindowFlag;
-            }));
-        }
-        #endregion
     }
 }
