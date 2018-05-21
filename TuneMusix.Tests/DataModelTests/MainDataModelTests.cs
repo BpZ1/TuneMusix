@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using TuneMusix.Data;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Model;
@@ -58,6 +59,36 @@ namespace TuneMusix.Tests.DataModelTests
             dataModel.CurrentTrack = track1;
             Assert.IsNotNull(dataModel.CurrentTrack);
             Assert.AreEqual(dataModel.CurrentTrack, track1);
+        }
+
+        [TestMethod]
+        public void ShuffleTest()
+        {
+            dataModel.TrackQueue = new ObservableCollection<Track>() { track1, track2, track3, track4, track5 };
+
+            dataModel.ShuffleTrackQueue();
+
+            bool orderChanged = false;
+
+            if(!(dataModel.TrackQueue.IndexOf(track1) == 0)||
+                !(dataModel.TrackQueue.IndexOf(track2) == 1)||
+                !(dataModel.TrackQueue.IndexOf(track3) == 2) ||
+                !(dataModel.TrackQueue.IndexOf(track4) == 3) ||
+                !(dataModel.TrackQueue.IndexOf(track5) == 4))
+            {
+                orderChanged = true;
+            }
+
+            Assert.IsTrue(orderChanged);
+
+            dataModel.UnShuffleTrackQueue();
+
+            Assert.IsTrue(dataModel.TrackQueue.IndexOf(track1)==0);
+            Assert.IsTrue(dataModel.TrackQueue.IndexOf(track2) == 1);
+            Assert.IsTrue(dataModel.TrackQueue.IndexOf(track3) == 2);
+            Assert.IsTrue(dataModel.TrackQueue.IndexOf(track4) == 3);
+            Assert.IsTrue(dataModel.TrackQueue.IndexOf(track5) == 4);
+
         }
     }
 }
