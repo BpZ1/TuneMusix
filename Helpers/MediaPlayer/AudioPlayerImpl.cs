@@ -14,7 +14,7 @@ namespace TuneMusix.Helpers
     /// Every instance of this class represents a loaded track and has to be disposed
     /// when a new track is loaded.
     /// </summary>
-    public class AudioPlayerImpl : AudioPlayer,IDisposable
+    public class AudioPlayerImpl : AudioPlayer, IDisposable
     {
       
         public bool Repeat { get; set; }
@@ -24,15 +24,14 @@ namespace TuneMusix.Helpers
         private bool isInitialized;
 
 
-        public AudioPlayerImpl(string url,float volume, int balance,bool isStereo,EffectQueue effects,bool effectsActive)
+        public AudioPlayerImpl(string url, float volume, int balance, bool isStereo, EffectQueue effects, bool effectsActive)
         {
-            soundOut = GetSoundOut();
-            soundSource = GetSoundSource(url);
+            soundOut = getSoundOut();
+            soundSource = getSoundSource(url);
 
+            //Apply effects if they are activated
             if (effectsActive)
-            {
                soundSource = effects.Apply(soundSource);
-            }
          
             if(soundSource != null)
             {
@@ -41,16 +40,15 @@ namespace TuneMusix.Helpers
                 isInitialized = true;
                 soundOut.Stopped += PlaybackStopped;
                 if (!isStereo)
-                {
                     soundSource.ToMono();
-                }
+                
             }              
         }
         /// <summary>
         /// Checks if Wasapi is supported and then uses that or directsound as ISoundOut.
         /// </summary>
         /// <returns></returns>
-        private ISoundOut GetSoundOut()
+        private ISoundOut getSoundOut()
         {           
             if (WasapiOut.IsSupportedOnCurrentPlatform)
             {
@@ -64,7 +62,7 @@ namespace TuneMusix.Helpers
             }
         }
 
-        private IWaveSource GetSoundSource(string URL)
+        private IWaveSource getSoundSource(string URL)
         {
             IWaveSource waveSource;
             try
@@ -118,6 +116,9 @@ namespace TuneMusix.Helpers
                                    
             }          
         }
+        /// <summary>
+        /// Pauses the playback of the current track.
+        /// </summary>
         public void Pause()
         {
             if (isInitialized)
@@ -125,6 +126,9 @@ namespace TuneMusix.Helpers
                 soundOut.Pause();
             }
         }
+        /// <summary>
+        /// Resumes the playback of the current track.
+        /// </summary>
         public void Resume()
         {
             if (isInitialized)
@@ -132,6 +136,9 @@ namespace TuneMusix.Helpers
                 soundOut.Resume();
             }
         }
+        /// <summary>
+        /// Starts the playback if the player is initialized with a track.
+        /// </summary>
         public void Play()
         {
             if (isInitialized)
@@ -139,6 +146,9 @@ namespace TuneMusix.Helpers
                 soundOut.Play();             
             }
         }
+        /// <summary>
+        /// Stops the current playback.
+        /// </summary>
         public void Stop()
         {
             if (isInitialized)
@@ -146,16 +156,21 @@ namespace TuneMusix.Helpers
                 soundOut.Stop();
             }
         }
+        /// <summary>
+        /// Volume of the current playback
+        /// </summary>
         public float Volume
         {
             set
             {
                 if (isInitialized)
-                {
                     soundOut.Volume = value;
-                }
             }
         }
+        /// <summary>
+        /// Returns true if the player is currently playing a track.
+        /// </summary>
+        /// <returns></returns>
         public bool IsPlaying()
         {
             if(soundOut.PlaybackState.Equals(PlaybackState.Playing))
@@ -167,6 +182,10 @@ namespace TuneMusix.Helpers
                 return false;
             }
         }  
+        /// <summary>
+        /// The current point in time for the playback of the current track.
+        /// </summary>
+        /// <returns></returns>
         public TimeSpan CurrentPosition()
         {
             if (isInitialized)
@@ -175,6 +194,10 @@ namespace TuneMusix.Helpers
             }
             else return new TimeSpan();
         }
+        /// <summary>
+        /// Sets the current position in time for the playback of the current track.
+        /// </summary>
+        /// <param name="pos"></param>
         public void SetCurrentPosition(TimeSpan pos)
         {
             if (isInitialized)
@@ -182,12 +205,20 @@ namespace TuneMusix.Helpers
                 soundSource.SetPosition(pos);
             }
         }
+        /// <summary>
+        /// NOT IMPLEMENTED
+        /// </summary>
+        /// <param name="balance"></param>
         public void SetBalance(int balance)
         {
             if (isInitialized)
             {
             }
         }
+        /// <summary>
+        /// The total length of the currently playing track.
+        /// </summary>
+        /// <returns></returns>
         public TimeSpan Length()
         {
             if (isInitialized)
@@ -196,6 +227,9 @@ namespace TuneMusix.Helpers
             }
             else return new TimeSpan();
         }
+        /// <summary>
+        /// Disposes the current audio playback.
+        /// </summary>
         public void Dispose()
         {
             if (isInitialized)
