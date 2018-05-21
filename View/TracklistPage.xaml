@@ -47,7 +47,7 @@
                 </Button>
             </StackPanel>
         </materialDesign:ColorZone>
-        <ListView Name="AllTrackList" ItemsSource="{Binding FilteredTracks}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+        <ListView Name="AllTrackList" ItemsSource="{Binding FilteredTracks, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
               Margin="10" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" DockPanel.Dock="Top">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
@@ -74,9 +74,9 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Title}"  Header="Title" Width="300"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Title}"  Header="Title" Width="300"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="auto"/>
-                    <GridViewColumn DisplayMemberBinding= "{Binding Path=Album}" Header="Album" Width="Auto"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Album}" Header="Album" Width="Auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="Auto"/>
                     <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="Auto"/>
                     <GridViewColumn Header="Rating" Width="150">
