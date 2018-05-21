@@ -18,8 +18,6 @@ namespace TuneMusix.ViewModel
     /// </summary>
     class CurrentPlaylistViewModel : ViewModelBase, IDropTarget
     {
-
-        DataModel dataModel = DataModel.Instance;
       
         public RelayCommand SelectionChanged { get; set; }
         public RelayCommand SetPlaylistIndex { get; set; }

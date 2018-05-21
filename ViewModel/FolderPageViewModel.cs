@@ -10,8 +10,6 @@ namespace TuneMusix.ViewModel
     class FolderPageViewModel : ViewModelBase
     {
 
-        DataModel dataModel;
-
         public RelayCommand DeleteSelected { get; set; }
         public RelayCommand PlayTrack { get; set; }
         public RelayCommand SelectedItemChanged { get; set; }
@@ -22,8 +20,6 @@ namespace TuneMusix.ViewModel
         //constructor
         public FolderPageViewModel()
         {
-            dataModel = DataModel.Instance;
-
             DeleteSelected = new RelayCommand(_deleteSelected);
             PlayTrack = new RelayCommand(_playTrack);
             SelectedItemChanged = new RelayCommand(_selectedItemChanged);

@@ -13,8 +13,6 @@ namespace TuneMusix.ViewModel
     class TracklistViewModel : ViewModelBase
     {
 
-        DataModel dataModel = DataModel.Instance;
-
         public ObservableCollection<Track> SelectedTracks { get; set; }
         private string searchText;
 

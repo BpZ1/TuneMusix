@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using TuneMusix.Data.DataModelOb;
@@ -12,15 +13,14 @@ namespace TuneMusix.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
 
-        DataModel dataModel = DataModel.Instance;
+        protected DataModel dataModel = DataModel.Instance;
 
-        //Getter
         public ObservableCollection<Track> TrackList
         {
             get { return dataModel.TrackList; }
         }
 
-        //Getter and setter
+
         public Track CurrentTrack
         {
             get { return dataModel.CurrentTrack; }
@@ -30,7 +30,7 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("CurrentTrack");
             }
         }
-        //Getter and setter
+
         public ObservableCollection<Playlist> Playlists
         {
             get { return dataModel.Playlists; }
@@ -40,7 +40,7 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("Playlists");
             }
         }
-        //Getter and setter
+
         public Playlist CurrentPlaylist
         {
             get { return dataModel.CurrentPlaylist; }
@@ -51,15 +51,14 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        //getter
         public ObservableCollection<Folder> RootFolders
         {
             get { return dataModel.RootFolders; }
         }
         public List<Track> TrackQueue
         {
-            get { return dataModel.TrackQueue; }
-            set { dataModel.TrackQueue = value; }
+            get { return dataModel.TrackQueue.ToList<Track>(); }
+            set { dataModel.TrackQueue = new ObservableCollection<Track>(value); }
         }
         public int TrackQueueIndex
         {

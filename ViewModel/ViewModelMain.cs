@@ -19,7 +19,6 @@ namespace TuneMusix.ViewModel
         public RelayCommand OpenOptionsWindow { get; set; }
         public RelayCommand SaveData { get; set; }
 
-        private DataModel dataModel = DataModel.Instance;
         private AudioControls audioControls = AudioControls.Instance;
         private Options options = Options.Instance;
 

@@ -13,7 +13,6 @@ namespace TuneMusix.ViewModel
     partial class MusicPlayerViewModel : ViewModelBase
     {
         //------------Objects----------------------------------
-        private DataModel dataModel = DataModel.Instance;
         private Options options = Options.Instance;
         private AudioControls audioControls = AudioControls.Instance;
 

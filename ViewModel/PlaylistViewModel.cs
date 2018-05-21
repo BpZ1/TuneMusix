@@ -18,8 +18,6 @@ namespace TuneMusix.ViewModel
     class PlaylistViewModel : ViewModelBase, IDragSource,IDropTarget
     {
 
-        private DataModel dataModel = DataModel.Instance;
-
         public RelayCommand OpenDialog { get; set; }
         public RelayCommand SelectionChanged { get; set; }
         public RelayCommand SelectPlaylist { get; set; }
