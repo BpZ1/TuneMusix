@@ -178,6 +178,7 @@
     <Compile Include="ViewModel\OptionsViewModel\OptionsOverviewViewModel.cs" />
     <Compile Include="ViewModel\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\TracklistViewModel.cs" />
+    <Compile Include="ViewModel\TrackQueueViewModel.cs" />
     <Compile Include="ViewModel\ViewModelMainEvents.cs" />
     <Compile Include="ViewModel\ViewModelMainMenuMethods.cs" />
     <Compile Include="View\Controls\YesNoDialogControl.xaml.cs">
@@ -248,6 +249,9 @@
     </Compile>
     <Compile Include="View\TracklistPage.xaml.cs">
       <DependentUpon>TracklistPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TrackQueuePage.xaml.cs">
+      <DependentUpon>TrackQueuePage.xaml</DependentUpon>
     </Compile>
     <Page Include="View\Controls\YesNoDialogControl.xaml">
       <SubType>Designer</SubType>
@@ -360,6 +364,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\TracklistPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TrackQueuePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
