@@ -39,7 +39,9 @@ namespace TuneMusix.Model
             }
         }
 
-        private Options() { }
+        private Options()
+        {
+        }
 
         private bool modified = false;
         public bool Modified
@@ -48,9 +50,9 @@ namespace TuneMusix.Model
             set { modified = value; }
         }
 
-        private bool _effectsActive;
+        private bool effectsActive;
         //Normal logging is only active when set to true.
-        private bool _LoggerActive;
+        private bool loggerActive;
         //volume of the audioplayer
         private int volume;
         //tracks in queue will shuffle randomly when set to true.
@@ -116,7 +118,7 @@ namespace TuneMusix.Model
         {
             if (EffectsActiveChanged != null)
             {
-                EffectsActiveChanged(_effectsActive);
+                EffectsActiveChanged(effectsActive);
             }
         }
         protected virtual void OnIsStereoChanged()
@@ -141,12 +143,8 @@ namespace TuneMusix.Model
         }
         public bool EffectsActive
         {
-            get { return _effectsActive; }
-            set
-            {
-                _effectsActive = value;
-                OnEffectsActiveChanged();
-            }
+            get { return effectsActive; }
+            set { this.effectsActive = value; }
         }
         public int Volume
         {
@@ -172,13 +170,18 @@ namespace TuneMusix.Model
             set
             {
                 this.balance = value;
+                DataModel.Instance.SaveOptions();
                 OnBalanceChanged();
             }
         }
         public bool LoggerActive
         {
-            get { return this._LoggerActive; }
-            set { this._LoggerActive = value; }
+            get { return this.loggerActive; }
+            set
+            {
+                this.loggerActive = value;
+                DataModel.Instance.SaveOptions();
+            }
         }
         /// <summary>
         /// 0 = No repeat
@@ -232,13 +235,6 @@ namespace TuneMusix.Model
                     effect.IsModified = false;
                 }
             }
-        }
-        /// <summary>
-        /// Saves the volume value to the database
-        /// </summary>
-        public void SaveVolume()
-        {
-
         }
 
     }
