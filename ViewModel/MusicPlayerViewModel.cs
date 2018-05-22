@@ -17,13 +17,14 @@ namespace TuneMusix.ViewModel
         private AudioControls audioControls = AudioControls.Instance;
 
         //-------------RelayCommands----------------------------------------
-        public RelayCommand LeftMouseDown_Slider { get; set; }
-        public RelayCommand LeftMouseUp_Slider { get; set; }
+        public RelayCommand PositionSlider_MouseDown { get; set; }
+        public RelayCommand PositionSlider_MouseUp { get; set; }
         public RelayCommand PlayButton { get; set; }
         public RelayCommand NextTrack { get; set; }
         public RelayCommand PreviousTrack { get; set; }
         public RelayCommand RepeatButton { get; set; }
         public RelayCommand VolumeButton { get; set; }
+        public RelayCommand VolumeButtonReleased { get; set; }
         public RelayCommand ShuffleButton { get; set; }
 
        //---------------Constants----------------------------------
@@ -51,13 +52,14 @@ namespace TuneMusix.ViewModel
             timer = new Timer(100);
 
             //RelayCommands
-            LeftMouseDown_Slider = new RelayCommand(leftMouseDown_Slider);
-            LeftMouseUp_Slider = new RelayCommand(leftMouseUp_Slider);
+            PositionSlider_MouseDown = new RelayCommand(leftMouseDown_Slider);
+            PositionSlider_MouseUp = new RelayCommand(leftMouseUp_Slider);
             PlayButton = new RelayCommand(playButton);
             NextTrack = new RelayCommand(nextTrack);
             PreviousTrack = new RelayCommand(previousTrack);
             RepeatButton = new RelayCommand(onRepeatButtonClicked);
             VolumeButton = new RelayCommand(onVolumeButtonClicked);
+            VolumeButtonReleased = new RelayCommand(onVolumeButtonReleased);
             ShuffleButton = new RelayCommand(shuffleButton);
 
             //Events
