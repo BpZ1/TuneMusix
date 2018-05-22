@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
@@ -10,9 +11,18 @@ namespace TuneMusix.ViewModel.Dialog
     /// </summary>
     class ConfirmationDialogViewModel : DialogViewModelBase
     {
+        private string messageBox = "";
 
         public ConfirmationDialogViewModel()
         {
+            yesCommand = new RelayCommand(onYesClick);
+            noCommand = new RelayCommand(onNoClick);
+            cancelCommand = new RelayCommand(onCancelClick);
+        }
+
+        public ConfirmationDialogViewModel(string message)
+        {
+            messageBox = message;
             yesCommand = new RelayCommand(onYesClick);
             noCommand = new RelayCommand(onNoClick);
             cancelCommand = new RelayCommand(onCancelClick);
@@ -37,6 +47,12 @@ namespace TuneMusix.ViewModel.Dialog
         {
             get { return cancelCommand; }
             set { cancelCommand = value; }
+        }
+
+        public string MessageBox
+        {
+            get { return messageBox; }
+            set { messageBox = value; }
         }
 
         private void onYesClick(object parameter)

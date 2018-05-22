@@ -7,6 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="300">
     <Grid>
+        <TextBlock Text="{Binding MessageBox}" HorizontalAlignment="Center" VerticalAlignment="Top">
+            
+        </TextBlock>
         <Button x:Name="YesButton" Content="Yes" 
                 Command="{Binding YesCommand}"   
                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
