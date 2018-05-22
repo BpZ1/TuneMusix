@@ -7,11 +7,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 { 
     public class EffectQueue
     {
-        private bool _modified;
-        public EqualizerEffect EqualizerEff { get; set; }
-        public CompressorEffect Compressor { get; set; }
-        public FlangerEffect Flanger { get; set; }
-
+        private bool modified;
         private LinkedList<Func<IWaveSource,IWaveSource>> Queue;
 
         public EffectQueue()
@@ -23,7 +19,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         {
             Func<IWaveSource, IWaveSource> func = effect.Apply;
             Queue.AddLast(func);
-            _modified = true;
+            modified = true;
             effect.EffectActivated += OnQueueChanged;
             OnQueueChanged();
         }
@@ -33,13 +29,13 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         /// </summary>
         public void Add10BandEqualizer()
         {
-            Func<IWaveSource, IWaveSource> func = _create10BandEqualizer;
+            Func<IWaveSource, IWaveSource> func = create10BandEqualizer;
             Queue.AddLast(func);
-            _modified = true;
+            modified = true;
             OnQueueChanged();
         }
 
-        private IWaveSource _create10BandEqualizer(IWaveSource waveSource)
+        private IWaveSource create10BandEqualizer(IWaveSource waveSource)
         {
             return waveSource
                 .ToSampleSource()
@@ -55,7 +51,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             if(Queue.Count > 0)
             {
                 Queue.RemoveLast();
-                _modified = true;
+                modified = true;
                 OnQueueChanged();
             }           
         }
@@ -93,10 +89,10 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public bool IsModified
         {
-            get { return _modified; }
+            get { return modified; }
             set
             {
-                _modified = value;
+                modified = value;
             }
         }
 

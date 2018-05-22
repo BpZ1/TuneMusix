@@ -6,17 +6,17 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
     public class ReverbEffect : BaseEffect
     {
         private DmoWavesReverbEffect _reverb;
-        private bool _isInitialized;
-        private float _highFrequencyRTRatio = 0.001f;
-        private float _inGain = 0;
-        private float _reverbMix = 0;
-        private float _reverbTime = 1000;
+        private bool isInitialized;
+        private float highFrequencyRTRatio = 0.001f;
+        private float inGain = 0;
+        private float reverbMix = 0;
+        private float reverbTime = 1000;
 
 
         public ReverbEffect()
         {
             IsActive = true;
-            _isInitialized = false;
+            isInitialized = false;
         }
         public ReverbEffect(
             float highFrequencyRTRatio,
@@ -25,18 +25,18 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             float reverbTime)
         {
             IsActive = true;
-            _highFrequencyRTRatio = highFrequencyRTRatio;
-            _inGain = inGain;
-            _reverbMix = reverbMix;
-            _reverbTime = reverbTime;
-            _isInitialized = false;
+            this.highFrequencyRTRatio = highFrequencyRTRatio;
+            this.inGain = inGain;
+            this.reverbMix = reverbMix;
+            this.reverbTime = reverbTime;
+            isInitialized = false;
         }
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
             if (IsActive)
             {
-                return waveSource.AppendSource(_createFlanger);
+                return waveSource.AppendSource(createFlanger);
             }
             else
             {
@@ -45,66 +45,66 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
           
         }
 
-        private DmoWavesReverbEffect _createFlanger(IWaveSource waveSource)
+        private DmoWavesReverbEffect createFlanger(IWaveSource waveSource)
         {
             _reverb = new DmoWavesReverbEffect(waveSource);
-            _isInitialized = true;
-            _reverb.HighFrequencyRTRatio = _highFrequencyRTRatio;
-            _reverb.InGain = _inGain;
-            _reverb.ReverbMix = _reverbMix;
-            _reverb.ReverbTime = _reverbTime;
+            isInitialized = true;
+            _reverb.HighFrequencyRTRatio = highFrequencyRTRatio;
+            _reverb.InGain = inGain;
+            _reverb.ReverbMix = reverbMix;
+            _reverb.ReverbTime = reverbTime;
             return _reverb;
         }
 
         public float HighFrequencyRTRatio
         {
-            get { return _highFrequencyRTRatio; }
+            get { return highFrequencyRTRatio; }
             set
             {
-                _highFrequencyRTRatio = value;
+                highFrequencyRTRatio = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _reverb.HighFrequencyRTRatio = _highFrequencyRTRatio;
+                    _reverb.HighFrequencyRTRatio = highFrequencyRTRatio;
                 }
             }
         }
         public float InGain
         {
-            get { return _inGain; }
+            get { return inGain; }
             set
             {
-                _inGain = value;
+                inGain = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _reverb.InGain = _inGain;
+                    _reverb.InGain = inGain;
                 }
             }
         }
         public float ReverbMix
         {
-            get { return _reverbMix; }
+            get { return reverbMix; }
             set
             {
-                _reverbMix = value;
+                reverbMix = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _reverb.ReverbMix = _reverbMix;
+                    _reverb.ReverbMix = reverbMix;
                 }
             }
         }
         public float ReverbTime
         {
-            get { return _reverbTime; }
+            get { return reverbTime; }
             set
             {
-                _reverbTime = value;
+                reverbTime = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _reverb.ReverbTime = _reverbTime;
+                    _reverb.ReverbTime = reverbTime;
                 }
             }
         }

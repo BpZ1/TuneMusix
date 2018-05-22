@@ -8,38 +8,38 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
     public class ChorusEffect : BaseEffect
     {
-        private DmoChorusEffect _chorus;
-        private bool _isInitialized;
-        private float _delay = 16;
-        private float _depth = 10;
-        private float _feedback = 25;
-        private float _frequency = 1.1f;
-        private int _waveForm = 0;
-        private int _phase = 3;
-        private float _wet_DryMix = 50;
+        private DmoChorusEffect chorus;
+        private bool isInitialized;
+        private float delay = 16;
+        private float depth = 10;
+        private float feedback = 25;
+        private float frequency = 1.1f;
+        private int waveForm = 0;
+        private int phase = 3;
+        private float wet_DryMix = 50;
 
         public ChorusEffect()
         {
             IsActive = true;
-            _isInitialized = false;
+            isInitialized = false;
         }
         public ChorusEffect(float delay,float depth,float feedback,float frequency,int phase,float wet_DryMix)
         {
             IsActive = true;
-            _delay = delay;
-            _depth = depth;
-            _feedback = feedback;
-            _frequency = frequency;
-            _phase = phase;
-            _wet_DryMix = wet_DryMix;
-            _isInitialized = false;
+            this.delay = delay;
+            this.depth = depth;
+            this.feedback = feedback;
+            this.frequency = frequency;
+            this.phase = phase;
+            this.wet_DryMix = wet_DryMix;
+            isInitialized = false;
         }
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
             if (IsActive)
             {
-                return waveSource.AppendSource(_createChorus);
+                return waveSource.AppendSource(createChorus);
             }
             else
             {
@@ -48,116 +48,116 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
          
         }
 
-        private DmoChorusEffect _createChorus(IWaveSource waveSource)
+        private DmoChorusEffect createChorus(IWaveSource waveSource)
         {
-            _chorus = new DmoChorusEffect(waveSource);
-            _isInitialized = true;
-            _chorus.Delay = _delay;
-            _chorus.Depth = _depth;
-            _chorus.Feedback = _feedback;
-            _chorus.Frequency = _frequency;
-            _chorus.Phase = (ChorusPhase)_phase;
-            _chorus.WetDryMix = _wet_DryMix;
-            return _chorus;
+            chorus = new DmoChorusEffect(waveSource);
+            isInitialized = true;
+            chorus.Delay = delay;
+            chorus.Depth = depth;
+            chorus.Feedback = feedback;
+            chorus.Frequency = frequency;
+            chorus.Phase = (ChorusPhase)phase;
+            chorus.WetDryMix = wet_DryMix;
+            return chorus;
         }
 
         //getter and setter
 
         public float Delay
         {
-            get { return _delay; }
+            get { return delay; }
             set
             {
-                _delay = value;
+                delay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _chorus.Delay = _delay;
+                    chorus.Delay = delay;
                 }
             }
         }
         public float Depth
         {
-            get { return _depth; }
+            get { return depth; }
             set
             {
-                _depth = value;
+                depth = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _chorus.Depth = _depth;
+                    chorus.Depth = depth;
                 }
             }
         }
         public float Feedback
         {
-            get { return _feedback; }
+            get { return feedback; }
             set
             {
-                _feedback = value;
+                feedback = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _chorus.Feedback = _feedback;
+                    chorus.Feedback = feedback;
                 }
             }
         }
         public float Frequency
         {
-            get { return _frequency; }
+            get { return frequency; }
             set
             {
-                _frequency = value;
+                frequency = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _chorus.Frequency = _frequency;
+                    chorus.Frequency = frequency;
                 }
             }
         }
         public int WaveForm
         {
-            get { return _waveForm; }
+            get { return waveForm; }
             set
             {
-                _waveForm = value;
+                waveForm = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
                     if(value == 1)
                     {                 
-                        _chorus.Waveform = ChorusWaveform.WaveformSin;
+                        chorus.Waveform = ChorusWaveform.WaveformSin;
                     }
                     else
                     {
-                        _chorus.Waveform = ChorusWaveform.WaveformTriangle;
+                        chorus.Waveform = ChorusWaveform.WaveformTriangle;
                     }                 
                 }
             }
         }
         public int Phase
         {
-            get { return _phase; }
+            get { return phase; }
             set
             {
-                _phase = value;
+                phase = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _chorus.Phase = (ChorusPhase)_phase;
+                    chorus.Phase = (ChorusPhase)phase;
                 }
             }
         }
         public float Wet_DryMix
         {
-            get { return _wet_DryMix; }
+            get { return wet_DryMix; }
             set
             {
-                _wet_DryMix = value;
+                wet_DryMix = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _chorus.WetDryMix = _wet_DryMix;
+                    chorus.WetDryMix = wet_DryMix;
                 }
             }
         }

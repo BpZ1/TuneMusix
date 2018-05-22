@@ -5,29 +5,29 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
     public class GargleEffect : BaseEffect
     {
-        private DmoGargleEffect _gargle;
-        private bool _isInitialized;
-        private int _rate = 20;
-        private int _waveShape = 0;
+        private DmoGargleEffect gargle;
+        private bool isInitialized;
+        private int rate = 20;
+        private int waveShape = 0;
 
 
         public GargleEffect()
         {
             IsActive = true;
-            _isInitialized = false;
+            isInitialized = false;
         }
         public GargleEffect(int rate, int waveShape)
         {
             IsActive = true;
-            _rate = rate;
-            _waveShape = waveShape;
+            this.rate = rate;
+            this.waveShape = waveShape;
         }
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
             if (IsActive)
             {
-                return waveSource.AppendSource(_createGargle);
+                return waveSource.AppendSource(createGargle);
             }
             else
             {
@@ -36,38 +36,38 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
            
         }
 
-        private DmoGargleEffect _createGargle(IWaveSource waveSource)
+        private DmoGargleEffect createGargle(IWaveSource waveSource)
         {
-            _gargle = new DmoGargleEffect(waveSource);
-            _isInitialized = true;
-            _gargle.RateHz = _rate;
-            _gargle.WaveShape = (GargleWaveShape)_rate;
-            return _gargle;
+            gargle = new DmoGargleEffect(waveSource);
+            isInitialized = true;
+            gargle.RateHz = rate;
+            gargle.WaveShape = (GargleWaveShape)waveShape;
+            return gargle;
         }
 
         public int Rate
         {
-            get { return _rate; }
+            get { return rate; }
             set
             {
-                _rate = value;
+                rate = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _gargle.RateHz = _rate;
+                    gargle.RateHz = rate;
                 }
             }
         }
         public int WaveShape
         {
-            get { return _waveShape; }
+            get { return waveShape; }
             set
             {
-                _waveShape = value;
+                waveShape = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _gargle.WaveShape = (GargleWaveShape)_waveShape;
+                    gargle.WaveShape = (GargleWaveShape)waveShape;
                 }
             }
         }

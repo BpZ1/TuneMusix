@@ -5,111 +5,111 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
     public class EchoEffect : BaseEffect
     {
-        private DmoEchoEffect _echo;
-        private bool _isInitialized;
-        private float _feedback = 50;
-        private float _leftDelay = 500;
-        private bool _panDelay = false;
-        private float _wet_DryMix = 50;
-        private float _rightDelay = 500;
+        private DmoEchoEffect echo;
+        private bool isInitialized;
+        private float feedback = 50;
+        private float leftDelay = 500;
+        private bool panDelay = false;
+        private float wet_DryMix = 50;
+        private float rightDelay = 500;
        
 
         public EchoEffect()
         {
             IsActive = true;
-            _isInitialized = false;
+            isInitialized = false;
         }
         public EchoEffect(float feedback,float leftDelay,bool panDelay,float wet_DryMix,float rightDelay)
         {
             IsActive = true;
-            _feedback = feedback;
-            _leftDelay = leftDelay;
-            _panDelay = panDelay;
-            _wet_DryMix = wet_DryMix;
-            _rightDelay = rightDelay;
-            _isInitialized = false;
+            this.feedback = feedback;
+            this.leftDelay = leftDelay;
+            this.panDelay = panDelay;
+            this.wet_DryMix = wet_DryMix;
+            this.rightDelay = rightDelay;
+            isInitialized = false;
         }
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
-            return waveSource.AppendSource(_createEcho);
+            return waveSource.AppendSource(createEcho);
         }
 
-        private DmoEchoEffect _createEcho(IWaveSource waveSource)
+        private DmoEchoEffect createEcho(IWaveSource waveSource)
         {
-            _echo = new DmoEchoEffect(waveSource);
-            _isInitialized = true;
-            _echo.Feedback = _feedback;
-            _echo.LeftDelay = _leftDelay;
-            _echo.PanDelay = _panDelay;
-            _echo.WetDryMix = _wet_DryMix;
-            _echo.RightDelay = _rightDelay;
-            return _echo;
+            echo = new DmoEchoEffect(waveSource);
+            isInitialized = true;
+            echo.Feedback = feedback;
+            echo.LeftDelay = leftDelay;
+            echo.PanDelay = panDelay;
+            echo.WetDryMix = wet_DryMix;
+            echo.RightDelay = rightDelay;
+            return echo;
         }
 
         #region properties
         public float Feedback
         {
-            get { return _feedback; }
+            get { return feedback; }
             set
             {
-                _feedback = value;
+                feedback = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _echo.Feedback = _feedback;
+                    echo.Feedback = feedback;
                 }
             }
         }
         public float LeftDelay
         {
-            get { return _leftDelay; }
+            get { return leftDelay; }
             set
             {
-                _leftDelay = value;
+                leftDelay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _echo.LeftDelay = _leftDelay;
+                    echo.LeftDelay = leftDelay;
                 }
             }
         }
         public float RightDelay
         {
-            get { return _rightDelay; }
+            get { return rightDelay; }
             set
             {
-                _rightDelay = value;
+                rightDelay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _echo.RightDelay = _rightDelay;
+                    echo.RightDelay = rightDelay;
                 }
             }
         }
         public bool PanDelay
         {
-            get { return _panDelay; }
+            get { return panDelay; }
             set
             {
-                _panDelay = value;
+                panDelay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _echo.PanDelay = _panDelay;
+                    echo.PanDelay = panDelay;
                 }
             }
         }
         public float WetDryMix
         {
-            get { return _wet_DryMix; }
+            get { return wet_DryMix; }
             set
             {
-                _wet_DryMix = value;
+                wet_DryMix = value;
                 IsModified = true;
-                if (_isInitialized)
+                if (isInitialized)
                 {
-                    _echo.WetDryMix = _wet_DryMix;
+                    echo.WetDryMix = wet_DryMix;
                 }
             }
         }

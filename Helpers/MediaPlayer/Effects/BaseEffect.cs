@@ -9,24 +9,24 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
     public abstract class BaseEffect
     {
-        private bool _isActive = true;
-        private bool _isModified = false;
+        private bool isActive = true;
+        private bool isModified = false;
         public bool IsActive
         {
-            get { return _isActive; }
+            get { return isActive; }
             set
             {
-                _isActive = value;
-                _isModified = true;
+                isActive = value;
+                isModified = true;
                 OnEffectActivated();
             }
         }
         public bool IsModified
         {
-            get { return _isModified; }
+            get { return isModified; }
             set
             {
-                _isModified = value;
+                isModified = value;
             }
         }
 
