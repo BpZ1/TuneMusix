@@ -117,6 +117,11 @@ namespace TuneMusix.ViewModel
             }
         }
 
+        private void onVolumeButtonReleased(object argument)
+        {
+            dataModel.SaveOptions();
+        }
+
         //Changes the state of the repeating functionality
         private void onRepeatButtonClicked(object argument)
         {
