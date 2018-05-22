@@ -26,7 +26,6 @@ namespace TuneMusix.Data.DataModelOb
             loader = new SQLLoader();
             loader.LoadFromDB();
             OnDataModelChanged();
-            AudioControls.Instance.LoadEffects();
         }
 
         public void RemoveTrackFromQueue(Track track)
@@ -244,6 +243,7 @@ namespace TuneMusix.Data.DataModelOb
             {
                 EffectQueue.Add(effect);
             }
+            AudioControls.Instance.LoadEffects();
             OnEffectQueueChanged();
         }
         /// <summary>
