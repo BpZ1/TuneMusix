@@ -89,7 +89,13 @@
                             </materialDesign:PackIcon>
                         </Button>
                         <Slider  x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" Orientation="Vertical" ToolTip="{Binding Volume,UpdateSourceTrigger=PropertyChanged}"
-                                 Maximum="100" IsSelectionRangeEnabled="True" Margin="0,3" HorizontalAlignment="Center"/>
+                                 Maximum="100" IsSelectionRangeEnabled="True" Margin="0,3" HorizontalAlignment="Center">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding VolumeButtonReleased}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Slider>
                         <Button Grid.Column="2" x:Name="RepeatButton" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding RepeatButton}">
                             <materialDesign:PackIcon Kind="{Binding RepeatButtonIcon,UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="0.5,0.5" >
                                 <materialDesign:PackIcon.RenderTransform>
@@ -120,10 +126,10 @@
                         Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TrackLoaded,UpdateSourceTrigger=PropertyChanged}" Margin="20,0,20,8">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseUp_Slider}" CommandParameter="{Binding ElementName=PositionSlider}"/>
+                            <i:InvokeCommandAction Command="{Binding PositionSlider_MouseUp}" CommandParameter="{Binding ElementName=PositionSlider}"/>
                         </i:EventTrigger>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding LeftMouseDown_Slider}"/>
+                            <i:InvokeCommandAction Command="{Binding PositionSlider_MouseDown}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Slider>
