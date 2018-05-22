@@ -10,12 +10,6 @@ namespace TuneMusix.ViewModel
              RaisePropertyChanged("TrackList");
         }
 
-        //Loading of tracks is finished
-        private void onLoadingComplete(object sender, RunWorkerCompletedEventArgs e)
-        {
-            audioControls.LoadEffects();
-        }
-
         private void onProgressChanged(object source, object obj)
         {
             int progress = (int)obj;
