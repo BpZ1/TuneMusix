@@ -2,6 +2,7 @@
 using System;
 using System.Timers;
 using System.Windows.Controls;
+using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
 {
@@ -119,7 +120,7 @@ namespace TuneMusix.ViewModel
 
         private void onVolumeButtonReleased(object argument)
         {
-            dataModel.SaveOptions();
+            Options.Instance.SaveValues();
         }
 
         //Changes the state of the repeating functionality
