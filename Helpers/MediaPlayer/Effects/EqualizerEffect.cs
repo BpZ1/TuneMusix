@@ -28,10 +28,13 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         }
 
         public override IWaveSource Apply(IWaveSource waveSource)
-        {
-            return waveSource.ToSampleSource().
-                AppendSource(createEqualizer).
-                ToWaveSource();
+        {     
+            if(IsActive)
+                return waveSource.ToSampleSource().
+                    AppendSource(createEqualizer).
+                    ToWaveSource();
+
+            return waveSource;
         }
 
         private Equalizer createEqualizer(ISampleSource waveSource)

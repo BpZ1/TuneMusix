@@ -46,14 +46,9 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         public override IWaveSource Apply(IWaveSource waveSource)
         {
             if (IsActive)
-            {
                 return waveSource.AppendSource(createCompressor);
-            }
-            else
-            {
-                return waveSource;
-            }
-            
+
+            return waveSource;         
         }
         private DmoCompressorEffect createCompressor(IWaveSource waveSource)
         {

@@ -26,14 +26,9 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         public override IWaveSource Apply(IWaveSource waveSource)
         {
             if (IsActive)
-            {
                 return waveSource.AppendSource(createGargle);
-            }
-            else
-            {
-                return waveSource;
-            }
-           
+ 
+            return waveSource;
         }
 
         private DmoGargleEffect createGargle(IWaveSource waveSource)

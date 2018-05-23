@@ -32,7 +32,10 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
-            return waveSource.AppendSource(createEcho);
+            if(IsActive)
+                return waveSource.AppendSource(createEcho);
+
+            return waveSource;
         }
 
         private DmoEchoEffect createEcho(IWaveSource waveSource)

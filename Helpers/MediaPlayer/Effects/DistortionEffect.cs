@@ -31,7 +31,10 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public override IWaveSource Apply(IWaveSource waveSource)
         {
-            return waveSource.AppendSource(createDistortion);
+            if (IsActive)
+                return waveSource.AppendSource(createDistortion);
+
+            return waveSource;
         }
 
         private DmoDistortionEffect createDistortion(IWaveSource waveSource)
