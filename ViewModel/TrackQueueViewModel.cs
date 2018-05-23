@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignColors;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -27,9 +28,7 @@ namespace TuneMusix.ViewModel
             AddToPlaylist = new RelayCommand(addToPlaylist);
             SelectionChanged = new RelayCommand(selectionChanged);
             PlayTrack = new RelayCommand(playTrack);
-
             dataModel.TrackQueueChanged += onTrackQueueChanged;
-
         }
         /// <summary>
         /// Changed the current track to the selected track.
@@ -81,6 +80,11 @@ namespace TuneMusix.ViewModel
         public List<Track> CurrentTrackQueue
         {
             get { return dataModel.TrackQueue.ToList<Track>(); }
+        }
+
+        public Swatch HighlightColor
+        {
+            get { return Options.Instance.CurrentColor; }
         }
 
         private void onTrackQueueChanged(object source, object argument)
