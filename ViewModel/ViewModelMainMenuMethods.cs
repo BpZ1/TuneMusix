@@ -7,6 +7,7 @@ using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 using TuneMusix.View.OptionsWindow;
+using TuneMusix.ViewModel.Dialog;
 using TuneMusix.ViewModel.Effects;
 using WinForms = System.Windows.Forms;
 
@@ -96,14 +97,32 @@ namespace TuneMusix.ViewModel
         public void exitApplication(object argument)
         {
             //Ask if data should be saved.
+            if (options.IsModified() && options.AskConfirmation)
+            {
+                DialogViewModelBase vm = new ConfirmationDialogViewModel("Do you want to close without saving?");
+                DialogResult result = DialogService.OpenDialog(vm);
 
+                if(result == DialogResult.Yes)
+                    shutdown();
 
+                if(result == DialogResult.No)
+                    return;
+            }
+
+            shutdown();
+        }
+        /// <summary>
+        /// Saves the options and shuts down the application.
+        /// </summary>
+        private void shutdown()
+        {
             //options have to be saved as they are not always saved as they are changed.
-            dataModel.SaveOptions();
+            Options.Instance.SaveValues();
             //audiControl has to be disposed to end playing of music.
             audioControls.Dispose();
             System.Windows.Application.Current.Shutdown();
         }
+
         /// <summary>
         /// Method used for debugging.
         /// </summary>
