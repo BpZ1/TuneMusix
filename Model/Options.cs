@@ -1,12 +1,7 @@
 ﻿using MaterialDesignColors;
 using MaterialDesignThemes.Wpf;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Threading;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
@@ -45,13 +40,17 @@ namespace TuneMusix.Model
 
         private Options() { }
 
-        private bool modified = false;
+        private bool modified;
         private bool effectsActive = true;
         private bool loggerActive;
         private int volume;      
         private bool shuffle;
         private bool askConfirmation = true;
         private bool muted = false;
+        //Values of the swatch for the database.
+        private bool theme;
+        private int primaryColorIndex;
+        private int accentColorIndex;
 
         public bool Modified
         {
@@ -139,13 +138,19 @@ namespace TuneMusix.Model
         /// <summary>
         /// Defines the primary color for the application.
         /// </summary>
-        public Swatch SetPrimaryColor
+        public Swatch PrimaryColor
         {
             set
             {
                 if(value != null)
                 {
-                    new PaletteHelper().ReplacePrimaryColor(value);
+                    var paletteHelper = new PaletteHelper();
+                    paletteHelper.ReplacePrimaryColor(value);
+
+                    //Get swatch from list to get index.
+                    var swatchList = new SwatchesProvider().Swatches.ToList();
+                    var swatch = swatchList.Single(s => s.Name.Equals(value.Name));
+                    primaryColorIndex = swatchList.IndexOf(swatch);
                     Modified = true;
                 }
             }
@@ -154,13 +159,19 @@ namespace TuneMusix.Model
         /// <summary>
         /// Defines the accent color for the application.
         /// </summary>
-        public Swatch SetAccentColor
+        public Swatch AccentColor
         {
             set
             {
                 if (value != null)
                 {
-                    new PaletteHelper().ReplaceAccentColor(value);
+                    var paletteHelper = new PaletteHelper();
+                    paletteHelper.ReplaceAccentColor(value);
+
+                    //Get swatch from list to get index.
+                    var swatchList = new SwatchesProvider().Swatches.ToList();
+                    var swatch = swatchList.Single(s =>  s.Name.Equals(value.Name) );
+                    accentColorIndex = swatchList.IndexOf(swatch);
                     Modified = true;
                 }
             }
@@ -169,15 +180,30 @@ namespace TuneMusix.Model
         /// <summary>
         /// Defines the theme of the application.
         /// </summary>
-        public bool SetTheme
+        public bool Theme
         {
             set
             {
                 new PaletteHelper().SetLightDark(value);
+                theme = value;
                 Modified = true;
             }
+            get { return theme; }
         }
-        
+        /// <summary>
+        /// Returns the index of the swatch that is set as accent color.
+        /// </summary>
+        public int PrimaryColorIndex
+        {
+            get { return primaryColorIndex; }
+        }
+        /// <summary>
+        /// Returns the index of the swatch that is set as accent color.
+        /// </summary>
+        public int AccentColorIndex
+        {
+            get { return accentColorIndex; }
+        }
 
         public bool IsStereo
         {
@@ -318,20 +344,34 @@ namespace TuneMusix.Model
             }
         }
 
-        public void SetOptions(int volume, bool shuffle, int repeatTrack)
-        {
-            this.volume = volume;
-            this.shuffle = shuffle;
-            this.repeatTrack = repeatTrack;
-            OnRepeatChanged();
-            OnVolumeChanged();
-        }
-
         public void SaveValues()
         {
             Database manager = Database.Instance;
             manager.UpdateOptions(IDGenerator.GetID(false), this);
             Logger.Log("Options saved to database");
         }
+
+        public void SetOptions(int volume, bool shuffle, int repeatTrack, int primaryColorIndex, int accentColorIndex, bool theme, bool askConfirmation)
+        {
+            this.volume = volume;
+            this.shuffle = shuffle;
+            this.repeatTrack = repeatTrack;
+            this.askConfirmation = askConfirmation;
+            this.primaryColorIndex = primaryColorIndex;
+            this.accentColorIndex = accentColorIndex;
+            this.theme = theme;
+
+            //set colors
+            var swatches = new SwatchesProvider().Swatches.ToArray();
+            var palette = new PaletteHelper();
+            palette.ReplacePrimaryColor(swatches[primaryColorIndex]);
+            palette.ReplaceAccentColor(swatches[accentColorIndex]);
+            palette.SetLightDark(theme);
+
+            OnRepeatChanged();
+            OnVolumeChanged();
+        }
+
+        
     }
 }
