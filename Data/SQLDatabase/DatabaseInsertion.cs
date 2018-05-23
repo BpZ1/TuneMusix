@@ -201,6 +201,9 @@ namespace TuneMusix.Data.SQLDatabase
         
         public void Insert(Playlist playlist, List<Track> tracks)
         {
+            if (playlist == null || tracks == null)
+                throw new ArgumentNullException();
+
             List<PlaylistTrack> playlistTracks = new List<PlaylistTrack>();
             foreach (Track track in tracks)
             {
