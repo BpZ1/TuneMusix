@@ -169,11 +169,11 @@ namespace TuneMusix.Helpers
                 TagLib.File f = TagLib.File.Create(url);
                 string title = f.Tag.Title;
                 if(title == null){
-                    title = track.Name;
+                    title = Path.GetFileNameWithoutExtension(f.Name);
                 }
                 else if (title.Equals(""))
                 {
-                    title = track.Name;
+                    title = Path.GetFileNameWithoutExtension(f.Name);
                 }
                 track.Title = title;
                 track.Interpret = f.Tag.FirstAlbumArtist;
