@@ -470,13 +470,13 @@ namespace TuneMusix.Helpers.MediaPlayer
 
                 //Change state after shuffling to avoid shuffle loop in setter of TrackQueue
                 options.Shuffle = true;
-                dataModel.SaveOptions();
+                Options.Instance.SaveValues();
             }
             else
             {
                 //Change state before unshuffling to avoid shuffling in setter of TrackQueue.
                 options.Shuffle = false;
-                dataModel.SaveOptions();
+                Options.Instance.SaveValues();
 
                 //Unshuffle the list
                 dataModel.UnShuffleTrackQueue();            
