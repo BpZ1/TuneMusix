@@ -68,18 +68,15 @@
                             <materialDesign:PackIcon Kind="ContentSave" />
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="Exit" Command="{Binding ExitApplication}" InputGestureText="Ctrl+E">
+                    <MenuItem Header="Exit" Command="{Binding ExitButtonPressed}" 
+                              CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" 
+                              InputGestureText="Ctrl+E">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="ExitToApp" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem Header="_Debug" Command="{Binding DebugMethod}">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="ContentCut" />
-                        </MenuItem.Icon>
-                    </MenuItem>
                     <MenuItem Header="_...">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="ContentCopy" />

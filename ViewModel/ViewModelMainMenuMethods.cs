@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
@@ -52,84 +54,112 @@ namespace TuneMusix.ViewModel
 
             win.ShowDialog();
         }
-
+        /// <summary>
+        /// Saved the changed data to the database.
+        /// </summary>
+        /// <param name="argument"></param>
         private void saveData(object argument)
         {
-            int count = 0;
-            List<Track> saveTracks = new List<Track>();
+            //get modified files from the datamodel
             List<Folder> saveFolders = dataModel.GetAllFolders(true);
-            List<Playlist> savePlaylists = new List<Playlist>();
-            Database dbManager = Database.Instance;
-            //get modified tracks from the datamodel
-            foreach (Track track in dataModel.TrackList)
+            List<Playlist> savePlaylists = checkPlaylistsModified();
+            List<Track> saveTracks = checkTracksModified();
+
+            int modifiedCount = saveTracks.Count + savePlaylists.Count + saveFolders.Count;
+
+          
+            if (modifiedCount > 0)
             {
-                if (track.IsModified)
-                {
-                    saveTracks.Add(track);
-                    track.IsModified = false;
-                    count++;
-                }
-                
-            }
-            foreach(Playlist playlist in dataModel.Playlists)
-            {
-                if (playlist.IsModified)
+                DialogService.NotificationMessage(modifiedCount + " files have been saved.");
+                //Save data to database
+                Database dbManager = Database.Instance;
+                foreach (Playlist playlist in savePlaylists)
                 {
                     dbManager.Insert(playlist);
-                    playlist.IsModified = false;
-                    count++;
                 }
-            }      
-            dbManager.Insert(saveTracks);
-            dbManager.Insert(saveFolders);
-            count += saveFolders.Count;
-            if (count > 0)
-                DialogService.NotificationMessage(count + " files have been saved.");
+                dbManager.Insert(saveTracks);
+                dbManager.Insert(saveFolders);
+            }
+                
 
             
             Debug.WriteLine("Modified files have been saved.");
         }
 
         /// <summary>
+        /// Returns a list of all modified tracks in the datamodel.
+        /// </summary>
+        /// <returns></returns>
+        private List<Track> checkTracksModified()
+        {
+            List<Track> modifiedTracks = new List<Track>();
+            foreach (Track track in dataModel.TrackList)
+            {
+                if (track.IsModified)
+                    modifiedTracks.Add(track);
+
+            }
+            return modifiedTracks;
+
+        }
+        /// <summary>
+        /// Returns a list of all modified playlists in the datamodel.
+        /// </summary>
+        /// <returns></returns>
+        private List<Playlist> checkPlaylistsModified()
+        {
+            List<Playlist> modifiedPlaylists = new List<Playlist>();
+            foreach (Playlist playlist in dataModel.Playlists)
+            {
+                if (playlist.IsModified)
+                    modifiedPlaylists.Add(playlist);
+            }
+
+            return modifiedPlaylists;
+        }
+
+        private void exitButtonPressed(object argument)
+        {
+            var window = argument as Window;
+            window.Close();
+        }
+
+        /// <summary>
         /// Gets called when the exit button is pressed or the window is closed.
         /// </summary>
         /// <param name="argument"></param>
-        public void exitApplication(object argument)
+        private void exitApplication(object argument)
         {
+            var eventArgs = argument as CancelEventArgs;
+
+            int count = dataModel.GetAllFolders(true).Count + checkPlaylistsModified().Count + checkTracksModified().Count;
             //Ask if data should be saved.
-            if (options.IsModified() && options.AskConfirmation)
+            if (count > 0 && options.AskConfirmation)
             {
                 DialogViewModelBase vm = new ConfirmationDialogViewModel("Do you want to close without saving?");
                 DialogResult result = DialogService.OpenDialog(vm);
 
                 if(result == DialogResult.Yes)
-                    shutdown();
-
+                {
+                    eventArgs.Cancel = false;
+                    //options have to be saved as they are not always saved as they are changed.
+                    Options.Instance.SaveValues();
+                    //audiControl has to be disposed to end playing of music.
+                    audioControls.Dispose();
+                }
+                   
                 if(result == DialogResult.No)
+                {
+                    eventArgs.Cancel = true;
                     return;
+                }
+
+                if (result == DialogResult.Undefined)
+                {
+                    eventArgs.Cancel = true;
+                    return;
+                }
             }
-
-            shutdown();
-        }
-        /// <summary>
-        /// Saves the options and shuts down the application.
-        /// </summary>
-        private void shutdown()
-        {
-            //options have to be saved as they are not always saved as they are changed.
-            Options.Instance.SaveValues();
-            //audiControl has to be disposed to end playing of music.
-            audioControls.Dispose();
-            System.Windows.Application.Current.Shutdown();
-        }
-
-        /// <summary>
-        /// Method used for debugging.
-        /// </summary>
-        /// <param name="argument"></param>
-        public void debugMethod(object argument)
-        {
-
         }
 
         /// <summary>
