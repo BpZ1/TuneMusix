@@ -1,9 +1,11 @@
 ﻿using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Data.SQLDatabase;
@@ -41,25 +43,15 @@ namespace TuneMusix.Model
             }
         }
 
-        private Options()
-        {
-            //Take 11 (Blue) as default color 
-            currentColor = new SwatchesProvider().Swatches.ToList<Swatch>()[11];
-
-            if (currentColor == null)
-                currentColor = new SwatchesProvider().Swatches.First<Swatch>();
-           
-        }
+        private Options() { }
 
         private bool modified = false;
-        private bool effectsActive;
+        private bool effectsActive = true;
         private bool loggerActive;
         private int volume;      
         private bool shuffle;
         private bool askConfirmation = true;
         private bool muted = false;
-
-        private Swatch currentColor;
 
         public bool Modified
         {
@@ -145,20 +137,47 @@ namespace TuneMusix.Model
 
         #region getter and setter
         /// <summary>
-        /// Defines the current color theme for the application
+        /// Defines the primary color for the application.
         /// </summary>
-        public Swatch CurrentColor
+        public Swatch SetPrimaryColor
         {
-            get { return currentColor; }
             set
             {
                 if(value != null)
                 {
-                    currentColor = value;
+                    new PaletteHelper().ReplacePrimaryColor(value);
                     Modified = true;
                 }
             }
         }
+
+        /// <summary>
+        /// Defines the accent color for the application.
+        /// </summary>
+        public Swatch SetAccentColor
+        {
+            set
+            {
+                if (value != null)
+                {
+                    new PaletteHelper().ReplaceAccentColor(value);
+                    Modified = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Defines the theme of the application.
+        /// </summary>
+        public bool SetTheme
+        {
+            set
+            {
+                new PaletteHelper().SetLightDark(value);
+                Modified = true;
+            }
+        }
+        
 
         public bool IsStereo
         {
