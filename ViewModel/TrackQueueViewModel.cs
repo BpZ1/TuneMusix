@@ -1,11 +1,6 @@
-﻿using MaterialDesignColors;
-using MaterialDesignThemes.Wpf;
-using System;
+﻿using MaterialDesignThemes.Wpf;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using TuneMusix.Helpers;
