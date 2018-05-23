@@ -19,7 +19,6 @@
     </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
-            <!--<i:InvokeCommandAction Command="{Binding ExitOptionsWindow}"/>-->
             <command:EventToCommand Command="{Binding ExitOptionsWindow}" PassEventArgsToCommand="True" ></command:EventToCommand>
         </i:EventTrigger>
     </i:Interaction.Triggers>
