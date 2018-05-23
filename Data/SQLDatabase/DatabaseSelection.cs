@@ -30,14 +30,17 @@ namespace TuneMusix.Data.SQLDatabase
                     {
                         folderID = dbReader.GetInt64(1);
                     }
-                    Track track = new Track(dbReader.GetString(2), dbReader.GetInt32(0), folderID);
-                    track.Title = dbReader.GetString(3);
-                    track.Interpret = dbReader.GetString(4);
-                    track.Album = dbReader.GetString(5);
-                    track.Year = dbReader.GetInt32(6);
-                    track.Comm = dbReader.GetString(7);
-                    track.Genre = dbReader.GetString(8);
-                    track.Rating = dbReader.GetInt32(9);
+                    string url = dbReader.GetString(2);
+                    long id = dbReader.GetInt32(0);
+                    long folderId = folderID;
+                    string title = dbReader.GetString(3);
+                    string interpret = dbReader.GetString(4);
+                    string album = dbReader.GetString(5);
+                    int year = dbReader.GetInt32(6);
+                    string comm = dbReader.GetString(7);
+                    string genre = dbReader.GetString(8);
+                    int rating = dbReader.GetInt32(9);
+                    Track track = new Track(url, id, folderId, title, interpret, album,year, comm, genre, rating);
                     tracklist.Add(track);
                 }
             }
@@ -93,48 +96,46 @@ namespace TuneMusix.Data.SQLDatabase
             dbReader = command.ExecuteReader();
             try
             {
-                int i = 0;
+                int volume = 50;
+                bool shuffle = false;
+                int repeatTrack = 0;
+
                 while (dbReader.Read())
                 {
-                    i++;
                     if (!dbReader.IsDBNull(0))
                     {
-                        options.Volume = dbReader.GetInt32(0);
+                        volume = dbReader.GetInt32(0);
                     }
                     else
                     {
-                        options.Volume = 50;
+                        volume = 50;
                     }
                     if (!dbReader.IsDBNull(1))
                     {
                         if (dbReader.GetInt32(1) == 1)
                         {
-                            options.Shuffle = true;
+                            shuffle = true;
                         }
                         else
                         {
-                            options.Shuffle = false;
+                            shuffle = false;
                         }
                     }
                     else
                     {
-                        options.Shuffle = false;
+                        shuffle = false;
                     }
                     if (!dbReader.IsDBNull(2))
                     {
-                        options.RepeatTrack = dbReader.GetInt32(2);
+                        repeatTrack = dbReader.GetInt32(2);
                     }
                     else
                     {
-                        options.RepeatTrack = 0;
+                        repeatTrack = 0;
                     }
                 }
-                if (i == 0)
-                {
-                    options.Volume = 50;
-                    options.Shuffle = false;
-                    options.RepeatTrack = 0;
-                }
+                Options.Instance.SetOptions(volume, shuffle, repeatTrack);
+
             }                    
             finally
             {
