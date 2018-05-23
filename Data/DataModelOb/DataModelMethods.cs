@@ -260,15 +260,6 @@ namespace TuneMusix.Data.DataModelOb
         //////////////////////////////////////////////////////////////////////////////
         #endregion
 
-        /// <summary>
-        /// Saves the options object in the database
-        /// </summary>
-        public void SaveOptions()
-        {
-            database.UpdateOptions(IDGenerator.IDCounter++, Options.Instance);
-            Logger.Log("Options saved to database");
-        }
-
         #region insertion methods
         /// <summary>
         /// Adds a Track to the Tracklist after checking if it is already contained.
@@ -495,7 +486,7 @@ namespace TuneMusix.Data.DataModelOb
         public void AddEffectToQueue(BaseEffect effect)
         {
             EffectQueue.Add(effect);
-            effect.EffectActivated += OnEffectQueueItemChanged;
+            effect.EffectActivated += OnEffectQueueChanged;
             OnEffectQueueChanged();
         }
         /// <summary>
@@ -510,9 +501,15 @@ namespace TuneMusix.Data.DataModelOb
                 OnEffectQueueChanged();
             }
         }
+        /// <summary>
+        /// Changed the position of a given effect in the effectqueue
+        /// if it is already contained, or inserts a new one if it is not.
+        /// </summary>
+        /// <param name="effect"></param>
+        /// <param name="position"></param>
         public void ChangeEffectListPosition(BaseEffect effect,int position)
         {
-            if (EffectQueue.Contains(effect))
+            if (EffectQueue.Contains(effect)) //Effect is already contained in the list.
             {
                 int pos1 = EffectQueue.IndexOf(effect);
                 Logger.Log("Moved effect from queue position " + pos1 + " to position " + position + ".");
@@ -525,18 +522,12 @@ namespace TuneMusix.Data.DataModelOb
                     EffectQueue.Move(pos1, position);
                 }                    
             }
-            else
+            else //Effect is a new effect.
             {
                 Logger.Log("Added effect on queue position " + position + ".");
-                EffectQueue.Insert(position, effect);              
+                EffectQueue.Insert(position, effect);
+                effect.EffectActivated += OnEffectQueueChanged;
             }
-            OnEffectQueueChanged();
-        }
-        /// <summary>
-        /// Called when an effect changes in a way that requires new loading of the queue.
-        /// </summary>
-        public void OnEffectQueueItemChanged()
-        {
             OnEffectQueueChanged();
         }
         #endregion

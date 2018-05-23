@@ -33,7 +33,14 @@ namespace TuneMusix.Data.DataModelOb
             get { return this.currentTrack; }
             set
             {
-                this.currentTrack = value;
+                if(currentTrack != null)
+                    this.currentTrack.IsCurrentTrack = false;
+
+                //Set new track to current track
+                if(value != null)
+                    value.IsCurrentTrack = true;
+
+                this.currentTrack = value;              
                 OnCurrentTrackChanged();
             }
         }

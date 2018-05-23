@@ -99,14 +99,6 @@ namespace TuneMusix.Data.DataModelOb
         }
         protected virtual void OnEffectQueueChanged()
         {
-            //Change EffectsActive if at least one effect is active
-            Options.Instance.EffectsActive = false;
-            foreach (BaseEffect effect in EffectQueue)
-            {
-                if (effect.IsActive)
-                    Options.Instance.EffectsActive = true;
-            }
-
             if(EffectQueueChanged != null)          
                 EffectQueueChanged(this,EffectQueue);
         }
