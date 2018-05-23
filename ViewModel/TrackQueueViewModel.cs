@@ -1,4 +1,5 @@
 ﻿using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
@@ -82,9 +84,14 @@ namespace TuneMusix.ViewModel
             get { return dataModel.TrackQueue.ToList<Track>(); }
         }
 
-        public Swatch HighlightColor
+        public Brush HighlightColor
         {
-            get { return Options.Instance.CurrentColor; }
+            get
+            {
+                var palette = new PaletteHelper().QueryPalette();
+                var hue = palette.AccentSwatch.AccentHues.ToArray()[palette.AccentHueIndex];
+                return new SolidColorBrush(hue.Color);
+            }
         }
 
         private void onTrackQueueChanged(object source, object argument)
