@@ -86,7 +86,11 @@ namespace TuneMusix.Data.SQLDatabase
             SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL," +
                                                                                                         "volume INT UNSIGNED," +
                                                                                                         "shuffle INT UNSIGNED," +
-                                                                                                        "repeatTrack INT UNSIGNED);",
+                                                                                                        "repeatTrack INT UNSIGNED," +
+                                                                                                        "primaryColor INT UNSIGNED," +
+                                                                                                        "accentColor INT UNSIGNED," + 
+                                                                                                        "theme INT UNSIGNED," +
+                                                                                                        "askConfirmation INT UNSIGNED);",
                                                                                                          dbConnection);
             SQLiteCommand sqlCreateTrackPlaylisttable = new SQLiteCommand("CREATE TABLE if not exists playlisttracks(trackID INT UNSIGNED NOT NULL, " +
                                                                                                                    "playlistID INT UNSIGNED NOT NULL, " +

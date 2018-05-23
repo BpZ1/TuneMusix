@@ -90,7 +90,7 @@ namespace TuneMusix.Data.SQLDatabase
         {
             Options options = Options.Instance;
 
-            SQLiteCommand command = new SQLiteCommand("SELECT volume,shuffle,repeatTrack FROM options;",dbConnection);
+            SQLiteCommand command = new SQLiteCommand("SELECT volume,shuffle,repeatTrack,primaryColor,accentColor,theme,askConfirmation FROM options;", dbConnection);
 
             OpenDBConnection();
             dbReader = command.ExecuteReader();
@@ -99,42 +99,36 @@ namespace TuneMusix.Data.SQLDatabase
                 int volume = 50;
                 bool shuffle = false;
                 int repeatTrack = 0;
+                int primaryColor = 16; //Default = BlueGrey
+                int accentColor = 12; //Default = Lime
+                bool theme = false; //Default = Light
+                bool askConfirmation = true;
 
                 while (dbReader.Read())
                 {
                     if (!dbReader.IsDBNull(0))
-                    {
                         volume = dbReader.GetInt32(0);
-                    }
-                    else
-                    {
-                        volume = 50;
-                    }
+
                     if (!dbReader.IsDBNull(1))
-                    {
-                        if (dbReader.GetInt32(1) == 1)
-                        {
-                            shuffle = true;
-                        }
-                        else
-                        {
-                            shuffle = false;
-                        }
-                    }
-                    else
-                    {
-                        shuffle = false;
-                    }
+                        shuffle = Converter.IntToBoolConverter(dbReader.GetInt32(1));                      
+
                     if (!dbReader.IsDBNull(2))
-                    {
                         repeatTrack = dbReader.GetInt32(2);
-                    }
-                    else
-                    {
-                        repeatTrack = 0;
-                    }
+                    
+                    if (!dbReader.IsDBNull(3))       
+                        primaryColor = dbReader.GetInt32(3);
+
+                    if (!dbReader.IsDBNull(4))
+                        accentColor = dbReader.GetInt32(4);
+
+                    if (!dbReader.IsDBNull(5))
+                        theme = Converter.IntToBoolConverter(dbReader.GetInt32(5));
+                 
+                    if (!dbReader.IsDBNull(6))
+                        askConfirmation = Converter.IntToBoolConverter(dbReader.GetInt32(6));
+
                 }
-                Options.Instance.SetOptions(volume, shuffle, repeatTrack);
+                Options.Instance.SetOptions(volume, shuffle, repeatTrack, primaryColor, accentColor, theme, askConfirmation);
 
             }                    
             finally

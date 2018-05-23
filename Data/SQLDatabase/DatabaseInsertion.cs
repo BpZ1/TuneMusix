@@ -241,22 +241,37 @@ namespace TuneMusix.Data.SQLDatabase
                 CloseDBConnection();
             }
         }
-        
+        /// <summary>
+        /// Updates the options table in the database.
+        /// Updated values include:
+        /// -stand of idgenerator
+        /// -volume
+        /// -shuffle
+        /// -repeatTrack
+        /// -primary color
+        /// -accent color
+        /// -theme
+        /// </summary>
+        /// <param name="IDGenStand"></param>
+        /// <param name="options"></param>
         public void UpdateOptions(long IDGenStand, Options options)
         {
             SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM options",dbConnection);
             SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",dbConnection);
-            SQLiteCommand sqlAddCommand = new SQLiteCommand("INSERT INTO options (IDgen,volume,shuffle,repeatTrack) VALUES (@IDgen,@volume,@shuffle,@repeatTrack);", dbConnection);
+            //Query
+            SQLiteCommand sqlAddCommand = new SQLiteCommand("INSERT INTO options (IDgen,volume,shuffle,repeatTrack,primaryColor,accentColor,theme,askConfirmation)"+
+                " VALUES (@IDgen,@volume,@shuffle,@repeatTrack,@primaryColor,@accentColor,@theme,@askConfirmation);", dbConnection);
+
+            //Set values
             sqlAddCommand.Parameters.AddWithValue("IDgen", IDGenStand);
             sqlAddCommand.Parameters.AddWithValue("volume",options.Volume);
-            int shuffle;
-
-            if (options.Shuffle)
-                shuffle = 1;
-
-            else shuffle = 0;
-            sqlAddCommand.Parameters.AddWithValue("shuffle",shuffle);
+            sqlAddCommand.Parameters.AddWithValue("shuffle",Converter.BoolToIntConverter(options.Shuffle));
             sqlAddCommand.Parameters.AddWithValue("repeatTrack",options.RepeatTrack);
+            sqlAddCommand.Parameters.AddWithValue("primaryColor", options.PrimaryColorIndex);
+            sqlAddCommand.Parameters.AddWithValue("accentColor", options.AccentColorIndex);
+            sqlAddCommand.Parameters.AddWithValue("theme", Converter.BoolToIntConverter(options.Theme));
+            sqlAddCommand.Parameters.AddWithValue("askConfirmation",Converter.BoolToIntConverter(options.AskConfirmation));
+
             OpenDBConnection();
             try
             {
@@ -272,7 +287,7 @@ namespace TuneMusix.Data.SQLDatabase
                 CloseDBConnection();
             }
         }
-        
+  
         public void UpdateEffectQueue(List<BaseEffect> effectQueue)
         {
 
@@ -727,5 +742,6 @@ namespace TuneMusix.Data.SQLDatabase
             }
         }
 
+ 
     }
 }
