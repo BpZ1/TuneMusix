@@ -1,8 +1,6 @@
-﻿using TuneMusix.Data;
-using TuneMusix.Helpers;
+﻿using TuneMusix.Helpers;
 using TuneMusix.Model;
 using TuneMusix.Helpers.MediaPlayer;
-using TuneMusix.Data.DataModelOb;
 using System.Threading.Tasks;
 using MaterialDesignThemes.Wpf;
 
@@ -51,7 +49,10 @@ namespace TuneMusix.ViewModel
             OpenOptionsWindow = new RelayCommand(openOptionsWindow);      
         }
 
-
+        /// <summary>
+        /// Displays a given message on the bottom screen for a few seconds.
+        /// </summary>
+        /// <param name="message"></param>
         public static void Notification(string message)
         {
             //the message queue can be called from any thread
