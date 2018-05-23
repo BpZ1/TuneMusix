@@ -38,7 +38,10 @@
             <TabItem Header="Effects">
                <Frame Source="EffectPage.xaml"/>
             </TabItem>
-        </dragablz:TabablzControl>
+                <TabItem Header="Visuals">
+                    <Frame Source="VisualOptionsPage.xaml"/>
+                </TabItem>
+            </dragablz:TabablzControl>
     </Grid>
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
