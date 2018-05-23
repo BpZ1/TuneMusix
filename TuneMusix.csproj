@@ -195,11 +195,15 @@
     <Compile Include="ViewModel\OptionsViewModel\AudioOptionsViewModel.cs" />
     <Compile Include="ViewModel\OptionsViewModel\GeneralOptionsViewModel.cs" />
     <Compile Include="ViewModel\OptionsViewModel\OptionsOverviewViewModel.cs" />
+    <Compile Include="ViewModel\OptionsViewModel\VisualOptionsViewModel.cs" />
     <Compile Include="ViewModel\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\TracklistViewModel.cs" />
     <Compile Include="ViewModel\TrackQueueViewModel.cs" />
     <Compile Include="ViewModel\ViewModelMainEvents.cs" />
     <Compile Include="ViewModel\ViewModelMainMenuMethods.cs" />
+    <Compile Include="View\Controls\SwatchView.xaml.cs">
+      <DependentUpon>SwatchView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Controls\YesNoDialogControl.xaml.cs">
       <DependentUpon>YesNoDialogControl.xaml</DependentUpon>
     </Compile>
@@ -263,6 +267,9 @@
     <Compile Include="View\OptionsWindow\OptionsWindowView.xaml.cs">
       <DependentUpon>OptionsWindowView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\OptionsWindow\VisualOptionsPage.xaml.cs">
+      <DependentUpon>VisualOptionsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\PlaylistPage.xaml.cs">
       <DependentUpon>PlaylistPage.xaml</DependentUpon>
     </Compile>
@@ -272,6 +279,10 @@
     <Compile Include="View\TrackQueuePage.xaml.cs">
       <DependentUpon>TrackQueuePage.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\Controls\SwatchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Controls\YesNoDialogControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -375,6 +386,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\OptionsWindow\OptionsWindowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OptionsWindow\VisualOptionsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
