@@ -25,7 +25,7 @@ namespace TuneMusix.ViewModel.Effects
 
         public EffectsViewModel()
         {
-            RemoveEffect = new RelayCommand(_removeEffect);
+            RemoveEffect = new RelayCommand(removeEffect);
             dataModel.EffectQueueChanged += OnEffectQueueChanged;
         }
 
@@ -34,7 +34,7 @@ namespace TuneMusix.ViewModel.Effects
             RaisePropertyChanged("EffectList");
         }
 
-        private void _removeEffect(object argument)
+        private void removeEffect(object argument)
         {
             dataModel.RemoveEffectFromQueue(SelectedItem);
             options.Modified = true;
