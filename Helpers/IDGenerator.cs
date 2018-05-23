@@ -2,6 +2,7 @@
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Exceptions;
+using TuneMusix.Model;
 
 namespace TuneMusix.Helpers
 {
@@ -50,8 +51,7 @@ namespace TuneMusix.Helpers
                 lock (lockObject)
                 {
                     long id = Interlocked.Increment(ref IDCounter);
-                    DataModel dm = DataModel.Instance;
-                    dm.SaveOptions();
+                    Options.Instance.SaveValues();
                     return id - 1;
                 }
             }
