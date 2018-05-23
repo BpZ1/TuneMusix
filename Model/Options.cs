@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MaterialDesignColors;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -41,22 +43,31 @@ namespace TuneMusix.Model
 
         private Options()
         {
+            //Take 11 (Blue) as default color 
+            currentColor = new SwatchesProvider().Swatches.ToList<Swatch>()[11];
+
+            if (currentColor == null)
+                currentColor = new SwatchesProvider().Swatches.First<Swatch>();
+           
         }
 
         private bool modified = false;
+        private bool effectsActive;
+        private bool loggerActive;
+        private int volume;      
+        private bool shuffle;
+        private bool askConfirmation = true;
+        private bool muted = false;
+
+        private Swatch currentColor;
+
         public bool Modified
         {
             private get { return modified; }
             set { modified = value; }
         }
 
-        private bool effectsActive;
-        //Normal logging is only active when set to true.
-        private bool loggerActive;
-        //volume of the audioplayer
-        private int volume;
         //tracks in queue will shuffle randomly when set to true.
-        private bool shuffle;
         public bool Shuffle
         {
             get { return shuffle; }
@@ -73,18 +84,20 @@ namespace TuneMusix.Model
         private int balance;
         private bool isStereo;
        
-        private bool muted = false;
+        /// <summary>
+        /// Boolean representing the current muted option.
+        /// </summary>
         public bool Muted
         {
             get { return muted; }
             set
             {
                 muted = value;
-                //TODO save to database
+                SaveValues();
             }
         }
 
-        //events
+        #region events
         public delegate void OptionsEventHandler(object changed);
 
         public event OptionsEventHandler VolumeChanged;
@@ -128,10 +141,25 @@ namespace TuneMusix.Model
                 IsStereoChanged(isStereo);
             }
         }
-
+        #endregion
 
         #region getter and setter
-        //Getter and setter
+        /// <summary>
+        /// Defines the current color theme for the application
+        /// </summary>
+        public Swatch CurrentColor
+        {
+            get { return currentColor; }
+            set
+            {
+                if(value != null)
+                {
+                    currentColor = value;
+                    Modified = true;
+                }
+            }
+        }
+
         public bool IsStereo
         {
             get { return isStereo; }
@@ -141,16 +169,28 @@ namespace TuneMusix.Model
                 OnIsStereoChanged();
             }
         }
+        /// <summary>
+        /// If false, all effects are disabled.
+        /// </summary>
         public bool EffectsActive
         {
             get { return effectsActive; }
-            set { this.effectsActive = value; }
+            set
+            {
+                this.effectsActive = value;
+                Modified = true;
+            }
         }
+        /// <summary>
+        /// Changes the volume of the playback
+        /// </summary>
         public int Volume
         {
             get { return this.volume; }
             set
             {
+                //Volume is saved in an event that is called when the slider
+                //is released. 
                 if (value > 100)
                 {                    
                     this.volume = 100;
@@ -164,23 +204,30 @@ namespace TuneMusix.Model
 
             }
         }
+        /// <summary>
+        /// Not Implemented
+        /// </summary>
         public int Balance
         {
             get { return this.balance; }
             set
             {
                 this.balance = value;
-                DataModel.Instance.SaveOptions();
+                //Needs event that is called when adjustment on slider is finished to save the value.
                 OnBalanceChanged();
             }
         }
+        /// <summary>
+        /// Avtivates or deactivates the logger that saves logging in a file
+        /// in the directory.
+        /// </summary>
         public bool LoggerActive
         {
             get { return this.loggerActive; }
             set
             {
                 this.loggerActive = value;
-                DataModel.Instance.SaveOptions();
+                Modified = true;
             }
         }
         /// <summary>
@@ -197,9 +244,23 @@ namespace TuneMusix.Model
             set
             {
                 this.repeatTrack = value;
+                SaveValues();
                 OnRepeatChanged();
             }
         }
+        /// <summary>
+        /// If this is set to false, confirmation dialogs will be disabled.
+        /// </summary>
+        public bool AskConfirmation
+        {
+            get { return askConfirmation; }
+            set
+            {
+                askConfirmation = value;
+                Modified = true;
+            }
+        }
+
         #endregion
   
         /// <summary>
@@ -234,8 +295,24 @@ namespace TuneMusix.Model
                 {
                     effect.IsModified = false;
                 }
+                Logger.Log("Options and effects saved to database");
             }
         }
 
+        public void SetOptions(int volume, bool shuffle, int repeatTrack)
+        {
+            this.volume = volume;
+            this.shuffle = shuffle;
+            this.repeatTrack = repeatTrack;
+            OnRepeatChanged();
+            OnVolumeChanged();
+        }
+
+        public void SaveValues()
+        {
+            Database manager = Database.Instance;
+            manager.UpdateOptions(IDGenerator.GetID(false), this);
+            Logger.Log("Options saved to database");
+        }
     }
 }

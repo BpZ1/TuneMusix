@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -11,8 +8,9 @@ namespace TuneMusix.Model
 {
     public class Track :IDisposable, INotifyPropertyChanged
     {
+        #region saved values
         private long id;
-        private long folderID;
+        private long folderId;
         private string url;
         private string title;
         private string interpret;
@@ -21,6 +19,10 @@ namespace TuneMusix.Model
         private string comm;
         private string genre;
         private int rating;
+        #endregion
+
+        private bool isCurrentTrack;
+
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
 
@@ -29,24 +31,36 @@ namespace TuneMusix.Model
         /// <summary>
         /// Constructor for Track
         /// </summary>
-        /// <param name="URL"></param> 
-        public Track(string URL,long ID)
+        /// <param name="url"></param> 
+        public Track(string url,long id)
         {
-            this.id = ID;
-            this.folderID = 0;
-            this.url = URL;
+            this.id = id;
+            this.folderId = 0;
+            this.url = url;
             Rating = 0;
         }
 
-        public Track(string URL, long ID,long folderID)
+        public Track(string url, long id, long folderId)
         {
-            this.id = ID;
-            this.folderID = folderID;
-            this.url = URL;
+            this.id = id;
+            this.folderId = folderId;
+            this.url = url;
             Rating = 0;
         }
-
-
+        public Track(string url, long id, long folderId, string title, 
+            string interpret, string album, int year, string comm, string genre, int rating)
+        {
+            this.url = url;
+            this.id = id;
+            this.folderId = folderId;
+            this.title = title;
+            this.interpret = interpret;
+            this.album = album;
+            this.year = year;
+            this.comm = comm;
+            this.genre = genre;
+            this.rating = rating;
+        }
         //events
         public delegate void TrackChangedEventHandler(object source);
 
@@ -79,10 +93,10 @@ namespace TuneMusix.Model
         }
         public long FolderID
         {
-            get { return this.folderID; }
+            get { return this.folderId; }
             set
             {
-                folderID = value;
+                folderId = value;
                 IsModified = true;
                 RaisePropertyChanged("FolderID");
                 OnTrackChanged();
@@ -217,7 +231,6 @@ namespace TuneMusix.Model
                 OnTrackChanged();
             }
         }
-
         public int Rating
         {
             get
@@ -232,15 +245,22 @@ namespace TuneMusix.Model
                 OnTrackChanged();
             }
         }
+        /// <summary>
+        /// Combination of Title and Interpret of the track.
+        /// Form: "Title - Interpret"
+        /// If one of them is empty "..." will be 
+        /// </summary>
         public string Name
         {
             get
             {
-                if(this.Interpret == null||this.Interpret.Count() == 0)
-                {
+                if(this.Interpret == null)
                     return this.Title;
-                }
-                return this.Interpret + " - " + this.Title;
+
+                if (this.Interpret.Equals(""))
+                    return this.Title;
+
+                return this.Title + " - " + this.Interpret;
             }
         }
 
@@ -249,35 +269,25 @@ namespace TuneMusix.Model
             get { return this.index; }
             set { this.index = value; }
         }
+        public bool IsCurrentTrack
+        {
+            get { return isCurrentTrack; }
+            set
+            {
+                isCurrentTrack = value;
+                RaisePropertyChanged("IsCurrentTrack");
+            }
+        }
 
 
 
+        #region propertychanged
         internal void RaisePropertyChanged(string prop)
         {
             if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        bool? _CloseWindowFlag;
-        public bool? CloseWindowFlag
-        {
-            get { return _CloseWindowFlag; }
-            set
-            {
-                _CloseWindowFlag = value;
-                RaisePropertyChanged("CloseWindowFlag");
-            }
-        }
-
-        public virtual void CloseWindow(bool? result = true)
-        {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
-            {
-                CloseWindowFlag = CloseWindowFlag == null
-                    ? true
-                    : !CloseWindowFlag;
-            }));
-        }
+        #endregion
     }
 }
