@@ -1,0 +1,45 @@
+﻿<Page x:Class="TuneMusix.View.OptionsWindow.VisualOptionsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:vm="clr-namespace:TuneMusix.ViewModel.OptionsViewModel"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:controls="clr-namespace:TuneMusix.View.Controls"
+      xmlns:local="clr-namespace:TuneMusix.View.OptionsWindow"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      DataContext="{DynamicResource VisualOptionsViewModel}"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="VisualOptionsPage">
+    <Page.Resources>
+        <vm:VisualOptionsViewModel x:Key="VisualOptionsViewModel"/>
+    </Page.Resources>
+    <DockPanel>
+        <Grid Margin="0 16 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Margin="8">
+                <TextBlock VerticalAlignment="Center">Light</TextBlock>
+                <ToggleButton Margin="8 0 16 0" Command="{Binding ChangeTheme}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
+                <TextBlock VerticalAlignment="Center">Dark</TextBlock>
+            </StackPanel>
+            <!-- Scrollviewer for the selection of swatches -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0 12 0 0">
+                <ItemsControl ItemsSource="{Binding Swatches, Mode=OneTime}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:SwatchView></controls:SwatchView>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</Page>
