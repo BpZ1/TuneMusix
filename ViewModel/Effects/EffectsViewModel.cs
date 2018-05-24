@@ -78,8 +78,14 @@ namespace TuneMusix.ViewModel.Effects
 
         public bool CanStartDrag(IDragInfo dragInfo)
         {
-            if (dragInfo != null) return true;
-            else return false;
+            if (dragInfo != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void Dropped(IDropInfo dropInfo)
