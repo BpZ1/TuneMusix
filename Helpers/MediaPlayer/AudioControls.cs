@@ -406,7 +406,9 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
                 if (!value)
                 {
-                    Player.Volume = getFloatVolume(options.Volume);
+                    if(Player != null)
+                        Player.Volume = getFloatVolume(options.Volume);
+
                     options.Muted = false;
                 }
             }
