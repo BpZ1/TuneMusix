@@ -117,6 +117,7 @@
       <HintPath>packages\System.Data.SQLite.Linq.1.0.105.2\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="system.windows.controls.ribbon" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
@@ -148,6 +149,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\FormattedSlider.cs" />
+    <Compile Include="Controls\FormattedSlider.Designer.cs">
+      <DependentUpon>FormattedSlider.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\DataModelOb\DataModelMethods.cs" />
     <Compile Include="Data\SQLDatabase\IDatabase.cs" />
     <Compile Include="Data\SQLDatabase\SQLLoader.cs" />
