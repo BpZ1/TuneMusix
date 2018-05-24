@@ -159,6 +159,7 @@
     <Compile Include="Data\SQLDatabase\DatabaseInsertion.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseSelection.cs" />
     <Compile Include="Helpers\Container\OptionsIDContainer.cs" />
+    <Compile Include="Helpers\Converter.cs" />
     <Compile Include="Helpers\Dialogs\DialogResult.cs" />
     <Compile Include="Helpers\Dialogs\DialogService.cs" />
     <Compile Include="Helpers\Exceptions\ClassNotInitializedException.cs" />
