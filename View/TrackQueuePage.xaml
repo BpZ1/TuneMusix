@@ -3,9 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
-      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
       xmlns:local="clr-namespace:TuneMusix.View"
       mc:Ignorable="d" 
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -25,14 +25,15 @@
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsCurrentTrack}" Value="True">
                     <Setter Property="Background" 
-                            Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Page}},Path=DataContext.HighlightColor, Mode=OneTime}"/>
+                            Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Page}},Path=DataContext.HighlightColor, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
      </Page.Resources>
     <DockPanel>
         <ListView Name="TrackQueue" ItemsSource="{Binding CurrentTrackQueue, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-              Margin="10" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" DockPanel.Dock="Top" SelectionMode="Single" ItemContainerStyle="{StaticResource ItemContStyle}">
+              Margin="10" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DragHandler="{Binding}" dd:DragDrop.DropHandler="{Binding}" 
+              DockPanel.Dock="Top" SelectionMode="Single" ItemContainerStyle="{StaticResource ItemContStyle}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <i:InvokeCommandAction Command="{Binding PlayTrack}"  CommandParameter="{Binding ElementName=TrackQueue}"/>
