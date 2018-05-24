@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:control="clr-namespace:TuneMusix.Controls"
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:local="clr-namespace:TuneMusix.View"
       mc:Ignorable="d" 
@@ -21,6 +22,7 @@
       >
     <Page.Resources>
         <vm:MusicPlayerViewModel x:Key="MusicPlayerViewModel"/>
+        <Style TargetType="{x:Type control:FormattedSlider}" BasedOn="{StaticResource MaterialDesignSlider}"/>
     </Page.Resources>
 
     <Grid>
@@ -49,7 +51,6 @@
                             </materialDesign:PackIcon.RenderTransform>
                         </materialDesign:PackIcon>
                     </Button>
-
                     <Button Grid.Column="1" x:Name="PlayButton" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding PlayButton}">
                         <materialDesign:PackIcon Kind="{Binding PlayButtonIcon,UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="0.5,0.5" >
                             <materialDesign:PackIcon.RenderTransform>
@@ -75,27 +76,47 @@
                         </materialDesign:PackIcon>
                     </Button>
                     <StackPanel Grid.Column="3" Orientation="Horizontal">
-                        <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding VolumeButton}" >
+                        <Button x:Name="MuteButton" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding VolumeButton}" 
+                                ToolTipService.ShowDuration="30000" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseEnter">
+                                    <i:InvokeCommandAction Command="{Binding OpenVolumePopup}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseLeave">
+                                    <i:InvokeCommandAction Command="{Binding CloseVolumePopup}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                             <materialDesign:PackIcon Kind="{Binding VolumeButtonIcon,UpdateSourceTrigger=PropertyChanged}"
-                                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" >
+                                                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5">
                                 <materialDesign:PackIcon.RenderTransform>
                                     <TransformGroup>
                                         <ScaleTransform ScaleX="2" ScaleY="2"/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform/>
                                     </TransformGroup>
                                 </materialDesign:PackIcon.RenderTransform>
                             </materialDesign:PackIcon>
                         </Button>
-                        <Slider  x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" Orientation="Vertical" ToolTip="{Binding Volume,UpdateSourceTrigger=PropertyChanged}"
-                                 Maximum="100" IsSelectionRangeEnabled="True" Margin="0,3" HorizontalAlignment="Center">
+                        <!-- Popup for the volume slider -->
+                        <Popup IsOpen="{Binding VolumePopupOpen,UpdateSourceTrigger=PropertyChanged}" AllowsTransparency="True"
+                                PopupAnimation="Fade" PlacementTarget="{Binding ElementName=MuteButton}" Placement="Bottom">
+                            <materialDesign:ColorZone Mode="Light" MinHeight="10" MinWidth="100" CornerRadius="10">
+                                <Slider DockPanel.Dock="Top"  x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" Orientation="Horizontal" AutoToolTipPlacement="BottomRight"
+                                    ToolTipService.ShowDuration="30000" Maximum="100" IsSelectionRangeEnabled="True" Margin="3,0" VerticalAlignment="Center">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                            <i:InvokeCommandAction Command="{Binding VolumeButtonReleased}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Slider>
+                            </materialDesign:ColorZone>
                             <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                                    <i:InvokeCommandAction Command="{Binding VolumeButtonReleased}"/>
+                                <i:EventTrigger EventName="MouseEnter">
+                                    <i:InvokeCommandAction Command="{Binding OpenVolumePopup}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseLeave">
+                                    <i:InvokeCommandAction Command="{Binding CloseVolumePopup}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-                        </Slider>
+                        </Popup>
                         <Button Grid.Column="2" x:Name="RepeatButton" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding RepeatButton}">
                             <materialDesign:PackIcon Kind="{Binding RepeatButtonIcon,UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="0.5,0.5" >
                                 <materialDesign:PackIcon.RenderTransform>
@@ -122,8 +143,9 @@
                         </Button>
                     </StackPanel>
                 </Grid>
-                <Slider x:Name="PositionSlider" Value="{Binding CurrentSliderPosition,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" 
-                        Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TrackLoaded,UpdateSourceTrigger=PropertyChanged}" Margin="20,0,20,8">
+                <control:FormattedSlider x:Name="PositionSlider" Value="{Binding CurrentSliderPosition,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"  AutoToolTipPlacement="BottomRight" 
+                        Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TrackLoaded,UpdateSourceTrigger=PropertyChanged}" Margin="20,0,20,8" IsTimeValue="True">
+
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
                             <i:InvokeCommandAction Command="{Binding PositionSlider_MouseUp}" CommandParameter="{Binding ElementName=PositionSlider}"/>
@@ -132,7 +154,7 @@
                             <i:InvokeCommandAction Command="{Binding PositionSlider_MouseDown}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                </Slider>
+                </control:FormattedSlider>
             </StackPanel>
         </Grid>
 
