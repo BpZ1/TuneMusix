@@ -16,7 +16,6 @@ namespace TuneMusix.ViewModel.OptionsViewModel
 
         public RelayCommand ApplyPrimaryColor { get; set; }
         public RelayCommand ApplyAccentColor { get; set; }
-        public RelayCommand ChangeTheme { get; }
 
         public VisualOptionsViewModel()
         {
@@ -24,7 +23,6 @@ namespace TuneMusix.ViewModel.OptionsViewModel
 
             ApplyPrimaryColor = new RelayCommand(applyPrimaryColor);
             ApplyAccentColor = new RelayCommand(applyAccentColor);
-            ChangeTheme = new RelayCommand(o => changeTheme((bool)o));
         }        
 
         private void applyPrimaryColor(object argument)
@@ -33,7 +31,7 @@ namespace TuneMusix.ViewModel.OptionsViewModel
             if (swatch == null)
                 throw new ArgumentNullException();
 
-            Options.Instance.SetPrimaryColor = swatch;
+            Options.Instance.PrimaryColor = swatch;
         }
 
         private void applyAccentColor(object argument)
@@ -42,12 +40,13 @@ namespace TuneMusix.ViewModel.OptionsViewModel
             if (swatch == null)
                 throw new ArgumentNullException();
 
-            Options.Instance.SetAccentColor = swatch;
+            Options.Instance.AccentColor = swatch;
         }
 
-        private void changeTheme(bool isDark)
+        public bool ChangeTheme
         {
-            Options.Instance.SetTheme = isDark;
+            get { return Options.Instance.Theme; }
+            set { Options.Instance.Theme = value; }
         }
     }
 }
