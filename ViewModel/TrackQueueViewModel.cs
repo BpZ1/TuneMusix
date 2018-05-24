@@ -1,15 +1,19 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using GongSolutions.Wpf.DragDrop;
+using MaterialDesignThemes.Wpf;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
+using System;
+using System.Windows;
 
 namespace TuneMusix.ViewModel
 {
 
-    class TrackQueueViewModel : ViewModelBase
+    class TrackQueueViewModel : ViewModelBase, INotifyPropertyChanged, IDragSource, IDropTarget
     {
         private Track selectedTrack { get; set; }
 
@@ -26,6 +30,8 @@ namespace TuneMusix.ViewModel
             SelectionChanged = new RelayCommand(selectionChanged);
             PlayTrack = new RelayCommand(playTrack);
             dataModel.TrackQueueChanged += onTrackQueueChanged;
+
+            Options.Instance.ColorChanged += onColorChanged;
         }
         /// <summary>
         /// Changed the current track to the selected track.
@@ -78,7 +84,9 @@ namespace TuneMusix.ViewModel
         {
             get { return dataModel.TrackQueue.ToList<Track>(); }
         }
-
+        /// <summary>
+        /// Brush that sets the highlight color of the current track in the trackqueue.
+        /// </summary>
         public Brush HighlightColor
         {
             get
@@ -89,9 +97,67 @@ namespace TuneMusix.ViewModel
             }
         }
 
+        private void onColorChanged()
+        {
+            RaisePropertyChanged("HighlightColor");
+        }
+
         private void onTrackQueueChanged(object source, object argument)
         {
             RaisePropertyChanged("CurrentTrackQueue");
+        }
+
+        public void StartDrag(IDragInfo dragInfo)
+        {
+            dragInfo.Data = dragInfo.SourceItem;
+            dragInfo.Effects = DragDropEffects.Copy;
+        }
+
+        public bool CanStartDrag(IDragInfo dragInfo)
+        {
+            if (dragInfo != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void Dropped(IDropInfo dropInfo)
+        {
+        }
+
+        public void DragCancelled()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryCatchOccurredException(Exception exception)
+        {
+            Logger.LogException(exception);
+            throw exception;
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.NotHandled = true;
+            var sourceItem = dropInfo.Data;
+            if (sourceItem != null)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+                dropInfo.Effects = DragDropEffects.Copy;
+            }
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            Track track = dropInfo.Data as Track;
+            if (track != null && dropInfo != null)
+            {
+                dataModel.ChangeTrackQueuePosition(track, dropInfo.UnfilteredInsertIndex);
+            }
         }
     }
 }
