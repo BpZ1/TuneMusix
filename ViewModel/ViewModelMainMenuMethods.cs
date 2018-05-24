@@ -160,6 +160,12 @@ namespace TuneMusix.ViewModel
                     return;
                 }
             }
+            else
+            {
+                Options.Instance.SaveValues();
+                //audiControl has to be disposed to end playing of music.
+                audioControls.Dispose();
+            }
         }
 
         /// <summary>
