@@ -2,6 +2,7 @@
 using System;
 using System.Timers;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
@@ -51,7 +52,7 @@ namespace TuneMusix.ViewModel
         /// <param name="e"></param>
         public void OnTimeElapsed(object sender, ElapsedEventArgs e)
         {
-            if (!_dragging && audioControls.IsLoaded)
+            if (!dragging && audioControls.IsLoaded)
             {
                 CurrentSliderPosition = CurrentPosition;
             }
@@ -68,7 +69,7 @@ namespace TuneMusix.ViewModel
         /// <param name="sender"></param>
         public void leftMouseDown_Slider(object sender)
         {
-            _dragging = true;
+            dragging = true;
         }
         /// <summary>
         /// Gets called when the user has finished manipulating the position slider.
@@ -76,7 +77,7 @@ namespace TuneMusix.ViewModel
         /// <param name="sender"></param>
         private void leftMouseUp_Slider(object sender)
         {
-            _dragging = false;
+            dragging = false;
             var slider = sender as Slider;
             CurrentPosition = slider.Value;
         }
@@ -142,5 +143,47 @@ namespace TuneMusix.ViewModel
             audioControls.ShuffleChanged();
             RaisePropertyChanged("ShuffleButtonIcon");
         }
+
+        /// <summary>
+        /// Opens the popup for the volume slider and stops the 
+        /// closing timer.
+        /// </summary>
+        /// <param name="argument"></param>
+        private void openVolumePopup(object argument)
+        {
+            VolumePopupOpen = true;
+            RaisePropertyChanged("VolumePopupOpen");
+            if(dispatcherTimer != null)
+                ((DispatcherTimer)dispatcherTimer).Stop();
+        }
+
+        /// <summary>
+        /// Starts the timer for the closing of the popup.
+        /// </summary>
+        /// <param name="argument"></param>
+        private void startPopupClosingTimer(object argument)
+        {
+            dispatcherTimer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+
+            dispatcherTimer.Tick += closeVolumePopup;
+
+            dispatcherTimer.Start();
+        }
+
+        /// <summary>
+        /// Closes the popup for the volume slider.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void closeVolumePopup(object sender, EventArgs e)
+        {          
+            VolumePopupOpen = false;
+            RaisePropertyChanged("VolumePopupOpen");
+            ((DispatcherTimer)dispatcherTimer).Stop();
+        }
+
     }
 }

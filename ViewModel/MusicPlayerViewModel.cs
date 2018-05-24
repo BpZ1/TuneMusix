@@ -2,6 +2,7 @@
 using System;
 using System.Timers;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using TuneMusix.Data;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
@@ -12,7 +13,7 @@ namespace TuneMusix.ViewModel
 {
     partial class MusicPlayerViewModel : ViewModelBase
     {
-        //------------Objects----------------------------------
+        //------------------------------------------------------
         private Options options = Options.Instance;
         private AudioControls audioControls = AudioControls.Instance;
 
@@ -26,6 +27,8 @@ namespace TuneMusix.ViewModel
         public RelayCommand VolumeButton { get; set; }
         public RelayCommand VolumeButtonReleased { get; set; }
         public RelayCommand ShuffleButton { get; set; }
+        public RelayCommand OpenVolumePopup { get; set; }
+        public RelayCommand CloseVolumePopup { get; set; }
 
        //---------------Constants----------------------------------
         private const string PLAY_ICON = "PlayCircleOutline";
@@ -43,12 +46,14 @@ namespace TuneMusix.ViewModel
         //-------------Fields----------------------------------
         private Timer timer;
         private double currentPosition;
-        private bool _dragging;
+        private bool dragging;
+        private DispatcherTimer dispatcherTimer;
+
 
         //Constructor
         public MusicPlayerViewModel()
         {
-            _dragging = false;
+            dragging = false;
             timer = new Timer(100);
 
             //RelayCommands
@@ -61,12 +66,20 @@ namespace TuneMusix.ViewModel
             VolumeButton = new RelayCommand(onVolumeButtonClicked);
             VolumeButtonReleased = new RelayCommand(onVolumeButtonReleased);
             ShuffleButton = new RelayCommand(shuffleButton);
+            OpenVolumePopup = new RelayCommand(openVolumePopup);
+            CloseVolumePopup = new RelayCommand(startPopupClosingTimer);
 
             //Events
             timer.Elapsed += OnTimeElapsed;
             audioControls.TrackChanged += OnTrackChanged;
             audioControls.PlaystateChanged += onPlaystateChanged;
             dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
+        }
+
+        public bool VolumePopupOpen
+        {
+            get;
+            set;
         }
 
         #region getter and setter
@@ -107,8 +120,6 @@ namespace TuneMusix.ViewModel
                 }        
             }
         }
-
-
         public double CurrentSliderPosition
         {
             get
@@ -130,6 +141,14 @@ namespace TuneMusix.ViewModel
             set
             {
                 audioControls.CurrentPosition = TimeSpan.FromSeconds(value);
+            }
+        }
+        public string PositionTime
+        {
+            get
+            {
+                TimeSpan position = TimeSpan.FromSeconds(CurrentPosition);
+                return position.ToString();
             }
         }
         public string CurrentPlaylistName
@@ -155,7 +174,6 @@ namespace TuneMusix.ViewModel
                return audioControls.IsLoaded;
             }
         }
-
         /// <summary>
         /// Changes the balance for playback (not yet implemented!).
         /// </summary>
@@ -163,7 +181,6 @@ namespace TuneMusix.ViewModel
         {
             set { } //Implement
         }
-
         /// <summary>
         /// Returns the length of the currently loaded track.
         /// </summary>
@@ -174,7 +191,6 @@ namespace TuneMusix.ViewModel
                 return audioControls.Length.TotalSeconds;
             }
         }
-
         //Value of the volume slider
         public int Volume
         {
@@ -185,10 +201,10 @@ namespace TuneMusix.ViewModel
             set
             {
                 options.Volume = value;
+                RaisePropertyChanged("Volume");
                 RaisePropertyChanged("VolumeButtonIcon");
             }
         }
-
         //Position of the current track playback
         public string CurrentTrackName
         {
@@ -204,7 +220,6 @@ namespace TuneMusix.ViewModel
                 }
             }
         }
-
         public string ShuffleButtonIcon
         {
             get
@@ -219,7 +234,6 @@ namespace TuneMusix.ViewModel
                 }
             }
         }
-
         /// <summary>
         /// 0 = No repeat
         /// 1 = Repeat all
@@ -234,7 +248,6 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("RepeatTrack");                     
             }
         }
-
         public string RepeatButtonIcon
         {
             get
