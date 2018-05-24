@@ -52,6 +52,17 @@ namespace TuneMusix.Model
         private int primaryColorIndex;
         private int accentColorIndex;
 
+        public delegate void OptionsChangedEventHandler();
+
+        public event OptionsChangedEventHandler ColorChanged;
+
+        protected virtual void OnColorChanged()
+        {
+            if (ColorChanged != null)
+                ColorChanged();
+        }
+
+
         public bool Modified
         {
             private get { return modified; }
@@ -151,6 +162,7 @@ namespace TuneMusix.Model
                     var swatchList = new SwatchesProvider().Swatches.ToList();
                     var swatch = swatchList.Single(s => s.Name.Equals(value.Name));
                     primaryColorIndex = swatchList.IndexOf(swatch);
+                    OnColorChanged();
                     Modified = true;
                 }
             }
@@ -172,6 +184,7 @@ namespace TuneMusix.Model
                     var swatchList = new SwatchesProvider().Swatches.ToList();
                     var swatch = swatchList.Single(s =>  s.Name.Equals(value.Name) );
                     accentColorIndex = swatchList.IndexOf(swatch);
+                    OnColorChanged();
                     Modified = true;
                 }
             }
@@ -186,6 +199,7 @@ namespace TuneMusix.Model
             {
                 new PaletteHelper().SetLightDark(value);
                 theme = value;
+                OnColorChanged();
                 Modified = true;
             }
             get { return theme; }
@@ -368,6 +382,7 @@ namespace TuneMusix.Model
             palette.ReplaceAccentColor(swatches[accentColorIndex]);
             palette.SetLightDark(theme);
 
+            OnColorChanged();
             OnRepeatChanged();
             OnVolumeChanged();
         }
