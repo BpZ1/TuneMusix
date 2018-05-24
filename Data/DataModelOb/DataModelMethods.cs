@@ -513,7 +513,7 @@ namespace TuneMusix.Data.DataModelOb
             {
                 int pos1 = EffectQueue.IndexOf(effect);
                 Logger.Log("Moved effect from queue position " + pos1 + " to position " + position + ".");
-                if(position == EffectQueue.Count)
+                if(position == EffectQueue.Count) //If the new position is at the end of the list
                 {
                     EffectQueue.Move(pos1, position-1);
                 }
@@ -571,6 +571,31 @@ namespace TuneMusix.Data.DataModelOb
                 select track;
             //Set queue to the sorted list
             TrackQueue = new ObservableCollection<Track>(sortedList);     
+        }
+   
+        public void ChangeTrackQueuePosition(Track track, int position)
+        {
+            if (track == null)
+                throw new ArgumentNullException();
+
+            if (TrackQueue.Contains(track))
+            {
+                int pos1 = TrackQueue.IndexOf(track);
+                Logger.Log("Moved track from queue position " + pos1 + " to position " + position + ".");
+                if (position == TrackQueue.Count)//If the new position is at the end of the list
+                {
+                    TrackQueue.Move(pos1, position - 1);
+                    if (track.IsCurrentTrack)
+                        QueueIndex = position - 1;
+                }
+                else
+                {
+                    TrackQueue.Move(pos1, position);
+                    if (track.IsCurrentTrack)
+                        QueueIndex = position;
+                }
+                OnTrackQueueChanged();
+            }           
         }
 
     }
