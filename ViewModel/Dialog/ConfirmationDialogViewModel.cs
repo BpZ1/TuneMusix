@@ -12,12 +12,14 @@ namespace TuneMusix.ViewModel.Dialog
     class ConfirmationDialogViewModel : DialogViewModelBase
     {
         private string messageBox = "";
+        private bool buttonPressed = false;
 
         public ConfirmationDialogViewModel()
         {
             yesCommand = new RelayCommand(onYesClick);
             noCommand = new RelayCommand(onNoClick);
             cancelCommand = new RelayCommand(onCancelClick);
+            exitButtonCommand = new RelayCommand(onExitClick);
         }
 
         public ConfirmationDialogViewModel(string message)
@@ -26,6 +28,7 @@ namespace TuneMusix.ViewModel.Dialog
             yesCommand = new RelayCommand(onYesClick);
             noCommand = new RelayCommand(onNoClick);
             cancelCommand = new RelayCommand(onCancelClick);
+            exitButtonCommand = new RelayCommand(onExitClick);
         }
 
         private ICommand yesCommand = null;
@@ -48,6 +51,12 @@ namespace TuneMusix.ViewModel.Dialog
             get { return cancelCommand; }
             set { cancelCommand = value; }
         }
+        private ICommand exitButtonCommand = null;
+        public ICommand ExitButtonCommand
+        {
+            get { return exitButtonCommand; }
+            set { exitButtonCommand = value; }
+        }
 
         public string MessageBox
         {
@@ -57,17 +66,36 @@ namespace TuneMusix.ViewModel.Dialog
 
         private void onYesClick(object parameter)
         {
-            this.CloseDialogWithResult(parameter as Window, DialogResult.Yes);
+            if (!buttonPressed)
+            {
+                buttonPressed = true;
+                this.CloseDialogWithResult(parameter as Window, DialogResult.Yes);
+            }  
         }
 
         private void onNoClick(object parameter)
         {
-            this.CloseDialogWithResult(parameter as Window, DialogResult.No);
+            if (!buttonPressed)
+            {
+                buttonPressed = true;
+                this.CloseDialogWithResult(parameter as Window, DialogResult.No);
+            }
+
         }
 
         private void onCancelClick(object parameter)
         {
-            this.CloseDialogWithResult(parameter as Window, DialogResult.Undefined);
+            if (!buttonPressed)
+            {
+                buttonPressed = true;
+                this.CloseDialogWithResult(parameter as Window, DialogResult.Undefined);
+            }   
+        }
+        
+        private void onExitClick(object parameter)
+        {
+            if (!buttonPressed)
+                this.CloseDialogWithResult(parameter as Window, DialogResult.Undefined);
         }
     }
 }
