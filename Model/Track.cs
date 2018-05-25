@@ -19,8 +19,10 @@ namespace TuneMusix.Model
         private string comm;
         private string genre;
         private int rating;
+        private string duration;
         #endregion
 
+        private bool isValid; //Checked on update
         private bool isCurrentTrack;
 
         public bool IsModified { get; set; }
@@ -28,27 +30,23 @@ namespace TuneMusix.Model
 
         private int index; //original position in the trackqueue
 
-        /// <summary>
-        /// Constructor for Track
-        /// </summary>
-        /// <param name="url"></param> 
-        public Track(string url,long id)
+        public Track(string url, long id, string title,
+            string interpret, string album, int year, string comm, string genre, string duration)
         {
-            this.id = id;
-            this.folderId = 0;
             this.url = url;
-            Rating = 0;
+            this.id = id;
+            this.title = title;
+            this.interpret = interpret;
+            this.album = album;
+            this.year = year;
+            this.comm = comm;
+            this.genre = genre;
+            this.rating = 0;
+            this.duration = duration;
         }
 
-        public Track(string url, long id, long folderId)
-        {
-            this.id = id;
-            this.folderId = folderId;
-            this.url = url;
-            Rating = 0;
-        }
         public Track(string url, long id, long folderId, string title, 
-            string interpret, string album, int year, string comm, string genre, int rating)
+            string interpret, string album, int year, string comm, string genre, int rating, string duration)
         {
             this.url = url;
             this.id = id;
@@ -60,7 +58,9 @@ namespace TuneMusix.Model
             this.comm = comm;
             this.genre = genre;
             this.rating = rating;
+            this.duration = duration;
         }
+
         //events
         public delegate void TrackChangedEventHandler(object source);
 
@@ -102,7 +102,7 @@ namespace TuneMusix.Model
                 OnTrackChanged();
             }
         }
-        public string sourceURL
+        public string SourceURL
         {
             get
             {
@@ -263,7 +263,9 @@ namespace TuneMusix.Model
                 return this.Title + " - " + this.Interpret;
             }
         }
-
+        /// <summary>
+        /// Index used to save potition for unshuffling.
+        /// </summary>
         public int Index
         {
             get { return this.index; }
@@ -278,8 +280,19 @@ namespace TuneMusix.Model
                 RaisePropertyChanged("IsCurrentTrack");
             }
         }
-
-
+        public string Duration
+        {
+            get { return duration; }
+        }
+        public bool IsValid
+        {
+            get { return isValid; }
+            set
+            {
+                isValid = value;
+                RaisePropertyChanged("IsValid");
+            }
+        }
 
         #region propertychanged
         internal void RaisePropertyChanged(string prop)
