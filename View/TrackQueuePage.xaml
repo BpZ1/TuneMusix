@@ -21,7 +21,7 @@
       Title="TrackQueuePage">
      <Page.Resources>
         <vm:TrackQueueViewModel x:Key="TrackQueueViewModel"/>
-        <Style x:Key="ItemContStyle" TargetType="{x:Type ListViewItem}">
+        <Style x:Key="ItemContStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsCurrentTrack}" Value="True">
                     <Setter Property="Background" 
@@ -31,9 +31,9 @@
         </Style>
      </Page.Resources>
     <DockPanel>
-        <ListView Name="TrackQueue" ItemsSource="{Binding CurrentTrackQueue, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+        <ListBox Name="TrackQueue" ItemsSource="{Binding CurrentTrackQueue, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
               Margin="10" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DragHandler="{Binding}" dd:DragDrop.DropHandler="{Binding}" 
-              DockPanel.Dock="Top" SelectionMode="Single" ItemContainerStyle="{StaticResource ItemContStyle}">
+              DockPanel.Dock="Top" SelectionMode="Single" ItemContainerStyle="{StaticResource ItemContStyle}" MouseDoubleClick="ListView_MouseDoubleClick">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <i:InvokeCommandAction Command="{Binding PlayTrack}"  CommandParameter="{Binding ElementName=TrackQueue}"/>
@@ -42,7 +42,13 @@
                     <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=TrackQueue}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            <ListView.ContextMenu>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}" Width="300"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <!-- Context Menu-->
+            <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
                     <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
@@ -56,13 +62,8 @@
                     </MenuItem>
                     <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete"/>
                 </ContextMenu>
-            </ListView.ContextMenu>
-            <ListView.View>
-                <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Title}"  Header="Track Queue" Width="300"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+            </ListBox.ContextMenu>
+        </ListBox>
 
     </DockPanel>
 </Page>
