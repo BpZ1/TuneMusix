@@ -28,30 +28,43 @@
     <DockPanel LastChildFill="True"  Margin="10,10,0,0"  dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
                 Background="Transparent" AllowDrop="True" >
         <Label DockPanel.Dock="Top" x:Name="label" Content="{Binding CurrentPlaylistName}" FontSize="18.667" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <ListView DockPanel.Dock="Bottom" x:Name="AllTrackList" ItemsSource="{Binding CurrentPlaylistTracks,UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    Margin="10">
+        <ListView Name="AllTrackList" ItemsSource="{Binding CurrentPlaylistTracks, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  Margin="10" DockPanel.Dock="Top" MouseDoubleClick="ListView_MouseDoubleClick" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" AllowDrop="True"
+                  dd:DragDrop.DropHandler="{Binding}">
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding SetPlaylistIndex}" CommandParameter="{Binding ElementName=AllTrackList}"/>
-                </i:EventTrigger>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <ListView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Play" Command="{Binding SetPlaylistIndex}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"/>
-                    <MenuItem Header="Remove" Command="{Binding RemoveFromPlaylist}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"/>
+                    <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
+                    <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Header" Value="{Binding Name}"/>
+                                <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=MenuItem}, Path=DataContext.AddToPlaylist}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                    <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete"/>
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Title}"  Header="Title" Width="auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret}" Header="Interpret" Width="auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Album}" Header="Album" Width="auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Year}" Header="Year" Width="auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Genre}"  Header="Genre" Width="auto"/>
-                    <GridViewColumn Header="Rating" Width="Auto">
+                    <GridViewColumn Header="Titel" DisplayMemberBinding="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" Width="300"/>
+                    <!--      Interpret column         -->
+                    <GridViewColumn Header="Interpret" DisplayMemberBinding="{Binding Path=Interpret, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                    <!--      Album column         -->
+                    <GridViewColumn Header="Album" DisplayMemberBinding="{Binding Path=Album, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                        <!--      Year column         -->
+                    <GridViewColumn Header="Year" DisplayMemberBinding="{Binding Path=Year, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    <!--      Genre column         -->
+                    <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Path=Genre, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                    <!--      Duration column         -->
+                    <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Path=Duration, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                    <GridViewColumn Header="Rating" Width="250" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <materialDesign:RatingBar Value="{Binding Rating,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Foreground="Gold" Margin="0" />
