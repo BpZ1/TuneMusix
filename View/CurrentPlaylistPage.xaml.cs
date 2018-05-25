@@ -1,4 +1,9 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using TuneMusix.Model;
+using TuneMusix.ViewModel;
 
 namespace TuneMusix.View
 {
@@ -9,8 +14,18 @@ namespace TuneMusix.View
     {
         public CurrentPlaylistPage()
         {
-            InitializeComponent();
-            
+            InitializeComponent();          
         }
+
+        void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var viewModel = (CurrentPlaylistViewModel)DataContext;
+            var item = ((FrameworkElement)e.OriginalSource).DataContext as Track;
+            if (item != null)
+            {
+                viewModel.TrackDoubleClicked.Execute(item);
+            }
+        }
+
     }
 }
