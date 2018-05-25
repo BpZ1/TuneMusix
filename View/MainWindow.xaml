@@ -27,7 +27,7 @@
         >
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
-            <command:EventToCommand Command="{Binding ExitApplication}" PassEventArgsToCommand="True" ></command:EventToCommand>
+            <command:EventToCommand Command="{Binding ExitApplication}" PassEventArgsToCommand="True" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Window.Resources>
@@ -36,7 +36,8 @@
     </Window.Resources>
     <Grid>
         <DockPanel LastChildFill="True">
-            <materialDesign:ColorZone DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+            <!-- Loading bar -->
+            <materialDesign:ColorZone x:Name="LoadingBar" DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                 <DockPanel >
                     <Grid DockPanel.Dock="Right">
                         <ProgressBar x:Name="progressBar" DockPanel.Dock="Right" Orientation="Horizontal" 
@@ -89,9 +90,9 @@
                     </MenuItem>
                 </MenuItem>
             </Menu>
-            
+            <!-- Music Player -->
             <Frame DockPanel.Dock="Top" Source="MusicPlayerPage.xaml"/>
-            
+            <!-- Track Queue -->
             <Expander ExpandDirection="Right" DockPanel.Dock="Right">
                 <Expander.Header>
                     <materialDesign:PackIcon Kind="PlaylistPlay" />
@@ -100,7 +101,7 @@
                     <Frame  Source="TrackQueuePage.xaml" DockPanel.Dock="Top" />                   
                 </DockPanel>
             </Expander>
-
+            <!-- Tabs -->
             <dragablz:TabablzControl DockPanel.Dock="Top" SelectionChanged="TabablzControl_SelectionChanged">
                 <TabItem Header="Playlists" >
                     <Grid>
