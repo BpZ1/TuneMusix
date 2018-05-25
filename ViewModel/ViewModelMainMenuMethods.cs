@@ -4,13 +4,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using TuneMusix.Data.SQLDatabase;
-using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
-using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 using TuneMusix.View.OptionsWindow;
 using TuneMusix.ViewModel.Dialog;
-using TuneMusix.ViewModel.Effects;
 using WinForms = System.Windows.Forms;
 
 namespace TuneMusix.ViewModel
@@ -69,16 +66,17 @@ namespace TuneMusix.ViewModel
 
           
             if (modifiedCount > 0)
-            {
-                DialogService.NotificationMessage(modifiedCount + " files have been saved.");
+            {              
                 //Save data to database
                 Database dbManager = Database.Instance;
-                foreach (Playlist playlist in savePlaylists)
-                {
-                    dbManager.Insert(playlist);
-                }
+
+                dataModel.SavePlaylists(savePlaylists);
+                dataModel.SaveTracks(saveTracks);
+                dataModel.SaveFolders(saveFolders);
+
                 dbManager.Insert(saveTracks);
                 dbManager.Insert(saveFolders);
+                DialogService.NotificationMessage(modifiedCount + " files have been saved.");
             }
                 
 
@@ -146,15 +144,13 @@ namespace TuneMusix.ViewModel
                     Options.Instance.SaveValues();
                     //audiControl has to be disposed to end playing of music.
                     audioControls.Dispose();
-                }
-                   
-                if(result == DialogResult.No)
+                }                
+                else if(result == DialogResult.No)
                 {
                     eventArgs.Cancel = true;
                     return;
                 }
-
-                if (result == DialogResult.Undefined)
+                else
                 {
                     eventArgs.Cancel = true;
                     return;

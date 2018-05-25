@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-
+﻿
 namespace TuneMusix.ViewModel
 {
     partial class ViewModelMain
