@@ -217,7 +217,14 @@ namespace TuneMusix.Helpers.MediaPlayer
             Debug.WriteLine("Current Track changed");
             if (NewCurrentTrack != null)
             {
-                this.PlayTrack(NewCurrentTrack as Track);
+                if (((Track)NewCurrentTrack).IsValid)
+                {
+                    this.PlayTrack(NewCurrentTrack as Track);
+                }
+                else
+                {
+                    onPlaybackFinished(this);
+                }
             }
             else
             {
@@ -256,7 +263,7 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
 
                 Player = new AudioPlayerImpl(
-                    track.sourceURL,
+                    track.SourceURL,
                     getFloatVolume(volume),
                     options.Balance,
                     true,
