@@ -98,7 +98,7 @@
                         <!-- Popup for the volume slider -->
                         <Popup IsOpen="{Binding VolumePopupOpen,UpdateSourceTrigger=PropertyChanged}" AllowsTransparency="True"
                                 PopupAnimation="Fade" PlacementTarget="{Binding ElementName=MuteButton}" Placement="Bottom">
-                            <materialDesign:ColorZone Mode="Light" MinHeight="10" MinWidth="100" CornerRadius="10">
+                            <materialDesign:ColorZone Mode="PrimaryDark" MinHeight="10" MinWidth="100" CornerRadius="10">
                                 <Slider DockPanel.Dock="Top"  x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" Orientation="Horizontal" AutoToolTipPlacement="BottomRight"
                                     ToolTipService.ShowDuration="30000" Maximum="100" IsSelectionRangeEnabled="True" Margin="3,0" VerticalAlignment="Center">
                                     <i:Interaction.Triggers>
@@ -160,8 +160,8 @@
 
         <Grid x:Name="TrackInfo" Grid.Column="1" RenderTransformOrigin="0.5,0.5">
             <StackPanel>
-                <Label Content="{Binding CurrentTrackName}" FontWeight="Bold" Background="{x:Null}" Foreground="Black" FontSize="16" FontFamily="Segoe WP Black" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Label Content="{Binding CurrentPlaylistName}" Foreground="Black" FontWeight="Bold"
+                <Label Content="{Binding CurrentTrackName}" FontWeight="Bold" Background="{x:Null}" FontSize="16" FontFamily="Segoe WP Black" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Label Content="{Binding CurrentPlaylistName}" FontWeight="Bold"
                        FontSize="16" FontFamily="Segoe WP Black" Background="{x:Null}" Margin="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </StackPanel>
         </Grid>
