@@ -70,13 +70,6 @@ namespace TuneMusix.Data.SQLDatabase
         void Insert(Playlist playlist);
 
         /// <summary>
-        /// Used for adding tracks to an existing playlist
-        /// </summary>
-        /// <param name="playlist"></param>
-        /// <param name="tracklist"></param>
-        void Insert(Playlist playlist, List<Track> tracks);
-
-        /// <summary>
         /// Clears the options table and updates it with new values.
         /// </summary>
         /// <param name="IDGenStand"></param>

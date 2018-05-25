@@ -40,7 +40,8 @@ namespace TuneMusix.Data.SQLDatabase
                     string comm = dbReader.GetString(7);
                     string genre = dbReader.GetString(8);
                     int rating = dbReader.GetInt32(9);
-                    Track track = new Track(url, id, folderId, title, interpret, album,year, comm, genre, rating);
+                    string duration = dbReader.GetString(10);
+                    Track track = new Track(url, id, folderId, title, interpret, album,year, comm, genre, rating, duration);
                     tracklist.Add(track);
                 }
             }
@@ -100,7 +101,7 @@ namespace TuneMusix.Data.SQLDatabase
                 bool shuffle = false;
                 int repeatTrack = 0;
                 int primaryColor = 16; //Default = BlueGrey
-                int accentColor = 12; //Default = Lime
+                int accentColor = 4; //Default = Teal
                 bool theme = false; //Default = Light
                 bool askConfirmation = true;
 

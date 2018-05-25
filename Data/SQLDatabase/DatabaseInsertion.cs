@@ -16,7 +16,7 @@ namespace TuneMusix.Data.SQLDatabase
         
         public void Insert(Track track)
         {
-            Logger.Log("Track: '" + track.sourceURL + "' added to database");
+            Logger.Log("Track: '" + track.SourceURL + "' added to database");
             SQLiteCommand sqlcommand = new SQLiteCommand("INSERT OR REPLACE INTO tracks (ID," +
                                                                                          "folderID," +
                                                                                          "URL," +
@@ -26,9 +26,10 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                          "releaseyear," +
                                                                                          "comm," +
                                                                                          "genre," +
-                                                                                         "rating)" +
+                                                                                         "rating," +
+                                                                                         "duration)" +
                                                                                  "VALUES(@ID," +
-                                                                                        "@folderID," +
+                                                                                        "@FolderID," +
                                                                                         "@URL," +
                                                                                         "@Title," +
                                                                                         "@Interpret," +
@@ -36,18 +37,19 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                         "@ReleaseYear," +
                                                                                         "@Comm," +
                                                                                         "@Genre," +
-                                                                                        "@Rating);",                                                                                   
+                                                                                        "@Rating," +
+                                                                                        "@Duration);",                                                                                   
                                                                                         dbConnection);
             sqlcommand.Parameters.AddWithValue("ID", track.ID);
             if (track.FolderID == 0)
             {
-                sqlcommand.Parameters.AddWithValue("folderID", null);
+                sqlcommand.Parameters.AddWithValue("FolderID", null);
             }
             else
             {
                 sqlcommand.Parameters.AddWithValue("folderID", track.FolderID);
             }
-            sqlcommand.Parameters.AddWithValue("URL", track.sourceURL);
+            sqlcommand.Parameters.AddWithValue("URL", track.SourceURL);
             sqlcommand.Parameters.AddWithValue("Title", track.Title);
             sqlcommand.Parameters.AddWithValue("Interpret", track.Interpret);
             sqlcommand.Parameters.AddWithValue("Album", track.Album);
@@ -55,6 +57,7 @@ namespace TuneMusix.Data.SQLDatabase
             sqlcommand.Parameters.AddWithValue("Comm", track.Comm);
             sqlcommand.Parameters.AddWithValue("Genre", track.Genre);
             sqlcommand.Parameters.AddWithValue("Rating", track.Rating);
+            sqlcommand.Parameters.AddWithValue("Duration", track.Duration);
 
             OpenDBConnection();
             try
@@ -83,7 +86,8 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                          "releaseyear," +
                                                                                          "comm," +
                                                                                          "genre," +
-                                                                                         "rating)" +
+                                                                                         "rating," +
+                                                                                         "duration)" +
                                                                                  "VALUES(@ID," +
                                                                                         "@folderID," +
                                                                                         "@URL," +
@@ -93,7 +97,8 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                         "@ReleaseYear," +
                                                                                         "@Comm," +
                                                                                         "@Genre," +
-                                                                                        "@Rating);",
+                                                                                        "@Rating," +
+                                                                                        "@Duration);",
                                                                                         dbConnection);
                 sqlcommand.Parameters.AddWithValue("ID", track.ID);
                 if (track.FolderID == 0)
@@ -104,7 +109,7 @@ namespace TuneMusix.Data.SQLDatabase
                 {
                     sqlcommand.Parameters.AddWithValue("folderID", track.FolderID);
                 }              
-                sqlcommand.Parameters.AddWithValue("URL", track.sourceURL);
+                sqlcommand.Parameters.AddWithValue("URL", track.SourceURL);
                 sqlcommand.Parameters.AddWithValue("Title", track.Title);
                 sqlcommand.Parameters.AddWithValue("Interpret", track.Interpret);
                 sqlcommand.Parameters.AddWithValue("Album", track.Album);
@@ -112,6 +117,7 @@ namespace TuneMusix.Data.SQLDatabase
                 sqlcommand.Parameters.AddWithValue("Comm", track.Comm);
                 sqlcommand.Parameters.AddWithValue("Genre", track.Genre);
                 sqlcommand.Parameters.AddWithValue("Rating", track.Rating);
+                sqlcommand.Parameters.AddWithValue("Duration", track.Duration);
                 commandlist.Add(sqlcommand);
             }
             OpenDBConnection();
@@ -177,60 +183,40 @@ namespace TuneMusix.Data.SQLDatabase
        
         public void Insert(Playlist playlist)
         {
-            Logger.Log("Playlist: '" + playlist.Name + "' added to database");
-            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT OR REPLACE INTO playlists (ID," +
+            List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
+
+            //Playlist table update
+            SQLiteCommand playlistInsertCommand = new SQLiteCommand("INSERT OR REPLACE INTO playlists (ID," +
                                                                                             "name) " +
                                                                                      "VALUES(@ID," +
                                                                                             "@name);",
                                                                                              dbConnection);
-            sqlcommand.Parameters.AddWithValue("ID", playlist.ID);
-            sqlcommand.Parameters.AddWithValue("name", playlist.Name);
-            OpenDBConnection();
-            try
-            {
-                beginCommand.ExecuteNonQuery();
-                sqlcommand.ExecuteNonQuery();
-                endCommand.ExecuteNonQuery();
-            }
-            finally
-            {
-                CloseDBConnection();
-            }
-            Debug.WriteLine("Playlist was added to DB: " + playlist.Name);
-        }
-        
-        public void Insert(Playlist playlist, List<Track> tracks)
-        {
-            if (playlist == null || tracks == null)
-                throw new ArgumentNullException();
+            playlistInsertCommand.Parameters.AddWithValue("ID", playlist.ID);
+            playlistInsertCommand.Parameters.AddWithValue("name", playlist.Name);
+            commandlist.Add(playlistInsertCommand);
 
-            List<PlaylistTrack> playlistTracks = new List<PlaylistTrack>();
-            foreach (Track track in tracks)
+            //Playlist tracks table Update
+            if(playlist.Tracklist.Count > 0)
             {
-                playlistTracks.Add(new PlaylistTrack(track.ID, playlist.ID));
-            }
-            this.insert(playlistTracks);
-        }
-
-        private void insert(List<PlaylistTrack> playlistTracks)
-        {
-            List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
-            foreach (PlaylistTrack track in playlistTracks)
-            {
-                SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttracks(trackID,"+
-                                                                                               "playlistID) "+
-                                                                                         "VALUES(@trackID,"+
+                foreach(Track track in playlist.Tracklist)
+                {
+                    SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttracks(trackID," +
+                                                                                               "playlistID) " +
+                                                                                         "VALUES(@trackID," +
                                                                                                 "@playlistID)",
                                                                                                  dbConnection);
-                command.Parameters.AddWithValue("trackID",track.TrackID);
-                command.Parameters.AddWithValue("playlistID",track.PlaylistID);
-                commandlist.Add(command);
+                    command.Parameters.AddWithValue("trackID", track.ID);
+                    command.Parameters.AddWithValue("playlistID", playlist.ID);
+                    commandlist.Add(command);
+                }
             }
+
             OpenDBConnection();
             try
             {
                 beginCommand.ExecuteNonQuery();
-                foreach (SQLiteCommand command in commandlist)
+
+                foreach(SQLiteCommand command in commandlist)
                 {
                     command.ExecuteNonQuery();
                 }
@@ -240,7 +226,9 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 CloseDBConnection();
             }
+            Debug.WriteLine("Playlist was added to DB: " + playlist.Name);
         }
+        
         /// <summary>
         /// Updates the options table in the database.
         /// Updated values include:

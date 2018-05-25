@@ -65,7 +65,9 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                      "releaseyear INT UNSIGNED," +
                                                                                                      "comm VARCHAR(50)," +
                                                                                                      "genre VARCHAR(20)," +
-                                                                                                     "rating INT NOT NULL,PRIMARY KEY(ID)," +
+                                                                                                     "rating INT NOT NULL,"+
+                                                                                                     "duration VARCHAR(20)," +
+                                                                                                     "PRIMARY KEY(ID)," +
                                                                                                      "FOREIGN KEY (folderID) " +
                                                                                                      "REFERENCES folders(ID) " +
                                                                                                      "ON DELETE CASCADE);",
@@ -96,7 +98,8 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                                    "playlistID INT UNSIGNED NOT NULL, " +
                                                                                                                    "FOREIGN KEY(trackID) " +
                                                                                                                    "REFERENCES tracks(ID) " +
-                                                                                                                   "ON DELETE CASCADE, " +
+                                                                                                                   "ON DELETE CASCADE, "+
+                                                                                                                   "PRIMARY KEY(trackID)," +
                                                                                                                    "FOREIGN KEY(playlistID) " +
                                                                                                                    "REFERENCES playlists(ID) " +
                                                                                                                    "ON DELETE CASCADE);"
