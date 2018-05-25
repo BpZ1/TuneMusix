@@ -38,7 +38,23 @@ namespace TuneMusix.Data.DataModelOb
 
                 //Set new track to current track
                 if(value != null)
+                {
                     value.IsCurrentTrack = true;
+                    //Update the track and check if it is valid.
+                    FileParser parser = new FileParser();
+                    if (parser.UpdateTrack(value))
+                    {
+                        value.IsValid = true;
+                    }
+                    else
+                    {
+                        value.IsValid = false;
+                    }
+                    if (value.IsModified)
+                    {
+                        SaveTrack(value);
+                    }
+                }
 
                 this.currentTrack = value;              
                 OnCurrentTrackChanged();
