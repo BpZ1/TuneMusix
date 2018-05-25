@@ -47,6 +47,32 @@ namespace TuneMusix.Helpers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="index1"></param>
+        /// <param name="index2"></param>
+        public static void ChangeItemPosition<T>(this IList<T> list, T element ,int position)
+        {
+            if (list.Contains(element)) //Effect is already contained in the list.
+            {
+                int pos1 = list.IndexOf(element);
+                Logger.Log("Moved effect from list position " + pos1 + " to position " + position + ".");
+                if (position == list.Count) //If the new position is at the end of the list
+                {
+                    list.Remove(element);
+                    list.Insert(position-1, element);
+                }
+                else
+                {
+                    list.Remove(element);
+                    list.Insert(position, element);
+                }
+            }
+        }
+
+        /// <summary>
         /// Checks if two lists contain the same elements.
         /// </summary>
         /// <typeparam name="T"></typeparam>
