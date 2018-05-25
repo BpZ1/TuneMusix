@@ -1,9 +1,8 @@
 ﻿using System.Windows.Controls;
-using TuneMusix.Data;
-using System;
-using TuneMusix.Helpers;
 using TuneMusix.Model;
 using TuneMusix.ViewModel;
+using System.Windows;
+using System.Windows.Input;
 
 namespace TuneMusix.View
 {
@@ -15,6 +14,16 @@ namespace TuneMusix.View
         public TracklistPage()
         {
             InitializeComponent();
+        }
+
+        void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var viewModel = (TracklistViewModel)DataContext;
+            var item = ((FrameworkElement)e.OriginalSource).DataContext as Track;
+            if (item != null)
+            {
+                viewModel.TrackDoubleClicked.Execute(item);
+            }
         }
     }
 }

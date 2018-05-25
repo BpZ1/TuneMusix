@@ -22,8 +22,9 @@
       >
     <Page.Resources>
         <vm:TracklistViewModel x:Key="TracklistViewModel"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
-    <DockPanel>
+    <DockPanel Background="Transparent">
         <materialDesign:ColorZone Mode="PrimaryLight" DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal">
                 <TextBox Width="400" Margin="10,2,0,2" HorizontalAlignment="Left" Text="Search" x:Name="searchBox">
@@ -48,11 +49,8 @@
             </StackPanel>
         </materialDesign:ColorZone>
         <ListView Name="AllTrackList" ItemsSource="{Binding FilteredTracks, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-              Margin="10" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" DockPanel.Dock="Top">
+              Margin="10" DockPanel.Dock="Top" MouseDoubleClick="ListView_MouseDoubleClick">
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding PlayTrack}"  CommandParameter="{Binding ElementName=AllTrackList}"/>
-                </i:EventTrigger>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
                 </i:EventTrigger>
@@ -62,7 +60,7 @@
                     <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
                     <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
                         <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem">
+                            <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                                 <Setter Property="Header" Value="{Binding Name}"/>
                                 <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=MenuItem}, Path=DataContext.AddToPlaylist}" />
                                 <Setter Property="CommandParameter" Value="{Binding}" />
@@ -74,12 +72,101 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}"  Header="Title" Width="300"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret, UpdateSourceTrigger=PropertyChanged}" Header="Interpret" Width="auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Album, UpdateSourceTrigger=PropertyChanged}" Header="Album" Width="Auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Year, UpdateSourceTrigger=PropertyChanged}" Header="Year" Width="Auto"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Genre, UpdateSourceTrigger=PropertyChanged}"  Header="Genre" Width="Auto"/>
-                    <GridViewColumn Header="Rating" Width="150">
+                    <GridViewColumn x:Name="TitleColumn" DisplayMemberBinding="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" Width="300" >
+                        <GridViewColumnHeader>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding ColumnClicked}" CommandParameter="TitleColumn"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <StackPanel Orientation="Horizontal" x:Name="TitleColumnHeader">
+                                <TextBlock Text="Title" VerticalAlignment="Center" Margin="5,0,10,0"></TextBlock>
+                                <materialDesign:PackIcon Kind="{Binding SortingIcon,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding TitleSorted, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
+                    <!--      Interpret column         -->
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret, UpdateSourceTrigger=PropertyChanged}" Width="200">
+                        <GridViewColumnHeader>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding ColumnClicked}" CommandParameter="InterpretColumn"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <StackPanel Orientation="Horizontal" x:Name="InterpretColumnHeader">
+                                <TextBlock Text="Interpret" VerticalAlignment="Center" Margin="5,0,10,0"></TextBlock>
+                                <materialDesign:PackIcon Kind="{Binding SortingIcon,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding InterpretSorted, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
+                    <!--      Album column         -->
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Album, UpdateSourceTrigger=PropertyChanged}" Width="200">
+                        <GridViewColumnHeader>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding ColumnClicked}" CommandParameter="AlbumColumn"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <StackPanel Orientation="Horizontal" x:Name="AlbumColumnHeader">
+                                <TextBlock Text="Album" VerticalAlignment="Center" Margin="5,0,10,0"></TextBlock>
+                                <materialDesign:PackIcon Kind="{Binding SortingIcon,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding AlbumSorted, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
+                    <!--      Year column         -->
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Year, UpdateSourceTrigger=PropertyChanged}" Width="100">
+                        <GridViewColumnHeader>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding ColumnClicked}" CommandParameter="YearColumn"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <StackPanel Orientation="Horizontal" x:Name="YearColumnHeader">
+                                <TextBlock Text="Year" VerticalAlignment="Center" Margin="5,0,10,0"></TextBlock>
+                                <materialDesign:PackIcon Kind="{Binding SortingIcon,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding YearSorted, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
+                    <!--      Genre column         -->
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Genre, UpdateSourceTrigger=PropertyChanged}" Width="150">
+                        <GridViewColumnHeader>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding ColumnClicked}" CommandParameter="GenreColumn"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <StackPanel Orientation="Horizontal" x:Name="GenreColumnHeader">
+                                <TextBlock Text="Genre" VerticalAlignment="Center" Margin="5,0,10,0"></TextBlock>
+                                <materialDesign:PackIcon Kind="{Binding SortingIcon,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding GenreSorted, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
+                    <!--      Duration column         -->
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Duration, UpdateSourceTrigger=PropertyChanged}" Width="150">
+                        <GridViewColumnHeader>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding ColumnClicked}" CommandParameter="DurationColumn"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <StackPanel Orientation="Horizontal" x:Name="DurationColumnHeader">
+                                <TextBlock Text="Duration" VerticalAlignment="Center" Margin="5,0,10,0"></TextBlock>
+                                <materialDesign:PackIcon Kind="{Binding SortingIcon,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding DurationSorted, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </GridViewColumnHeader>
+                    </GridViewColumn>
+                    <GridViewColumn Width="250">
+                        <GridViewColumnHeader>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding ColumnClicked}" CommandParameter="RatingColumn"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <StackPanel Orientation="Horizontal" x:Name="RatingColumnHeader">
+                                <TextBlock Text="Rating" VerticalAlignment="Center" Margin="5,0,10,0"></TextBlock>
+                                <materialDesign:PackIcon Kind="{Binding SortingIcon,UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding RatingSorted, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </GridViewColumnHeader>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <materialDesign:RatingBar Value="{Binding Rating,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Foreground="Gold" Margin="0" />
