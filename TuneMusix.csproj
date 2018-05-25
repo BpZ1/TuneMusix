@@ -167,6 +167,8 @@
     <Compile Include="Helpers\Converter.cs" />
     <Compile Include="Helpers\Dialogs\DialogResult.cs" />
     <Compile Include="Helpers\Dialogs\DialogService.cs" />
+    <Compile Include="Helpers\Enums\HeaderType.cs" />
+    <Compile Include="Helpers\Enums\SortingType.cs" />
     <Compile Include="Helpers\Exceptions\ClassNotInitializedException.cs" />
     <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
     <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
