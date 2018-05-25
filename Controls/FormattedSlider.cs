@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
+using TuneMusix.Helpers;
 
 namespace TuneMusix.Controls
 {
@@ -54,9 +55,9 @@ namespace TuneMusix.Controls
             //Format the string if it is a time value in seconds.
             if (IsTimeValue)
             {
-                
-                this.AutoToolTip.Content = TimeSpan.FromSeconds(
-                    Double.Parse((string)this.AutoToolTip.Content)).ToString();
+
+                this.AutoToolTip.Content = Converter.TimeSpanToString(TimeSpan.FromSeconds(
+                    Double.Parse((string)this.AutoToolTip.Content)));
             }
         }
 

@@ -38,5 +38,40 @@ namespace TuneMusix.Helpers
 
             return false;
         }
+
+        public static string TimeSpanToString(TimeSpan timeSpan)
+        {
+            if (timeSpan == null)
+                throw new ArgumentNullException();
+
+            int hours = timeSpan.Hours;
+            int minutes = timeSpan.Minutes;
+            int seconds = timeSpan.Seconds;
+            string result = "";
+            if(hours != 0)
+            {
+                result += hours + ":";
+            }
+            if(minutes != 0)
+            {
+                if(hours != 0 && minutes < 10)
+                {
+                    result += (minutes * 10) + ":";
+                }
+                else
+                {
+                    result += minutes + ":";
+                }
+            }
+            if(seconds < 10)
+            {
+                result += (seconds * 10);
+            }
+            else
+            {
+                result += seconds;
+            }
+            return result;
+        }
     }
 }
