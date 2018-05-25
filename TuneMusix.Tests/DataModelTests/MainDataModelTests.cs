@@ -19,11 +19,11 @@ namespace TuneMusix.Tests.DataModelTests
         private Playlist playlist4 = new Playlist("4", 1);
         private Playlist playlist5 = new Playlist("5", 1);
 
-        private Track track1 = new Track("url1", 1);
-        private Track track2 = new Track("url2", 1);
-        private Track track3 = new Track("url3", 1);
-        private Track track4 = new Track("url4", 1);
-        private Track track5 = new Track("url4", 1);
+        private Track track1 = new Track("url1", 1, null, null, null, 0, null, null, null);
+        private Track track2 = new Track("url2", 1, null, null, null, 0, null, null, null);
+        private Track track3 = new Track("url3", 1, null, null, null, 0, null, null, null);
+        private Track track4 = new Track("url4", 1, null, null, null, 0, null, null, null);
+        private Track track5 = new Track("url4", 1, null, null, null, 0, null, null, null);
 
         
         /*
