@@ -4,10 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TuneMusix.View.Dialog"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:command="http://www.galasoft.ch/mvvmlight"
         ResizeMode="NoResize"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"     
         WindowStartupLocation="CenterScreen"
         Title="TuneMusix" Height="100" Width="300">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding ExitButtonCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <ContentPresenter x:Name="ContentPreseter" Content="{Binding}"></ContentPresenter>
 </Window>
