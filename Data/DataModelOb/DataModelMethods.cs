@@ -165,7 +165,7 @@ namespace TuneMusix.Data.DataModelOb
         {
             foreach (Track t in TrackList)
             {
-                if (track.sourceURL.Equals(t.sourceURL))
+                if (track.SourceURL.Equals(t.SourceURL))
                     return true;
             }
             return false;
@@ -210,7 +210,6 @@ namespace TuneMusix.Data.DataModelOb
                     TrackList.Add(track);
                 }          
             }
-            OnDataModelChanged();
         }
         /// <summary>
         /// DatabaseMethod for Inserting Folders into the DataModel.
@@ -222,7 +221,6 @@ namespace TuneMusix.Data.DataModelOb
             {
                 RootFolders.Add(folder);
             }
-            OnDataModelChanged();
         }
         /// <summary>
         /// DatabaseMethod for Inserting Playlists into the DataModel.
@@ -235,7 +233,6 @@ namespace TuneMusix.Data.DataModelOb
                 playlist.IsModified = false;
                 Playlists.Add(playlist);
             }
-            OnDataModelChanged();
         }
         public void AddEffectsToQueue_NoDatabase(List<BaseEffect> effectList)
         {
@@ -244,7 +241,6 @@ namespace TuneMusix.Data.DataModelOb
                 EffectQueue.Add(effect);
             }
             AudioControls.Instance.LoadEffects();
-            OnEffectQueueChanged();
         }
         /// <summary>
         /// Adds a track to a playlist and triggers the event.
@@ -254,7 +250,6 @@ namespace TuneMusix.Data.DataModelOb
         public void AddTrackToPlaylist_NoDatabase(Track track,Playlist playlist)
         {
             playlist.AddTrack(track);
-            OnDataModelChanged();
         }
 
         //////////////////////////////////////////////////////////////////////////////
@@ -339,6 +334,7 @@ namespace TuneMusix.Data.DataModelOb
                         tracks.AddRange(f.Tracklist);
                     }
                     Console.WriteLine("Tracks added: " + tracks.Count);
+                    folder.FolderID = 1;
                     database.Insert(folders);
                     RootFolders.Add(folder);
                     Add(tracks);
@@ -355,7 +351,9 @@ namespace TuneMusix.Data.DataModelOb
         }
 
         /// <summary>
-        /// Adds a playlist to the datamodel and the database.
+        /// Adds a playlist to the datamodel.
+        /// The playlist has to be manually saved to 
+        /// the database by the user.
         /// </summary>
         /// <param name="name"></param>
         public void AddPlaylist(string name)
@@ -398,7 +396,6 @@ namespace TuneMusix.Data.DataModelOb
             }
             if(checkedTracks.Count > 0)
             {
-                database.Insert(playlist, checkedTracks);
                 playlist.AddTracks(checkedTracks);
             }  
         }
@@ -532,7 +529,51 @@ namespace TuneMusix.Data.DataModelOb
         }
         #endregion
 
-        
+        /// <summary>
+        /// Saves all playlists to the database and sets modified to false;
+        /// </summary>
+        /// <param name="playlists"></param>
+        public void SavePlaylists(List<Playlist> playlists)
+        {
+            foreach (Playlist playlist in playlists)
+            {
+                database.Insert(playlist);
+                playlist.IsModified = false;
+            }
+        }
+        /// <summary>
+        /// Saves all tracks to the database and sets modified to false;
+        /// </summary>
+        /// <param name="tracklist"></param>
+        public void SaveTracks(List<Track> tracklist)
+        {
+            database.Insert(tracklist);
+            foreach (Track track in tracklist)
+            {
+                track.IsModified = false;
+            }
+        }
+        /// <summary>
+        /// Saves all folders to the database and sets modified to false;
+        /// </summary>
+        /// <param name="folderlist"></param>
+        public void SaveFolders(List<Folder> folderlist)
+        {
+            database.Insert(folderlist);
+            foreach(Folder folder in folderlist)
+            {
+                folder.IsModified = false;
+            }
+        }
+        /// <summary>
+        /// Saves the folder to the database and sets IsModified to false.
+        /// </summary>
+        /// <param name="track"></param>
+        public void SaveTrack(Track track)
+        {      
+            database.Insert(track);
+            track.IsModified = false;
+        }
 
         /// <summary>
         /// Shuffles the current trackqueue. 
@@ -572,7 +613,6 @@ namespace TuneMusix.Data.DataModelOb
             //Set queue to the sorted list
             TrackQueue = new ObservableCollection<Track>(sortedList);     
         }
-   
         public void ChangeTrackQueuePosition(Track track, int position)
         {
             if (track == null)
