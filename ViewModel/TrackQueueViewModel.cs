@@ -9,6 +9,7 @@ using TuneMusix.Helpers;
 using TuneMusix.Model;
 using System;
 using System.Windows;
+using System.Collections.ObjectModel;
 
 namespace TuneMusix.ViewModel
 {
@@ -21,6 +22,7 @@ namespace TuneMusix.ViewModel
         public RelayCommand PlayTrack { get; set; }
         public RelayCommand DeleteSelectedTracks { get; set; }
         public RelayCommand AddToPlaylist { get; set; }
+        public RelayCommand TrackDoubleClicked { get; set; }
         public RelayCommand SelectionChanged { get; set; }
 
         public TrackQueueViewModel()
@@ -30,6 +32,7 @@ namespace TuneMusix.ViewModel
             SelectionChanged = new RelayCommand(selectionChanged);
             PlayTrack = new RelayCommand(playTrack);
             dataModel.TrackQueueChanged += onTrackQueueChanged;
+            TrackDoubleClicked = new RelayCommand(trackDoubleClicked);
 
             Options.Instance.ColorChanged += onColorChanged;
         }
@@ -57,6 +60,18 @@ namespace TuneMusix.ViewModel
                 selectedTrack = listView.SelectedItem as Track;
             }
         }
+        private void trackDoubleClicked(object argument)
+        {
+            if (argument == null)
+                throw new ArgumentNullException();
+
+            var track = argument as Track;
+            if (track != null)
+            {
+                CurrentTrack = track;
+                dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(track);
+            }
+        }
         /// <summary>
         /// Adds the selected track to a playlist
         /// </summary>
@@ -80,9 +95,9 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        public List<Track> CurrentTrackQueue
+        public ObservableCollection<Track> CurrentTrackQueue
         {
-            get { return dataModel.TrackQueue.ToList<Track>(); }
+            get { return dataModel.TrackQueue; }
         }
         /// <summary>
         /// Brush that sets the highlight color of the current track in the trackqueue.
@@ -96,17 +111,16 @@ namespace TuneMusix.ViewModel
                 return new SolidColorBrush(hue.Color);
             }
         }
-
         private void onColorChanged()
         {
             RaisePropertyChanged("HighlightColor");
         }
-
         private void onTrackQueueChanged(object source, object argument)
         {
             RaisePropertyChanged("CurrentTrackQueue");
         }
 
+        #region drag and drop
         public void StartDrag(IDragInfo dragInfo)
         {
             dragInfo.Data = dragInfo.SourceItem;
@@ -131,7 +145,6 @@ namespace TuneMusix.ViewModel
 
         public void DragCancelled()
         {
-            throw new NotImplementedException();
         }
 
         public bool TryCatchOccurredException(Exception exception)
@@ -156,8 +169,12 @@ namespace TuneMusix.ViewModel
             Track track = dropInfo.Data as Track;
             if (track != null && dropInfo != null)
             {
-                dataModel.ChangeTrackQueuePosition(track, dropInfo.UnfilteredInsertIndex);
+                ListUtil.ChangeItemPosition(CurrentTrackQueue, track, dropInfo.UnfilteredInsertIndex);
+                RaisePropertyChanged("CurrentTrackQueue");
             }
         }
+        #endregion
+
+
     }
 }
