@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Controls;
-using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Enums;
 using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
@@ -16,6 +15,11 @@ namespace TuneMusix.ViewModel
         public ObservableCollection<Track> SelectedTracks { get; set; }
         private string searchText;
 
+        private const string DESCENDING_SORTED_ICON = "ChevronDown";
+        private const string ASCENDING_SORTED_ICON = "ChevronUp";
+        private HeaderType sortedColumn;
+        private SortingType sortingType;
+
         //Relaycommands
         public RelayCommand PlayTrack { get; set; }
         public RelayCommand DeleteSelectedTracks { get; set; }
@@ -23,14 +27,19 @@ namespace TuneMusix.ViewModel
         public RelayCommand SelectionChanged { get; set; }
         public RelayCommand SearchChanged { get; set; }
         public RelayCommand DeleteSearch { get; set; }
+        public RelayCommand ColumnClicked { get; set; }
+        public RelayCommand TrackDoubleClicked { get; set; }
 
+        private List<Track> filteredTracks;
 
         //Constructor
         public TracklistViewModel()
         {
             searchText = "";
             SelectedTracks = new ObservableCollection<Track>();
-
+            filteredTracks = TrackList.ToList();
+            sortingType = SortingType.Ascending;
+            sortedColumn = HeaderType.Title;
 
             DeleteSelectedTracks = new RelayCommand(deleteSelectedTracks);
             AddToPlaylist = new RelayCommand(addToPlaylist);
@@ -38,46 +47,24 @@ namespace TuneMusix.ViewModel
             PlayTrack = new RelayCommand(playTrack);
             SearchChanged = new RelayCommand(searchChanged);
             DeleteSearch = new RelayCommand(deleteSearch);
+            ColumnClicked = new RelayCommand(columnClicked);
+            TrackDoubleClicked = new RelayCommand(trackDoubleClicked);
 
             //events
             dataModel.DataModelChanged += OnTrackListChanged;
 
         }
 
+
+        #region properties
         public List<Track> FilteredTracks
         {
-            get
-            {
-                if (!searchText.Equals(""))
-                {
-                    IEnumerable<Track> result = TrackList.Where(t => TrackService.Contains(t, searchText, false));
-                    return result.ToList<Track>();
-                }
-                else
-                {
-                    return TrackList.ToList<Track>();
-                }
-            
-            }
+            get { return filteredTracks; }
         }
-
-        #region methods
-        public void OnTrackListChanged(object source,object obj)
-        {
-            RaisePropertyChanged("FilteredTracks");
-        }
-
-        private void playTrack(object argument)
-        {
-            if (SelectedTracks == null) return;
-            if (SelectedTracks.Count > 0)
-            {
-                CurrentPlaylist = null;
-                TrackQueue = SelectedTracks.ToList<Track>();
-            }
-        }
+        #endregion
 
 
+        #region commands
         /// <summary>
         /// Deletes all selected tracks from the tracklist.
         /// </summary>
@@ -86,7 +73,6 @@ namespace TuneMusix.ViewModel
         {
             dataModel.Delete(SelectedTracks.ToList<Track>());
         }
-
         /// <summary>
         /// Adds all selected tracks to the playlist with the given id.
         /// </summary>
@@ -97,10 +83,9 @@ namespace TuneMusix.ViewModel
 
             if (selectedPlaylist != null)
             {
-                dataModel.AddTracksToPlaylist(SelectedTracks.ToList<Track>(),selectedPlaylist);
-            }        
+                dataModel.AddTracksToPlaylist(SelectedTracks.ToList<Track>(), selectedPlaylist);
+            }
         }
-
         private void selectionChanged(object argument)
         {
             var listView = argument as ListView;
@@ -112,7 +97,15 @@ namespace TuneMusix.ViewModel
                 SelectedTracks.Add(track);
             }
         }
-
+        private void playTrack(object argument)
+        {
+            if (SelectedTracks == null) return;
+            if (SelectedTracks.Count > 0)
+            {
+                CurrentPlaylist = null;
+                TrackQueue = SelectedTracks.ToList<Track>();
+            }
+        }
         //Called every time the text in the textbox changes
         private void searchChanged(object argument)
         {
@@ -120,9 +113,9 @@ namespace TuneMusix.ViewModel
                 return;
 
             searchText = (string)argument;
+            updateFilteredTracks();
             RaisePropertyChanged("FilteredTracks");
         }
-
         //called if the button for the deletion of the textbox is clicked
         private void deleteSearch(object argument)
         {
@@ -132,6 +125,316 @@ namespace TuneMusix.ViewModel
             searchText = "";
             RaisePropertyChanged("FilteredTracks");
         }
+        /// <summary>
+        /// Changes the type of the column to sort.
+        /// Changes the sorting type if the same column is
+        /// clicked that is already sorted.
+        /// </summary>
+        /// <param name="argument"></param>
+        private void columnClicked(object argument)
+        {
+            var columnType = argument as string;
+            HeaderType previousType = sortedColumn;
+            switch (columnType)
+            {
+                case "TitleColumn":
+                    sortedColumn = HeaderType.Title;
+                    break;
+
+                case "InterpretColumn":
+                    sortedColumn = HeaderType.Interpret;
+                    break;
+
+                case "AlbumColumn":
+                    sortedColumn = HeaderType.Album;
+                    break;
+
+                case "YearColumn":
+                    sortedColumn = HeaderType.Year;
+                    break;
+
+                case "GenreColumn":
+                    sortedColumn = HeaderType.Genre;
+                    break;
+
+                case "RatingColumn":
+                    sortedColumn = HeaderType.Rating;
+                    break;
+
+                case "DurationColumn":
+                    sortedColumn = HeaderType.Duration;
+                    break;
+            }
+            //If column did not change change sorting mode.
+            if (previousType == sortedColumn)
+            {
+                if (sortingType == SortingType.Ascending)
+                {
+                    sortingType = SortingType.Descending;
+                }
+                else
+                {
+                    sortingType = SortingType.Ascending;
+                }
+                RaisePropertyChanged("SortingIcon");
+            }
+            RaisePropertyChanged("TitleSorted");
+            RaisePropertyChanged("InterpretSorted");
+            RaisePropertyChanged("AlbumSorted");
+            RaisePropertyChanged("YearSorted");
+            RaisePropertyChanged("GenreSorted");
+            RaisePropertyChanged("RatingSorted");
+            RaisePropertyChanged("DurationSorted");
+            //start sorting
+            sortListView();
+            RaisePropertyChanged("FilteredTracks");
+        }
+        private void trackDoubleClicked(object argument)
+        {
+            if (argument == null)
+                throw new ArgumentNullException();
+
+            var track = argument as Track;
+            if (track != null)
+            {
+                CurrentTrack = track;
+                dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(track);
+            }
+        }
         #endregion
+
+
+        #region methods
+        public void OnTrackListChanged(object source,object obj)
+        {
+            filteredTracks = TrackList.ToList();
+            sortListView();
+        }
+
+        private void updateFilteredTracks()
+        {
+            //Implement filter
+        }
+
+
+
+        private void sortListView()
+        {
+            Logger.Log("Sorting " + sortedColumn);
+
+            IEnumerable<Track> sortedList = null;
+
+            if (sortedColumn == HeaderType.Album)
+            {
+                if(sortingType == SortingType.Ascending)
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Album ascending
+                       select track;
+                }
+                else
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Album descending
+                       select track;
+                }
+            }
+            if (sortedColumn == HeaderType.Duration)
+            {
+                if (sortingType == SortingType.Ascending)
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Duration ascending
+                       select track;
+                }
+                else
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Duration descending
+                       select track;
+                }
+            }
+            if (sortedColumn == HeaderType.Genre)
+            {
+                if (sortingType == SortingType.Ascending)
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Genre ascending
+                       select track;
+                }
+                else
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Genre descending
+                       select track;
+                }
+            }
+            if (sortedColumn == HeaderType.Interpret)
+            {
+                if (sortingType == SortingType.Ascending)
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Interpret ascending
+                       select track;
+                }
+                else
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Interpret descending
+                       select track;
+                }
+            }
+            if (sortedColumn == HeaderType.Rating)
+            {
+                if (sortingType == SortingType.Ascending)
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Rating ascending
+                       select track;
+                }
+                else
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Rating descending
+                       select track;
+                }
+            }
+            if (sortedColumn == HeaderType.Title)
+            {
+                if (sortingType == SortingType.Ascending)
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Title ascending
+                       select track;
+                }
+                else
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Title descending
+                       select track;
+                }
+            }
+            if (sortedColumn == HeaderType.Year)
+            {
+                if (sortingType == SortingType.Ascending)
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Year ascending
+                       select track;
+                }
+                else
+                {
+                    sortedList =
+                       from track in FilteredTracks
+                       orderby track.Year descending
+                       select track;
+                }
+            }
+            if(sortedList != null)
+                filteredTracks = sortedList.ToList();
+
+            RaisePropertyChanged("FilteredTracks");
+        }
+        #endregion
+        /// <summary>
+        /// Defines the arrow icon type besides the header in the columns.
+        /// </summary>
+        public string SortingIcon
+        {
+            get
+            {
+                if (sortingType == SortingType.Ascending)
+                {
+                    return ASCENDING_SORTED_ICON;
+                }
+                else
+                {
+                    return DESCENDING_SORTED_ICON;
+                }               
+            }
+        }
+        public bool TitleSorted
+        {
+            get
+            {
+                if (sortedColumn == HeaderType.Title)
+                    return true;
+
+                return false;
+            }
+        }
+        public bool InterpretSorted
+        {
+            get
+            {
+                if (sortedColumn == HeaderType.Interpret)
+                    return true;
+
+                return false;
+            }
+        }
+        public bool AlbumSorted
+        {
+            get
+            {
+                if (sortedColumn == HeaderType.Album)
+                    return true;
+
+                return false;
+            }
+        }
+        public bool YearSorted
+        {
+            get
+            {
+                if (sortedColumn == HeaderType.Year)
+                    return true;
+
+                return false;
+            }
+        }
+        public bool GenreSorted
+        {
+            get
+            {
+                if (sortedColumn == HeaderType.Genre)
+                    return true;
+
+                return false;
+            }
+        }
+        public bool RatingSorted
+        {
+            get
+            {
+                if (sortedColumn == HeaderType.Rating)
+                    return true;
+
+                return false;
+            }
+        }
+        public bool DurationSorted
+        {
+            get
+            {
+                if (sortedColumn == HeaderType.Duration)
+                    return true;
+
+                return false;
+            }
+        }
     }
 }
