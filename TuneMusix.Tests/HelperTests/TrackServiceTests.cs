@@ -12,10 +12,10 @@ namespace TuneMusix.Tests.HelperTests
     [TestClass]
     public class TrackServiceTests
     {
-        private Track track1 = new Track("aaaaaa", 123);
-        private Track track2 = new Track("bbbbbb", 456);
-        private Track track3 = new Track("cccccc", 567);
-        private Track track4 = new Track("dddddd", 678);
+        private Track track1 = new Track("aaaaaa", 123, null, null, null, 0, null, null, null);
+        private Track track2 = new Track("bbbbbb", 456, null, null, null, 0, null, null, null);
+        private Track track3 = new Track("cccccc", 567, null, null, null, 0, null, null, null);
+        private Track track4 = new Track("dddddd", 678, null, null, null, 0, null, null, null);
 
         private void setTracks()
         {
