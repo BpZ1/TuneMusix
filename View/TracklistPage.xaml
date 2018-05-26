@@ -58,7 +58,9 @@
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
-                    <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
+                    <MenuItem Command="{Binding AddTracksToQueue}" Header="Add to queue"/>
+                    <MenuItem Command="{Binding OpenNewPlaylistDialog}"  Header="Add new playlist"/>
+                    <MenuItem ItemsSource="{Binding Playlists}" Header="Add to existing playlist">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                                 <Setter Property="Header" Value="{Binding Name}"/>
