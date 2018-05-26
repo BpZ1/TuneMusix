@@ -1,11 +1,16 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.Enums;
 using TuneMusix.Model;
+using TuneMusix.View.Dialog;
+using TuneMusix.ViewModel.Dialog;
 
 namespace TuneMusix.ViewModel
 {
@@ -29,6 +34,8 @@ namespace TuneMusix.ViewModel
         public RelayCommand DeleteSearch { get; set; }
         public RelayCommand ColumnClicked { get; set; }
         public RelayCommand TrackDoubleClicked { get; set; }
+        public RelayCommand AddTracksToQueue { get; set; }
+        public RelayCommand OpenNewPlaylistDialog { get; set; }
 
         private List<Track> filteredTracks;
 
@@ -49,6 +56,8 @@ namespace TuneMusix.ViewModel
             DeleteSearch = new RelayCommand(deleteSearch);
             ColumnClicked = new RelayCommand(columnClicked);
             TrackDoubleClicked = new RelayCommand(trackDoubleClicked);
+            AddTracksToQueue = new RelayCommand(addTracksToQueue);
+            OpenNewPlaylistDialog = new RelayCommand(newPlaylistDialog);
 
             //events
             dataModel.DataModelChanged += OnTrackListChanged;
@@ -198,9 +207,82 @@ namespace TuneMusix.ViewModel
             if (track != null)
             {
                 CurrentTrack = track;
+                dataModel.CurrentPlaylist = null;
+                dataModel.TrackQueue = new ObservableCollection<Track>(new List<Track>(){track});
                 dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(track);
             }
         }
+        private void addTracksToQueue(object argument)
+        {
+            if (SelectedTracks == null) return;
+            if (SelectedTracks.Count > 0)
+            {
+                CurrentPlaylist = null;
+                foreach(Track track in SelectedTracks)
+                {
+                    if(!dataModel.TrackQueue.Contains(track))
+                        dataModel.TrackQueue.Add(track);
+                }
+                RaisePropertyChanged("TrackQueue");
+            }
+        }
+        #region playlist creation
+        /// <summary>
+        /// Open the dialog for adding a playlist.
+        /// </summary>
+        /// <param name="argument"></param>
+        private async void newPlaylistDialog(object argument)
+        {
+            var view = new GetTextDialog
+            {
+                DataContext = new GetTextViewModel("New playlist")               
+            };
+            //show the dialog
+            var result = await DialogHost.Show(view, "DialogHost", OpenedEventHandler, playlistDialogClosingHandler);
+        }
+        /// <summary>
+        /// Intercept the open and affect the dialog using eventArgs.Session.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eventargs"></param>
+        private void OpenedEventHandler(object sender, DialogOpenedEventArgs eventargs)
+        {
+        }
+
+        /// <summary>
+        /// Closes the dialog for adding a playlist and adds the playlist if accept was selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eventArgs"></param>
+        private void playlistDialogClosingHandler(object sender, DialogClosingEventArgs eventArgs)
+        {
+            if ((bool)eventArgs.Parameter == false) return;
+
+            //chancel the closing
+            eventArgs.Cancel();
+            var content = eventArgs.Session.Content as GetTextDialog;
+            eventArgs.Session.UpdateContent(new GetTextDialog());
+            var dataContext = content.DataContext as GetTextViewModel;
+            if (dataContext != null)
+            {
+                if (dataContext.TextBoxText.Count<char>() >= 2)
+                {
+                    Playlist playlist = dataModel.AddPlaylist(dataContext.TextBoxText);
+                    if(playlist != null)
+                    {
+                        dataModel.AddTracksToPlaylist(SelectedTracks.ToList(), playlist);
+                    }             
+                }
+                else
+                {
+                    DialogService.NotificationMessage("The name has to be longer than two characters.");
+                }
+            }
+            Task.Factory.StartNew(() => { }).ContinueWith((t, _) => eventArgs.Session.Close(false), null,
+                         TaskScheduler.FromCurrentSynchronizationContext());
+
+        }
+        #endregion
         #endregion
 
 
