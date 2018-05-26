@@ -36,11 +36,11 @@ namespace TuneMusix.ViewModel
             IsDragging = false;
 
             SelectedTracks = new ObservableCollection<Track>();
-            OpenDialog = new RelayCommand(_newPlaylistDialog);                    
-            SelectPlaylist = new RelayCommand(_selectPlaylist);
-            SetPlaylistCurrent = new RelayCommand(_setPlaylistCurrent);
-            DeletePlaylist = new RelayCommand(_deletePlaylist);
-            RenamePlaylistDialog = new RelayCommand(_renamePlaylistDialog);
+            OpenDialog = new RelayCommand(newPlaylistDialog);                    
+            SelectPlaylist = new RelayCommand(selectPlaylist);
+            SetPlaylistCurrent = new RelayCommand(setPlaylistCurrent);
+            DeletePlaylist = new RelayCommand(deletePlaylist);
+            RenamePlaylistDialog = new RelayCommand(renamePlaylistDialog);
 
             //events
             dataModel.DataModelChanged += OnDataModelChanged;
@@ -50,7 +50,7 @@ namespace TuneMusix.ViewModel
         /// sets the given playlist object as selected playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private void _selectPlaylist(object argument)
+        private void selectPlaylist(object argument)
         {
             var playlist = argument as Playlist;
             if(playlist != null)
@@ -86,21 +86,21 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        private async void _renamePlaylistDialog(object argument)
+        private async void renamePlaylistDialog(object argument)
         {
             var view = new GetTextDialog
             {
                 DataContext = new GetTextViewModel("New name:")
             };
 
-            var result = await DialogHost.Show(view,"DialogHost",OpenedEventHandler, _renamePlaylistDialogClosingHandler);
+            var result = await DialogHost.Show(view,"DialogHost",OpenedEventHandler, renamePlaylistDialogClosingHandler);
         }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void _renamePlaylistDialogClosingHandler(object sender, DialogClosingEventArgs eventArgs)
+        private void renamePlaylistDialogClosingHandler(object sender, DialogClosingEventArgs eventArgs)
         {
             if ((bool)eventArgs.Parameter == false) return;
 
@@ -130,7 +130,7 @@ namespace TuneMusix.ViewModel
         /// Open the dialog for adding a playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private async void _newPlaylistDialog(object argument)
+        private async void newPlaylistDialog(object argument)
         {
             var view = new GetTextDialog
             {
@@ -138,7 +138,7 @@ namespace TuneMusix.ViewModel
             };
          
             //show the dialog
-            var result = await DialogHost.Show(view, "DialogHost", OpenedEventHandler, _playlistDialogClosingHandler);
+            var result = await DialogHost.Show(view, "DialogHost", OpenedEventHandler, playlistDialogClosingHandler);
         }
         /// <summary>
         /// Intercept the open and affect the dialog using eventArgs.Session.
@@ -154,7 +154,7 @@ namespace TuneMusix.ViewModel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void _playlistDialogClosingHandler(object sender, DialogClosingEventArgs eventArgs)
+        private void playlistDialogClosingHandler(object sender, DialogClosingEventArgs eventArgs)
         {
             if ((bool)eventArgs.Parameter == false) return;
 
@@ -183,7 +183,7 @@ namespace TuneMusix.ViewModel
         /// set the current playlist to the selected.
         /// </summary>
         /// <param name="argument"></param>
-        private void _setPlaylistCurrent(object argument)
+        private void setPlaylistCurrent(object argument)
         {
             if (SelectedPlaylist != null)
             {
@@ -194,7 +194,7 @@ namespace TuneMusix.ViewModel
         /// delets the currently selected playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private void _deletePlaylist(object argument)
+        private void deletePlaylist(object argument)
         {
             if (SelectedPlaylist != null)
             {
@@ -277,7 +277,7 @@ namespace TuneMusix.ViewModel
         {
             if (dropInfo.VisualTarget.GetType() == typeof(Button))
             {
-                _deletePlaylist(null);
+                deletePlaylist(null);
             }
         }
     }
