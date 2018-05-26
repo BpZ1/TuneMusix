@@ -9,126 +9,59 @@ using TuneMusix.Helpers;
 
 namespace TuneMusix.Model
 {
-    public class Folder : INotifyPropertyChanged
+    public class Folder : ItemContainer<Track>, INotifyPropertyChanged
     {
         private long id;
         private long folderID;
-        private string name;
         private string url;
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
-        private ObservableCollection<Folder> _folderlist;
-        private ObservableCollection<Track> _tracklist;
+        private ObservableCollection<Folder> folderlist;
 
-        public Folder(string name, string url, long ID)
+        public Folder(string name, string url, long ID) : base(name)
         {
-            this.Name = name;
             this.URL = url;
             this.id = ID;
-            _folderlist = new ObservableCollection<Folder>();
-            _tracklist = new ObservableCollection<Track>();
+            folderlist = new ObservableCollection<Folder>();
         }
 
-        public Folder(string name, string url, long ID,long folderID)
+        public Folder(string name, string url, long ID,long folderID) : base(name)
         {
-            this.Name = name;
             this.URL = url;
             this.id = ID;
             this.folderID = folderID;
-            _folderlist = new ObservableCollection<Folder>();
-            _tracklist = new ObservableCollection<Track>();
-        }
-        //Events
-
-        public delegate void FolderChangedEventHandler(object source);
-
-        public event FolderChangedEventHandler FolderChanged;
-
-        protected virtual void OnFolderChanged()
-        {
-            if(FolderChanged != null)
-            {
-                FolderChanged(this);
-            }
+            folderlist = new ObservableCollection<Folder>();
         }
 
 
-        /// <summary>
-        /// Method for Adding a container to a container.
-        /// </summary>
-        /// <param name="folder"></param>
-        /// <returns></returns>
-        public bool AddFolder(Folder folder)
+        public bool Add(Folder folder)
         {
-            ValidationUtil<Folder> valiUtil = new ValidationUtil<Folder>();
-            if(folder != null)
+            if(folder == null)
+                throw new ArgumentNullException("You can't add Null to container");
+
+            if (!folderlist.Contains(folder))
             {
-                if (valiUtil.insertValidation(folder.name, this.name, folder, _folderlist))
-                {
-                    _folderlist.Add(folder);
-                    folder.FolderID = this.ID;
-                    folder.Container = this;
-                    OnFolderChanged();
-                    return true;
-                }
-                else { return false; }
+                folderlist.Add(folder);
+                folder.FolderID = this.ID;
+                folder.Container = this;
+                RaisePropertyChanged("Folderlist");
+                OnContainerChanged();
+                return true;
             }
             return false;          
         }
-        /// <summary>
-        /// Inertion method for Database loading
-        /// Avoids all checks.
-        /// </summary>
-        public void InsertFolder(Folder folder)
-        {
-            Folderlist.Add(folder);
-            RaisePropertyChanged("Folderlist");
-            folder.Container = this;
-        }
 
-        public bool AddTrack(Track track)
+        public override bool Add(Track track)
         {
-            ValidationUtil<Track> valiUtil = new ValidationUtil<Track>();
-            if(track != null)
+            if (base.Add(track))
             {
-                if (valiUtil.insertValidation(track.Title, this.name, track, _tracklist))
-                {
-                    _tracklist.Add(track);
-                    track.FolderID = this.ID;
-                    track.Container = this;
-                    RaisePropertyChanged("Tracklist");
-                    OnFolderChanged();
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                track.FolderID = this.ID;
+                track.Container = this;
+                return true;
             }
             return false;
         }
 
-
-
-        // Setter and Getter for the name of the Container
-        public string Name
-        {
-            get { return this.name; }
-            set
-            {
-                if (value != null && value.Length > 0)
-                {
-                    this.name = value;
-                    IsModified = true;
-                    RaisePropertyChanged("Name");
-                    OnFolderChanged();
-                }
-                else
-                {
-                    throw new InvalidOperationException("Name of a Folder has to be longer then 0");
-                }
-            }
-        }
         public string URL
         {
             get
@@ -144,7 +77,7 @@ namespace TuneMusix.Model
                 this.url = value;
                 RaisePropertyChanged("URL");
                 IsModified = true;
-                OnFolderChanged();
+                OnContainerChanged();
             }
         }
         public long ID
@@ -159,15 +92,7 @@ namespace TuneMusix.Model
                 folderID = value;
                 IsModified = true;
                 RaisePropertyChanged("FolderID");
-                OnFolderChanged();
-            }
-        }
-
-        public ObservableCollection<Track> Tracklist
-        {
-            get
-            {
-                return this._tracklist;
+                OnContainerChanged();
             }
         }
 
@@ -175,9 +100,10 @@ namespace TuneMusix.Model
         {
             get
             {
-                return this._folderlist;
+                return this.folderlist;
             }
         }
+
         CompositeCollection cc = new CompositeCollection();
         
         /// <summary>
@@ -189,19 +115,10 @@ namespace TuneMusix.Model
             {
                 return new CompositeCollection()
             {
-                new CollectionContainer() { Collection = Tracklist },
+                new CollectionContainer() { Collection = Itemlist },
                 new CollectionContainer() { Collection = Folderlist }
             };
             }
         }
-
-        #region propertychanged
-        internal void RaisePropertyChanged(string prop)
-        {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion
     }
 }

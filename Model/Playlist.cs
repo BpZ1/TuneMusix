@@ -10,63 +10,45 @@ namespace TuneMusix.Model
     /// <summary>
     /// Class for the Playlist model containing a list of tracks
     /// </summary>
-    public class Playlist : INotifyPropertyChanged
+    public class Playlist : ItemContainer<Track>, INotifyPropertyChanged
     {
         private long id;
-        private string name;
         public bool IsModified { get; set; }
-        public ObservableCollection<Track> Tracklist { get; set; }
 
-        //Constructor-------
-        public Playlist(string name,long ID)
+        public Playlist(string name,long ID) : base(name)
         {
-            this.Name = name;
             this.id = ID;
-            Tracklist = new ObservableCollection<Track>();
         }
-        //Constructor-------
-        public Playlist(string name,Track track,long ID)
+
+        public Playlist(string name,Track track,long ID) : base(name)
         {
-            this.Name = name;
             this.id = ID;
-            Tracklist = new ObservableCollection<Track>();
             if (track != null)
             {
-                Tracklist.Add(track);
+                Itemlist.Add(track);
             }
         }
-        //Constructor-------
-        public Playlist(string name,List<Track> tracks,long ID)
+
+        public Playlist(string name,List<Track> tracks,long ID) : base(name)
         {
-            this.Name = name;
             this.id = ID;
-            Tracklist = new ObservableCollection<Track>();
             foreach (Track track in tracks)
             {
                 if (track != null)
                 {
-                    Tracklist.Add(track);
+                    Itemlist.Add(track);
                 }
             }          
         }
 
-        //Getter and setter
-        public string Name
+        public override string Name
         {
-            get { return this.name; }
+            get { return base.Name; }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("Name can't be null.");
-                }
-                else
-                {
-                    this.name = value;
-                    RaisePropertyChanged("Name");
-                    IsModified = true;
-                }
-             }
+                base.Name = value;
+                IsModified = true;
+            }
         }
 
         public long ID
@@ -79,34 +61,14 @@ namespace TuneMusix.Model
         /// </summary>
         /// <param name="tracks">Tracks to be added to the List.</param>
         /// <returns>Number of Elements added.</returns>
-        public void AddTracks(List<Track> tracks)
+        public void Add(List<Track> tracks)
         {
             foreach (Track track in tracks)
             {             
-                Tracklist.Add(track);             
+                Itemlist.Add(track);             
             }
             RaisePropertyChanged("Tracklist");
         }
 
-        /// <summary>
-        /// Adds a track to the playlist. (no database entry)
-        /// </summary>
-        /// <param name="track"></param>
-        public void AddTrack(Track track)
-        {
-            this.Tracklist.Add(track);
-            RaisePropertyChanged("Tracklist");
-        }
-
-
-
-        #region propertychanged
-        internal void RaisePropertyChanged(string prop)
-        {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        #endregion
     }
 }

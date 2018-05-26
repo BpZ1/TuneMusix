@@ -6,7 +6,7 @@ using System.Windows.Threading;
 
 namespace TuneMusix.Model
 {
-    public class Track :IDisposable, INotifyPropertyChanged
+    public class Track : IDisposable, INotifyPropertyChanged
     {
         #region saved values
         private long id;
@@ -24,6 +24,9 @@ namespace TuneMusix.Model
 
         private bool isValid; //Checked on update
         private bool isCurrentTrack;
+
+        public Interpret interpretContainer { get; set; }
+        public Album albumContainer { get; set; }
 
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
@@ -82,7 +85,9 @@ namespace TuneMusix.Model
         {
             if(this.Container != null)
             {
-                this.Container.Tracklist.Remove(this);
+                this.Container.Remove(this);
+                this.albumContainer.Remove(this);
+                this.interpretContainer.Remove(this);
             }
         }
 
