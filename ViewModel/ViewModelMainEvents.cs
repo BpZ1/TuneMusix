@@ -9,19 +9,26 @@ namespace TuneMusix.ViewModel
              RaisePropertyChanged("TrackList");
         }
 
-        private void onProgressChanged(object source, object obj)
+        private void onProgressChanged(object obj)
         {
             int progress = (int)obj;
             ProgressBarProgress = progress;             
         } 
 
-        private void onLoadingStarted(object sender, object obj)
+        private void onLoadingStarted(object obj)
         {
             ProgressVisible = true;
             InfoTextVisible = true;
             InfoText = "Loading tracks...";
         }
-        private void onLoadingFinished(object sender, object obj)
+
+        private void onInfoTextChanged(object obj)
+        {
+            var message = obj as string;
+            InfoText = message;
+        }
+
+        private void onLoadingFinished(object obj)
         {
             ProgressVisible = false;
             InfoTextVisible = false;

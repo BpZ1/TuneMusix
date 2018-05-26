@@ -3,7 +3,7 @@ using TuneMusix.Model;
 using TuneMusix.Helpers.MediaPlayer;
 using System.Threading.Tasks;
 using MaterialDesignThemes.Wpf;
-
+using TuneMusix.Helpers.Interface;
 
 namespace TuneMusix.ViewModel
 {
@@ -20,6 +20,7 @@ namespace TuneMusix.ViewModel
 
         private AudioControls audioControls = AudioControls.Instance;
         private Options options = Options.Instance;
+        private LoadingBarManager loadingBarManager = LoadingBarManager.Instance;
 
         private bool infoTextVisible = false;
         private bool progressVisible = false;
@@ -37,9 +38,10 @@ namespace TuneMusix.ViewModel
             //notification
             MessageQueue = new SnackbarMessageQueue();
             dataModel.DataModelChanged += onRootFoldersChanged;
-            dataModel.ProgressChanged += onProgressChanged;
-            dataModel.LoadingStarted += onLoadingStarted;
-            dataModel.LoadingFinished += onLoadingFinished;
+            loadingBarManager.ProgressChanged += onProgressChanged;
+            loadingBarManager.LoadingStarted += onLoadingStarted;
+            loadingBarManager.LoadingFinished += onLoadingFinished;
+            loadingBarManager.InfoTextChanged += onInfoTextChanged;
 
             //Relaycommands
             GetFiles = new RelayCommand(getFiles);
