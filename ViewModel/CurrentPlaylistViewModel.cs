@@ -82,7 +82,7 @@ namespace TuneMusix.ViewModel
             {
                 var track = SelectedTracks.First();
                 dataModel.CurrentTrack = track;
-                dataModel.QueueIndex = dataModel.CurrentPlaylist.Tracklist.IndexOf(track);
+                dataModel.QueueIndex = dataModel.CurrentPlaylist.Itemlist.IndexOf(track);
             }
         }
 
@@ -193,7 +193,7 @@ namespace TuneMusix.ViewModel
             {
                 if (dataModel.CurrentPlaylist != null)
                 {
-                    return dataModel.CurrentPlaylist.Tracklist;
+                    return dataModel.CurrentPlaylist.Itemlist;
                 }
                 else
                 {
