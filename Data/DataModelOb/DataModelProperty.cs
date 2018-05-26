@@ -12,16 +12,6 @@ namespace TuneMusix.Data.DataModelOb
 {
     public partial class DataModel
     {
-        //Progress for the loading of tracks
-        public int Progress
-        {
-            get { return progress; }
-            set
-            {
-                progress = value;
-                OnProgressChanged();
-            }
-        }
         //list containing all tracks
         public ObservableCollection<Track> TrackList
         {
@@ -79,7 +69,7 @@ namespace TuneMusix.Data.DataModelOb
                 this.currentPlaylist = value;
                 if(value != null)
                 {
-                    TrackQueue = value.Tracklist;
+                    TrackQueue = value.Itemlist;
                 }            
                 OnCurrentPlaylistChanged();
             }
@@ -134,6 +124,24 @@ namespace TuneMusix.Data.DataModelOb
         {
             get { return effectQueue; }
             set { EffectQueue = value; }
+        }
+        public ObservableCollection<Album> Albumlist
+        {
+            get { return albumlist; }
+            set
+            {
+                albumlist = value;
+                OnAlbumlistChanged();
+            }
+        }
+        public ObservableCollection<Interpret> Interpretlist
+        {
+            get { return interpretlist; }
+            set
+            {
+                interpretlist = value;
+                OnInterpretlistChanged();
+            }
         }
     }
 }

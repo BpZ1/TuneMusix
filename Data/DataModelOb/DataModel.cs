@@ -27,6 +27,8 @@ namespace TuneMusix.Data.DataModelOb
         private ObservableCollection<Folder> rootFolders = new ObservableCollection<Folder>();
         private ObservableCollection<Track> trackQueue = new ObservableCollection<Track>();
         private ObservableCollection<BaseEffect> effectQueue = new ObservableCollection<BaseEffect>();
+        private ObservableCollection<Album> albumlist = new ObservableCollection<Album>();
+        private ObservableCollection<Interpret> interpretlist = new ObservableCollection<Interpret>();
 
         #region constructor and instance accessor
 
@@ -66,21 +68,18 @@ namespace TuneMusix.Data.DataModelOb
 
 
         #region events
-        public delegate void DataModelChangedEventHandler(object source,object changedObject);
-
+        public delegate void DataModelChangedEventHandler(object source,object changedObject);     
         public event DataModelChangedEventHandler CurrentTrackChanged;
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
         public event DataModelChangedEventHandler DataModelChanged;
         public event DataModelChangedEventHandler TrackQueueChanged;
         public event DataModelChangedEventHandler EffectQueueChanged;
-        public event DataModelChangedEventHandler ProgressChanged;
-        public event DataModelChangedEventHandler LoadingStarted;
-        public event DataModelChangedEventHandler LoadingFinished;
-
+        public event DataModelChangedEventHandler AlbumlistChanged;
+        public event DataModelChangedEventHandler InterpretlistChanged;
         protected virtual void OnCurrentTrackChanged()
         {
-            if(CurrentTrackChanged != null)
-                CurrentTrackChanged(this,CurrentTrack);
+            if (CurrentTrackChanged != null)
+                CurrentTrackChanged(this, CurrentTrack);
         }
         protected virtual void OnCurrentPlaylistChanged()
         {
@@ -90,33 +89,30 @@ namespace TuneMusix.Data.DataModelOb
         protected virtual void OnDataModelChanged()
         {
             if (DataModelChanged != null)
-                DataModelChanged(this,TrackList);        
+                DataModelChanged(this, TrackList);
         }
         protected virtual void OnTrackQueueChanged()
         {
             if (TrackQueueChanged != null)
-                TrackQueueChanged(this,TrackQueue);
+                TrackQueueChanged(this, TrackQueue);
         }
         protected virtual void OnEffectQueueChanged()
         {
-            if(EffectQueueChanged != null)          
-                EffectQueueChanged(this,EffectQueue);
+            if (EffectQueueChanged != null)
+                EffectQueueChanged(this, EffectQueue);
         }
-        protected virtual void OnProgressChanged()
+        protected virtual void OnAlbumlistChanged()
         {
-            if (ProgressChanged != null)
-                ProgressChanged(this, Progress);
+            if (AlbumlistChanged != null)
+                AlbumlistChanged(this, albumlist);
         }
-        protected virtual void OnLoadingStarted()
+        protected virtual void OnInterpretlistChanged()
         {
-            if (LoadingStarted != null)
-                LoadingStarted(this, null);
+            if (InterpretlistChanged != null)
+                InterpretlistChanged(this, interpretlist);
         }
-        protected virtual void OnLoadingFinished()
-        {
-            if (LoadingFinished != null)
-                LoadingFinished(this, null);
-        }
+
+
 
         #endregion
 

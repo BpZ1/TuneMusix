@@ -63,7 +63,7 @@ namespace TuneMusix.Data.DataModelOb
                 foreach (Playlist playlist in Playlists)
                 {
                     //delete only from the object because database has foreign keys.
-                    playlist.Tracklist.Remove(track);                                
+                    playlist.Itemlist.Remove(track);                                
                 }
                 track.Dispose();
                 OnDataModelChanged();
@@ -118,7 +118,7 @@ namespace TuneMusix.Data.DataModelOb
         {
             bool queueChanged = false;
 
-            foreach (Track track in folder.Tracklist)
+            foreach (Track track in folder.Itemlist)
             {
                 TrackList.Remove(track);
                 if(TrackQueue != null)
@@ -249,7 +249,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="playlist"></param>
         public void AddTrackToPlaylist_NoDatabase(Track track,Playlist playlist)
         {
-            playlist.AddTrack(track);
+            playlist.Add(track);
         }
 
         //////////////////////////////////////////////////////////////////////////////
@@ -307,6 +307,47 @@ namespace TuneMusix.Data.DataModelOb
 
             return added;
         }
+        /// <summary>
+        /// Creates Album and Interpret container if they don't already exist.
+        /// </summary>
+        /// <param name="track"></param>
+        private void createContainer(Track track)
+        {
+            foreach(Album album in Albumlist)
+            {
+                if (track.Album.ToLower().Equals(album.Name.ToLower()))
+                {
+                    album.Add(track);
+                    track.albumContainer = album;
+                }
+                else
+                {
+                    Album newAlbum = new Album(track.Album);
+                    newAlbum.Add(track);
+                    track.albumContainer = newAlbum;
+                    Albumlist.Add(newAlbum);                 
+                }               
+            }
+            OnAlbumlistChanged();
+
+            foreach(Interpret interpret in Interpretlist)
+            {
+                if (track.Interpret.ToLower().Equals(interpret.Name.ToLower()))
+                {
+                    interpret.Add(track);
+                    track.interpretContainer = interpret;
+                }
+                else
+                {
+                    Interpret newInterpret = new Interpret(track.Interpret);
+                    newInterpret.Add(track);
+                    track.interpretContainer = newInterpret;
+                    Interpretlist.Add(newInterpret);
+
+                }
+            }
+            OnInterpretlistChanged();
+        }
 
         /// <summary>
         /// Checks if a folder is already contained in the list, or if it
@@ -331,7 +372,7 @@ namespace TuneMusix.Data.DataModelOb
                     folders.Add(folder);
                     foreach (Folder f in folders)
                     {
-                        tracks.AddRange(f.Tracklist);
+                        tracks.AddRange(f.Itemlist);
                     }
                     Console.WriteLine("Tracks added: " + tracks.Count);
                     folder.FolderID = 1;
@@ -356,7 +397,8 @@ namespace TuneMusix.Data.DataModelOb
         /// the database by the user.
         /// </summary>
         /// <param name="name"></param>
-        public void AddPlaylist(string name)
+        /// <returns></returns>
+        public Playlist AddPlaylist(string name)
         {
             bool contained = false;
             foreach (Playlist pl in Playlists)
@@ -368,14 +410,16 @@ namespace TuneMusix.Data.DataModelOb
             }
             if (!contained)
             {
-
                 Playlist playlist = new Playlist(name,IDGenerator.GetID(true));
                 Playlists.Add(playlist);
                 database.Insert(playlist);
+                OnDataModelChanged();
+                return playlist;
             }
             else
             {
                 DialogService.NotificationMessage("The name was already given to another playlist.");
+                return null;
             }          
         }
 
@@ -389,15 +433,16 @@ namespace TuneMusix.Data.DataModelOb
             List<Track> checkedTracks = new List<Track>();
             foreach (Track track in tracklist)
             {
-                if (!playlist.Tracklist.Contains(track))
+                if (!playlist.Itemlist.Contains(track))
                 {
                     checkedTracks.Add(track);
                 }
             }
             if(checkedTracks.Count > 0)
             {
-                playlist.AddTracks(checkedTracks);
-            }  
+                playlist.Add(checkedTracks);
+            }
+            OnDataModelChanged();
         }
         #endregion
 
@@ -453,9 +498,9 @@ namespace TuneMusix.Data.DataModelOb
         {
             foreach (Track track in tracklist)
             {
-                if (playlist.Tracklist.Contains(track))
+                if (playlist.Itemlist.Contains(track))
                 {
-                    playlist.Tracklist.Remove(track);
+                    playlist.Itemlist.Remove(track);
                 }
                 else
                 {
@@ -471,7 +516,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="playlist"></param>
         public void RemoveTrackFromPlaylist(Track track,Playlist playlist)
         {
-            if (playlist.Tracklist.Remove(track))
+            if (playlist.Itemlist.Remove(track))
             {
                 database.Delete(playlist,track);
             }

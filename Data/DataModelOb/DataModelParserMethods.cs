@@ -4,6 +4,7 @@ using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
 using System.Diagnostics;
 using System.ComponentModel;
+using TuneMusix.Helpers.Interface;
 
 namespace TuneMusix.Data.DataModelOb
 {
@@ -29,7 +30,7 @@ namespace TuneMusix.Data.DataModelOb
             worker.WorkerReportsProgress = true;
             worker.DoWork += new DoWorkEventHandler(fp.CreateTracks);
             worker.RunWorkerAsync(urls);
-            OnLoadingStarted();
+            LoadingBarManager.Instance.StartLoading("Loading Tracks...");
         }
 
         public void AddTracks(string folderUrl)
@@ -44,7 +45,7 @@ namespace TuneMusix.Data.DataModelOb
                 worker.WorkerReportsProgress = true;
                 worker.DoWork += new DoWorkEventHandler(fp.CreateFolder);
                 worker.RunWorkerAsync(folderUrl);
-                OnLoadingStarted();
+                LoadingBarManager.Instance.StartLoading("Loading Folders...");
             }
             else
             {
@@ -83,13 +84,13 @@ namespace TuneMusix.Data.DataModelOb
                 }
                   
             }
-            OnLoadingFinished();              
+            LoadingBarManager.Instance.EndLoading();
         }
 
         private void onTracksAdded_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             //update loading bar
-            Progress = e.ProgressPercentage;
+            LoadingBarManager.Instance.Progress = e.ProgressPercentage;
         }
       
     }
