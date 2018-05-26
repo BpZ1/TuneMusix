@@ -64,7 +64,7 @@ namespace TuneMusix.Helpers
                 List<string> urlData = (List<string>)data;
                 foreach (string url in urlData)
                 {
-                    tracks.Add(GetAudioData(url));
+                    tracks.Add(getAudioData(url));
                 }
                 float progress = (float)Interlocked.Increment(ref progressCounter) / (float)listCount * 100;
                 worker.ReportProgress((int)Math.Round(progress));
@@ -129,10 +129,10 @@ namespace TuneMusix.Helpers
                     string extention = Path.GetExtension(file);
                     if (extention.Equals(".mp3"))
                     {
-                        Track audio = GetAudioData(file);
+                        Track audio = getAudioData(file);
                         if (audio != null)
                         {
-                            folder.AddTrack(audio);
+                            folder.Add(audio);
                             audio.IsModified = false;
                         }
                     }
@@ -158,7 +158,7 @@ namespace TuneMusix.Helpers
         /// </summary>
         /// <param name="url">URL of the Audiofile</param>
         /// <returns>Track</returns>
-        private Track GetAudioData(string url)
+        private Track getAudioData(string url)
         {
             IDGenerator IDgen = IDGenerator.Instance;
             try
@@ -221,7 +221,7 @@ namespace TuneMusix.Helpers
                 {
                     if (parent.Equals(fold2.URL))
                     {
-                        fold2.AddFolder(fold1);
+                        fold2.Add(fold1);
                         fold1.Container = fold2;
                     }
                 }
