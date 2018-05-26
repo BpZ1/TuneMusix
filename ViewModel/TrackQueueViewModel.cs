@@ -36,6 +36,8 @@ namespace TuneMusix.ViewModel
 
             Options.Instance.ColorChanged += onColorChanged;
         }
+
+        #region commands
         /// <summary>
         /// Changed the current track to the selected track.
         /// </summary>
@@ -94,7 +96,9 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("CurrentTrackQueue");
             }
         }
+        #endregion
 
+        #region properties
         public ObservableCollection<Track> CurrentTrackQueue
         {
             get { return dataModel.TrackQueue; }
@@ -111,6 +115,14 @@ namespace TuneMusix.ViewModel
                 return new SolidColorBrush(hue.Color);
             }
         }
+        public string HeaderText
+        {
+            get
+            {
+                return "Track Queue [" + CurrentTrackQueue.Count + "]";
+            }
+        }
+        #endregion
         private void onColorChanged()
         {
             RaisePropertyChanged("HighlightColor");
@@ -118,6 +130,7 @@ namespace TuneMusix.ViewModel
         private void onTrackQueueChanged(object source, object argument)
         {
             RaisePropertyChanged("CurrentTrackQueue");
+            RaisePropertyChanged("HeaderText");
         }
 
         #region drag and drop
