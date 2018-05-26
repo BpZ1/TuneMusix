@@ -13,6 +13,8 @@ namespace TuneMusix.ViewModel
         public RelayCommand DeleteSelected { get; set; }
         public RelayCommand PlayTrack { get; set; }
         public RelayCommand SelectedItemChanged { get; set; }
+        public RelayCommand FolderDoubleClicked { get; set; }
+        public RelayCommand TrackDoubleClicked { get; set; }
 
         public Track SelectedTrack { get; set; }
         public Folder SelectedFolder { get; set; }
@@ -23,6 +25,8 @@ namespace TuneMusix.ViewModel
             DeleteSelected = new RelayCommand(deleteSelected);
             PlayTrack = new RelayCommand(playTrack);
             SelectedItemChanged = new RelayCommand(selectedItemChanged);
+            FolderDoubleClicked = new RelayCommand(folderDoubleClicked);
+            TrackDoubleClicked = new RelayCommand(trackDoubleClicked);
 
             //events
             dataModel.DataModelChanged += onRootlistChanged;
@@ -78,6 +82,14 @@ namespace TuneMusix.ViewModel
             }                
         }
 
+        private void folderDoubleClicked(object argument)
+        {
+            throw new NotImplementedException();
+        }
 
+        private void trackDoubleClicked(object argument)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
