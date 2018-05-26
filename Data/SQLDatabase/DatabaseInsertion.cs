@@ -196,9 +196,9 @@ namespace TuneMusix.Data.SQLDatabase
             commandlist.Add(playlistInsertCommand);
 
             //Playlist tracks table Update
-            if(playlist.Tracklist.Count > 0)
+            if(playlist.Itemlist.Count > 0)
             {
-                foreach(Track track in playlist.Tracklist)
+                foreach(Track track in playlist.Itemlist)
                 {
                     SQLiteCommand command = new SQLiteCommand("INSERT OR REPLACE INTO playlisttracks(trackID," +
                                                                                                "playlistID) " +
