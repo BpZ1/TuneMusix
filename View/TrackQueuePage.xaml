@@ -31,6 +31,7 @@
         </Style>
      </Page.Resources>
     <DockPanel>
+        <TextBlock Text="{Binding HeaderText,UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top"/>
         <ListBox Name="TrackQueue" ItemsSource="{Binding CurrentTrackQueue, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
               Margin="10" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DragHandler="{Binding}" dd:DragDrop.DropHandler="{Binding}" 
               DockPanel.Dock="Top" SelectionMode="Single" ItemContainerStyle="{StaticResource ItemContStyle}" MouseDoubleClick="ListView_MouseDoubleClick">
