@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TuneMusix.Model;
 
-namespace TuneMusix.ViewModel.OptionsViewModel
+namespace TuneMusix.ViewModel
 {
     class GeneralOptionsViewModel : INotifyPropertyChanged
     {

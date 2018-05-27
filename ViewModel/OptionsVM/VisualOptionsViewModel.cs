@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
-namespace TuneMusix.ViewModel.OptionsViewModel
+namespace TuneMusix.ViewModel
 {
     class VisualOptionsViewModel
     {

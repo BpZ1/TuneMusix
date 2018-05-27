@@ -7,7 +7,7 @@ using TuneMusix.Model;
 using TuneMusix.View.OptionsWindow;
 using TuneMusix.ViewModel.Dialog;
 
-namespace TuneMusix.ViewModel.OptionsViewModel
+namespace TuneMusix.ViewModel
 {
     class OptionsOverviewViewModel
     {

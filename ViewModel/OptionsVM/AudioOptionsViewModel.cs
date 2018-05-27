@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TuneMusix.ViewModel.OptionsViewModel
+namespace TuneMusix.ViewModel
 {
     class AudioOptionsViewModel
     {
