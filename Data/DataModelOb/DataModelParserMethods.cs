@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
 using System.Diagnostics;
 using System.ComponentModel;
 using TuneMusix.Helpers.Interface;
+using TuneMusix.Helpers;
 
 namespace TuneMusix.Data.DataModelOb
 {

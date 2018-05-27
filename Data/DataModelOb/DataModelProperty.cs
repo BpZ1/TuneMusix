@@ -45,7 +45,6 @@ namespace TuneMusix.Data.DataModelOb
                         SaveTrack(value);
                     }
                 }
-
                 this.currentTrack = value;              
                 OnCurrentTrackChanged();
             }

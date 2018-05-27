@@ -14,7 +14,6 @@ namespace TuneMusix.Data.DataModelOb
         private Database database = Database.Instance;
         private SQLLoader loader;
 
-        private static int progress;
         public int QueueIndex { get; set; }
         public double CurrentPosition { get; set; }
         public Folder SelectedFolder { get; set; }
