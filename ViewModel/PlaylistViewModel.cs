@@ -26,9 +26,9 @@ namespace TuneMusix.ViewModel
         public RelayCommand RenamePlaylistDialog { get; set; }
 
         public ObservableCollection<Track> SelectedTracks { get; set; }
-        private bool _isDragging;
+        private bool isDragging;
 
-        private Playlist _selectedPlaylist;
+        private Playlist selectedPlaylist;
 
         //constructor
         public PlaylistViewModel()
@@ -61,22 +61,15 @@ namespace TuneMusix.ViewModel
         //getter and setter
         public Playlist SelectedPlaylist
         {
-            get { return this._selectedPlaylist; }
+            get { return this.selectedPlaylist; }
             set
             {
-                this._selectedPlaylist = value;
+                this.selectedPlaylist = value;
                 RaisePropertyChanged("SelectedPlaylist");
             }
         }
-        public bool IsDragging
-        {
-            get { return this._isDragging; }
-            set
-            {
-                this._isDragging = value;
-                RaisePropertyChanged("IsDragging");
-            }
-        }
+
+
         //updates the Playlists when the datamodel changes.
         private void OnDataModelChanged(object source,object changed)
         {
@@ -125,7 +118,7 @@ namespace TuneMusix.ViewModel
             RaisePropertyChanged("Playlists");
         }
 
-
+        #region playlist creation
         /// <summary>
         /// Open the dialog for adding a playlist.
         /// </summary>
@@ -178,6 +171,7 @@ namespace TuneMusix.ViewModel
                          TaskScheduler.FromCurrentSynchronizationContext());
 
         }
+        #endregion
 
         /// <summary>
         /// set the current playlist to the selected.
@@ -209,7 +203,7 @@ namespace TuneMusix.ViewModel
                 SelectedPlaylist = null;
             }
         }
-
+        #region drag and drop
         /// <summary>
         /// Gets called when the drag is started and sets the dragging boolean.
         /// </summary>
@@ -221,6 +215,15 @@ namespace TuneMusix.ViewModel
             {
                 dragInfo.Data = dragInfo.SourceItem;
                 dragInfo.Effects = DragDropEffects.Copy;
+            }
+        }
+        public bool IsDragging
+        {
+            get { return this.isDragging; }
+            set
+            {
+                this.isDragging = value;
+                RaisePropertyChanged("IsDragging");
             }
         }
         /// <summary>
@@ -280,5 +283,6 @@ namespace TuneMusix.ViewModel
                 deletePlaylist(null);
             }
         }
+        #endregion
     }
 }
