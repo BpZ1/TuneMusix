@@ -224,6 +224,7 @@ namespace TuneMusix.Helpers
                         fold2.Add(fold1);
                         fold1.Container = fold2;
                     }
+                    fold2.IsModified = false;
                 }
                 if (fold1.URL.Equals(rootUrl))
                     root = fold1;
