@@ -52,8 +52,10 @@ namespace TuneMusix.Data.SQLDatabase
             #region folders
             LoadingBarManager.Instance.Message = "Loading Folders...";
             Debug.WriteLine("Folders loading...");
+
             List<Folder> FolderList = database.GetFolders();
             List<Folder> RootList = new List<Folder>();
+
             Debug.WriteLine("Folders loaded");
             LoadingBarManager.Instance.Progress = 20;
             #endregion
@@ -81,6 +83,7 @@ namespace TuneMusix.Data.SQLDatabase
             //load playlists
             LoadingBarManager.Instance.Message = "Loading Playlists...";
             Debug.WriteLine("Loading Playlists...");
+
             dataModel.AddPlaylists_NoDatabase(database.GetPlaylists());          
             foreach (Playlist playlist in dataModel.Playlists)
             {
@@ -91,7 +94,7 @@ namespace TuneMusix.Data.SQLDatabase
                     {
                         if (track.ID == pt.TrackID)
                         {
-                            dataModel.AddTrackToPlaylist_NoDatabase(track,playlist);
+                            dataModel.AddTrackToPlaylistWithoutModification(track,playlist);
                         }
                     }
                 }
@@ -212,19 +215,20 @@ namespace TuneMusix.Data.SQLDatabase
         }
 
 
-        private List<Folder> FolderSort(List<Folder> FolderList)
+        private List<Folder> FolderSort(List<Folder> folderlist)
         {
-            List<Folder> templist = FolderList;
+            List<Folder> templist = folderlist;
             foreach (Folder a in templist)
-            {
-                a.IsModified = false;
+            {              
                 foreach (Folder b in templist)
                 {
                     if (a.ID == b.FolderID)
                     {
                         a.Add(b);
+                        b.IsModified = false;
                     }
                 }
+                a.IsModified = false;
             }
             return templist;
         }
