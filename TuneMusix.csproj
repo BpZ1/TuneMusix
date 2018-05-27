@@ -164,7 +164,7 @@
     <Compile Include="Data\SQLDatabase\DatabaseInsertion.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseSelection.cs" />
     <Compile Include="Helpers\Container\OptionsIDContainer.cs" />
-    <Compile Include="Helpers\Converter.cs" />
+    <Compile Include="Helpers\Util\Converter.cs" />
     <Compile Include="Helpers\Dialogs\DialogResult.cs" />
     <Compile Include="Helpers\Dialogs\DialogService.cs" />
     <Compile Include="Helpers\Enums\HeaderType.cs" />
@@ -173,7 +173,7 @@
     <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
     <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
     <Compile Include="Helpers\Interface\LoadingBarManager.cs" />
-    <Compile Include="Helpers\ListUtil.cs" />
+    <Compile Include="Helpers\Util\ListUtil.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioControls.cs" />
     <Compile Include="Helpers\MediaPlayer\AudioPlayerImpl.cs" />
     <Compile Include="Helpers\IDGenerator.cs" />
@@ -188,8 +188,9 @@
     <Compile Include="Helpers\MediaPlayer\Effects\FlangerEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\GargleEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\ReverbEffect.cs" />
-    <Compile Include="Helpers\TextFormatService.cs" />
-    <Compile Include="Helpers\TrackService.cs" />
+    <Compile Include="Helpers\DelayIterativeSearch.cs" />
+    <Compile Include="Helpers\Util\TextFormatService.cs" />
+    <Compile Include="Helpers\Util\TrackService.cs" />
     <Compile Include="Model\Album.cs" />
     <Compile Include="Model\Interpret.cs" />
     <Compile Include="Model\ItemContainer.cs" />
@@ -202,17 +203,17 @@
     <Compile Include="ViewModel\Effects\AddEffectsViewModel.cs" />
     <Compile Include="ViewModel\Effects\EffectsViewModel.cs" />
     <Compile Include="ViewModel\FolderPageViewModel.cs" />
-    <Compile Include="ViewModel\MusicPlayerViewModel.cs" />
-    <Compile Include="ViewModel\MusicPlayerViewModelEvents.cs" />
-    <Compile Include="ViewModel\OptionsViewModel\AudioOptionsViewModel.cs" />
-    <Compile Include="ViewModel\OptionsViewModel\GeneralOptionsViewModel.cs" />
-    <Compile Include="ViewModel\OptionsViewModel\OptionsOverviewViewModel.cs" />
-    <Compile Include="ViewModel\OptionsViewModel\VisualOptionsViewModel.cs" />
+    <Compile Include="ViewModel\MusicPlayerVM\MusicPlayerViewModel.cs" />
+    <Compile Include="ViewModel\MusicPlayerVM\MusicPlayerViewModelEvents.cs" />
+    <Compile Include="ViewModel\OptionsVM\AudioOptionsViewModel.cs" />
+    <Compile Include="ViewModel\OptionsVM\GeneralOptionsViewModel.cs" />
+    <Compile Include="ViewModel\OptionsVM\OptionsOverviewViewModel.cs" />
+    <Compile Include="ViewModel\OptionsVM\VisualOptionsViewModel.cs" />
     <Compile Include="ViewModel\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\TracklistViewModel.cs" />
     <Compile Include="ViewModel\TrackQueueViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelMainEvents.cs" />
-    <Compile Include="ViewModel\ViewModelMainMenuMethods.cs" />
+    <Compile Include="ViewModel\MainWindowVM\ViewModelMainEvents.cs" />
+    <Compile Include="ViewModel\MainWindowVM\ViewModelMainMenuMethods.cs" />
     <Compile Include="View\Controls\SwatchView.xaml.cs">
       <DependentUpon>SwatchView.xaml</DependentUpon>
     </Compile>
@@ -359,16 +360,16 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Helpers\FileParser.cs" />
+    <Compile Include="Helpers\IO\FileParser.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
-    <Compile Include="Helpers\ValidationUtil.cs" />
+    <Compile Include="Helpers\Util\ValidationUtil.cs" />
     <Compile Include="Model\Folder.cs" />
     <Compile Include="Model\Options.cs" />
     <Compile Include="Model\Playlist.cs" />
     <Compile Include="Model\Track.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="ViewModel\ViewModelMain.cs" />
+    <Compile Include="ViewModel\MainWindowVM\ViewModelMain.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -460,8 +461,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />
-    <Folder Include="ViewModel\MainWindowViewModel\" />
-    <Folder Include="ViewModel\MusicPlayerViewModel\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

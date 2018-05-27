@@ -2,7 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using TuneMusix.Helpers;
@@ -24,6 +27,7 @@ namespace TuneMusix.ViewModel
         private const string ASCENDING_SORTED_ICON = "ChevronUp";
         private HeaderType sortedColumn;
         private SortingType sortingType;
+        private DelayIterativeSearch searchService;
 
         //Relaycommands
         public RelayCommand PlayTrack { get; set; }
@@ -37,17 +41,21 @@ namespace TuneMusix.ViewModel
         public RelayCommand AddTracksToQueue { get; set; }
         public RelayCommand OpenNewPlaylistDialog { get; set; }
 
-        private List<Track> filteredTracks;
+        private ObservableCollection<Track> filteredTracks;      
 
         //Constructor
         public TracklistViewModel()
         {
             searchText = "";
-            SelectedTracks = new ObservableCollection<Track>();
-            filteredTracks = TrackList.ToList();
             sortingType = SortingType.Ascending;
             sortedColumn = HeaderType.Title;
+            searchService = new DelayIterativeSearch(TrackList.ToList());
+            searchService.SearchTaskCompleted += onSearchCompleted;
+            SelectedTracks = new ObservableCollection<Track>();
+            filteredTracks = TrackList;
+            queueSearchTask();
 
+            #region commands
             DeleteSelectedTracks = new RelayCommand(deleteSelectedTracks);
             AddToPlaylist = new RelayCommand(addToPlaylist);
             SelectionChanged = new RelayCommand(selectionChanged);
@@ -58,7 +66,7 @@ namespace TuneMusix.ViewModel
             TrackDoubleClicked = new RelayCommand(trackDoubleClicked);
             AddTracksToQueue = new RelayCommand(addTracksToQueue);
             OpenNewPlaylistDialog = new RelayCommand(newPlaylistDialog);
-
+            #endregion
             //events
             dataModel.DataModelChanged += OnTrackListChanged;
 
@@ -66,12 +74,20 @@ namespace TuneMusix.ViewModel
 
 
         #region properties
-        public List<Track> FilteredTracks
+        public ObservableCollection<Track> FilteredTracks
         {
             get { return filteredTracks; }
         }
+        public string SelectedItemsText
+        {
+            get { return "Selected items: " + SelectedTracks.Count; }
+        }
+        public string SearchBoxText
+        {
+            get;
+            set;
+        }
         #endregion
-
 
         #region commands
         /// <summary>
@@ -105,6 +121,7 @@ namespace TuneMusix.ViewModel
             {
                 SelectedTracks.Add(track);
             }
+            RaisePropertyChanged("SelectedItemsText");
         }
         private void playTrack(object argument)
         {
@@ -115,25 +132,20 @@ namespace TuneMusix.ViewModel
                 TrackQueue = SelectedTracks.ToList<Track>();
             }
         }
-        //Called every time the text in the textbox changes
+        /// <summary>
+        /// Called every time the text in the textbox changes
+        /// </summary>
+        /// <param name="argument"></param>
         private void searchChanged(object argument)
         {
             if (((string)argument).Equals(searchText))
                 return;
-
-            searchText = (string)argument;
-            updateFilteredTracks();
-            RaisePropertyChanged("FilteredTracks");
+            
+            searchText = (string)argument;         
+            queueSearchTask();                       
         }
-        //called if the button for the deletion of the textbox is clicked
-        private void deleteSearch(object argument)
-        {
-            if (searchText.Equals(""))
-                return;
+       
 
-            searchText = "";
-            RaisePropertyChanged("FilteredTracks");
-        }
         /// <summary>
         /// Changes the type of the column to sort.
         /// Changes the sorting type if the same column is
@@ -287,19 +299,13 @@ namespace TuneMusix.ViewModel
 
 
         #region methods
-        public void OnTrackListChanged(object source,object obj)
+
+        private void OnTrackListChanged(object source,object obj)
         {
-            filteredTracks = TrackList.ToList();
-            sortListView();
+            filteredTracks = TrackList;
+            searchService.Itemlist = TrackList.ToList();
+            queueSearchTask();
         }
-
-        private void updateFilteredTracks()
-        {
-            //Implement filter
-        }
-
-
-
         private void sortListView()
         {
             Logger.Log("Sorting " + sortedColumn);
@@ -425,11 +431,40 @@ namespace TuneMusix.ViewModel
                        select track;
                 }
             }
-            if(sortedList != null)
-                filteredTracks = sortedList.ToList();
+            if (sortedList != null)
+                filteredTracks = new ObservableCollection<Track>(sortedList);
+        }
 
+        #region searching methods
+        /// <summary>
+        /// Deletes the search text and updates the list.
+        /// </summary>
+        /// <param name="argument"></param>
+        private void deleteSearch(object argument)
+        {
+            if (searchText.Equals(""))
+                return;
+
+            searchText = "";
+            SearchBoxText = "";
+            RaisePropertyChanged("SearchBoxText");
+            queueSearchTask();  
+        }
+
+        private void onSearchCompleted(object result)
+        {
+            filteredTracks = new ObservableCollection<Track>((List<Track>)result);
+            sortListView();
             RaisePropertyChanged("FilteredTracks");
         }
+        /// <summary>
+        /// Queues a search task and sorts and updates the view on completion.
+        /// </summary>
+        private void queueSearchTask()
+        {
+            searchService.QueueSearchTask(searchText);
+        }
+        #endregion
         #endregion
         /// <summary>
         /// Defines the arrow icon type besides the header in the columns.
