@@ -4,12 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:TuneMusix.ViewModel.OptionsViewModel"
+        xmlns:vm="clr-namespace:TuneMusix.ViewModel"
         xmlns:command="http://www.galasoft.ch/mvvmlight"
         xmlns:local="clr-namespace:TuneMusix.View"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
-        DataContext="{DynamicResource OptionsOverviewViewModel}"  
+        DataContext="{DynamicResource OptionsOverviewViewModel}" 
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"   
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Name="OptionsWindow"
@@ -22,7 +25,7 @@
             <command:EventToCommand Command="{Binding ExitOptionsWindow}" PassEventArgsToCommand="True" ></command:EventToCommand>
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    <Grid>
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="20*"/>
             <RowDefinition Height="auto"/>
