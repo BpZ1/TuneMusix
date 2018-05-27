@@ -9,7 +9,7 @@
              >
     <Grid>
         <Expander >
-            <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Tracklist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+            <ListView x:Name="PlaylistTracks" ItemsSource="{Binding Itemlist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                                       Margin="10" HorizontalContentAlignment="Stretch">
                 <ListView.View>
                     <GridView AllowsColumnReorder="false"  ColumnHeaderToolTip="Track Information">
