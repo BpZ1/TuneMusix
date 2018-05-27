@@ -27,7 +27,7 @@
     <DockPanel Background="Transparent">
         <materialDesign:ColorZone Mode="PrimaryLight" DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal">
-                <TextBox Width="400" Margin="10,2,0,2" HorizontalAlignment="Left" Text="Search" x:Name="searchBox">
+                <TextBox Width="400" Margin="10,2,0,2" HorizontalAlignment="Left" Text="{Binding SearchBoxText,UpdateSourceTrigger=PropertyChanged}" x:Name="searchBox">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">
                             <i:InvokeCommandAction Command="{Binding SearchChanged}" CommandParameter="{Binding Text, ElementName=searchBox}"></i:InvokeCommandAction>
@@ -57,10 +57,38 @@
             </i:Interaction.Triggers>
             <ListView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
-                    <MenuItem Command="{Binding AddTracksToQueue}" Header="Add to queue"/>
-                    <MenuItem Command="{Binding OpenNewPlaylistDialog}"  Header="Add new playlist"/>
-                    <MenuItem ItemsSource="{Binding Playlists}" Header="Add to existing playlist">
+                    <MenuItem Header="{Binding SelectedItemsText,UpdateSourceTrigger=PropertyChanged}" IsEnabled="False"/>
+                    <MenuItem Command="{Binding PlayTrack}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="Play" Margin="0,0,5,0"/>
+                                <TextBlock Text="Play"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding AddTracksToQueue}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
+                                <TextBlock Text="Add to queue"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding OpenNewPlaylistDialog}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="Plus" Margin="0,0,5,0"/>
+                                <TextBlock Text="Add new playlist"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem ItemsSource="{Binding Playlists}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
+                                <TextBlock Text="Add to playlist"/>
+                            </StackPanel>
+                        </MenuItem.Header>
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                                 <Setter Property="Header" Value="{Binding Name}"/>
@@ -69,7 +97,14 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete"/>
+                    <MenuItem Command="{Binding DeleteSelectedTracks}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="Delete" Margin="0,0,5,0"/>
+                                <TextBlock Text="Delete"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
