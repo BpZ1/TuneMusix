@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using TagLib;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
@@ -194,6 +195,10 @@ namespace TuneMusix.Helpers
                 return null;
             }
             catch (IOException ex)
+            {
+                Logger.LogException(ex);
+                return null;
+            }catch(CorruptFileException ex)
             {
                 Logger.LogException(ex);
                 return null;
