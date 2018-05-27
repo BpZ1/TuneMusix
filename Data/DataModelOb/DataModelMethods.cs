@@ -263,13 +263,16 @@ namespace TuneMusix.Data.DataModelOb
         /// <returns></returns>
         public bool Add(Track track)
         {
-            if (!Contains(track))
+            if(track != null)
             {
-                TrackList.Add(track);
-                database.Insert(track);
-                OnDataModelChanged();
-                return true;
-            }
+                if (!Contains(track))
+                {
+                    TrackList.Add(track);
+                    database.Insert(track);
+                    OnDataModelChanged();
+                    return true;
+                }
+            }     
             return false;
         }
 
@@ -286,13 +289,16 @@ namespace TuneMusix.Data.DataModelOb
             List<Track> uniqueTracks = new List<Track>();
             foreach (Track t in trackList)
             {
-                //Check if Track is already loaded
-                if (!Contains(t))
+                if(t != null)
                 {
-                    TrackList.Add(t); //add track to model
-                    uniqueTracks.Add(t);
-                    added++;
-                }
+                    //Check if Track is already loaded
+                    if (!Contains(t))
+                    {
+                        TrackList.Add(t); //add track to model
+                        uniqueTracks.Add(t);
+                        added++;
+                    }
+                }               
             }
             if (added > 0)
             {
@@ -630,7 +636,9 @@ namespace TuneMusix.Data.DataModelOb
             //Shuffle the queue
             List<Track> shuffledQueue = TrackQueue.ToList<Track>();
             ListUtil.Shuffle<Track>(shuffledQueue);
-            TrackQueue = new ObservableCollection<Track>(shuffledQueue);    
+            trackQueue = new ObservableCollection<Track>(shuffledQueue);
+            QueueIndex = trackQueue.IndexOf(currentTrack);
+            OnTrackQueueChanged();
         }
         /// <summary>
         /// Unshuffles the tracks by returning them to their original order.
@@ -647,8 +655,11 @@ namespace TuneMusix.Data.DataModelOb
                 orderby track.Index
                 select track;
             //Set queue to the sorted list
-            TrackQueue = new ObservableCollection<Track>(sortedList);     
+            trackQueue = new ObservableCollection<Track>(sortedList);
+            QueueIndex = trackQueue.IndexOf(currentTrack);
+            OnTrackQueueChanged(); 
         }
+
         public void ChangeTrackQueuePosition(Track track, int position)
         {
             if (track == null)

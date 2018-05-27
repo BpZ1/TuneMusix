@@ -456,22 +456,6 @@ namespace TuneMusix.Helpers.MediaPlayer
         /// </summary>
         public void ShuffleChanged()
         {
-            Track oldTrack = null;
-            TimeSpan oldPosition = new TimeSpan();
-            bool playing = IsPlaying;
-            
-            //If a track is currently playing backup the track and position
-            bool hasCurrentTrack = false;
-            if (dataModel.CurrentTrack != null)
-                hasCurrentTrack = true;
-
-            //Backup old track data
-            if(hasCurrentTrack)
-            {
-                oldTrack = dataModel.CurrentTrack;
-                oldPosition = CurrentPosition;
-            }
-
             if (!options.Shuffle)
             {             
                 //Shuffle the list
@@ -489,22 +473,6 @@ namespace TuneMusix.Helpers.MediaPlayer
 
                 //Unshuffle the list
                 dataModel.UnShuffleTrackQueue();            
-            }
-
-            //Restore backup of track and position
-            if (hasCurrentTrack)
-            {
-                dataModel.CurrentTrack = oldTrack;
-                CurrentPosition = oldPosition;
-                dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(dataModel.CurrentTrack);
-                if (playing)
-                {
-                    Play();
-                }
-                else
-                {
-                    Pause();
-                }
             }
         }
 
