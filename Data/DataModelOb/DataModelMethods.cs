@@ -247,12 +247,11 @@ namespace TuneMusix.Data.DataModelOb
         /// </summary>
         /// <param name="track"></param>
         /// <param name="playlist"></param>
-        public void AddTrackToPlaylist_NoDatabase(Track track,Playlist playlist)
+        public void AddTrackToPlaylistWithoutModification(Track track,Playlist playlist)
         {
             playlist.Add(track);
+            playlist.IsModified = false;
         }
-
-        //////////////////////////////////////////////////////////////////////////////
         #endregion
 
         #region insertion methods
@@ -430,17 +429,9 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="playlist"></param>
         public void AddTracksToPlaylist(List<Track> tracklist,Playlist playlist)
         {
-            List<Track> checkedTracks = new List<Track>();
-            foreach (Track track in tracklist)
+            foreach(Track track in tracklist)
             {
-                if (!playlist.Itemlist.Contains(track))
-                {
-                    checkedTracks.Add(track);
-                }
-            }
-            if(checkedTracks.Count > 0)
-            {
-                playlist.Add(checkedTracks);
+                playlist.Add(track);
             }
             OnDataModelChanged();
         }
