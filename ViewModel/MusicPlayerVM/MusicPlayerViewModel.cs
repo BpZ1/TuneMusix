@@ -55,6 +55,7 @@ namespace TuneMusix.ViewModel
         {
             dragging = false;
             timer = new Timer(100);
+            VolumeSliderVisible = false;
 
             //RelayCommands
             PositionSlider_MouseDown = new RelayCommand(leftMouseDown_Slider);
@@ -76,7 +77,7 @@ namespace TuneMusix.ViewModel
             dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
         }
 
-        public bool VolumePopupOpen
+        public bool VolumeSliderVisible
         {
             get;
             set;

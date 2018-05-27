@@ -150,8 +150,8 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         private void openVolumePopup(object argument)
         {
-            VolumePopupOpen = true;
-            RaisePropertyChanged("VolumePopupOpen");
+            VolumeSliderVisible = true;
+            RaisePropertyChanged("VolumeSliderVisible");
             if(dispatcherTimer != null)
                 ((DispatcherTimer)dispatcherTimer).Stop();
         }
@@ -179,8 +179,8 @@ namespace TuneMusix.ViewModel
         /// <param name="e"></param>
         private void closeVolumePopup(object sender, EventArgs e)
         {          
-            VolumePopupOpen = false;
-            RaisePropertyChanged("VolumePopupOpen");
+            VolumeSliderVisible = false;
+            RaisePropertyChanged("VolumeSliderVisible");
             ((DispatcherTimer)dispatcherTimer).Stop();
         }
 
