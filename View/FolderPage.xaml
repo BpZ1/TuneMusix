@@ -29,9 +29,30 @@
         <TreeView Name="FolderTreeView" ItemsSource="{Binding RootFolders}">
             <TreeView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
-                    <MenuItem Command="{Binding AddToPlaylist}" Header="Add to playlist"/>
-                    <MenuItem Command="{Binding DeleteSelected}" Header="Delete"/>
+                    <MenuItem Command="{Binding PlayTrack}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="Play" Margin="0,0,5,0"/>
+                                <TextBlock Text="Play"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding AddToPlaylist}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
+                                <TextBlock Text="Add to playlist"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem Command="{Binding DeleteSelected}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="Delete" Margin="0,0,5,0"/>
+                                <TextBlock Text="Delete"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
                 </ContextMenu>
             </TreeView.ContextMenu>
             <i:Interaction.Triggers>

@@ -38,8 +38,21 @@
             </i:Interaction.Triggers>
             <ListView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
-                    <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
+                    <MenuItem Command="{Binding PlayTrack}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="Play" Margin="0,0,5,0"/>
+                                <TextBlock Text="Play"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem ItemsSource="{Binding Playlists}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
+                                <TextBlock Text="Add to playlist"/>
+                            </StackPanel>
+                        </MenuItem.Header>
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Header" Value="{Binding Name}"/>
@@ -48,7 +61,14 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem Command="{Binding DeleteSelectedTracks}" Header="Delete"/>
+                    <MenuItem Command="{Binding DeleteSelectedTracks}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="PlaylistMinus" Margin="0,0,5,0"/>
+                                <TextBlock Text="Remove"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>

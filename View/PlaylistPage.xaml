@@ -48,9 +48,30 @@
                              SelectionMode="Single" SelectedItem="{Binding SelectedPlaylist}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
                         <ListView.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Play" Command="{Binding SetPlaylistCurrent}"/>
-                                <MenuItem Header="Rename" Command="{Binding RenamePlaylistDialog}"/>
-                                <MenuItem Header="Delete" Command="{Binding DeletePlaylist}"/>
+                                <MenuItem Command="{Binding SetPlaylistCurrent}">
+                                    <MenuItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon  Kind="Play" Margin="0,0,5,0"/>
+                                            <TextBlock Text="Play"/>
+                                        </StackPanel>
+                                    </MenuItem.Header>
+                                </MenuItem>
+                                <MenuItem Command="{Binding RenamePlaylistDialog}">
+                                    <MenuItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon  Kind="Pencil" Margin="0,0,5,0"/>
+                                            <TextBlock Text="Rename"/>
+                                        </StackPanel>
+                                    </MenuItem.Header>
+                                </MenuItem>
+                                <MenuItem Command="{Binding DeletePlaylist}">
+                                    <MenuItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon  Kind="Delete" Margin="0,0,5,0"/>
+                                            <TextBlock Text="Delete"/>
+                                        </StackPanel>
+                                    </MenuItem.Header>
+                                </MenuItem>
                             </ContextMenu>
                         </ListView.ContextMenu>
                         <ListView.ItemTemplate>
