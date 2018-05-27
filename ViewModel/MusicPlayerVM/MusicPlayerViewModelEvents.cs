@@ -30,13 +30,11 @@ namespace TuneMusix.ViewModel
                 RaisePropertyChanged("PlayButtonIcon");
             }
         }
-
         private void onPlaystateChanged(object argument)
         {
             RaisePropertyChanged("PlayButtonIcon");
         }
-
-        private void OnTrackChanged(object e)
+        private void OnTrackChanged(object sender,object argument)
         {
             RaisePropertyChanged("TrackLoaded");
             RaisePropertyChanged("Length");
@@ -86,6 +84,7 @@ namespace TuneMusix.ViewModel
         {
             RaisePropertyChanged("CurrentSliderPosition");
             RaisePropertyChanged("Length");
+            RaisePropertyChanged("CurrentTrackName");
         }
 
         /// <summary>

@@ -71,7 +71,7 @@ namespace TuneMusix.ViewModel
 
             //Events
             timer.Elapsed += OnTimeElapsed;
-            audioControls.TrackChanged += OnTrackChanged;
+            dataModel.CurrentTrackChanged += OnTrackChanged;
             audioControls.PlaystateChanged += onPlaystateChanged;
             dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
         }
