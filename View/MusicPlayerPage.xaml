@@ -23,6 +23,7 @@
     <Page.Resources>
         <vm:MusicPlayerViewModel x:Key="MusicPlayerViewModel"/>
         <Style TargetType="{x:Type control:FormattedSlider}" BasedOn="{StaticResource MaterialDesignSlider}"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
 
     <Grid>
@@ -96,28 +97,23 @@
                             </materialDesign:PackIcon>
                         </Button>
                         <!-- Popup for the volume slider -->
-                        <Popup IsOpen="{Binding VolumePopupOpen,UpdateSourceTrigger=PropertyChanged}" AllowsTransparency="True"
-                                PopupAnimation="Fade" PlacementTarget="{Binding ElementName=MuteButton}" Placement="Top">
-                            <materialDesign:ColorZone Mode="PrimaryDark" MinHeight="10" MinWidth="100" CornerRadius="10">
-                                <Slider DockPanel.Dock="Top"  x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" Orientation="Horizontal" AutoToolTipPlacement="BottomRight"
-                                    ToolTipService.ShowDuration="30000" Maximum="100" IsSelectionRangeEnabled="True" Margin="3,0" VerticalAlignment="Center">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                                            <i:InvokeCommandAction Command="{Binding VolumeButtonReleased}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </Slider>
-                            </materialDesign:ColorZone>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseEnter">
-                                    <i:InvokeCommandAction Command="{Binding OpenVolumePopup}"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseLeave">
-                                    <i:InvokeCommandAction Command="{Binding CloseVolumePopup}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Popup>
-                        <Button Grid.Column="2" x:Name="RepeatButton" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding RepeatButton}">
+                            <Slider DockPanel.Dock="Top"  x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" Orientation="Horizontal" AutoToolTipPlacement="BottomRight"
+                                    ToolTipService.ShowDuration="30000" Maximum="100" IsSelectionRangeEnabled="True" Margin="3,0" Width="80"
+                                    Visibility="{Binding VolumeSliderVisible,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVis}}" 
+                                    VerticalAlignment="Center">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding VolumeButtonReleased}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseEnter">
+                                        <i:InvokeCommandAction Command="{Binding OpenVolumePopup}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeave">
+                                        <i:InvokeCommandAction Command="{Binding CloseVolumePopup}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Slider>
+                            <Button Grid.Column="2" x:Name="RepeatButton" Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding RepeatButton}">
                             <materialDesign:PackIcon Kind="{Binding RepeatButtonIcon,UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="0.5,0.5" >
                                 <materialDesign:PackIcon.RenderTransform>
                                     <TransformGroup>
