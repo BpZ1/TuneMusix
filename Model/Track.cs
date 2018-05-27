@@ -305,6 +305,23 @@ namespace TuneMusix.Model
             if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
         }
 
+        public bool Contains(string value)
+        {
+            if (value == null)
+                throw new ArgumentNullException();
+
+            if (Title.ToLower().Contains(value.ToLower()))
+                return true;
+
+            if (Interpret.ToLower().Contains(value.ToLower()))
+                return true;
+
+            if (Album.ToLower().Contains(value.ToLower()))
+                return true;
+
+            return false;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
     }

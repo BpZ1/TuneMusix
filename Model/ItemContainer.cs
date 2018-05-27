@@ -61,7 +61,7 @@ namespace TuneMusix.Model
             if (!itemlist.Contains(item))
             {
                 itemlist.Add(item);
-                RaisePropertyChanged("Tracklist");
+                RaisePropertyChanged("Itemlist");
                 OnContainerChanged();
                 return true;
             }
@@ -74,8 +74,9 @@ namespace TuneMusix.Model
 
             if(itemlist.Remove(item))
             {                
-                RaisePropertyChanged("Tracklist");
+                RaisePropertyChanged("Itemlist");
                 OnContainerChanged();
+                return true;
             }           
             return false;
         }

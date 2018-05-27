@@ -10,17 +10,17 @@ namespace TuneMusix.Model
     /// <summary>
     /// Class for the Playlist model containing a list of tracks
     /// </summary>
-    public class Playlist : ItemContainer<Track>, INotifyPropertyChanged
+    public class Playlist : ItemContainer<Track>
     {
         private long id;
         public bool IsModified { get; set; }
 
-        public Playlist(string name,long ID) : base(name)
+        public Playlist(string name, long ID) : base(name)
         {
             this.id = ID;
         }
 
-        public Playlist(string name,Track track,long ID) : base(name)
+        public Playlist(string name, Track track, long ID) : base(name)
         {
             this.id = ID;
             if (track != null)
@@ -29,7 +29,7 @@ namespace TuneMusix.Model
             }
         }
 
-        public Playlist(string name,List<Track> tracks,long ID) : base(name)
+        public Playlist(string name, List<Track> tracks, long ID) : base(name)
         {
             this.id = ID;
             foreach (Track track in tracks)
@@ -38,7 +38,7 @@ namespace TuneMusix.Model
                 {
                     Itemlist.Add(track);
                 }
-            }          
+            }
         }
 
         public override string Name
@@ -56,18 +56,14 @@ namespace TuneMusix.Model
             get { return this.id; }
         }
 
-        /// <summary>
-        /// Adds all Elements that are not Null or already contained to the List.
-        /// </summary>
-        /// <param name="tracks">Tracks to be added to the List.</param>
-        /// <returns>Number of Elements added.</returns>
-        public void Add(List<Track> tracks)
+        public override bool Add(Track track)
         {
-            foreach (Track track in tracks)
-            {             
-                Itemlist.Add(track);             
+            if (base.Add(track))
+            {
+                IsModified = true;
+                return true;
             }
-            RaisePropertyChanged("Tracklist");
+            return false;
         }
 
     }
