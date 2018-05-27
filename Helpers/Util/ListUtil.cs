@@ -55,6 +55,7 @@ namespace TuneMusix.Helpers
         /// <param name="index2"></param>
         public static void ChangeItemPosition<T>(this IList<T> list, T element ,int position)
         {
+            Console.WriteLine("New position: " + position);
             if (list.Contains(element)) //Effect is already contained in the list.
             {
                 int pos1 = list.IndexOf(element);
@@ -71,7 +72,6 @@ namespace TuneMusix.Helpers
                 }
             }
         }
-
         /// <summary>
         /// Checks if two lists contain the same elements.
         /// </summary>
