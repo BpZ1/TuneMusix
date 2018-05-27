@@ -4,37 +4,40 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TuneMusix.View.Effects"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}"   
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Expander >
             <StackPanel>
-                <materialDesign:ColorZone Mode="Light">
+                <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
                         <Label Content="Feedback" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding Feedback,Mode=TwoWay}" Maximum="100" Minimum="0" ToolTip="{Binding Feedback}" />
                     </StackPanel>
                 </materialDesign:ColorZone>
-                <materialDesign:ColorZone Mode="Light">
+                <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel Height="auto">
                         <Label Content="Left Delay" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding LeftDelay,Mode=TwoWay}" Maximum="2000" ToolTip="{Binding LeftDelay}" Minimum="1"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
-                <materialDesign:ColorZone Mode="Light">
+                <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
                         <Label Content="RightDelay" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding RightDelay,Mode=TwoWay}" Maximum="2000" ToolTip="{Binding RightDelay}" Minimum="1"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
-                <materialDesign:ColorZone Mode="Light">
+                <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Pan Delay" FontWeight="Bold"/>
                         <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" ToolTip="{Binding}" IsChecked="{Binding PanDelay,Mode=TwoWay}" Margin="60,0,0,0"  />                  
                     </StackPanel>
                 </materialDesign:ColorZone>
-                <materialDesign:ColorZone Mode="Light">
+                <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
                         <Label Content="Wet-Dry Mix" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding WetDryMix,Mode=TwoWay}" Maximum="100" ToolTip="{Binding WetDryMix}" Minimum="0"/>
@@ -52,7 +55,7 @@
             </StackPanel>
         </Expander>
 
-        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
+        <materialDesign:ColorZone Mode="PrimaryMid" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
             <StackPanel Orientation="Horizontal">
                 <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}"/>
                 <Label Content="Echo" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />

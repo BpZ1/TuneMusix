@@ -8,6 +8,9 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:local="clr-namespace:TuneMusix.View.OptionsWindow"
       DataContext="{DynamicResource AddEffectsViewModel}"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}"   
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="AddEffectsPage">
@@ -27,7 +30,7 @@
         <ListView DockPanel.Dock="Top" dd:DragDrop.IsDragSource="True" HorizontalContentAlignment="Stretch" dd:DragDrop.DragAdornerTemplate="{StaticResource EffectDragAdorner}"
                       dd:DragDrop.DragHandler="{Binding}" dd:DragDrop.DropHandler="{Binding}">
             <ListViewItem Name="DistortionItem">
-                <materialDesign:ColorZone Mode="PrimaryLight">
+                <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <Label Content="Distortion"/>
@@ -35,7 +38,7 @@
                 </materialDesign:ColorZone>
             </ListViewItem>
             <ListViewItem Name="EchoItem">
-                <materialDesign:ColorZone Mode="PrimaryLight">
+                <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <Label Content="Echo"/>
@@ -43,7 +46,7 @@
                 </materialDesign:ColorZone>
             </ListViewItem>
             <ListViewItem Name="CompressorItem">
-                <materialDesign:ColorZone Mode="PrimaryLight">
+                <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <Label Content="Compressor"/>
@@ -51,7 +54,7 @@
                 </materialDesign:ColorZone>
             </ListViewItem>
             <ListViewItem Name="ChorusItem">
-                <materialDesign:ColorZone Mode="PrimaryLight">
+                <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <Label Content="Chorus"/>
@@ -59,7 +62,7 @@
                 </materialDesign:ColorZone>
             </ListViewItem>
             <ListViewItem Name="Equalizer10Item">
-                <materialDesign:ColorZone Mode="PrimaryLight">
+                <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <Label Content="Equalizer"/>
@@ -67,7 +70,7 @@
                 </materialDesign:ColorZone>
             </ListViewItem>
             <ListViewItem Name="FlangerItem">
-                <materialDesign:ColorZone Mode="PrimaryLight">
+                <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <Label Content="Flanger"/>
@@ -75,7 +78,7 @@
                 </materialDesign:ColorZone>
             </ListViewItem>
             <ListViewItem Name="ReverbItem">
-                <materialDesign:ColorZone Mode="PrimaryLight">
+                <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <Label Content="Reverb"/>
@@ -83,7 +86,7 @@
                 </materialDesign:ColorZone>
             </ListViewItem>
             <ListViewItem Name="GargleItem">
-                <materialDesign:ColorZone Mode="PrimaryLight">
+                <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         <Label Content="Gargle"/>

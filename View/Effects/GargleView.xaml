@@ -5,19 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TuneMusix.View.Effects"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{DynamicResource MaterialDesignFont}"   
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Expander >
             <StackPanel>
-                
-                <materialDesign:ColorZone Mode="Light">
+
+                <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
                         <Label Content="Rate" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding Release,Mode=TwoWay}" Maximum="1000" ToolTip="{Binding Release}" Minimum="1"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
-                <materialDesign:ColorZone Mode="Light">
+                <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
                         <Label Content="Wave Shape" FontWeight="Bold"/>
                         <Slider Grid.Column="1" Value="{Binding WaveShape,Mode=TwoWay}" Maximum="1" ToolTip="{Binding WaveShape}" Minimum="0"/>
@@ -35,7 +38,7 @@
             </StackPanel>
         </Expander>
 
-        <materialDesign:ColorZone Mode="PrimaryLight" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
+        <materialDesign:ColorZone Mode="PrimaryMid" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
             <StackPanel Orientation="Horizontal">
                 <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}"/>
                 <Label Content="Gargle" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
