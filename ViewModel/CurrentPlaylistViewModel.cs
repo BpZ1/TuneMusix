@@ -36,7 +36,7 @@ namespace TuneMusix.ViewModel
 
             dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
         }
-
+        #region commands
         /// <summary>
         /// Changes the selection of the playlist.
         /// </summary>
@@ -98,7 +98,7 @@ namespace TuneMusix.ViewModel
                 dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(track);
             }
         }
-
+        #endregion
         private void onCurrentPlaylistChanged(object source, object newPlaylist)
         {
             RaisePropertyChanged("CurrentPlaylistName");
@@ -106,7 +106,7 @@ namespace TuneMusix.ViewModel
             SelectedTracks.Clear();
         }
 
-        //drag and drop methods
+        #region drag and drop
         public void DragOver(IDropInfo dropInfo)
         {
             dropInfo.NotHandled = true;
@@ -120,16 +120,25 @@ namespace TuneMusix.ViewModel
 
         public void Drop(IDropInfo dropInfo)
         {
-            if(dropInfo.Data.GetType() == typeof(Track))
+            //Check the type of the dropped item.
+            if (dropInfo.Data.GetType() == typeof(Track))
             {
-                Track track = dropInfo.Data as Track;
-                if (track != null && dropInfo != null)
+                if(dropInfo.VisualTargetItem != null)
                 {
-                    ListUtil.ChangeItemPosition<Track>(CurrentPlaylistTracks, track, dropInfo.UnfilteredInsertIndex);
-                    dataModel.CurrentPlaylist.IsModified = true;
-                    RaisePropertyChanged("CurrentPlaylistTracks");
-                }
+                    //Check if it was dropped in the listview.
+                    if(dropInfo.VisualTargetItem.GetType() == typeof(ListViewItem))
+                    {
+                        Track track = dropInfo.Data as Track;
+                        if (track != null && dropInfo != null)
+                        {
+                            ListUtil.ChangeItemPosition<Track>(CurrentPlaylistTracks, track, dropInfo.UnfilteredInsertIndex);
+                            dataModel.CurrentPlaylist.IsModified = true;
+                            RaisePropertyChanged("CurrentPlaylistTracks");
+                        }
+                    }
+                }               
             }
+            //If the droppen item was a playlist.
             if(dropInfo.Data.GetType() == typeof(Playlist))
             {
                 Playlist playlist = dropInfo.Data as Playlist;
@@ -170,9 +179,9 @@ namespace TuneMusix.ViewModel
             Logger.LogException(exception);
             throw exception;
         }
+        #endregion
 
-
-        //setter and getter
+        #region properties
         public string CurrentPlaylistName
         {
             get
@@ -201,5 +210,6 @@ namespace TuneMusix.ViewModel
                 }
             }
         }
+        #endregion
     }
 }
