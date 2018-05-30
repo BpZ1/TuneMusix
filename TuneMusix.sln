@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuneMusix", "TuneMusix.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuneMusix.Tests", "TuneMusix.Tests\TuneMusix.Tests.csproj", "{CFA36542-6F6A-4D02-B2E1-03072BF8DC1A}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TMSetupWizard", "TMSetupWizard\TMSetupWizard.vdproj", "{3093A210-8B19-4586-A622-1764707AA725}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TuneMusixSetup", "TuneMusixSetup\TuneMusixSetup.vdproj", "{C6D23014-4FB2-449B-AA4D-D817B1CF19B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,8 +23,8 @@ Global
 		{CFA36542-6F6A-4D02-B2E1-03072BF8DC1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFA36542-6F6A-4D02-B2E1-03072BF8DC1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFA36542-6F6A-4D02-B2E1-03072BF8DC1A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3093A210-8B19-4586-A622-1764707AA725}.Debug|Any CPU.ActiveCfg = Debug
-		{3093A210-8B19-4586-A622-1764707AA725}.Release|Any CPU.ActiveCfg = Release
+		{C6D23014-4FB2-449B-AA4D-D817B1CF19B6}.Debug|Any CPU.ActiveCfg = Debug
+		{C6D23014-4FB2-449B-AA4D-D817B1CF19B6}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
