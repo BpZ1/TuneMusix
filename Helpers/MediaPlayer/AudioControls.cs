@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using TuneMusix.Data;
 using TuneMusix.Data.DataModelOb;
+using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
@@ -456,23 +457,33 @@ namespace TuneMusix.Helpers.MediaPlayer
         /// </summary>
         public void ShuffleChanged()
         {
-            if (!options.Shuffle)
-            {             
-                //Shuffle the list
-                dataModel.ShuffleTrackQueue();
-
-                //Change state after shuffling to avoid shuffle loop in setter of TrackQueue
-                options.Shuffle = true;
-                Options.Instance.SaveValues();
-            }
-            else
+            DialogResult result = DialogResult.Yes;
+            if (dataModel.TrackQueue.Count > 500)
             {
-                //Change state before unshuffling to avoid shuffling in setter of TrackQueue.
-                options.Shuffle = false;
-                Options.Instance.SaveValues();
+                result = DialogService.OpenDialog("Shuffling that many tracks can take a long time. Continue?");
 
-                //Unshuffle the list
-                dataModel.UnShuffleTrackQueue();            
+            }
+            if (result == DialogResult.Yes)
+            {
+
+                if (!options.Shuffle)
+                {
+                    //Shuffle the list
+                    dataModel.ShuffleTrackQueue();
+
+                    //Change state after shuffling to avoid shuffle loop in setter of TrackQueue
+                    options.Shuffle = true;
+                    Options.Instance.SaveValues();
+                }
+                else
+                {
+                    //Change state before unshuffling to avoid shuffling in setter of TrackQueue.
+                    options.Shuffle = false;
+                    Options.Instance.SaveValues();
+
+                    //Unshuffle the list
+                    dataModel.UnShuffleTrackQueue();
+                }
             }
         }
 
