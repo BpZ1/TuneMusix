@@ -65,7 +65,14 @@ namespace TuneMusix.Helpers
             }
             if(seconds < 10)
             {
-                result += (seconds * 10);
+                if(seconds == 0)
+                {
+                    result += "00";
+                }
+                else
+                {
+                    result += seconds + "0";
+                }
             }
             else
             {
