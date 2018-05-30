@@ -50,6 +50,21 @@ namespace TuneMusix.Helpers.Dialogs
             DialogResult result = (win.DataContext as DialogViewModelBase).UserDialogResult;
             return result;
         }
-        
+
+        /// <summary>
+        /// Opens a dialog waiting for user confirmation and returns the result as <see cref="DialogResult"/>
+        /// </summary>
+        /// <param name="DialogViewModelBase"></param>
+        /// <returns><see cref="DialogResult"/></returns>
+        public static DialogResult OpenDialog(String message)
+        {
+            DialogViewModelBase vm = new ConfirmationDialogViewModel(message);
+            DialogWindow win = new DialogWindow();
+            win.DataContext = vm;
+            win.ShowDialog();
+            DialogResult result = (win.DataContext as DialogViewModelBase).UserDialogResult;
+            return result;
+        }
+
     }
 }
