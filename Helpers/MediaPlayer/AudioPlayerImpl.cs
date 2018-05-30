@@ -95,7 +95,7 @@ namespace TuneMusix.Helpers
         /// <param name="source"></param>
         /// <param name="args"></param>
         private void PlaybackStopped(object source,EventArgs args)
-        {
+        {           
             if(soundSource == null || soundOut == null)
             {
                 OnPlaybackFinished();
@@ -104,7 +104,7 @@ namespace TuneMusix.Helpers
             {
                 try
                 {
-                    if (soundSource.GetPosition() == soundSource.GetLength())
+                    if ((TimeSpan.Compare(soundSource.GetPosition(), soundSource.GetLength())) == 0)
                     {
                         OnPlaybackFinished();
                     }
