@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using TuneMusix.Helpers.Dialogs;
+using TuneMusix.ViewModel.Dialog;
 
 namespace TuneMusix.Helpers
 {
@@ -31,7 +33,7 @@ namespace TuneMusix.Helpers
         /// <param name="list"></param>
         public static void Shuffle<T>(this IList<T> list)
         {
-            var provider = new RNGCryptoServiceProvider();
+            var provider = new RNGCryptoServiceProvider();           
             int n = list.Count;
             while (n > 1)
             {
@@ -44,6 +46,7 @@ namespace TuneMusix.Helpers
                 list[k] = list[n];
                 list[n] = value;
             }
+                       
         }
 
         /// <summary>
