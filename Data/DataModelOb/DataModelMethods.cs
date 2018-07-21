@@ -181,67 +181,6 @@ namespace TuneMusix.Data.DataModelOb
             }
             return false;
         }
-        #region database loading methods
-        //////////////////////////database methods///////////////////////////////////////
-        ///DataBaseMethods should only be used to load tracks into the DataModel when////
-        ///initializing the prorgam as they avoid all checks for duplicates etc./////////
-        /////////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Inserts a list of tracks into the datamodel.
-        /// If boolean is set to false, duplicate checks are avoided.
-        /// </summary>
-        /// <param name="tracks"></param>
-        public void AddTracks_NoDatabase(List<Track> tracks, bool check)
-        {
-            foreach (Track track in tracks)
-            {
-                if (check)
-                {
-                    if (!Contains(track))
-                        TrackList.Add(track);
-                }
-                else
-                {
-                    track.IsModified = false;
-                    TrackList.Add(track);
-                }          
-            }
-        }
-        /// <summary>
-        /// DatabaseMethod for Inserting Folders into the DataModel.
-        /// </summary>
-        /// <param name="folders"></param>
-        public void AddRootFolders_NoDatabase(List<Folder> folders)
-        {
-            foreach (Folder folder in folders)
-            {
-                RootFolders.Add(folder);
-            }
-        }
-        /// <summary>
-        /// DatabaseMethod for Inserting Playlists into the DataModel.
-        /// </summary>
-        /// <param name="playlists"></param>
-        public void AddPlaylists_NoDatabase(List<Playlist> playlists)
-        {
-            foreach (Playlist playlist in playlists)
-            {
-                playlist.IsModified = false;
-                Playlists.Add(playlist);
-            }
-        }
-        /// <summary>
-        /// Adds a track to a playlist and triggers the event.
-        /// </summary>
-        /// <param name="track"></param>
-        /// <param name="playlist"></param>
-        public void AddTrackToPlaylistWithoutModification(Track track,Playlist playlist)
-        {
-            playlist.Add(track);
-            playlist.IsModified = false;
-        }
-        #endregion
 
         #region insertion methods
         /// <summary>

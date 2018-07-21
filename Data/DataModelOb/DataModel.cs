@@ -20,13 +20,13 @@ namespace TuneMusix.Data.DataModelOb
         private Playlist currentPlaylist;
         private Track currentTrack;
         private bool trackQueueIsShuffled;
-        private ObservableCollection<Playlist> playlists = new ObservableCollection<Playlist>();
-        private ObservableCollection<Track> tracklist = new ObservableCollection<Track>();
+        private ObservableCollection<Playlist> playlists;
+        private ObservableCollection<Track> tracklist;
+        private ObservableCollection<Folder> rootFolders;
+        private ObservableCollection<Album> albumlist;
+        private ObservableCollection<Interpret> interpretlist;
         private ObservableCollection<Track> selectedTracks = new ObservableCollection<Track>();
-        private ObservableCollection<Folder> rootFolders = new ObservableCollection<Folder>();
         private ObservableCollection<Track> trackQueue = new ObservableCollection<Track>();
-        private ObservableCollection<Album> albumlist = new ObservableCollection<Album>();
-        private ObservableCollection<Interpret> interpretlist = new ObservableCollection<Interpret>();
 
         #region constructor and instance accessor
 
@@ -44,7 +44,8 @@ namespace TuneMusix.Data.DataModelOb
                     {
                         if (instance == null)
                         {
-                            instance = new DataModel();
+                            SQLLoader loader = new SQLLoader();
+                            instance = loader.LoadFromDB();
                         }
                     }
                 }
@@ -53,12 +54,19 @@ namespace TuneMusix.Data.DataModelOb
         }
 
 
-        private DataModel()
+        public DataModel(List<Track> tracklist, List<Playlist> playlists, List<Folder> rootfolders,
+            List<Album> albumlist, List<Interpret> interpretlist)
         {
+            this.tracklist = new ObservableCollection<Track>(tracklist);
+            this.rootFolders = new ObservableCollection<Folder>(rootfolders);
+            this.playlists = new ObservableCollection<Playlist>(playlists);
+            this.albumlist = new ObservableCollection<Album>(albumlist);
+            this.interpretlist = new ObservableCollection<Interpret>(interpretlist);
+
             QueueIndex = 0;
-            tracklist.CollectionChanged += dataModelChanged;
-            playlists.CollectionChanged += dataModelChanged;
-            rootFolders.CollectionChanged += dataModelChanged;
+            this.tracklist.CollectionChanged += dataModelChanged;
+            this.playlists.CollectionChanged += dataModelChanged;
+            this.rootFolders.CollectionChanged += dataModelChanged;
         }
         #endregion
 

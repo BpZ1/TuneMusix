@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using TuneMusix.Data.DataModelOb;
@@ -18,7 +16,6 @@ namespace TuneMusix.Data.SQLDatabase
     /// </summary>
     public class SQLLoader
     {
-        private DataModel dataModel = DataModel.Instance;
         private Database database = Database.Instance;
         private IDGenerator IDgen = IDGenerator.Instance;
 
@@ -27,93 +24,54 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void LoadFromDB()
+        public DataModel LoadFromDB()
         {
+            //Starting the timer
             var watch = new Stopwatch();
             watch.Start();
-            LoadingBarManager loadingBar = LoadingBarManager.Instance;
-            loadingBar.StartLoading("Loading...");
 
-            #region options       
+            Debug.WriteLine("Loading started");
+
+            //Starting the loading bar
+            LoadingBarManager loadingBar = LoadingBarManager.Instance;
+            loadingBar.StartLoading("Loading data...");
+
+            #region loading data         
             long idgen = database.GetIDCounterStand();
             if (idgen == 0 || idgen == 1)
             {
                 idgen = 2;
             }
             IDgen.Initialize(idgen);
-            loadingBar.Message = "Loading Options...";
-            Debug.WriteLine("Options loading...");
             database.LoadOptions();
-            Debug.WriteLine("Options loaded!");
-            loadingBar.Progress = 10;
-            #endregion
 
-            #region folders
-            loadingBar.Message = "Loading Folders...";
-            Debug.WriteLine("Folders loading...");
-
+            loadingBar.Progress = 5;
             List<Folder> FolderList = database.GetFolders();
-            List<Folder> RootList = new List<Folder>();
-
-            Debug.WriteLine("Folders loaded");
+            loadingBar.Progress = 10;
+            List<Track> tracklist = database.GetTracks();
             loadingBar.Progress = 20;
+            List<Playlist> playlists = database.GetPlaylists();
+            loadingBar.Progress = 25;
+
             #endregion
 
-            #region tracks
-            loadingBar.Message = "Loading Tracks...";
-            Debug.WriteLine("Loading Tracks...");
-            List<Track> tracklist = database.GetTracks();
-            dataModel.AddTracks_NoDatabase(tracklist, false);
-            Debug.WriteLine("Tracks loaded!");
-            FolderSort(FolderList);
-            TrackSort(FolderList);
+
+            #region sorting
+            folderSort(FolderList);
+            loadingBar.Progress = 50;
+            trackSort(FolderList, tracklist);
+            loadingBar.Progress = 80;
+            List<Folder> rootList = new List<Folder>();
+
             foreach (Folder folder in FolderList)
             {
                 if (folder.FolderID == 1)
-                {
-                    RootList.Add(folder);
-                }
+                    rootList.Add(folder);
             }
-            dataModel.AddRootFolders_NoDatabase(RootList);
-            loadingBar.Progress = 60;
-            #endregion
-
-            #region Playlists
-            //load playlists
-            loadingBar.Message = "Loading Playlists...";
-            Debug.WriteLine("Loading Playlists...");
-
-            dataModel.AddPlaylists_NoDatabase(database.GetPlaylists());          
-            foreach (Playlist playlist in dataModel.Playlists)
-            {
-                List<PlaylistTrack> playlistTracks = database.GetPlaylistTracks(playlist);
-                foreach (PlaylistTrack pt in playlistTracks)
-                {
-                    foreach (Track track in dataModel.TrackList)
-                    {
-                        if (track.ID == pt.TrackID)
-                        {
-                            dataModel.AddTrackToPlaylistWithoutModification(track,playlist);
-                        }
-                    }
-                }
-            }         
-            Debug.WriteLine("Playlists loaded!");
-            loadingBar.Message = "Loading Playlists...";
-            loadingBar.Progress = 70;
-            #endregion
-
-            #region creating albums
-            loadingBar.Message = "Loading Albums...";
-            dataModel.Albumlist = new ObservableCollection<Album>(createAlbums(tracklist));
+            playlistSort(playlists, tracklist);
             loadingBar.Progress = 90;
-            #endregion
-
-            #region creating interprets
-            loadingBar.Message = "Loading Interprets...";
-            dataModel.Interpretlist = new ObservableCollection<Interpret>(createInterprets(tracklist));
-            loadingBar.Message = "Loading Settings...";
-            LoadOptions();
+            List<Album> albumList = createAlbums(tracklist);
+            List<Interpret> interpretList = createInterprets(tracklist);
             loadingBar.Progress = 100;
             #endregion
 
@@ -123,6 +81,8 @@ namespace TuneMusix.Data.SQLDatabase
             loadingBar.EndLoading();
             Debug.WriteLine("Time: "+ watch.ElapsedMilliseconds);
 
+            DataModel model = new DataModel(tracklist, playlists, rootList, albumList, interpretList);
+            return model;
         }
 
         /// <summary>
@@ -216,13 +176,16 @@ namespace TuneMusix.Data.SQLDatabase
             return interprets;
         }
 
-
-        private List<Folder> FolderSort(List<Folder> folderlist)
+        /// <summary>
+        /// Takes a list of folders and returns the rootfolder(s).
+        /// </summary>
+        /// <param name="folderlist">List of folders.</param>
+        /// <returns>Rootfolder(s) of the given Folder</returns>
+        private void folderSort(List<Folder> folderlist)
         {
-            List<Folder> templist = folderlist;
-            foreach (Folder a in templist)
+            foreach (Folder a in folderlist)
             {              
-                foreach (Folder b in templist)
+                foreach (Folder b in folderlist)
                 {
                     if (a.ID == b.FolderID)
                     {
@@ -232,12 +195,18 @@ namespace TuneMusix.Data.SQLDatabase
                 }
                 a.IsModified = false;
             }
-            return templist;
         }
-        private List<Folder> TrackSort(List<Folder> FolderList)
+        /// <summary>
+        /// Takes a list of folders and a list of tracks and 
+        /// sets the folder for each track and sets the tracks for each folder.
+        /// </summary>
+        /// <param name="FolderList">List of folders.</param>
+        /// <param name="tracklist">List of tracks.</param>
+        /// <returns>List of sorted folders</returns>
+        private void trackSort(List<Folder> FolderList, List<Track> tracklist)
         {
             List<Folder> tempFolderList = FolderList;
-            foreach (Track track in dataModel.TrackList)
+            foreach (Track track in tracklist)
             {
                 foreach (Folder folder in FolderList)
                 {
@@ -246,10 +215,34 @@ namespace TuneMusix.Data.SQLDatabase
                         folder.Add(track);
                         track.IsModified = false;
                     }
+                    folder.IsModified = false;
                 }
             }
-            return tempFolderList;
         }
      
+        /// <summary>
+        /// Matches each playlist with its corresponding tracks.
+        /// </summary>
+        /// <param name="playlists">List of playlists.</param>
+        /// <param name="tracklist">List of all tracks.</param>
+        private void playlistSort(List<Playlist> playlists, List<Track> tracklist)
+        {
+            List<Playlist> sortedList = new List<Playlist>();
+            foreach(Playlist playlist in playlists)
+            {
+                List<PlaylistTrack> playlistTracks = database.GetPlaylistTracks(playlist);
+                foreach(PlaylistTrack playlistTrack in playlistTracks)
+                {
+                    foreach(Track track in tracklist)
+                    {
+                        if(track.ID == playlistTrack.TrackID)
+                        {
+                            playlist.Add(track);
+                        }
+                    }
+                }
+                playlist.IsModified = false;
+            }
+        }
     }
 }
