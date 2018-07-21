@@ -1,10 +1,6 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using TuneMusix.Helpers;
-using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
 
@@ -118,12 +114,7 @@ namespace TuneMusix.Data.DataModelOb
                 OnTrackQueueChanged();
             }
         }
-        //list containing all loaded effects
-        public ObservableCollection<BaseEffect> EffectQueue
-        {
-            get { return effectQueue; }
-            set { EffectQueue = value; }
-        }
+
         public ObservableCollection<Album> Albumlist
         {
             get { return albumlist; }

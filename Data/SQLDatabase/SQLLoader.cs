@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Interface;
+using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
@@ -33,7 +31,8 @@ namespace TuneMusix.Data.SQLDatabase
         {
             var watch = new Stopwatch();
             watch.Start();
-            LoadingBarManager.Instance.StartLoading("Loading...");
+            LoadingBarManager loadingBar = LoadingBarManager.Instance;
+            loadingBar.StartLoading("Loading...");
 
             #region options       
             long idgen = database.GetIDCounterStand();
@@ -42,26 +41,26 @@ namespace TuneMusix.Data.SQLDatabase
                 idgen = 2;
             }
             IDgen.Initialize(idgen);
-            LoadingBarManager.Instance.Message = "Loading Options...";
+            loadingBar.Message = "Loading Options...";
             Debug.WriteLine("Options loading...");
             database.LoadOptions();
             Debug.WriteLine("Options loaded!");
-            LoadingBarManager.Instance.Progress = 10;
+            loadingBar.Progress = 10;
             #endregion
 
             #region folders
-            LoadingBarManager.Instance.Message = "Loading Folders...";
+            loadingBar.Message = "Loading Folders...";
             Debug.WriteLine("Folders loading...");
 
             List<Folder> FolderList = database.GetFolders();
             List<Folder> RootList = new List<Folder>();
 
             Debug.WriteLine("Folders loaded");
-            LoadingBarManager.Instance.Progress = 20;
+            loadingBar.Progress = 20;
             #endregion
 
             #region tracks
-            LoadingBarManager.Instance.Message = "Loading Tracks...";
+            loadingBar.Message = "Loading Tracks...";
             Debug.WriteLine("Loading Tracks...");
             List<Track> tracklist = database.GetTracks();
             dataModel.AddTracks_NoDatabase(tracklist, false);
@@ -76,12 +75,12 @@ namespace TuneMusix.Data.SQLDatabase
                 }
             }
             dataModel.AddRootFolders_NoDatabase(RootList);
-            LoadingBarManager.Instance.Progress = 60;
+            loadingBar.Progress = 60;
             #endregion
 
             #region Playlists
             //load playlists
-            LoadingBarManager.Instance.Message = "Loading Playlists...";
+            loadingBar.Message = "Loading Playlists...";
             Debug.WriteLine("Loading Playlists...");
 
             dataModel.AddPlaylists_NoDatabase(database.GetPlaylists());          
@@ -100,31 +99,28 @@ namespace TuneMusix.Data.SQLDatabase
                 }
             }         
             Debug.WriteLine("Playlists loaded!");
-            LoadingBarManager.Instance.Message = "Loading Playlists...";
-            LoadingBarManager.Instance.Progress = 70;
-            Debug.WriteLine("Loading effects...");
-            List<BaseEffect> effectlist = database.GetEffects();
-            dataModel.AddEffectsToQueue_NoDatabase(effectlist);
-            Debug.WriteLine(effectlist.Count +  " Effects loaded!");
-            LoadingBarManager.Instance.Progress = 80;
+            loadingBar.Message = "Loading Playlists...";
+            loadingBar.Progress = 70;
             #endregion
 
             #region creating albums
-            LoadingBarManager.Instance.Message = "Loading Albums...";
+            loadingBar.Message = "Loading Albums...";
             dataModel.Albumlist = new ObservableCollection<Album>(createAlbums(tracklist));
-            LoadingBarManager.Instance.Progress = 90;
+            loadingBar.Progress = 90;
             #endregion
 
             #region creating interprets
-            LoadingBarManager.Instance.Message = "Loading Interprets...";
+            loadingBar.Message = "Loading Interprets...";
             dataModel.Interpretlist = new ObservableCollection<Interpret>(createInterprets(tracklist));
-            LoadingBarManager.Instance.Progress = 100;
+            loadingBar.Message = "Loading Settings...";
+            LoadOptions();
+            loadingBar.Progress = 100;
             #endregion
 
             Debug.WriteLine("Loading finished");
             watch.Stop();
-            LoadingBarManager.Instance.Message = "Loading Finished";
-            LoadingBarManager.Instance.EndLoading();
+            loadingBar.Message = "Loading Finished";
+            loadingBar.EndLoading();
             Debug.WriteLine("Time: "+ watch.ElapsedMilliseconds);
 
         }
@@ -134,10 +130,16 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         public void LoadOptions()
         {
+            AudioControls audio = AudioControls.Instance;
             database.LoadOptions();
             List<BaseEffect> effectlist = database.GetEffects();
-            dataModel.EffectQueue.Clear();
-            dataModel.AddEffectsToQueue_NoDatabase(effectlist);
+            audio.EffectQueue.Clear();
+            foreach(BaseEffect effect in effectlist)
+            {
+                audio.EffectQueue.Add(effect);
+            }
+            audio.EffectQueue.IsModified = false;
+            Debug.WriteLine("Options loaded");
         }
         /// <summary>
         /// Creates a list of albums from a list of tracks.

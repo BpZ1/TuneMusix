@@ -5,9 +5,6 @@ using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 using System.Linq;
-using System.ComponentModel;
-using System.Windows.Threading;
-using System.Windows;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers.MediaPlayer;
 using System.Diagnostics;
@@ -233,14 +230,6 @@ namespace TuneMusix.Data.DataModelOb
                 playlist.IsModified = false;
                 Playlists.Add(playlist);
             }
-        }
-        public void AddEffectsToQueue_NoDatabase(List<BaseEffect> effectList)
-        {
-            foreach (BaseEffect effect in effectList)
-            {
-                EffectQueue.Add(effect);
-            }
-            AudioControls.Instance.LoadEffects();
         }
         /// <summary>
         /// Adds a track to a playlist and triggers the event.
@@ -485,13 +474,12 @@ namespace TuneMusix.Data.DataModelOb
             return subFolders;
         }
 
-        #region effect methods
         /// <summary>
         /// Removes a list of tracks from a playlist.
         /// </summary>
         /// <param name="tracklist"></param>
         /// <param name="playlist"></param>
-        public void RemoveTracksFromPlaylist(List<Track> tracklist,Playlist playlist)
+        public void RemoveTracksFromPlaylist(List<Track> tracklist, Playlist playlist)
         {
             foreach (Track track in tracklist)
             {
@@ -504,72 +492,20 @@ namespace TuneMusix.Data.DataModelOb
                     tracklist.Remove(track);
                 }
             }
-            database.Delete(playlist,tracklist);
+            database.Delete(playlist, tracklist);
         }
         /// <summary>
         /// Removes the track from the playlist and the connection of both from the database.
         /// </summary>
         /// <param name="track"></param>
         /// <param name="playlist"></param>
-        public void RemoveTrackFromPlaylist(Track track,Playlist playlist)
+        public void RemoveTrackFromPlaylist(Track track, Playlist playlist)
         {
             if (playlist.Itemlist.Remove(track))
             {
-                database.Delete(playlist,track);
+                database.Delete(playlist, track);
             }
         }
-        /// <summary>
-        /// Adds an effect to the effectqueue.
-        /// </summary>
-        /// <param name="effect"></param>
-        public void AddEffectToQueue(BaseEffect effect)
-        {
-            EffectQueue.Add(effect);
-            effect.EffectActivated += OnEffectQueueChanged;
-            OnEffectQueueChanged();
-        }
-        /// <summary>
-        /// Removes an effect from the effectqueue.
-        /// </summary>
-        /// <param name="effect"></param>
-        public void RemoveEffectFromQueue(BaseEffect effect)
-        {
-            if (EffectQueue.Remove(effect))
-            {
-                effect.EffectActivated -= OnEffectQueueChanged;
-                OnEffectQueueChanged();
-            }
-        }
-        /// <summary>
-        /// Changed the position of a given effect in the effectqueue
-        /// if it is already contained, or inserts a new one if it is not.
-        /// </summary>
-        /// <param name="effect"></param>
-        /// <param name="position"></param>
-        public void ChangeEffectListPosition(BaseEffect effect,int position)
-        {
-            if (EffectQueue.Contains(effect)) //Effect is already contained in the list.
-            {
-                int pos1 = EffectQueue.IndexOf(effect);
-                Logger.Log("Moved effect from queue position " + pos1 + " to position " + position + ".");
-                if(position == EffectQueue.Count) //If the new position is at the end of the list
-                {
-                    EffectQueue.Move(pos1, position-1);
-                }
-                else
-                {
-                    EffectQueue.Move(pos1, position);
-                }                    
-            }
-            else //Effect is a new effect.
-            {
-                Logger.Log("Added effect on queue position " + position + ".");
-                EffectQueue.Insert(position, effect);
-                effect.EffectActivated += OnEffectQueueChanged;
-            }
-            OnEffectQueueChanged();
-        }
-        #endregion
 
         /// <summary>
         /// Saves all playlists to the database and sets modified to false;

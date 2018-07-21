@@ -17,7 +17,7 @@
                 <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
                         <Label Content="Rate" FontWeight="Bold"/>
-                        <Slider Grid.Column="1" Value="{Binding Release,Mode=TwoWay}" Maximum="1000" ToolTip="{Binding Release}" Minimum="1"/>
+                        <Slider Grid.Column="1" Value="{Binding Release,Mode=TwoWay}" Maximum="1000" ToolTip="{Binding Rate}" Minimum="1"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
                 <materialDesign:ColorZone Mode="PrimaryLight">

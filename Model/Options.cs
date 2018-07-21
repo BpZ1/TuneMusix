@@ -5,6 +5,7 @@ using System.Linq;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 
 namespace TuneMusix.Model
@@ -331,7 +332,7 @@ namespace TuneMusix.Model
             if (Modified)
                 return true;
 
-            foreach(BaseEffect effect in DataModel.Instance.EffectQueue)
+            foreach(BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist)
             {
                 if (effect.IsModified)
                     return true;
@@ -348,9 +349,9 @@ namespace TuneMusix.Model
                 DataModel dataModel = DataModel.Instance;
                 Database manager = Database.Instance;
                 manager.UpdateOptions(IDGenerator.GetID(false), this);
-                manager.UpdateEffectQueue(dataModel.EffectQueue.ToList<BaseEffect>());
+                manager.UpdateEffectQueue(AudioControls.Instance.EffectQueue.Effectlist.ToList<BaseEffect>());
                 Modified = false;
-                foreach (BaseEffect effect in dataModel.EffectQueue)
+                foreach (BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist)
                 {
                     effect.IsModified = false;
                 }

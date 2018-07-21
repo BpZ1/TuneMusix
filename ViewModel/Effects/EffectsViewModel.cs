@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Threading;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
@@ -20,23 +21,23 @@ namespace TuneMusix.ViewModel.Effects
 
         public ObservableCollection<BaseEffect> Effectlist
         {
-            get { return dataModel.EffectQueue; }
+            get { return AudioControls.Instance.EffectQueue.Effectlist; }
         }
 
         public EffectsViewModel()
         {
             RemoveEffect = new RelayCommand(removeEffect);
-            dataModel.EffectQueueChanged += OnEffectQueueChanged;
+            AudioControls.Instance.EffectQueue.QueueChanged += OnEffectQueueChanged;
         }
 
-        private void OnEffectQueueChanged(object source,object queue)
+        private void OnEffectQueueChanged(object source)
         {
-            RaisePropertyChanged("EffectList");
+            RaisePropertyChanged("Effectlist");
         }
 
         private void removeEffect(object argument)
         {
-            dataModel.RemoveEffectFromQueue(SelectedItem);
+            AudioControls.Instance.EffectQueue.Remove(SelectedItem);
             options.Modified = true;
         }
 
@@ -118,7 +119,8 @@ namespace TuneMusix.ViewModel.Effects
             BaseEffect effect = dropInfo.Data as BaseEffect;
             if (effect != null && dropInfo != null)
             {
-                dataModel.ChangeEffectListPosition(effect, dropInfo.UnfilteredInsertIndex);
+                AudioControls.Instance.
+                    EffectQueue.ChangeEffectListPosition(effect, dropInfo.UnfilteredInsertIndex);
             }
             options.Modified = true;
         }

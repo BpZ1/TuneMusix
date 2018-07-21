@@ -25,7 +25,6 @@ namespace TuneMusix.Data.DataModelOb
         private ObservableCollection<Track> selectedTracks = new ObservableCollection<Track>();
         private ObservableCollection<Folder> rootFolders = new ObservableCollection<Folder>();
         private ObservableCollection<Track> trackQueue = new ObservableCollection<Track>();
-        private ObservableCollection<BaseEffect> effectQueue = new ObservableCollection<BaseEffect>();
         private ObservableCollection<Album> albumlist = new ObservableCollection<Album>();
         private ObservableCollection<Interpret> interpretlist = new ObservableCollection<Interpret>();
 
@@ -60,7 +59,6 @@ namespace TuneMusix.Data.DataModelOb
             tracklist.CollectionChanged += dataModelChanged;
             playlists.CollectionChanged += dataModelChanged;
             rootFolders.CollectionChanged += dataModelChanged;
-            effectQueue.CollectionChanged += dataModelChanged;
         }
         #endregion
 
@@ -72,7 +70,6 @@ namespace TuneMusix.Data.DataModelOb
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
         public event DataModelChangedEventHandler DataModelChanged;
         public event DataModelChangedEventHandler TrackQueueChanged;
-        public event DataModelChangedEventHandler EffectQueueChanged;
         public event DataModelChangedEventHandler AlbumlistChanged;
         public event DataModelChangedEventHandler InterpretlistChanged;
         protected virtual void OnCurrentTrackChanged()
@@ -94,11 +91,6 @@ namespace TuneMusix.Data.DataModelOb
         {
             if (TrackQueueChanged != null)
                 TrackQueueChanged(this, TrackQueue);
-        }
-        protected virtual void OnEffectQueueChanged()
-        {
-            if (EffectQueueChanged != null)
-                EffectQueueChanged(this, EffectQueue);
         }
         protected virtual void OnAlbumlistChanged()
         {

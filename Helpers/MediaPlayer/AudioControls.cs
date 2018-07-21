@@ -36,10 +36,17 @@ namespace TuneMusix.Helpers.MediaPlayer
         private AudioPlayerImpl Player;
         private DataModel dataModel = DataModel.Instance;
         private Options options = Options.Instance;
+        //list containing all loaded effects
+        public EffectQueue EffectQueue
+        {
+            get { return effectQueue; }
+        }
         private bool isPlaying;  
 
-        public AudioControls()
+        private AudioControls()
         {
+            effectQueue = new EffectQueue();
+            effectQueue.QueueChanged += onEffectsChanged;
             //Events
             dataModel.CurrentTrackChanged += onCurrentTrackChanged;
             options.BalanceChanged += onBalanceChanged;
@@ -95,39 +102,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 PlaystateChanged(this);
         }
 
-        /// <summary>
-        /// called on program start to create the effect queue.
-        /// </summary>
-        public void LoadEffects()
-        {
-            effectQueue = new EffectQueue();
-            dataModel.EffectQueueChanged += onEffectQueueChanged;
-        }
-        /// <summary>
-        /// Loads all effects from the dataModel into the effectQueue.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="queue"></param>
-        private void onEffectQueueChanged(object source,object queue)
-        {
-            ObservableCollection<BaseEffect> effectQueue = queue as ObservableCollection<BaseEffect>;          
-            this.effectQueue = new EffectQueue();
-            foreach (BaseEffect effect in effectQueue)
-            {
-                this.effectQueue.AddEffect(effect);
-            }
-            //If a track is currently playing start at the old position
-            if(Player != null)
-            {
-                TimeSpan lastPosition = CurrentPosition;
-                PlayTrack(dataModel.CurrentTrack);
-                CurrentPosition = lastPosition;
-                if (!IsPlaying)
-                {
-                    Pause();
-                }
-            }      
-        }
         private void onPlaybackFinished(object source)
         {
             if (options.RepeatTrack == 0)
@@ -202,7 +176,6 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             if (Player != null) Player.Volume = getFloatVolume((int)volume);
         }
-
         private void onBalanceChanged(object balance)
         {
             var Balance = (int)balance;
@@ -423,7 +396,7 @@ namespace TuneMusix.Helpers.MediaPlayer
             get { return options.Muted; }
         }
         /// <summary>
-        /// sets the Balance from -100 to 100
+        /// sets the Balance from -100 to 100.
         /// </summary>
         public int Balance
         {
@@ -486,6 +459,23 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
             }
         }
-
+        /// <summary>
+        /// Restarts the player.
+        /// </summary>
+        /// <param name="source"></param>
+        private void onEffectsChanged(object source)
+        {
+            if (Player != null)
+            {
+                //setting the old position
+                TimeSpan lastPosition = CurrentPosition;
+                PlayTrack(dataModel.CurrentTrack);
+                CurrentPosition = lastPosition;
+                if (!IsPlaying)
+                {
+                    Pause();
+                }
+            }
+        }
     }
 }

@@ -6,6 +6,8 @@ using CSCore.Codecs;
 using CSCore;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
+using TuneMusix.Model;
+using System.Collections.Generic;
 
 namespace TuneMusix.Helpers
 {

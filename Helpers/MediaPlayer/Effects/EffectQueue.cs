@@ -2,26 +2,46 @@
 using CSCore.Streams.Effects;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 { 
     public class EffectQueue
     {
         private bool modified;
-        private LinkedList<Func<IWaveSource,IWaveSource>> Queue;
+        private LinkedList<Func<IWaveSource,IWaveSource>> queue;
+        private ObservableCollection<BaseEffect> effectlist;
 
         public EffectQueue()
         {
-            Queue = new LinkedList<Func<IWaveSource, IWaveSource>>();
+            queue = new LinkedList<Func<IWaveSource, IWaveSource>>();
+            effectlist = new ObservableCollection<BaseEffect>();
         }
 
-        public void AddEffect(BaseEffect effect)
+        public void Add(BaseEffect effect)
         {
-            Func<IWaveSource, IWaveSource> func = effect.Apply;
-            Queue.AddLast(func);
+            if (effect == null)
+                throw new ArgumentNullException("Can't add null to to effectlist!");
+
+            effectlist.Add(effect);
             modified = true;
             effect.EffectActivated += OnQueueChanged;
             OnQueueChanged();
+        }
+
+        public bool Remove(BaseEffect effect)
+        {
+            if (effect == null)
+                throw new ArgumentNullException("Can't remove null from effectlist");
+
+            bool success;
+            effectlist.Remove(effect);
+            Func<IWaveSource, IWaveSource> func = effect.Apply;
+            success = queue.Remove(func);
+            modified = true;
+            effect.EffectActivated -= OnQueueChanged;
+            OnQueueChanged();
+            return success;
         }
        
         /// <summary>
@@ -30,7 +50,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         public void Add10BandEqualizer()
         {
             Func<IWaveSource, IWaveSource> func = create10BandEqualizer;
-            Queue.AddLast(func);
+            queue.AddLast(func);
             modified = true;
             OnQueueChanged();
         }
@@ -48,9 +68,9 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         /// </summary>
         public void RemoveLast()
         {
-            if(Queue.Count > 0)
+            if(queue.Count > 0)
             {
-                Queue.RemoveLast();
+                queue.RemoveLast();
                 modified = true;
                 OnQueueChanged();
             }           
@@ -58,9 +78,8 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         public int Count
         {
-            get { return Queue.Count; }
+            get { return queue.Count; }
         }
-
 
         /// <summary>
         /// Applies all effects that are contained in the queue to the given IWavesource and returns it.
@@ -69,7 +88,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         /// <returns></returns>
         public IWaveSource Apply(IWaveSource waveSource)
         {
-            foreach (Func<IWaveSource,IWaveSource> effect in Queue)
+            foreach (Func<IWaveSource,IWaveSource> effect in queue)
             {
                 waveSource = effect(waveSource);
             }
@@ -81,9 +100,16 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         protected virtual void OnQueueChanged()
         {
+            queue = new LinkedList<Func<IWaveSource, IWaveSource>>();
+            foreach(BaseEffect effect in effectlist)
+            {
+                Func<IWaveSource, IWaveSource> func = effect.Apply;
+                queue.AddLast(func);
+            }
+
             if (QueueChanged != null)
             {
-                QueueChanged(Queue);
+                QueueChanged(queue);
             }
         }
 
@@ -96,5 +122,48 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             }
         }
 
+        public ObservableCollection<BaseEffect> Effectlist
+        {
+            get { return effectlist; }
+            set { effectlist = value; }
+        }
+
+        public void Clear()
+        {
+            effectlist.Clear();
+            queue.Clear();
+            modified = true;
+        }
+
+        /// <summary>
+        /// Changed the position of a given effect in the effectqueue
+        /// if it is already contained, or inserts a new one if it is not.
+        /// </summary>
+        /// <param name="effect"></param>
+        /// <param name="position"></param>
+        public void ChangeEffectListPosition(BaseEffect effect, int position)
+        {
+            if (effectlist.Contains(effect)) //Effect is already contained in the list.
+            {
+                int pos1 = effectlist.IndexOf(effect);
+                Logger.Log("Moved effect from queue position " + pos1 + " to position " + position + ".");
+                if (position == effectlist.Count) //If the new position is at the end of the list
+                {
+                    effectlist.Move(pos1, position - 1);
+                }
+                else
+                {
+                    effectlist.Move(pos1, position);
+                }
+            }
+            else //Effect is a new effect.
+            {
+                Logger.Log("Added effect on queue position " + position + ".");
+                effectlist.Insert(position, effect);
+                effect.EffectActivated += OnQueueChanged;
+                modified = true;
+            }
+            OnQueueChanged();
+        }
     }
 }
