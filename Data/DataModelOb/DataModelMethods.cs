@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
-using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 using System.Linq;
 using TuneMusix.Data.SQLDatabase;
@@ -24,7 +23,6 @@ namespace TuneMusix.Data.DataModelOb
             loader.LoadFromDB();
             OnDataModelChanged();
         }
-
         public void RemoveTrackFromQueue(Track track)
         {
             //If the track is currently playing
@@ -33,7 +31,6 @@ namespace TuneMusix.Data.DataModelOb
 
             TrackQueue.Remove(track);
         }
-
         /// <summary>
         /// Deletes a track from the folder, tracklist and database.
         /// </summary>
@@ -71,7 +68,6 @@ namespace TuneMusix.Data.DataModelOb
 
             database.Delete(tracks);
         }
-
         /// <summary>
         /// Deletes a single Playlist. The tracks will not be deleted.
         /// </summary>
@@ -276,7 +272,6 @@ namespace TuneMusix.Data.DataModelOb
                     newInterpret.Add(track);
                     track.interpretContainer = newInterpret;
                     Interpretlist.Add(newInterpret);
-
                 }
             }
             OnInterpretlistChanged();
@@ -559,6 +554,5 @@ namespace TuneMusix.Data.DataModelOb
                 OnTrackQueueChanged();
             }           
         }
-
     }
 }

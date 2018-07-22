@@ -18,7 +18,6 @@ namespace TuneMusix.Helpers
     /// </summary>
     public class FileParser
     {
-
         private bool workDone = false;
         private int SPLITNUMBER = 50; //Number of tracks per thread
 
@@ -198,7 +197,8 @@ namespace TuneMusix.Helpers
             {
                 Logger.LogException(ex);
                 return null;
-            }catch(CorruptFileException ex)
+            }
+            catch (CorruptFileException ex)
             {
                 Logger.LogException(ex);
                 return null;
@@ -267,49 +267,9 @@ namespace TuneMusix.Helpers
                 string comm = file.Tag.Comment;
                 string genre = file.Tag.FirstGenre;
                 int year = (int)file.Tag.Year;
+                Track temporaryCompTrack = new Track(null, 0, title, interpret, album, year, comm, genre, null);
 
-                //Check what need to be updated.
-                bool modified = false;
-
-                if (!track.Title.Equals(title) && title != null)
-                {
-                    track.Title = title;
-                    modified = true;
-                }
-
-                if (!track.Interpret.Equals(interpret) && interpret != null)
-                {
-                    track.Interpret = interpret;
-                    modified = true;
-                }
-
-                if (!track.Album.Equals(album) && album != null)
-                {
-                    track.Album = album;
-                    modified = true;
-                }
-
-                if (!track.Comm.Equals(comm) && comm != null)
-                {
-                    track.Comm = comm;
-                    modified = true;
-                }
-
-                if (!track.Genre.Equals(genre) && genre != null)
-                {
-                    track.Genre = genre;
-                    modified = true;
-                }
-
-                if (!track.Year.Equals(year))
-                {
-                    track.Year = year;
-                    modified = true;
-                }
-
-
-                if (!modified)
-                    track.IsModified = false;
+                checkTrackModification(track, temporaryCompTrack);
 
             }
             catch (UnauthorizedAccessException ex)
@@ -331,6 +291,45 @@ namespace TuneMusix.Helpers
                 return false;
             }
             return true;
+        }
+
+        private void checkTrackModification(Track oldTrack, Track newTrack)
+        {
+            //Check what need to be updated.
+            bool modified = false;
+
+            if (!oldTrack.Title.Equals(newTrack.Title) && newTrack.Title != null)
+            {
+                oldTrack.Title = newTrack.Title;
+                modified = true;
+            }
+            if (!oldTrack.Interpret.Equals(newTrack.Interpret) && newTrack.Interpret != null)
+            {
+                oldTrack.Interpret = newTrack.Interpret;
+                modified = true;
+            }
+            if (!oldTrack.Album.Equals(newTrack.Album) && newTrack.Album != null)
+            {
+                oldTrack.Album = newTrack.Album;
+                modified = true;
+            }
+            if (!oldTrack.Comm.Equals(newTrack.Comm) && newTrack.Comm != null)
+            {
+                oldTrack.Comm = newTrack.Comm;
+                modified = true;
+            }
+            if (!oldTrack.Genre.Equals(newTrack.Genre) && newTrack.Genre != null)
+            {
+                oldTrack.Genre = newTrack.Genre;
+                modified = true;
+            }
+            if (!oldTrack.Year.Equals(newTrack.Year))
+            {
+                oldTrack.Year = newTrack.Year;
+                modified = true;
+            }
+            if (!modified)
+                oldTrack.IsModified = false;
         }
     }
 }

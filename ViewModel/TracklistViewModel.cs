@@ -66,10 +66,7 @@ namespace TuneMusix.ViewModel
             #endregion
             //events
             dataModel.DataModelChanged += OnTrackListChanged;
-
         }
-
-
         #region properties
         public ObservableCollection<Track> FilteredTracks
         {
@@ -85,7 +82,6 @@ namespace TuneMusix.ViewModel
             set;
         }
         #endregion
-
         #region commands
         /// <summary>
         /// Deletes all selected tracks from the tracklist.
@@ -141,8 +137,6 @@ namespace TuneMusix.ViewModel
             searchText = (string)argument;         
             queueSearchTask();                       
         }
-       
-
         /// <summary>
         /// Changes the type of the column to sort.
         /// Changes the sorting type if the same column is
@@ -294,9 +288,7 @@ namespace TuneMusix.ViewModel
         #endregion
         #endregion
 
-
         #region methods
-
         private void OnTrackListChanged(object source,object obj)
         {
             filteredTracks = TrackList;
@@ -431,7 +423,6 @@ namespace TuneMusix.ViewModel
             if (sortedList != null)
                 filteredTracks = new ObservableCollection<Track>(sortedList);
         }
-
         #region searching methods
         /// <summary>
         /// Deletes the search text and updates the list.
@@ -447,7 +438,6 @@ namespace TuneMusix.ViewModel
             RaisePropertyChanged("SearchBoxText");
             queueSearchTask();  
         }
-
         private void onSearchCompleted(object result)
         {
             filteredTracks = new ObservableCollection<Track>((List<Track>)result);
