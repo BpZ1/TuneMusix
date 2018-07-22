@@ -1,8 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace TuneMusix.Model
 {
@@ -307,6 +304,9 @@ namespace TuneMusix.Model
 
         public bool Contains(string value)
         {
+            if (value == null)
+                throw new ArgumentException("Value can't be null.");
+
             if (value == null)
                 throw new ArgumentNullException();
 

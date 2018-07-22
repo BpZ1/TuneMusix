@@ -1,28 +1,32 @@
-﻿
-using TuneMusix.Model;
+﻿using System;
 using System.Collections.Generic;
-using System;
-using System.Threading;
 using System.ComponentModel;
 using System.Windows.Threading;
 using TuneMusix.Helpers.Dialogs;
+using TuneMusix.Model;
 
 namespace TuneMusix.Helpers
 {
     public class DelayIterativeSearch
     {
-        private List<Track> itemlist;
+        private Track[] itemlist;
         private List<Track> successlist = new List<Track>();
         private List<Track> failurelist = new List<Track>();
         private bool itemslistChanged;
+        /// <summary>
+        /// The previous value that the user entrerd.
+        /// </summary>
         private string oldSearchValue;
+        /// <summary>
+        /// Value that the user entered for search.
+        /// </summary>
         private string currentSearchValue;
         //This value is the next to be searched after the current.
         private string queuedSearchValue; 
         private BackgroundWorker worker = new BackgroundWorker();
         private DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
-        public DelayIterativeSearch(List<Track> list)
+        public DelayIterativeSearch(Track[] list)
         {
             if (list == null)
                 throw new ArgumentNullException("SearchService initialized with null");
@@ -65,7 +69,7 @@ namespace TuneMusix.Helpers
             //If the search value is empty return the whole list.
             if (value.Equals(""))
             {
-                OnSearchTaskCompleted(itemlist);
+                OnSearchTaskCompleted(new List<Track>(itemlist));
             }
             else
             {
@@ -85,7 +89,6 @@ namespace TuneMusix.Helpers
         private void startSearchTask(object sender, EventArgs e)
         {
             dispatcherTimer.Stop();
-            Console.WriteLine("Start new");
             if (currentSearchValue != null || queuedSearchValue != null)
             {
                 if(queuedSearchValue != null) //Check if there is a newer search value.
@@ -103,7 +106,6 @@ namespace TuneMusix.Helpers
                 {
                     queuedSearchValue = currentSearchValue;
                     currentSearchValue = null;
-                    Console.WriteLine("Queued: " + queuedSearchValue);
                 }
             }      
         }
@@ -114,7 +116,6 @@ namespace TuneMusix.Helpers
         /// <param name="e"></param>
         private void OnWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Console.WriteLine("Completed");
             if (e.Error != null)
                 DialogService.WarnMessage("Searching error", e.Error.Message);
 
@@ -133,7 +134,7 @@ namespace TuneMusix.Helpers
         /// <summary>
         /// The list that is to be searched.
         /// </summary>
-        public List<Track> Itemlist
+        public Track[] Itemlist
         {
             set
             {

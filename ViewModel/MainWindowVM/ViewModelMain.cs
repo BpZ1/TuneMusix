@@ -49,7 +49,8 @@ namespace TuneMusix.ViewModel
             ExitApplication = new RelayCommand(exitApplication);
             ExitButtonPressed = new RelayCommand(exitButtonPressed);
             SaveData = new RelayCommand(saveData);
-            OpenOptionsWindow = new RelayCommand(openOptionsWindow);      
+            OpenOptionsWindow = new RelayCommand(openOptionsWindow);
+            DebugMethod = new RelayCommand(debugMethod);
         }
 
         /// <summary>

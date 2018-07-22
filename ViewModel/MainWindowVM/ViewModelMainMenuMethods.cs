@@ -48,7 +48,6 @@ namespace TuneMusix.ViewModel
         private void openOptionsWindow(object argument)
         {
             var win = new OptionsWindowView();
-
             win.ShowDialog();
         }
         /// <summary>
@@ -162,6 +161,11 @@ namespace TuneMusix.ViewModel
                 //audiControl has to be disposed to end playing of music.
                 audioControls.Dispose();
             }
+        }
+
+        private void debugMethod(object argument)
+        {
+            DialogService.WarnMessage("DEBUG","This is a debug message!");
         }
 
         /// <summary>

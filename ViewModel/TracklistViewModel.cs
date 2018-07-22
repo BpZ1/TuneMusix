@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using TuneMusix.Helpers;
@@ -49,7 +46,7 @@ namespace TuneMusix.ViewModel
             searchText = "";
             sortingType = SortingType.Ascending;
             sortedColumn = HeaderType.Title;
-            searchService = new DelayIterativeSearch(TrackList.ToList());
+            searchService = new DelayIterativeSearch(TrackList.ToArray());
             searchService.SearchTaskCompleted += onSearchCompleted;
             SelectedTracks = new ObservableCollection<Track>();
             filteredTracks = TrackList;
@@ -303,7 +300,7 @@ namespace TuneMusix.ViewModel
         private void OnTrackListChanged(object source,object obj)
         {
             filteredTracks = TrackList;
-            searchService.Itemlist = TrackList.ToList();
+            searchService.Itemlist = TrackList.ToArray();
             queueSearchTask();
         }
         private void sortListView()

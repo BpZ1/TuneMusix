@@ -81,7 +81,7 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem Header="_...">
+                    <MenuItem Header="_Debug" Command="{Binding DebugMethod}">
                         <MenuItem.Icon>
                             <materialDesign:PackIcon Kind="ContentCopy" />
                         </MenuItem.Icon>

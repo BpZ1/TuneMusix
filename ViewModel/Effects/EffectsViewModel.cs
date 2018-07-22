@@ -37,8 +37,11 @@ namespace TuneMusix.ViewModel.Effects
 
         private void removeEffect(object argument)
         {
-            AudioControls.Instance.EffectQueue.Remove(SelectedItem);
-            options.Modified = true;
+            if(argument != null)
+            {
+                AudioControls.Instance.EffectQueue.Remove(SelectedItem);
+                options.Modified = true;
+            }      
         }
 
         internal void RaisePropertyChanged(string prop)

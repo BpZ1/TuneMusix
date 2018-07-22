@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using TuneMusix.Helpers.Dialogs;
 using TuneMusix.View.Dialog;
 using TuneMusix.ViewModel;
 using TuneMusix.ViewModel.Dialog;
@@ -33,8 +29,8 @@ namespace TuneMusix.Helpers.Dialogs
                 throw new ArgumentException("Header for warning messages can only be 35 characters or less.");
             
             var win = new WarningDialogWindow { DataContext = new WarningDialog(header,body), };
-        
-            win.Show();
+            win.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            win.ShowDialog();
         }
 
         /// <summary>
@@ -46,6 +42,7 @@ namespace TuneMusix.Helpers.Dialogs
         {
             DialogWindow win = new DialogWindow();
             win.DataContext = vm;
+            win.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             win.ShowDialog();
             DialogResult result = (win.DataContext as DialogViewModelBase).UserDialogResult;
             return result;
@@ -61,6 +58,7 @@ namespace TuneMusix.Helpers.Dialogs
             DialogViewModelBase vm = new ConfirmationDialogViewModel(message);
             DialogWindow win = new DialogWindow();
             win.DataContext = vm;
+            win.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             win.ShowDialog();
             DialogResult result = (win.DataContext as DialogViewModelBase).UserDialogResult;
             return result;
