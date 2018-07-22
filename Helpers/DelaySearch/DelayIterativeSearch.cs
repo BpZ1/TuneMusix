@@ -75,7 +75,6 @@ namespace TuneMusix.Helpers
             {
                 dispatcherTimer.Stop();
                 currentSearchValue = value;
-                Console.WriteLine("Currentvalue: " + currentSearchValue);
                 //Start the timer that waits for new input                    
                 dispatcherTimer.Start();
             }         

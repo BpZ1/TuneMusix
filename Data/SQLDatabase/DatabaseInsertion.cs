@@ -13,33 +13,48 @@ namespace TuneMusix.Data.SQLDatabase
     /// </summary>
     public sealed partial class Database : IDatabase
     {
+        private const string TRACK_COMMAND = "tracks(ID, " +
+                                                   "folderID," +
+                                                   "URL," +
+                                                   "title," +
+                                                   "interpret," +
+                                                   "album," +
+                                                   "releaseyear," +
+                                                   "comm," +
+                                                   "genre," +
+                                                   "rating," +
+                                                   "duration)" +
+                                            "VALUES(@ID," +
+                                                   "@FolderID," +
+                                                   "@URL," +
+                                                   "@Title," +
+                                                   "@Interpret," +
+                                                   "@Album," +
+                                                   "@ReleaseYear," +
+                                                   "@Comm," +
+                                                   "@Genre," +
+                                                   "@Rating," +
+                                                   "@Duration);";
+
+        private const string BASE_EFFECT_COMMAND = "effectsqueue(queueindex, " +
+                                                                "effecttype," +
+                                                                "isactive," +
+                                                                "value0," +
+                                                                "value1," +
+                                                                "value2," +
+                                                                "value3," +
+                                                                "value4," +
+                                                                "value5," +
+                                                                "value6," +
+                                                                "value7," +
+                                                                "value8," +
+                                                                "value9," +
+                                                                "value10," +
+                                                                "value11) ";
         
-        public void Insert(Track track)
+        private SQLiteCommand createCommand(string prefix, Track track)
         {
-            Logger.Log("Track: '" + track.SourceURL + "' added to database");
-            SQLiteCommand sqlcommand = new SQLiteCommand("INSERT OR REPLACE INTO tracks (ID," +
-                                                                                         "folderID," +
-                                                                                         "URL," +
-                                                                                         "title," +
-                                                                                         "interpret," +
-                                                                                         "album," +
-                                                                                         "releaseyear," +
-                                                                                         "comm," +
-                                                                                         "genre," +
-                                                                                         "rating," +
-                                                                                         "duration)" +
-                                                                                 "VALUES(@ID," +
-                                                                                        "@FolderID," +
-                                                                                        "@URL," +
-                                                                                        "@Title," +
-                                                                                        "@Interpret," +
-                                                                                        "@Album," +
-                                                                                        "@ReleaseYear," +
-                                                                                        "@Comm," +
-                                                                                        "@Genre," +
-                                                                                        "@Rating," +
-                                                                                        "@Duration);",                                                                                   
-                                                                                        dbConnection);
+            SQLiteCommand sqlcommand = new SQLiteCommand(prefix + " " + TRACK_COMMAND, dbConnection);
             sqlcommand.Parameters.AddWithValue("ID", track.ID);
             if (track.FolderID == 0)
             {
@@ -59,6 +74,14 @@ namespace TuneMusix.Data.SQLDatabase
             sqlcommand.Parameters.AddWithValue("Rating", track.Rating);
             sqlcommand.Parameters.AddWithValue("Duration", track.Duration);
 
+            return sqlcommand;
+        }
+
+        public void Insert(Track track)
+        {
+            Logger.Log("Track: '" + track.SourceURL + "' added to database");
+            SQLiteCommand sqlcommand = createCommand("INSERT OR REPLACE INTO", track);       
+
             OpenDBConnection();
             try
             {
@@ -76,49 +99,7 @@ namespace TuneMusix.Data.SQLDatabase
             
             foreach (Track track in tracklist)
             {
-                
-                SQLiteCommand sqlcommand = new SQLiteCommand("INSERT OR REPLACE INTO tracks (ID," +
-                                                                                         "folderID," +
-                                                                                         "URL," +
-                                                                                         "title," +
-                                                                                         "interpret," +
-                                                                                         "album," +
-                                                                                         "releaseyear," +
-                                                                                         "comm," +
-                                                                                         "genre," +
-                                                                                         "rating," +
-                                                                                         "duration)" +
-                                                                                 "VALUES(@ID," +
-                                                                                        "@folderID," +
-                                                                                        "@URL," +
-                                                                                        "@Title," +
-                                                                                        "@Interpret," +
-                                                                                        "@Album," +
-                                                                                        "@ReleaseYear," +
-                                                                                        "@Comm," +
-                                                                                        "@Genre," +
-                                                                                        "@Rating," +
-                                                                                        "@Duration);",
-                                                                                        dbConnection);
-                sqlcommand.Parameters.AddWithValue("ID", track.ID);
-                if (track.FolderID == 0)
-                {
-                    sqlcommand.Parameters.AddWithValue("folderID", null);
-                }
-                else
-                {
-                    sqlcommand.Parameters.AddWithValue("folderID", track.FolderID);
-                }              
-                sqlcommand.Parameters.AddWithValue("URL", track.SourceURL);
-                sqlcommand.Parameters.AddWithValue("Title", track.Title);
-                sqlcommand.Parameters.AddWithValue("Interpret", track.Interpret);
-                sqlcommand.Parameters.AddWithValue("Album", track.Album);
-                sqlcommand.Parameters.AddWithValue("ReleaseYear", track.Year);
-                sqlcommand.Parameters.AddWithValue("Comm", track.Comm);
-                sqlcommand.Parameters.AddWithValue("Genre", track.Genre);
-                sqlcommand.Parameters.AddWithValue("Rating", track.Rating);
-                sqlcommand.Parameters.AddWithValue("Duration", track.Duration);
-                commandlist.Add(sqlcommand);
+                commandlist.Add(createCommand("INSERT OR REPLACE INTO", track));
             }
             OpenDBConnection();
             try
@@ -278,7 +259,6 @@ namespace TuneMusix.Data.SQLDatabase
   
         public void UpdateEffectQueue(List<BaseEffect> effectQueue)
         {
-
             SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM effectsqueue",dbConnection);
             SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",dbConnection);
             List<SQLiteCommand> effectInsertCommands = new List<SQLiteCommand>();
@@ -290,22 +270,8 @@ namespace TuneMusix.Data.SQLDatabase
                 if (effect.GetType() == typeof(ChorusEffect))
                 {
                     ChorusEffect currentEffect = effect as ChorusEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
-                                                                                        "effecttype," +
-                                                                                        "isactive,"+
-                                                                                        "value0,"+
-                                                                                        "value1,"+
-                                                                                        "value2," +
-                                                                                        "value3," +
-                                                                                        "value4," +
-                                                                                        "value5," +
-                                                                                        "value6," +
-                                                                                        "value7," +
-                                                                                        "value8," +
-                                                                                        "value9," + 
-                                                                                        "value10," +
-                                                                                        "value11) "+
-                                                                                "VALUES(@Index,"+
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO "+ BASE_EFFECT_COMMAND +
+                                                                                "VALUES(@Index," +
                                                                                        "@Effecttype,"+
                                                                                        "@Isactive,"+
                                                                                        "@Delay,"+
@@ -342,21 +308,7 @@ namespace TuneMusix.Data.SQLDatabase
                 if (effect.GetType() == typeof(CompressorEffect))
                 {
                     CompressorEffect currentEffect = effect as CompressorEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
-                                                                                        "effecttype," +
-                                                                                        "isactive," +
-                                                                                        "value0," +
-                                                                                        "value1," +
-                                                                                        "value2," +
-                                                                                        "value3," +
-                                                                                        "value4," +
-                                                                                        "value5," +
-                                                                                        "value6," +
-                                                                                        "value7," +
-                                                                                        "value8," +
-                                                                                        "value9," +
-                                                                                        "value10," +
-                                                                                        "value11) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO " + BASE_EFFECT_COMMAND +
                                                                                     "VALUES(@Index," +
                                                                                            "@Effecttype," +
                                                                                            "@Isactive," +
@@ -394,21 +346,7 @@ namespace TuneMusix.Data.SQLDatabase
                 if (effect.GetType() == typeof(EchoEffect))
                 {
                     EchoEffect currentEffect = effect as EchoEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
-                                                                                        "effecttype," +
-                                                                                        "isactive," +
-                                                                                        "value0," +
-                                                                                        "value1," +
-                                                                                        "value2," +
-                                                                                        "value3," +
-                                                                                        "value4," +
-                                                                                        "value5," +
-                                                                                        "value6," +
-                                                                                        "value7," +
-                                                                                        "value8," +
-                                                                                        "value9," +
-                                                                                        "value10," +
-                                                                                        "value11) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO " + BASE_EFFECT_COMMAND +
                                                                               "VALUES(@Index," +
                                                                                      "@Effecttype," +
                                                                                      "@Isactive," +
@@ -447,21 +385,7 @@ namespace TuneMusix.Data.SQLDatabase
                 if (effect.GetType() == typeof(FlangerEffect))
                 {
                     FlangerEffect currentEffect = effect as FlangerEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
-                                                                                        "effecttype," +
-                                                                                        "isactive," +
-                                                                                        "value0," +
-                                                                                        "value1," +
-                                                                                        "value2," +
-                                                                                        "value3," +
-                                                                                        "value4," +
-                                                                                        "value5," +
-                                                                                        "value6," +
-                                                                                        "value7," +
-                                                                                        "value8," +
-                                                                                        "value9," +
-                                                                                        "value10," +
-                                                                                        "value11) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO " + BASE_EFFECT_COMMAND +
                                                                                  "VALUES(@Index," +
                                                                                         "@Effecttype," +
                                                                                         "@Isactive," +
@@ -500,21 +424,7 @@ namespace TuneMusix.Data.SQLDatabase
                 if (effect.GetType() == typeof(DistortionEffect))
                 {
                     DistortionEffect currentEffect = effect as DistortionEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
-                                                                                        "effecttype," +
-                                                                                        "isactive," +
-                                                                                        "value0," +
-                                                                                        "value1," +
-                                                                                        "value2," +
-                                                                                        "value3," +
-                                                                                        "value4," +
-                                                                                        "value5," +
-                                                                                        "value6," +
-                                                                                        "value7," +
-                                                                                        "value8," +
-                                                                                        "value9," +
-                                                                                        "value10," +
-                                                                                        "value11) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO " + BASE_EFFECT_COMMAND +
                                                                                     "VALUES(@Index," +
                                                                                            "@Effecttype," +
                                                                                            "@Isactive," +
@@ -552,21 +462,7 @@ namespace TuneMusix.Data.SQLDatabase
                 if (effect.GetType() == typeof(ReverbEffect))
                 {
                     ReverbEffect currentEffect = effect as ReverbEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
-                                                                                        "effecttype," +
-                                                                                        "isactive," +
-                                                                                        "value0," +
-                                                                                        "value1," +
-                                                                                        "value2," +
-                                                                                        "value3," +
-                                                                                        "value4," +
-                                                                                        "value5," +
-                                                                                        "value6," +
-                                                                                        "value7," +
-                                                                                        "value8," +
-                                                                                        "value9," +
-                                                                                        "value10," +
-                                                                                        "value11) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO " + BASE_EFFECT_COMMAND +
                                                                                 "VALUES(@Index," +
                                                                                        "@Effecttype," +
                                                                                        "@Isactive," +
@@ -605,21 +501,7 @@ namespace TuneMusix.Data.SQLDatabase
                 if (effect.GetType() == typeof(EqualizerEffect))
                 {
                     EqualizerEffect currentEffect = effect as EqualizerEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
-                                                                                           "effecttype," +
-                                                                                           "isactive," +
-                                                                                           "value0," +
-                                                                                           "value1," +
-                                                                                           "value2," +
-                                                                                           "value3," +
-                                                                                           "value4," +
-                                                                                           "value5," +
-                                                                                           "value6," +
-                                                                                           "value7," +
-                                                                                           "value8," +
-                                                                                           "value9," +
-                                                                                           "value10," +
-                                                                                           "value11) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO " + BASE_EFFECT_COMMAND +
                                                                                    "VALUES(@Index," +
                                                                                           "@Effecttype," +
                                                                                           "@Isactive," +
@@ -657,21 +539,7 @@ namespace TuneMusix.Data.SQLDatabase
                 if (effect.GetType() == typeof(GargleEffect))
                 {
                     GargleEffect currentEffect = effect as GargleEffect;
-                    SQLiteCommand command = new SQLiteCommand("INSERT INTO effectsqueue (queueindex," +
-                                                                                        "effecttype," +
-                                                                                        "isactive," +
-                                                                                        "value0,"+
-                                                                                        "value1," +
-                                                                                        "value2," +
-                                                                                        "value3," +
-                                                                                        "value4," +
-                                                                                        "value5," +
-                                                                                        "value6," +
-                                                                                        "value7," +
-                                                                                        "value8," +
-                                                                                        "value9," +
-                                                                                        "value10," +
-                                                                                        "value11) " +
+                    SQLiteCommand command = new SQLiteCommand("INSERT INTO " + BASE_EFFECT_COMMAND +
                                                                                 "VALUES(@Index," +                                                                                     
                                                                                        "@Effecttype," +
                                                                                        "@Isactive," +
@@ -729,7 +597,5 @@ namespace TuneMusix.Data.SQLDatabase
                 CloseDBConnection();
             }
         }
-
- 
     }
 }
