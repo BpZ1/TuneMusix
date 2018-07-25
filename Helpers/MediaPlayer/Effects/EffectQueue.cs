@@ -133,6 +133,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             effectlist.Clear();
             queue.Clear();
             modified = true;
+            OnQueueChanged();
         }
 
         /// <summary>
