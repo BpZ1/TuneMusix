@@ -26,6 +26,7 @@ namespace TuneMusix.ViewModel
             }
             else
             {
+                timer.Start();
                 audioControls.Play();
                 RaisePropertyChanged("PlayButtonIcon");
             }

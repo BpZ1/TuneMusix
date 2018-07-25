@@ -1,10 +1,6 @@
-﻿using ControlzEx;
-using System;
+﻿using System;
 using System.Timers;
-using System.Windows.Controls;
 using System.Windows.Threading;
-using TuneMusix.Data;
-using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Model;
