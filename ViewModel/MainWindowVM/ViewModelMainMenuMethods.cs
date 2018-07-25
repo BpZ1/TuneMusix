@@ -27,7 +27,7 @@ namespace TuneMusix.ViewModel
             var ofd = new WinForms.OpenFileDialog();
             ofd.Title = "File Browser";
             ofd.InitialDirectory = @"C:\"; //change to systems default hd
-            ofd.Filter = "mp3 file (*.mp3)|*.mp3"; //| wav file (*.wav)|*wav
+            ofd.Filter = "audio files (*.mp3, *.wav, *.flac, *.wma, *.ac3, *.aac)|*.mp3; *.wav; *.flac; *.wma; *.ac3; *.aac";
             ofd.Multiselect = true;
 
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
