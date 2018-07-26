@@ -443,6 +443,7 @@ namespace TuneMusix.ViewModel
             filteredTracks = new ObservableCollection<Track>((List<Track>)result);
             sortListView();
             RaisePropertyChanged("FilteredTracks");
+            RaisePropertyChanged("TrackDurationSum");
         }
         /// <summary>
         /// Queues a search task and sorts and updates the view on completion.
@@ -539,6 +540,25 @@ namespace TuneMusix.ViewModel
 
                 return false;
             }
+        }
+
+        public string TrackDurationSum
+        {
+            get
+            {
+                string result = "Total playtime: [";
+                result += sumAllTracks();
+                return result + "]";
+            }
+        }
+        private string sumAllTracks()
+        {
+            string returnValue = "";
+            foreach(Track track in filteredTracks)
+            {
+                returnValue = TrackService.AddDurations(returnValue, track.Duration);
+            }
+            return returnValue;
         }
     }
 }

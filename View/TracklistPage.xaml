@@ -46,6 +46,7 @@
                         </materialDesign:PackIcon.RenderTransform>
                     </materialDesign:PackIcon>
                 </Button>
+                <TextBlock x:Name="TotalPlaytime" Text="{Binding TrackDurationSum, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" FontWeight="Bold" FontSize="13.333" VerticalAlignment="Center" Width="161"/>
             </StackPanel>
         </materialDesign:ColorZone>
         <ListView Name="AllTrackList" ItemsSource="{Binding FilteredTracks, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"

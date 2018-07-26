@@ -6,8 +6,6 @@ using CSCore.Codecs;
 using CSCore;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
-using TuneMusix.Model;
-using System.Collections.Generic;
 
 namespace TuneMusix.Helpers
 {
@@ -43,8 +41,8 @@ namespace TuneMusix.Helpers
                 soundOut.Stopped += PlaybackStopped;
                 if (!isStereo)
                     soundSource.ToMono();
-                
             }              
+            //FOR VISUALISATION: CSCore.DSG.fft ... 
         }
         /// <summary>
         /// Checks if Wasapi is supported and then uses that or directsound as ISoundOut.

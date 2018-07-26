@@ -1,9 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
@@ -60,6 +56,37 @@ namespace TuneMusix.Tests.HelperTests
             Assert.IsFalse(TrackService.Contains(track1, "thomasioni", false));
             Assert.IsFalse(TrackService.Contains(track3, "chart", false));
 
+        }
+
+        [TestMethod]
+        public void AddDurationValidTest()
+        {
+            string duration1 = "11:24:44";
+            string duration2 = "43";
+            string duration3 = "00:44";
+            string duration4 = "12:33";
+            string duration5 = "52:00";
+            string duration6 = "";
+
+            Assert.AreEqual("11:25:27", TrackService.AddDurations(duration1, duration2));
+            Assert.AreEqual("11:24:44", TrackService.AddDurations(duration1, duration6));
+            Assert.AreEqual("00:13:17", TrackService.AddDurations(duration3, duration4));
+            Assert.AreEqual("00:00:00", TrackService.AddDurations(duration6, duration6));
+            Assert.AreEqual("00:52:44", TrackService.AddDurations(duration5, duration3));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void NullArgumentAddDurationTest()
+        {
+            TrackService.AddDurations(null, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void InvalidArgumentAddDurationTest()
+        {
+            TrackService.AddDurations("ab:as:dd", "dd");
         }
     }
 }

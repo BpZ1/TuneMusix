@@ -296,19 +296,10 @@ namespace TuneMusix.Model
             }
         }
 
-        #region propertychanged
-        internal void RaisePropertyChanged(string prop)
-        {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
-        }
-
         public bool Contains(string value)
         {
             if (value == null)
                 throw new ArgumentException("Value can't be null.");
-
-            if (value == null)
-                throw new ArgumentNullException();
 
             if (Title.ToLower().Contains(value.ToLower()))
                 return true;
@@ -320,6 +311,12 @@ namespace TuneMusix.Model
                 return true;
 
             return false;
+        }
+
+        #region propertychanged
+        internal void RaisePropertyChanged(string prop)
+        {
+            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
