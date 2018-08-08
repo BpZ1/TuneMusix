@@ -115,11 +115,22 @@ namespace TuneMusix.ViewModel
                 return new SolidColorBrush(hue.Color);
             }
         }
+        /// <summary>
+        /// Returns the title for the queue, containing the number of tracks and 
+        /// their combined time.
+        /// </summary>
         public string HeaderText
         {
             get
             {
-                return "Track Queue [" + CurrentTrackQueue.Count + "]";
+                if(CurrentTrackQueue.Count > 0)
+                {
+                    return "Track Queue [" + CurrentTrackQueue.Count + "]" + " - "  + combinedTrackTimes();
+                }
+                else
+                {
+                    return "Track Queue [" + CurrentTrackQueue.Count + "]";
+                }
             }
         }
         #endregion
@@ -132,7 +143,15 @@ namespace TuneMusix.ViewModel
             RaisePropertyChanged("CurrentTrackQueue");
             RaisePropertyChanged("HeaderText");
         }
-
+        private String combinedTrackTimes()
+        {
+            String result = "";
+            foreach(Track track in CurrentTrackQueue)
+            {
+                result = TrackService.AddDurations(result, track.Duration);
+            }
+            return result;
+        }
         #region drag and drop
         public void StartDrag(IDragInfo dragInfo)
         {
