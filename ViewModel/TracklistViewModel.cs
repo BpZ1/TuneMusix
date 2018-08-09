@@ -68,6 +68,9 @@ namespace TuneMusix.ViewModel
             dataModel.DataModelChanged += OnTrackListChanged;
         }
         #region properties
+        /// <summary>
+        /// Filtered list of tracks.
+        /// </summary>
         public ObservableCollection<Track> FilteredTracks
         {
             get { return filteredTracks; }
@@ -76,6 +79,9 @@ namespace TuneMusix.ViewModel
         {
             get { return "Selected items: " + SelectedTracks.Count; }
         }
+        /// <summary>
+        /// Text contained in the search box.
+        /// </summary>
         public string SearchBoxText
         {
             get;
@@ -433,9 +439,9 @@ namespace TuneMusix.ViewModel
             if (searchText.Equals(""))
                 return;
 
-            searchText = "";
-            SearchBoxText = "";
+            SearchBoxText = "";          
             RaisePropertyChanged("SearchBoxText");
+            searchText = "";
             queueSearchTask();  
         }
         private void onSearchCompleted(object result)
