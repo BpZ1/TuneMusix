@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -55,20 +54,30 @@ namespace TuneMusix.ViewModel
             {
                 CurrentSliderPosition = CurrentPosition;
             }
+            RaisePropertyChanged("SliderPostionString");
         }
 
         private void onCurrentPlaylistChanged(object source,object newPlaylist)
         {
             RaisePropertyChanged("CurrentPlaylistName");
         }
-
         /// <summary>
-        /// Gets called when the user has started manipulating the position slider.
+        /// Gets called when the PreviewMouseDown event on the 
+        /// grid surrounding the position slider is called.
         /// </summary>
         /// <param name="sender"></param>
-        public void leftMouseDown_Slider(object sender)
+        private void sliderDraggingOn(object sender)
         {
             dragging = true;
+        }
+        /// <summary>
+        /// Gets called when the PreviewMouseUp event on the 
+        /// grid surrounding the position slider is called.
+        /// </summary>
+        /// <param name="sender"></param>
+        private void sliderDraggingOff(object sender)
+        {
+            dragging = false;
         }
         /// <summary>
         /// Gets called when the user has finished manipulating the position slider.

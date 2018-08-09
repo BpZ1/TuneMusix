@@ -100,7 +100,7 @@
                             <Slider DockPanel.Dock="Top"  x:Name="VolumeSlider" Value="{Binding Volume,Mode=TwoWay}" Orientation="Horizontal" AutoToolTipPlacement="BottomRight"
                                     ToolTipService.ShowDuration="30000" Maximum="100" IsSelectionRangeEnabled="True" Margin="3,0" Width="80"
                                     Visibility="{Binding VolumeSliderVisible,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVis}}" 
-                                    VerticalAlignment="Center">
+                                    VerticalAlignment="Center" IsMoveToPointEnabled="True">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
                                         <i:InvokeCommandAction Command="{Binding VolumeButtonReleased}"/>
@@ -139,18 +139,29 @@
                         </Button>
                     </StackPanel>
                 </Grid>
-                <control:FormattedSlider x:Name="PositionSlider" Value="{Binding CurrentSliderPosition,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"  AutoToolTipPlacement="BottomRight" 
-                        Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TrackLoaded,UpdateSourceTrigger=PropertyChanged}" Margin="20,0,20,8" IsTimeValue="True">
-
+                <Grid>
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                            <i:InvokeCommandAction Command="{Binding PositionSlider_MouseUp}" CommandParameter="{Binding ElementName=PositionSlider}"/>
+                            <i:InvokeCommandAction Command="{Binding SliderDraggingOff}"/>
                         </i:EventTrigger>
                         <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                            <i:InvokeCommandAction Command="{Binding PositionSlider_MouseDown}"/>
+                            <i:InvokeCommandAction Command="{Binding SliderDraggingOn}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                </control:FormattedSlider>
+                    <control:FormattedSlider x:Name="PositionSlider" Value="{Binding CurrentSliderPosition,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"  AutoToolTipPlacement="BottomRight" 
+                                         Minimum="0" Maximum="{Binding Length,UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding TrackLoaded,UpdateSourceTrigger=PropertyChanged}"
+                                         Margin="20,0,20,8" IsTimeValue="True" ToolTip="{Binding SliderPostionString, UpdateSourceTrigger=PropertyChanged}" ToolTipService.Placement="Mouse"
+                                         IsMoveToPointEnabled="True">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                <i:InvokeCommandAction Command="{Binding PositionSlider_MouseUp}" CommandParameter="{Binding ElementName=PositionSlider}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                <i:InvokeCommandAction Command="{Binding PositionSlider_MouseDown}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </control:FormattedSlider>
+                </Grid>
             </StackPanel>
         </Grid>
 

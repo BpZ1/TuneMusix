@@ -14,7 +14,8 @@ namespace TuneMusix.ViewModel
         private AudioControls audioControls = AudioControls.Instance;
 
         //-------------RelayCommands----------------------------------------
-        public RelayCommand PositionSlider_MouseDown { get; set; }
+        public RelayCommand SliderDraggingOn { get; set; }
+        public RelayCommand SliderDraggingOff { get; set; }
         public RelayCommand PositionSlider_MouseUp { get; set; }
         public RelayCommand PlayButton { get; set; }
         public RelayCommand NextTrack { get; set; }
@@ -54,8 +55,9 @@ namespace TuneMusix.ViewModel
             VolumeSliderVisible = false;
 
             //RelayCommands
-            PositionSlider_MouseDown = new RelayCommand(leftMouseDown_Slider);
             PositionSlider_MouseUp = new RelayCommand(leftMouseUp_Slider);
+            SliderDraggingOn = new RelayCommand(sliderDraggingOn);
+            SliderDraggingOff = new RelayCommand(sliderDraggingOff);
             PlayButton = new RelayCommand(playButton);
             NextTrack = new RelayCommand(nextTrack);
             PreviousTrack = new RelayCommand(previousTrack);
@@ -139,6 +141,10 @@ namespace TuneMusix.ViewModel
             {
                 audioControls.CurrentPosition = TimeSpan.FromSeconds(value);
             }
+        }
+        public string SliderPostionString
+        {
+            get { return Converter.TimeSpanToString(TimeSpan.FromSeconds(this.currentPosition)); }
         }
         public string PositionTime
         {
