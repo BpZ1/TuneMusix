@@ -100,11 +100,12 @@ namespace TuneMusix.Helpers
             {
                 OnPlaybackFinished();
             }
-            if(soundOut.WaveSource != null)
+            if (soundOut.WaveSource != null)
             {
                 try
                 {
-                    if ((TimeSpan.Compare(soundSource.GetPosition(), soundSource.GetLength())) == 0)
+                    Console.WriteLine(soundSource.GetPosition().ToString() + " equals " + soundSource.GetLength().ToString());
+                    if ((TimeSpan.Compare(soundSource.GetPosition(), soundSource.GetLength())) >= 0)
                     {
                         OnPlaybackFinished();
                     }
