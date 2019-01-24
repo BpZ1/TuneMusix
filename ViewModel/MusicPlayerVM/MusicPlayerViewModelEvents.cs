@@ -136,14 +136,7 @@ namespace TuneMusix.ViewModel
         //Changes the state of the repeating functionality
         private void onRepeatButtonClicked(object argument)
         {
-            if (RepeatTrack+1 > 2)
-            {
-                RepeatTrack = 0;
-            }
-            else
-            {
-                RepeatTrack++;
-            }                   
+            RepeatTrack = (RepeatTrack + 1) % 3;
             RaisePropertyChanged("RepeatButtonIcon");
         }
 
