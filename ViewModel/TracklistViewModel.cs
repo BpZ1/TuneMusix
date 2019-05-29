@@ -16,7 +16,6 @@ namespace TuneMusix.ViewModel
 {
     class TracklistViewModel : ViewModelBase
     {
-
         public ObservableCollection<Track> SelectedTracks { get; set; }
         private string searchText;
 

@@ -213,6 +213,7 @@
     <Compile Include="Model\Album.cs" />
     <Compile Include="Model\Interpret.cs" />
     <Compile Include="Model\ItemContainer.cs" />
+    <Compile Include="ViewModel\AlbumPageViewModel.cs" />
     <Compile Include="ViewModel\Dialog\ConfirmationDialogViewModel.cs" />
     <Compile Include="ViewModel\Dialog\DialogViewModelBase.cs" />
     <Compile Include="ViewModel\Dialog\WarningDialog.cs" />
@@ -233,6 +234,10 @@
     <Compile Include="ViewModel\TrackQueueViewModel.cs" />
     <Compile Include="ViewModel\MainWindowVM\ViewModelMainEvents.cs" />
     <Compile Include="ViewModel\MainWindowVM\ViewModelMainMenuMethods.cs" />
+    <Compile Include="ViewModel\VisualizerViewModel.cs" />
+    <Compile Include="View\AlbumPage.xaml.cs">
+      <DependentUpon>AlbumPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Controls\SwatchView.xaml.cs">
       <DependentUpon>SwatchView.xaml</DependentUpon>
     </Compile>
@@ -311,6 +316,13 @@
     <Compile Include="View\TrackQueuePage.xaml.cs">
       <DependentUpon>TrackQueuePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Visualizer\VisualizerPage.xaml.cs">
+      <DependentUpon>VisualizerPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\AlbumPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Controls\SwatchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -434,6 +446,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\TrackQueuePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Visualizer\VisualizerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

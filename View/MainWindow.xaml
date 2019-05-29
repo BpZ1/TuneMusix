@@ -122,6 +122,12 @@
                 <TabItem Header="Folders">
                     <Frame Source="FolderPage.xaml"/>
                 </TabItem>
+                <TabItem Header="Album">
+                    <Frame Source="AlbumPage.xaml"/>
+                </TabItem>
+                <TabItem Header="Visualizer">
+                    <Frame Source="Visualizer/VisualizerPage.xaml"/>
+                </TabItem>
             </dragablz:TabablzControl>
            
         </DockPanel>

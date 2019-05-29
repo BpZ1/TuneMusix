@@ -1,0 +1,26 @@
+﻿<Page x:Class="TuneMusix.View.AlbumView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:vm="clr-namespace:TuneMusix.ViewModel"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TuneMusix.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="AlbumView"
+      DataContext="{DynamicResource AlbumPageViewModel}"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      TextElement.FontWeight="Regular"
+      TextElement.FontSize="13"
+      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextRenderingMode="Auto"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}"  >
+    <Page.Resources>
+        <vm:AlbumPageViewModel x:Key="AlbumPageViewModel"/>
+    </Page.Resources>
+    <Grid>
+        <TextBlock Text="TODO"></TextBlock>
+    </Grid>
+</Page>
