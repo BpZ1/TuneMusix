@@ -184,7 +184,7 @@ namespace TuneMusix.ViewModel
         {          
             VolumeSliderVisible = false;
             RaisePropertyChanged("VolumeSliderVisible");
-            ((DispatcherTimer)dispatcherTimer).Stop();
+            dispatcherTimer.Stop();
         }
 
     }
