@@ -69,7 +69,7 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
@@ -172,6 +172,7 @@
     <Compile Include="Controls\FormattedSlider.Designer.cs">
       <DependentUpon>FormattedSlider.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Visualizer.cs" />
     <Compile Include="Data\DataModelOb\DataModelMethods.cs" />
     <Compile Include="Data\SQLDatabase\IDatabase.cs" />
     <Compile Include="Data\SQLDatabase\SQLLoader.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="Data\SQLDatabase\DatabaseInsertion.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseSelection.cs" />
     <Compile Include="Helpers\Container\OptionsIDContainer.cs" />
+    <Compile Include="Helpers\Exceptions\PlayerException.cs" />
     <Compile Include="Helpers\Util\Converter.cs" />
     <Compile Include="Helpers\Dialogs\DialogResult.cs" />
     <Compile Include="Helpers\Dialogs\DialogService.cs" />
@@ -316,7 +318,7 @@
     <Compile Include="View\TrackQueuePage.xaml.cs">
       <DependentUpon>TrackQueuePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Visualizer\VisualizerPage.xaml.cs">
+    <Compile Include="View\VisualizerPage.xaml.cs">
       <DependentUpon>VisualizerPage.xaml</DependentUpon>
     </Compile>
     <Page Include="View\AlbumPage.xaml">
@@ -449,7 +451,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Visualizer\VisualizerPage.xaml">
+    <Page Include="View\VisualizerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

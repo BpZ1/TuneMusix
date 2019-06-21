@@ -6,6 +6,8 @@ using CSCore.Codecs;
 using CSCore;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
+using CSCore.DSP;
+using CSCore.Utils;
 
 namespace TuneMusix.Helpers
 {
@@ -18,7 +20,8 @@ namespace TuneMusix.Helpers
     {
       
         public bool Repeat { get; set; }
-       
+
+        private FftProvider fftProvider;
         private IWaveSource soundSource;
         private ISoundOut soundOut;
         private bool isInitialized;
@@ -28,11 +31,13 @@ namespace TuneMusix.Helpers
         {
             soundOut = getSoundOut();
             soundSource = getSoundSource(url);
-
+            //FFT creation object
+            fftProvider = new FftProvider(soundSource.WaveFormat.Channels, FftSize.Fft2048);
+            
             //Apply effects if they are activated
             if (effectsActive)
                soundSource = effects.Apply(soundSource);
-         
+
             if(soundSource != null)
             {
                 soundOut.Initialize(soundSource);
@@ -41,9 +46,17 @@ namespace TuneMusix.Helpers
                 soundOut.Stopped += PlaybackStopped;
                 if (!isStereo)
                     soundSource.ToMono();
-            }              
-            //FOR VISUALISATION: CSCore.DSG.fft ... 
+            }                       
         }
+
+        public bool GetFftData(float[] resultBuffer)
+        {
+            float[] fft = new float[2048];
+            fftProvider.GetFftData(fft);
+            Console.WriteLine("Data: " + fft[0]);
+            return true;
+        }
+
         /// <summary>
         /// Checks if Wasapi is supported and then uses that or directsound as ISoundOut.
         /// </summary>
@@ -241,5 +254,18 @@ namespace TuneMusix.Helpers
             }
         }
 
+        public int SampleRate
+        {
+            get
+            {
+                int sampleRate = 0;
+                if(soundSource != null)
+                {
+                    return soundSource.WaveFormat.SampleRate;
+
+                }
+                return sampleRate;
+            }
+        }
     }
 }

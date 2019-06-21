@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using TuneMusix.Data;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers.Dialogs;
+using TuneMusix.Helpers.Exceptions;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
 
@@ -33,14 +35,12 @@ namespace TuneMusix.Helpers.MediaPlayer
             }
         }
 
-        private AudioPlayerImpl Player;
+        private float[] fftData = new float[2048];
+        private AudioPlayerImpl player;
         private DataModel dataModel = DataModel.Instance;
         private Options options = Options.Instance;
         //list containing all loaded effects
-        public EffectQueue EffectQueue
-        {
-            get { return effectQueue; }
-        }
+
         private bool isPlaying;  
 
         private AudioControls()
@@ -54,6 +54,7 @@ namespace TuneMusix.Helpers.MediaPlayer
             
         }
 
+        #region Events
         public delegate void AudioControlsEventHandler(object source);
 
         public event AudioControlsEventHandler TrackChanged;
@@ -73,6 +74,7 @@ namespace TuneMusix.Helpers.MediaPlayer
                 PlaystateChanged(this);
 
         }
+
         protected virtual void OnStopped()
         {
             isPlaying = false;
@@ -83,6 +85,7 @@ namespace TuneMusix.Helpers.MediaPlayer
             if (PlaystateChanged != null)
                 PlaystateChanged(this);
         }
+
         protected virtual void OnPaused()
         {
             isPlaying = false;
@@ -93,6 +96,7 @@ namespace TuneMusix.Helpers.MediaPlayer
             if (PlaystateChanged != null)
                 PlaystateChanged(this);
         }
+
         protected virtual void OnTrackChanged()
         {
             if (TrackChanged!= null)
@@ -125,6 +129,79 @@ namespace TuneMusix.Helpers.MediaPlayer
                 this.Play();
             }
         }
+
+        /// <summary>
+        /// Sets the new current track after it was changed.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="NewCurrentTrack"></param>
+        private void onCurrentTrackChanged(object source, object NewCurrentTrack)
+        {
+            Debug.WriteLine("Current Track changed");
+            if (NewCurrentTrack != null)
+            {
+                if (((Track)NewCurrentTrack).IsValid)
+                {
+                    this.PlayTrack(NewCurrentTrack as Track);
+                }
+                else
+                {
+                    onPlaybackFinished(this);
+                }
+            }
+            else
+            {
+                if (player != null)
+                    player.Dispose();
+
+                dataModel.QueueIndex--; //Correct queue index because of removed element
+                //If the track was playing before it was set to null play next track
+                if (IsPlaying)
+                {
+                    PlayNext();
+                }
+                else //If the track was deleted but not playing, just go to the next track.
+                {
+                    PlayNext();
+                    Pause();
+                }
+
+            }
+        }
+
+        private void onVolumeChanged(object volume)
+        {
+            if (player != null) player.Volume = getFloatVolume((int)volume);
+        }
+
+        private void onBalanceChanged(object balance)
+        {
+            var Balance = (int)balance;
+            this.Balance = Balance;
+        }
+
+        /// <summary>
+        /// Restarts the player.
+        /// </summary>
+        /// <param name="source"></param>
+        private void onEffectsChanged(object source)
+        {
+            if (player != null)
+            {
+                //setting the old position
+                TimeSpan lastPosition = CurrentPosition;
+                PlayTrack(dataModel.CurrentTrack);
+                CurrentPosition = lastPosition;
+                if (!IsPlaying)
+                {
+                    Pause();
+                }
+            }
+        }
+        #endregion
+
+        #region Actions
+
         /// <summary>
         /// Plays the next song in the track queue.
         /// If the track is the last element of the queue
@@ -167,64 +244,12 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
             }          
         }
-        private float getFloatVolume(int value)
-        {
-            float newvalue = (float)value;
-            return newvalue / 100;
-        }
-        private void onVolumeChanged(object volume)
-        {
-            if (Player != null) Player.Volume = getFloatVolume((int)volume);
-        }
-        private void onBalanceChanged(object balance)
-        {
-            var Balance = (int)balance;
-            this.Balance = Balance;
-        }
-        /// <summary>
-        /// Sets the new current track after it was changed.
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="NewCurrentTrack"></param>
-        private void onCurrentTrackChanged(object source,object NewCurrentTrack)
-        {
-            Debug.WriteLine("Current Track changed");
-            if (NewCurrentTrack != null)
-            {
-                if (((Track)NewCurrentTrack).IsValid)
-                {
-                    this.PlayTrack(NewCurrentTrack as Track);
-                }
-                else
-                {
-                    onPlaybackFinished(this);
-                }
-            }
-            else
-            {
-                if(Player != null)
-                    Player.Dispose();
-
-                dataModel.QueueIndex--; //Correct queue index because of removed element
-                //If the track was playing before it was set to null play next track
-                if (IsPlaying)
-                {
-                    PlayNext();
-                }
-                else //If the track was deleted but not playing, just go to the next track.
-                {
-                    PlayNext();
-                    Pause();
-                }
-                               
-            }         
-        }
         /// <summary>
         /// Private method called by PlayTrack to create a new player
         /// </summary>
         private void createPlayer(Track track)
         {
-            if(track != null)
+            if (track != null)
             {
                 int volume = 0;
                 if (options.Muted)
@@ -236,14 +261,14 @@ namespace TuneMusix.Helpers.MediaPlayer
                     volume = options.Volume;
                 }
 
-                Player = new AudioPlayerImpl(
+                player = new AudioPlayerImpl(
                     track.SourceURL,
                     getFloatVolume(volume),
                     options.Balance,
                     true,
                     effectQueue,
                     options.EffectsActive);
-                Player.PlaybackFinished += onPlaybackFinished;
+                player.PlaybackFinished += onPlaybackFinished;
                 OnTrackChanged();
             }
             else
@@ -257,30 +282,100 @@ namespace TuneMusix.Helpers.MediaPlayer
         /// <param name="track"></param>
         public void PlayTrack(Track track)
         {
-            if (Player!=null)
-            {              
-                Player.Dispose();
-                Player = null;
+            if (player != null)
+            {
+                player.Dispose();
+                player = null;
                 Debug.WriteLine("Player Disposed");
             }
             createPlayer(track);
             this.Play();
         }
+
+        /// <summary>
+        /// Starts playback of the currently loaded track.
+        /// </summary>
+        public void Play()
+        {
+            if (player != null)
+            {
+                player.Play();
+                OnPlaying();
+            }
+        }
+        /// <summary>
+        /// Pauses playback of the currently loaded track.
+        /// </summary>
+        public void Pause()
+        {
+            if (player != null)
+            {
+                player.Pause();
+                OnPaused();
+            }
+        }
+        /// <summary>
+        /// Resumes playback of the currently loaded track.
+        /// </summary>
+        public void Resume()
+        {
+            if (player != null)
+            {
+                player.Resume();
+                OnPlaying();
+            }
+        }
+        /// <summary>
+        /// Stops playback of the currently loaded track.
+        /// </summary>
+        public void Stop()
+        {
+            if (player != null)
+            {
+                player.Stop();
+                OnStopped();
+            }
+        }
+        /// <summary>
+        /// Disposes the current player.
+        /// </summary>
+        public void Dispose()
+        {
+            if (player != null)
+            {
+                isPlaying = false;
+                player.Dispose();
+            }
+        }
+
+        #endregion
+
+        #region Fields
+
+        public EffectQueue EffectQueue
+        {
+            get
+            {
+                return effectQueue;
+            }
+        }
+
         /// <summary>
         /// Returns true of the player is currently playing a track.
         /// </summary>
         public bool IsPlaying
         {
-            get{ return isPlaying; }
+            get { return isPlaying; }
         }
+
         /// <summary>
         /// Returns true if the player is loaded and not null.
-        /// </summary>
+        /// </summary>  
         public bool IsLoaded
         {
             get
             {
-                if (Player != null)
+                if (player != null)
                 {
                     return true;
                 }
@@ -290,61 +385,7 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
             }
         }
-        /// <summary>
-        /// Starts playback of the currently loaded track.
-        /// </summary>
-        public void Play()
-        {
-            if (Player != null)
-            {
-                Player.Play();
-                OnPlaying();
-            }
-        }
-        /// <summary>
-        /// Pauses playback of the currently loaded track.
-        /// </summary>
-        public void Pause()
-        {
-            if (Player != null)
-            {
-                Player.Pause();
-                OnPaused();
-            }           
-        }
-        /// <summary>
-        /// Resumes playback of the currently loaded track.
-        /// </summary>
-        public void Resume()
-        {
-            if (Player != null)
-            {
-                Player.Resume();
-                OnPlaying();
-            }         
-        }
-        /// <summary>
-        /// Stops playback of the currently loaded track.
-        /// </summary>
-        public void Stop()
-        {
-            if (Player != null)
-            {
-                Player.Stop();
-                OnStopped();
-            }
-        }
-        /// <summary>
-        /// Disposes the current player.
-        /// </summary>
-        public void Dispose()
-        {
-            if (Player != null)
-            {
-                isPlaying = false;
-                Player.Dispose();
-            }
-        }
+
         /// <summary>
         /// Returns the length of the current track.
         /// </summary>
@@ -352,7 +393,7 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             get
             {
-                if (Player != null) return Player.Length();
+                if (player != null) return player.Length();
                 else return new TimeSpan();
             }
         }
@@ -363,15 +404,15 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             get
             {
-                if(Player != null)
+                if (player != null)
                 {
-                    return Player.CurrentPosition();
+                    return player.CurrentPosition();
                 }
                 return new TimeSpan();
             }
             set
             {
-                Player.SetCurrentPosition(value);
+                player.SetCurrentPosition(value);
             }
         }
         public bool Mute
@@ -380,15 +421,15 @@ namespace TuneMusix.Helpers.MediaPlayer
             {
                 if (value)
                 {
-                    if(IsLoaded)
-                        Player.Volume = 0;
+                    if (IsLoaded)
+                        player.Volume = 0;
 
                     options.Muted = true;
                 }
                 if (!value)
                 {
-                    if(Player != null)
-                        Player.Volume = getFloatVolume(options.Volume);
+                    if (player != null)
+                        player.Volume = getFloatVolume(options.Volume);
 
                     options.Muted = false;
                 }
@@ -402,9 +443,10 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             set
             {
-                Player.SetBalance(value);
+                player.SetBalance(value);
             }
         }
+
         /// <summary>
         /// Returns true if a track is currently loaded.
         /// </summary>
@@ -412,22 +454,31 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             get
             {
-                if (Player != null)
+                if (player != null)
                 {
                     return true;
                 }
                 else
-                { 
+                {
                     return false;
                 }
             }
         }
+
+        #endregion
+
+        private float getFloatVolume(int value)
+        {
+            float newvalue = (float)value;
+            return newvalue / 100;
+        }
+
         /// <summary>
         /// Shuffles the trackqueue when called.
         /// Also changes the state of shuffle.
         /// If the trackqueue is already shuffled it will be unshuffled and
         /// sorted again.
-        /// </summary>
+        /// </summary>  
         public void ShuffleChanged()
         {
             DialogResult result = DialogResult.Yes;
@@ -459,23 +510,28 @@ namespace TuneMusix.Helpers.MediaPlayer
                 }
             }
         }
-        /// <summary>
-        /// Restarts the player.
-        /// </summary>
-        /// <param name="source"></param>
-        private void onEffectsChanged(object source)
+
+
+        public bool GetFFTData(float[] fftDataBuffer)
         {
-            if (Player != null)
+            if(player != null)
             {
-                //setting the old position
-                TimeSpan lastPosition = CurrentPosition;
-                PlayTrack(dataModel.CurrentTrack);
-                CurrentPosition = lastPosition;
-                if (!IsPlaying)
-                {
-                    Pause();
-                }
+                return player.GetFftData(fftDataBuffer);
             }
+            else
+            {
+                throw new PlayerException("No track is currently loaded.");
+            }
+        }
+
+        public int GetFFTFrequencyIndex(int frequency)
+        {
+            double maxFrequency = 22050d;
+            if (player != null)
+            {
+                maxFrequency = player.SampleRate / 2.0d;          
+            }
+            return (int)((frequency / maxFrequency) * (2048 / 2));
         }
     }
 }

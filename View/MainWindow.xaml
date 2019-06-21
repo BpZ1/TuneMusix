@@ -126,7 +126,7 @@
                     <Frame Source="AlbumPage.xaml"/>
                 </TabItem>
                 <TabItem Header="Visualizer">
-                    <Frame Source="Visualizer/VisualizerPage.xaml"/>
+                    <Frame Source="VisualizerPage.xaml"/>
                 </TabItem>
             </dragablz:TabablzControl>
            

@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:TuneMusix.View.Visualizer"
+      xmlns:visual="clr-namespace:TuneMusix.Controls"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="VisualizerPage"
@@ -22,6 +23,13 @@
     </Page.Resources>
 
     <Grid>
-        <Rectangle Height="200" Width="200" Fill="Black"></Rectangle>
+        <visual:Visualizer Background="Transparent" IsActive="{Binding IsActive,UpdateSourceTrigger=PropertyChanged}"
+                           BarValues="{Binding TestData, UpdateSourceTrigger=PropertyChanged}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewMouseDown">
+                    <i:InvokeCommandAction Command="{Binding Test}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </visual:Visualizer>
     </Grid>
 </Page>

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TuneMusix.Helpers.MediaPlayer;
 
 namespace TuneMusix.View.Visualizer
 {
@@ -22,7 +23,7 @@ namespace TuneMusix.View.Visualizer
     {
         public VisualizerPage()
         {
-            InitializeComponent();
+            
         }
     }
 }
