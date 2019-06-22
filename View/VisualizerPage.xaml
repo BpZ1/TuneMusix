@@ -23,13 +23,13 @@
     </Page.Resources>
 
     <Grid>
-        <visual:Visualizer Background="Transparent" IsActive="{Binding IsActive,UpdateSourceTrigger=PropertyChanged}"
-                           BarValues="{Binding TestData, UpdateSourceTrigger=PropertyChanged}">
+        <visual:FlatVisualization Background="Transparent" IsActive="{Binding IsActive,UpdateSourceTrigger=PropertyChanged}"
+                           BarValues="{Binding BarValues, UpdateSourceTrigger=PropertyChanged}" BarCount="{Binding BarCount, UpdateSourceTrigger=PropertyChanged}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewMouseDown">
                     <i:InvokeCommandAction Command="{Binding Test}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </visual:Visualizer>
+        </visual:FlatVisualization>
     </Grid>
 </Page>

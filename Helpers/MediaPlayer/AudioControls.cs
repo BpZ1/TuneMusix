@@ -35,7 +35,6 @@ namespace TuneMusix.Helpers.MediaPlayer
             }
         }
 
-        private float[] fftData = new float[2048];
         private AudioPlayerImpl player;
         private DataModel dataModel = DataModel.Instance;
         private Options options = Options.Instance;
@@ -514,13 +513,13 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         public bool GetFFTData(float[] fftDataBuffer)
         {
-            if(player != null)
+            if(player != null && isPlaying)
             {
                 return player.GetFftData(fftDataBuffer);
             }
             else
             {
-                throw new PlayerException("No track is currently loaded.");
+                return false;
             }
         }
 
@@ -531,7 +530,7 @@ namespace TuneMusix.Helpers.MediaPlayer
             {
                 maxFrequency = player.SampleRate / 2.0d;          
             }
-            return (int)((frequency / maxFrequency) * (2048 / 2));
+            return (int)((frequency / maxFrequency) * 1024d);
         }
     }
 }

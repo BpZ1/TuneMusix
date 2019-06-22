@@ -8,6 +8,7 @@ using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using CSCore.DSP;
 using CSCore.Utils;
+using CSCore.Streams;
 
 namespace TuneMusix.Helpers
 {
@@ -21,6 +22,8 @@ namespace TuneMusix.Helpers
       
         public bool Repeat { get; set; }
 
+        private Complex[] fftValues = new Complex[2048];
+        private SingleBlockNotificationStream notificationStream;
         private FftProvider fftProvider;
         private IWaveSource soundSource;
         private ISoundOut soundOut;
@@ -29,18 +32,19 @@ namespace TuneMusix.Helpers
 
         public AudioPlayerImpl(string url, float volume, int balance, bool isStereo, EffectQueue effects, bool effectsActive)
         {
-            soundOut = getSoundOut();
             soundSource = getSoundSource(url);
-            //FFT creation object
+            this.notificationStream = new SingleBlockNotificationStream(soundSource.ToSampleSource());
             fftProvider = new FftProvider(soundSource.WaveFormat.Channels, FftSize.Fft2048);
-            
+            soundOut = getSoundOut();
+
+            notificationStream.SingleBlockRead += addAudioSamples;
             //Apply effects if they are activated
             if (effectsActive)
                soundSource = effects.Apply(soundSource);
 
             if(soundSource != null)
             {
-                soundOut.Initialize(soundSource);
+                soundOut.Initialize(notificationStream.ToWaveSource());
                 soundOut.Volume = volume;
                 isInitialized = true;
                 soundOut.Stopped += PlaybackStopped;
@@ -49,12 +53,52 @@ namespace TuneMusix.Helpers
             }                       
         }
 
+        private void addAudioSamples(object sender, SingleBlockReadEventArgs e)
+        {
+            try
+            {
+                this.fftProvider.Add(e.Left, e.Right);
+            }
+            catch (Exception)
+            {
+            }
+        }
+        /// <summary>
+        /// Returns the magnitudes of the fft.
+        /// </summary>
+        /// <param name="resultBuffer">Buffer in which the result will be stored. 
+        /// If the array is longer than 2048 only the first 2048 spaces will be filled with data.</param>
+        /// <returns>True if the new data was calculated and false if not enough sampels were read.</returns>
         public bool GetFftData(float[] resultBuffer)
         {
-            float[] fft = new float[2048];
-            fftProvider.GetFftData(fft);
-            Console.WriteLine("Data: " + fft[0]);
-            return true;
+            if (!fftProvider.IsNewDataAvailable) return false;
+
+            //Set values to zero if the player is stopped.
+            if (!IsPlaying())
+            {
+                for (int i = 0; i < resultBuffer.Length; i++)
+                {
+                    resultBuffer[i] = 0f;
+                }
+            }
+
+            bool res = fftProvider.GetFftData(fftValues);
+            //If the size of the returned array is smaller or equals the data will only be returned for that length
+            if (resultBuffer.Length <= fftValues.Length)
+            {             
+                for (int i = 0; i < resultBuffer.Length; i++)
+                {
+                    resultBuffer[i] = (float)Math.Sqrt(Math.Pow(fftValues[i].Imaginary, 2) + Math.Pow(fftValues[i].Real, 2));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < fftValues.Length; i++)
+                {
+                    resultBuffer[i] = (float)Math.Sqrt(Math.Pow(fftValues[i].Imaginary, 2) + Math.Pow(fftValues[i].Real, 2));
+                }
+            }    
+            return res;
         }
 
         /// <summary>
@@ -75,15 +119,15 @@ namespace TuneMusix.Helpers
             }
         }
 
-        private IWaveSource getSoundSource(string URL)
+        private IWaveSource getSoundSource(string url)
         {
             IWaveSource waveSource;
             try
             {
-                waveSource = CodecFactory.Instance.GetCodec(URL);      
+                waveSource = CodecFactory.Instance.GetCodec(url);      
             }catch
             {
-                DialogService.WarnMessage("Could not play track","The track '" + URL +"' could not be played.");
+                DialogService.WarnMessage("Could not play track","The track '" + url + "' could not be played.");
                 return null;
             }
             return waveSource;
@@ -202,7 +246,7 @@ namespace TuneMusix.Helpers
         /// <returns></returns>
         public TimeSpan CurrentPosition()
         {
-            if (isInitialized)
+            if (isInitialized && soundSource != null)
             {
                 return soundSource.GetPosition();
             }

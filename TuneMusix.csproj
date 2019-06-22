@@ -168,11 +168,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Visualization\FlatVisualization.cs" />
     <Compile Include="Controls\FormattedSlider.cs" />
     <Compile Include="Controls\FormattedSlider.Designer.cs">
       <DependentUpon>FormattedSlider.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Visualizer.cs" />
+    <Compile Include="Controls\Visualization\Visualizer.cs" />
     <Compile Include="Data\DataModelOb\DataModelMethods.cs" />
     <Compile Include="Data\SQLDatabase\IDatabase.cs" />
     <Compile Include="Data\SQLDatabase\SQLLoader.cs" />
