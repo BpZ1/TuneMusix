@@ -66,11 +66,8 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             isPlaying = true;
 
-            if(Playing != null)
-                Playing(this);
-
-            if (PlaystateChanged != null)
-                PlaystateChanged(this);
+            Playing?.Invoke(this);
+            PlaystateChanged?.Invoke(this);
 
         }
 
@@ -78,31 +75,22 @@ namespace TuneMusix.Helpers.MediaPlayer
         {
             isPlaying = false;
 
-            if (Stopped != null)
-                Stopped(this);
-
-            if (PlaystateChanged != null)
-                PlaystateChanged(this);
+            Stopped?.Invoke(this);
+            PlaystateChanged?.Invoke(this);
         }
 
         protected virtual void OnPaused()
         {
             isPlaying = false;
 
-            if (Paused != null)
-                Paused(this);
-
-            if (PlaystateChanged != null)
-                PlaystateChanged(this);
+            Paused?.Invoke(this);
+            PlaystateChanged?.Invoke(this);
         }
 
         protected virtual void OnTrackChanged()
         {
-            if (TrackChanged!= null)
-                TrackChanged(this);
-
-            if (PlaystateChanged != null)
-                PlaystateChanged(this);
+            TrackChanged?.Invoke(this);
+            PlaystateChanged?.Invoke(this);
         }
 
         private void onPlaybackFinished(object source)

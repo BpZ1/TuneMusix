@@ -73,15 +73,6 @@ namespace TuneMusix.Helpers
         {
             if (!fftProvider.IsNewDataAvailable) return false;
 
-            //Set values to zero if the player is stopped.
-            if (!IsPlaying())
-            {
-                for (int i = 0; i < resultBuffer.Length; i++)
-                {
-                    resultBuffer[i] = 0f;
-                }
-            }
-
             bool res = fftProvider.GetFftData(fftValues);
             //If the size of the returned array is smaller or equals the data will only be returned for that length
             if (resultBuffer.Length <= fftValues.Length)

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Threading;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer;
@@ -14,15 +8,42 @@ namespace TuneMusix.ViewModel
     class VisualizerViewModel : ViewModelBase
     {
         private float[] fftData = new float[1023];
-        private const int DEFAULT_BAR_COUNT = 20;
         private float[] barValues = new float[DEFAULT_BAR_COUNT];
         private int barCount = DEFAULT_BAR_COUNT;
-        private Random r = new Random();
-        private DispatcherTimer timer = new DispatcherTimer();
+        private readonly DispatcherTimer timer = new DispatcherTimer();
 
+        private const int DEFAULT_BAR_COUNT = 20;
         private const int maxDbValue = 0;
         private const int minDbValue = -90;
         private const int dbScale = (maxDbValue - minDbValue);
+
+        public VisualizerViewModel()
+        {
+            AudioControls.Instance.Paused += onPlayerPaused;
+            AudioControls.Instance.Stopped += onPlayerPaused;
+            AudioControls.Instance.Playing += onPlayerPlays;
+
+            IsActive = true;
+            RaisePropertyChanged("IsActive");
+            timer.Interval = TimeSpan.FromMilliseconds(60);
+            timer.Tick += onTick;
+            timer.Start();
+        }
+
+        private void onPlayerPaused(object o)
+        {
+            //Set the bar values to zero if no music is played.
+            for(int i = 0; i < barValues.Length; i++)
+            {
+                barValues[i] = 0f;
+            }
+            timer.Stop();
+        }
+
+        private void onPlayerPlays(object o)
+        {
+            timer.Start();
+        }
 
         public bool IsActive { get; set; }
 
@@ -45,17 +66,6 @@ namespace TuneMusix.ViewModel
                 barValues = value;
                 RaisePropertyChanged("BarValues");
             }
-        }
-
-        public RelayCommand Test { get; set; }
-
-        public VisualizerViewModel()
-        {
-            IsActive = true;
-            RaisePropertyChanged("IsActive");
-            timer.Interval = TimeSpan.FromMilliseconds(60);
-            timer.Tick += onTick;
-            timer.Start();
         }
 
         private void onTick(object sender, EventArgs args)
