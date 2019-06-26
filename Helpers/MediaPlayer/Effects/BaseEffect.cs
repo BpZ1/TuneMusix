@@ -1,32 +1,19 @@
 ﻿using CSCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
     public abstract class BaseEffect
     {
-        private bool isActive = true;
-        private bool isModified = false;
+        private bool _isActive = true;
+        public bool IsModified { get; set; } = false;
         public bool IsActive
         {
-            get { return isActive; }
+            get { return _isActive; }
             set
             {
-                isActive = value;
-                isModified = true;
+                _isActive = value;
+                IsModified = true;
                 OnEffectActivated();
-            }
-        }
-        public bool IsModified
-        {
-            get { return isModified; }
-            set
-            {
-                isModified = value;
             }
         }
 
@@ -37,10 +24,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         protected virtual void OnEffectActivated()
         {
-            if(EffectActivated != null)
-            {
-                EffectActivated();
-            }
+            EffectActivated?.Invoke();
         }
     }
 }

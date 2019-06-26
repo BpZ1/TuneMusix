@@ -16,7 +16,7 @@ namespace TuneMusix.ViewModel
 
     class TrackQueueViewModel : ViewModelBase, INotifyPropertyChanged, IDragSource, IDropTarget
     {
-        private Track selectedTrack { get; set; }
+        private Track _selectedTrack;
 
         //Relaycommands
         public RelayCommand PlayTrack { get; set; }
@@ -27,14 +27,14 @@ namespace TuneMusix.ViewModel
 
         public TrackQueueViewModel()
         {
-            DeleteSelectedTracks = new RelayCommand(deleteSelectedTrack);
-            AddToPlaylist = new RelayCommand(addToPlaylist);
-            SelectionChanged = new RelayCommand(selectionChanged);
-            PlayTrack = new RelayCommand(playTrack);
-            dataModel.TrackQueueChanged += onTrackQueueChanged;
-            TrackDoubleClicked = new RelayCommand(trackDoubleClicked);
-
-            Options.Instance.ColorChanged += onColorChanged;
+            DeleteSelectedTracks = new RelayCommand(_deleteSelectedTrack);
+            AddToPlaylist = new RelayCommand(_addToPlaylist);
+            SelectionChanged = new RelayCommand(_selectionChanged);
+            PlayTrack = new RelayCommand(_playTrack);
+            TrackDoubleClicked = new RelayCommand(_trackDoubleClicked);
+       
+            _dataModel.TrackQueueChanged += OnTrackQueueChanged;
+            Options.Instance.ColorChanged += OnColorChanged;
         }
 
         #region commands
@@ -42,27 +42,27 @@ namespace TuneMusix.ViewModel
         /// Changed the current track to the selected track.
         /// </summary>
         /// <param name="argument"></param>
-        private void playTrack(object argument)
+        private void _playTrack(object argument)
         {
-            if(selectedTrack != null)
+            if(_selectedTrack != null)
             {
-                dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(selectedTrack);
-                dataModel.CurrentTrack = selectedTrack;
+                _dataModel.QueueIndex = _dataModel.TrackQueue.IndexOf(_selectedTrack);
+                _dataModel.CurrentTrack = _selectedTrack;
             }     
         }
         /// <summary>
         /// Changes the selected track.
         /// </summary>
         /// <param name="argument"></param>
-        private void selectionChanged(object argument)
+        private void _selectionChanged(object argument)
         {
             var listView = argument as ListView;
             if(listView != null)
             {
-                selectedTrack = listView.SelectedItem as Track;
+                _selectedTrack = listView.SelectedItem as Track;
             }
         }
-        private void trackDoubleClicked(object argument)
+        private void _trackDoubleClicked(object argument)
         {
             if (argument == null)
                 throw new ArgumentNullException();
@@ -71,28 +71,28 @@ namespace TuneMusix.ViewModel
             if (track != null)
             {
                 CurrentTrack = track;
-                dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(track);
+                _dataModel.QueueIndex = _dataModel.TrackQueue.IndexOf(track);
             }
         }
         /// <summary>
         /// Adds the selected track to a playlist
         /// </summary>
         /// <param name="obj"></param>
-        private void addToPlaylist(object argument)
+        private void _addToPlaylist(object argument)
         {
             Playlist selectedPlaylist = argument as Playlist;
 
             if (selectedPlaylist != null)
             {
-                dataModel.AddTracksToPlaylist(new List<Track>() { selectedTrack }, selectedPlaylist);
+                _dataModel.AddTracksToPlaylist(new List<Track>() { _selectedTrack }, selectedPlaylist);
             }
         }
 
-        private void deleteSelectedTrack(object argument)
+        private void _deleteSelectedTrack(object argument)
         {
-            if(selectedTrack != null)
+            if(_selectedTrack != null)
             {
-                dataModel.RemoveTrackFromQueue(selectedTrack);
+                _dataModel.RemoveTrackFromQueue(_selectedTrack);
                 RaisePropertyChanged("CurrentTrackQueue");
             }
         }
@@ -101,7 +101,7 @@ namespace TuneMusix.ViewModel
         #region properties
         public ObservableCollection<Track> CurrentTrackQueue
         {
-            get { return dataModel.TrackQueue; }
+            get { return _dataModel.TrackQueue; }
         }
         /// <summary>
         /// Brush that sets the highlight color of the current track in the trackqueue.
@@ -134,11 +134,11 @@ namespace TuneMusix.ViewModel
             }
         }
         #endregion
-        private void onColorChanged()
+        private void OnColorChanged()
         {
             RaisePropertyChanged("HighlightColor");
         }
-        private void onTrackQueueChanged(object source, object argument)
+        private void OnTrackQueueChanged(object source, object argument)
         {
             RaisePropertyChanged("CurrentTrackQueue");
             RaisePropertyChanged("HeaderText");

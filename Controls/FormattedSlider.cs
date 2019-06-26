@@ -2,14 +2,16 @@
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
 using TuneMusix.Helpers;
 
 namespace TuneMusix.Controls
 {
+    /// <summary>
+    /// Slider that displays the tooltip value in time format.
+    /// </summary>
     public partial class FormattedSlider : Slider
     {
-        private System.Windows.Controls.ToolTip _autoToolTip;
+        private ToolTip _autoToolTip;
         private string _autoToolTipFormat;
         private bool _isTimeValue;
 

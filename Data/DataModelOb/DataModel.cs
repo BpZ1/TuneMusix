@@ -11,45 +11,43 @@ namespace TuneMusix.Data.DataModelOb
     public partial class DataModel
     {
 
-        private Database database = Database.Instance;
-        private SQLLoader loader;
+        private readonly Database _database = Database.Instance;
+        private SQLLoader _loader;
 
         public int QueueIndex { get; set; }
         public double CurrentPosition { get; set; }
         public Folder SelectedFolder { get; set; }
-        private Playlist currentPlaylist;
-        private Track currentTrack;
-        private bool trackQueueIsShuffled;
-        private ObservableList<Playlist> playlists;
-        private ObservableList<Track> tracklist;
-        private ObservableList<Folder> rootFolders;
-        private ObservableList<Album> albumlist;
-        private ObservableList<Interpret> interpretlist;
-        private ObservableList<Track> selectedTracks = new ObservableList<Track>();
-        private ObservableList<Track> trackQueue = new ObservableList<Track>();
+        private Playlist _currentPlaylist;
+        private Track _currentTrack;
+        private bool _trackQueueIsShuffled;
+        private ObservableList<Playlist> _playlists;
+        private ObservableList<Track> _tracklist;
+        private ObservableList<Folder> _rootFolders;
+        private ObservableList<Album> _albumlist;
+        private ObservableList<Interpret> _interpretlist;
+        private ObservableList<Track> _trackQueue = new ObservableList<Track>();
 
         #region constructor and instance accessor
 
-        private static volatile DataModel instance;
-
-        private static object lockObject = new Object();
+        private static volatile DataModel _instance;
+        private static object _lockObject = new Object();
 
         public static DataModel Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    lock (lockObject)
+                    lock (_lockObject)
                     {
-                        if (instance == null)
+                        if (_instance == null)
                         {
                             SQLLoader loader = new SQLLoader();
-                            instance = loader.LoadFromDB();
+                            _instance = loader.LoadFromDB();
                         }
                     }
                 }
-                return instance;
+                return _instance;
             }
         }
 
@@ -57,16 +55,16 @@ namespace TuneMusix.Data.DataModelOb
         public DataModel(List<Track> tracklist, List<Playlist> playlists, List<Folder> rootfolders,
             List<Album> albumlist, List<Interpret> interpretlist)
         {
-            this.tracklist = new ObservableList<Track>(tracklist);
-            this.rootFolders = new ObservableList<Folder>(rootfolders);
-            this.playlists = new ObservableList<Playlist>(playlists);
-            this.albumlist = new ObservableList<Album>(albumlist);
-            this.interpretlist = new ObservableList<Interpret>(interpretlist);
+            this._tracklist = new ObservableList<Track>(tracklist);
+            this._rootFolders = new ObservableList<Folder>(rootfolders);
+            this._playlists = new ObservableList<Playlist>(playlists);
+            this._albumlist = new ObservableList<Album>(albumlist);
+            this._interpretlist = new ObservableList<Interpret>(interpretlist);
 
             QueueIndex = 0;
-            this.tracklist.CollectionChanged += dataModelChanged;
-            this.playlists.CollectionChanged += dataModelChanged;
-            this.rootFolders.CollectionChanged += dataModelChanged;
+            this._tracklist.CollectionChanged += CallOnDataModelChanged;
+            this._playlists.CollectionChanged += CallOnDataModelChanged;
+            this._rootFolders.CollectionChanged += CallOnDataModelChanged;
         }
         #endregion
 
@@ -98,18 +96,22 @@ namespace TuneMusix.Data.DataModelOb
         }
         protected virtual void OnAlbumlistChanged()
         {
-            AlbumlistChanged?.Invoke(this, albumlist);
+            AlbumlistChanged?.Invoke(this, _albumlist);
         }
         protected virtual void OnInterpretlistChanged()
         {
-            InterpretlistChanged?.Invoke(this, interpretlist);
+            InterpretlistChanged?.Invoke(this, _interpretlist);
         }
 
 
 
         #endregion
-
-        private void dataModelChanged(object sender, NotifyCollectionChangedEventArgs e)
+        /// <summary>
+        /// Exists to call OnDataModelChanged() automatically when the lists change.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CallOnDataModelChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             OnDataModelChanged();
         }

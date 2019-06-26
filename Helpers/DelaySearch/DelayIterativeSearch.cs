@@ -7,24 +7,31 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Helpers
 {
+    /// <summary>
+    /// The delay iterative search algorithm works as follows:<br></br>
+    /// Every consecutive search that includes the first previous search term will
+    /// wait for a set amount of time until the input is finished before searching.
+    /// If the term is not included, a new search will be started.
+    /// 
+    /// </summary>
     public class DelayIterativeSearch
     {
-        private Track[] itemlist;
-        private List<Track> successlist = new List<Track>();
-        private List<Track> failurelist = new List<Track>();
-        private bool itemslistChanged;
+        private Track[] _itemlist;
+        private List<Track> _successlist = new List<Track>();
+        private List<Track> _failurelist = new List<Track>();
+        private bool _itemslistChanged;
         /// <summary>
         /// The previous value that the user entrerd.
         /// </summary>
-        private string oldSearchValue;
+        private string _oldSearchValue;
         /// <summary>
         /// Value that the user entered for search.
         /// </summary>
-        private string currentSearchValue;
+        private string _currentSearchValue;
         //This value is the next to be searched after the current.
-        private string queuedSearchValue; 
-        private BackgroundWorker worker = new BackgroundWorker();
-        private DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        private string _queuedSearchValue; 
+        private BackgroundWorker _worker = new BackgroundWorker();
+        private DispatcherTimer _dispatcherTimer = new DispatcherTimer();
 
         public DelayIterativeSearch(Track[] list)
         {
@@ -32,12 +39,12 @@ namespace TuneMusix.Helpers
                 throw new ArgumentNullException("SearchService initialized with null");
 
             //Timer for the delay between input and search
-            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(200);
-            dispatcherTimer.Tick += startSearchTask;
+            _dispatcherTimer.Interval = TimeSpan.FromMilliseconds(200);
+            _dispatcherTimer.Tick += StartSearchTask;
 
-            worker.WorkerReportsProgress = false;
-            worker.DoWork += new DoWorkEventHandler(search);
-            worker.RunWorkerCompleted += OnWorkerCompleted;
+            _worker.WorkerReportsProgress = false;
+            _worker.DoWork += new DoWorkEventHandler(Search);
+            _worker.RunWorkerCompleted += OnWorkerCompleted;
             Itemlist = list;
         }
 
@@ -69,14 +76,14 @@ namespace TuneMusix.Helpers
             //If the search value is empty return the whole list.
             if (value.Equals(""))
             {
-                OnSearchTaskCompleted(new List<Track>(itemlist));
+                OnSearchTaskCompleted(new List<Track>(_itemlist));
             }
             else
             {
-                dispatcherTimer.Stop();
-                currentSearchValue = value;
+                _dispatcherTimer.Stop();
+                _currentSearchValue = value;
                 //Start the timer that waits for new input                    
-                dispatcherTimer.Start();
+                _dispatcherTimer.Start();
             }         
         }
         
@@ -85,26 +92,26 @@ namespace TuneMusix.Helpers
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void startSearchTask(object sender, EventArgs e)
+        private void StartSearchTask(object sender, EventArgs e)
         {
-            dispatcherTimer.Stop();
-            if (currentSearchValue != null || queuedSearchValue != null)
+            _dispatcherTimer.Stop();
+            if (_currentSearchValue != null || _queuedSearchValue != null)
             {
-                if(queuedSearchValue != null) //Check if there is a newer search value.
+                if(_queuedSearchValue != null) //Check if there is a newer search value.
                 {
                     //Update the current value.
-                    currentSearchValue = queuedSearchValue;
-                    queuedSearchValue = null;
+                    _currentSearchValue = _queuedSearchValue;
+                    _queuedSearchValue = null;
                 }
 
-                if (!worker.IsBusy) //If not busy start next task.
+                if (!_worker.IsBusy) //If not busy start next task.
                 {                   
-                    worker.RunWorkerAsync(currentSearchValue);
+                    _worker.RunWorkerAsync(_currentSearchValue);
                 }
                 else //Queue current value for later.
                 {
-                    queuedSearchValue = currentSearchValue;
-                    currentSearchValue = null;
+                    _queuedSearchValue = _currentSearchValue;
+                    _currentSearchValue = null;
                 }
             }      
         }
@@ -124,10 +131,10 @@ namespace TuneMusix.Helpers
             }
 
             //If there is a new queued item start new search.
-            if(queuedSearchValue != null)
+            if(_queuedSearchValue != null)
             {
-                startSearchTask(null, null);
-                queuedSearchValue = null;               
+                StartSearchTask(null, null);
+                _queuedSearchValue = null;               
             }
         }
         /// <summary>
@@ -137,12 +144,12 @@ namespace TuneMusix.Helpers
         {
             set
             {
-                itemlist = value;
-                itemslistChanged = true;
+                _itemlist = value;
+                _itemslistChanged = true;
             }
         }
 
-        private void search(object sender, DoWorkEventArgs e)
+        private void Search(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = (BackgroundWorker)sender;
 
@@ -152,78 +159,78 @@ namespace TuneMusix.Helpers
                 throw new ArgumentNullException("Search value is null");
 
             //If the list was changed and needs to be completely searched
-            if (itemslistChanged)
+            if (_itemslistChanged)
             {
-                newSearch(value);
+                NewSearch(value);
             }
             else
             {
                 //In case value is the same as the previous
-                if (oldSearchValue.Equals(value))
+                if (_oldSearchValue.Equals(value))
                 {
-                    e.Result = successlist;
+                    e.Result = _successlist;
                     return;
                 }                
 
                 //If the value is the old value + more.
                 //only need to search the old filtered list.
-                else if (oldSearchValue.Contains(value))
+                else if (_oldSearchValue.Contains(value))
                 {
-                    List<Track> newFailureList = new List<Track>(failurelist);
-                    foreach (Track item in failurelist)
+                    List<Track> newFailureList = new List<Track>(_failurelist);
+                    foreach (Track item in _failurelist)
                     {
                         if (item.Contains(value))
                         {
-                            successlist.Add(item);
+                            _successlist.Add(item);
                             newFailureList.Remove(item);
                         }
                     }
-                    failurelist = newFailureList;
+                    _failurelist = newFailureList;
                 }
                 //If the new value is just the last value - some
                 //Only need to search the failure list and add
                 //the items to the success list.
-                else if (value.Contains(oldSearchValue))
+                else if (value.Contains(_oldSearchValue))
                 {                    
-                    List<Track> newSuccessList = new List<Track>(successlist);
-                    foreach (Track item in successlist)
+                    List<Track> newSuccessList = new List<Track>(_successlist);
+                    foreach (Track item in _successlist)
                     {
                         if (!item.Contains(value))
                         {
                             newSuccessList.Remove(item);
-                            failurelist.Add(item);
+                            _failurelist.Add(item);
                         }
                     }
-                    successlist = newSuccessList;
+                    _successlist = newSuccessList;
                 }
                 else //The new value is not and does not contain a
                 {
-                    newSearch(value);
+                    NewSearch(value);
                 }
             }
-            oldSearchValue = value;
-            e.Result = successlist;
+            _oldSearchValue = value;
+            e.Result = _successlist;
         }
         /// <summary>
         /// Gets called when the itemlist is new or has changed.
         /// </summary>
         /// <param name="value"></param>
-        private void newSearch(string value)
+        private void NewSearch(string value)
         {
-            successlist = new List<Track>();
-            failurelist = new List<Track>();
-            foreach (Track item in itemlist)
+            _successlist = new List<Track>();
+            _failurelist = new List<Track>();
+            foreach (Track item in _itemlist)
             {
                 if (item.Contains(value))
                 {
-                    successlist.Add(item);
+                    _successlist.Add(item);
                 }
                 else
                 {
-                    failurelist.Add(item);
+                    _failurelist.Add(item);
                 }
             }
-        itemslistChanged = false;
+        _itemslistChanged = false;
         }
     }
 }

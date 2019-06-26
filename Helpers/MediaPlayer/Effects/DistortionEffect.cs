@@ -1,31 +1,30 @@
-﻿using System;
-using CSCore;
+﻿using CSCore;
 using CSCore.Streams.Effects;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
     public class DistortionEffect : BaseEffect
     {
-        private DmoDistortionEffect distortion;
-        private bool isInitialized;
-        private float edge = 15;
-        private float gain = -18;
-        private float postEQBandwidth = 2400;
-        private float postEQCenterFrequency = 2400;
-        private float preLowPassCutoff = 8000;
+        private DmoDistortionEffect _distortion;
+        private bool _isInitialized;
+        private float _edge = 15;
+        private float _gain = -18;
+        private float _postEQBandwidth = 2400;
+        private float _postEQCenterFrequency = 2400;
+        private float _preLowPassCutoff = 8000;
 
         public DistortionEffect()
         {
-            isInitialized = false;
+            _isInitialized = false;
         }
         public DistortionEffect(float edge,float gain,float postEQBandwidth,float postEQCenterFrequency,float preLowPass)
         {
-            this.edge = edge;
-            this.gain = gain;
-            this.postEQBandwidth = postEQBandwidth;
-            this.postEQCenterFrequency = postEQCenterFrequency;
-            preLowPassCutoff = preLowPass;
-            isInitialized = false;
+            this._edge = edge;
+            this._gain = gain;
+            this._postEQBandwidth = postEQBandwidth;
+            this._postEQCenterFrequency = postEQCenterFrequency;
+            _preLowPassCutoff = preLowPass;
+            _isInitialized = false;
         }
 
 
@@ -39,78 +38,78 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         private DmoDistortionEffect createDistortion(IWaveSource waveSource)
         {
-            distortion = new DmoDistortionEffect(waveSource);
-            isInitialized = true;
-            distortion.Edge = edge;
-            distortion.Gain = gain;
-            distortion.PostEQBandwidth = postEQBandwidth;
-            distortion.PostEQCenterFrequency = postEQCenterFrequency;
-            distortion.PreLowpassCutoff = preLowPassCutoff;
-            return distortion;
+            _distortion = new DmoDistortionEffect(waveSource);
+            _isInitialized = true;
+            _distortion.Edge = _edge;
+            _distortion.Gain = _gain;
+            _distortion.PostEQBandwidth = _postEQBandwidth;
+            _distortion.PostEQCenterFrequency = _postEQCenterFrequency;
+            _distortion.PreLowpassCutoff = _preLowPassCutoff;
+            return _distortion;
         }
 
         public float Edge
         {
-            get { return edge; }
+            get { return _edge; }
             set
             {
-                edge = value;
+                _edge = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    distortion.Edge = edge;
+                    _distortion.Edge = _edge;
                 }
             }
         }
         public float Gain
         {
-            get { return gain; }
+            get { return _gain; }
             set
             {
-                gain = value;
+                _gain = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    distortion.Gain = gain;
+                    _distortion.Gain = _gain;
                 }
             }
         }
         public float PostEQBandwidth
         {
-            get { return postEQBandwidth; }
+            get { return _postEQBandwidth; }
             set
             {
-                postEQBandwidth = value;
+                _postEQBandwidth = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    distortion.PostEQBandwidth = postEQBandwidth;
+                    _distortion.PostEQBandwidth = _postEQBandwidth;
                 }
             }
         }
         public float PostEQCenterFrequency
         {
-            get { return postEQCenterFrequency; }
+            get { return _postEQCenterFrequency; }
             set
             {
-                postEQCenterFrequency = value;
+                _postEQCenterFrequency = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    distortion.PostEQCenterFrequency = postEQCenterFrequency;
+                    _distortion.PostEQCenterFrequency = _postEQCenterFrequency;
                 }
             }
         }
         public float PreLowPassCutoff
         {
-            get { return preLowPassCutoff; }
+            get { return _preLowPassCutoff; }
             set
             {
-                preLowPassCutoff = value;
+                _preLowPassCutoff = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    distortion.PreLowpassCutoff = preLowPassCutoff;
+                    _distortion.PreLowpassCutoff = _preLowPassCutoff;
                 }
             }
         }

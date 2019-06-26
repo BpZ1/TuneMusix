@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using TuneMusix.Helpers;
 using TuneMusix.Helpers.Util;
 
 namespace TuneMusix.Model
@@ -11,13 +9,13 @@ namespace TuneMusix.Model
     /// </summary>
     public abstract class ItemContainer<T>
     {
-        protected string name;
-        protected ObservableList<T> itemlist;
+        protected string _name;
+        protected ObservableList<T> _itemlist;
 
         public ItemContainer(string name)
         {
-            this.name = name;
-            itemlist = new ObservableList<T>();
+            this._name = name;
+            _itemlist = new ObservableList<T>();
         }
 
         public delegate void ContainerChangedEventHandler(object source);
@@ -26,24 +24,20 @@ namespace TuneMusix.Model
 
         protected virtual void OnContainerChanged()
         {
-            if (ContainerChanged != null)
-            {
-                ContainerChanged(this);
-            }
+            ContainerChanged?.Invoke(this);
         }
-
 
         #region properties
         public virtual string Name
         {
-            get { return name; }
+            get { return _name; }
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
                     throw new ArgumentNullException("Container name can't be null or empty");
                 }
-                name = value;
+                _name = value;
                 RaisePropertyChanged("Name");
                 OnContainerChanged();
             }
@@ -51,7 +45,7 @@ namespace TuneMusix.Model
         }
         public ObservableList<T> Itemlist
         {
-            get { return itemlist; }
+            get { return _itemlist; }
         }
         #endregion
         public virtual bool Add(T item)
@@ -59,9 +53,9 @@ namespace TuneMusix.Model
             if (item == null)
                 throw new ArgumentNullException("You can't add Null to container");
 
-            if (!itemlist.Contains(item))
+            if (!_itemlist.Contains(item))
             {
-                itemlist.Add(item);
+                _itemlist.Add(item);
                 RaisePropertyChanged("Itemlist");
                 OnContainerChanged();
                 return true;
@@ -73,7 +67,7 @@ namespace TuneMusix.Model
             if (item == null)
                 throw new ArgumentNullException("You can't remove Null from container");
 
-            if(itemlist.Remove(item))
+            if(_itemlist.Remove(item))
             {                
                 RaisePropertyChanged("Itemlist");
                 OnContainerChanged();
@@ -81,7 +75,6 @@ namespace TuneMusix.Model
             }           
             return false;
         }
-
 
         #region propertychanged
         internal void RaisePropertyChanged(string prop)

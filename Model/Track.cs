@@ -19,16 +19,14 @@ namespace TuneMusix.Model
         private string duration;
         #endregion
 
-        private bool isValid; //Checked on update
-        private bool isCurrentTrack;
-
-        public Interpret interpretContainer { get; set; }
-        public Album albumContainer { get; set; }
-
+        private bool _isValid; //Checked on update
+        private bool _isCurrentTrack;
+        private int _index; //original position in the trackqueue
+        public Interpret InterpretContainer { get; set; }
+        public Album AlbumContainer { get; set; }
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
 
-        private int index; //original position in the trackqueue
 
         public Track(string url, long id, string title,
             string interpret, string album, int year, string comm, string genre, string duration)
@@ -83,8 +81,8 @@ namespace TuneMusix.Model
             if(this.Container != null)
             {
                 this.Container.Remove(this);
-                this.albumContainer.Remove(this);
-                this.interpretContainer.Remove(this);
+                this.AlbumContainer.Remove(this);
+                this.InterpretContainer.Remove(this);
             }
         }
 
@@ -270,15 +268,15 @@ namespace TuneMusix.Model
         /// </summary>
         public int Index
         {
-            get { return this.index; }
-            set { this.index = value; }
+            get { return this._index; }
+            set { this._index = value; }
         }
         public bool IsCurrentTrack
         {
-            get { return isCurrentTrack; }
+            get { return _isCurrentTrack; }
             set
             {
-                isCurrentTrack = value;
+                _isCurrentTrack = value;
                 RaisePropertyChanged("IsCurrentTrack");
             }
         }
@@ -288,10 +286,10 @@ namespace TuneMusix.Model
         }
         public bool IsValid
         {
-            get { return isValid; }
+            get { return _isValid; }
             set
             {
-                isValid = value;
+                _isValid = value;
                 RaisePropertyChanged("IsValid");
             }
         }

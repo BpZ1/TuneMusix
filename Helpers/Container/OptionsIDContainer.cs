@@ -4,13 +4,13 @@ namespace TuneMusix.Helpers.Container
 {
     public class OptionsIDContainer
     {
-        public Options options;
-        public long id;
+        public Options Options;
+        public long ID;
 
         public OptionsIDContainer(Options options, long id)
         {
-            this.options = options;
-            this.id = id;
+            this.Options = options;
+            this.ID = id;
         }
     }
 }

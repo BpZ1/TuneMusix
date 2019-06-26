@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SQLite;
 using TuneMusix.Exceptions;
-using TuneMusix.Model;
-using TuneMusix.Helpers;
 using System.Diagnostics;
 
 namespace TuneMusix.Data.SQLDatabase
@@ -17,42 +11,42 @@ namespace TuneMusix.Data.SQLDatabase
     public sealed partial class Database
     {
 
-        SQLiteConnection dbConnection;
-        SQLiteDataReader dbReader;
-        SQLiteCommand beginCommand;
-        SQLiteCommand endCommand;
+        private SQLiteConnection _dbConnection;
+        private SQLiteDataReader _dbReader;
+        private SQLiteCommand _beginCommand;
+        private SQLiteCommand _endCommand;
 
-        private static volatile Database instance;
-        private static object lockObject = new Object();
+        private static volatile Database _instance;
+        private static object _lockObject = new Object();
 
         public static Database Instance
         {
             get
             {
-                if(instance == null)
+                if(_instance == null)
                 {
-                    lock (lockObject)
+                    lock (_lockObject)
                     {
-                        if(instance == null)
+                        if(_instance == null)
                         {
-                            instance = new Database();
+                            _instance = new Database();
                         }
                     }                  
                 }
-                return instance;
+                return _instance;
             }
         }
 
         private Database()
         {
-            dbConnection = new SQLiteConnection("Data Source=musixDB.db;Version=3;");
-            beginCommand = new SQLiteCommand("begin", dbConnection);
-            endCommand = new SQLiteCommand("end", dbConnection);
+            _dbConnection = new SQLiteConnection("Data Source=musixDB.db;Version=3;");
+            _beginCommand = new SQLiteCommand("begin", _dbConnection);
+            _endCommand = new SQLiteCommand("end", _dbConnection);
 
-            createDatabase();
+            CreateDatabase();
         }
 
-        private void createDatabase()
+        private void CreateDatabase()
         {
             #region sqlcommands
             //Initial SQL Querys
@@ -71,7 +65,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                      "FOREIGN KEY (folderID) " +
                                                                                                      "REFERENCES folders(ID) " +
                                                                                                      "ON DELETE CASCADE);",
-                                                                                                     dbConnection);
+                                                                                                     _dbConnection);
             SQLiteCommand sqlCreateFolderTable = new SQLiteCommand("CREATE TABLE if not exists folders (ID INT UNSIGNED NOT NULL," +
                                                                                                        "folderID INT," +
                                                                                                        "URL VARCHAR (100)," +
@@ -80,11 +74,11 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                        "FOREIGN KEY (folderID) " +
                                                                                                        "REFERENCES folders(ID) " +
                                                                                                        "ON DELETE CASCADE);"
-                                                                                                       ,dbConnection);
+                                                                                                       ,_dbConnection);
             SQLiteCommand sqlCreatePlaylistTable = new SQLiteCommand("CREATE TABLE if not exists playlists (ID INT NOT NULL," +
                                                                                                            "name VARCHAR(30)," +
                                                                                                            "PRIMARY KEY(ID))",
-                                                                                                           dbConnection);
+                                                                                                           _dbConnection);
             SQLiteCommand sqlCreateOptionsTable = new SQLiteCommand("CREATE TABLE if not exists options (IDgen INT UNSIGNED NOT NULL," +
                                                                                                         "volume INT UNSIGNED," +
                                                                                                         "shuffle INT UNSIGNED," +
@@ -93,7 +87,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                         "accentColor INT UNSIGNED," + 
                                                                                                         "theme INT UNSIGNED," +
                                                                                                         "askConfirmation INT UNSIGNED);",
-                                                                                                         dbConnection);
+                                                                                                         _dbConnection);
             SQLiteCommand sqlCreateTrackPlaylisttable = new SQLiteCommand("CREATE TABLE if not exists playlisttracks(trackID INT UNSIGNED NOT NULL, " +
                                                                                                                    "playlistID INT UNSIGNED NOT NULL, " +
                                                                                                                    "FOREIGN KEY(trackID) " +
@@ -103,7 +97,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                                    "FOREIGN KEY(playlistID) " +
                                                                                                                    "REFERENCES playlists(ID) " +
                                                                                                                    "ON DELETE CASCADE);"
-                                                                                                                   ,dbConnection);
+                                                                                                                   ,_dbConnection);
             SQLiteCommand sqlCreateEffectsQueueTable = new SQLiteCommand("CREATE TABLE if not exists effectsqueue (queueindex INT UNSIGNED NOT NULL," +
                                                                                                                   "effecttype VARCHAR(20),"+
                                                                                                                   "isactive INT,"+
@@ -119,7 +113,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                                   "value9 REAL," +
                                                                                                                   "value10 int," +
                                                                                                                   "value11 int);",
-                                                                                                                  dbConnection);
+                                                                                                                  _dbConnection);
 
             #endregion
 
@@ -145,11 +139,11 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         private void OpenDBConnection()
         {
-            if(dbConnection != null)
+            if(_dbConnection != null)
             {
-                if (dbConnection.State != System.Data.ConnectionState.Open)
+                if (_dbConnection.State != System.Data.ConnectionState.Open)
                 {
-                    dbConnection.Open();
+                    _dbConnection.Open();
                 }
             }
             else
@@ -162,11 +156,11 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         private void CloseDBConnection()
         {
-            if (dbConnection != null)
+            if (_dbConnection != null)
             {
-                if (dbConnection.State != System.Data.ConnectionState.Closed)
+                if (_dbConnection.State != System.Data.ConnectionState.Closed)
                 {
-                    dbConnection.Close();
+                    _dbConnection.Close();
                 }
             }
             else

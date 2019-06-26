@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 
@@ -12,11 +11,8 @@ namespace TuneMusix.Helpers.Util
     /// <typeparam name="T"></typeparam>
     public class ObservableList<T> : ObservableCollection<T>
     {
-
         public ObservableList() : base() { }
-
         public ObservableList(IEnumerable<T> items) : base(items) { }
-
 
         public void AddRange(IEnumerable<T> items)
         {

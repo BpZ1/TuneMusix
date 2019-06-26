@@ -2,35 +2,32 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows;
 using System.Windows.Data;
-using System.Windows.Threading;
-using TuneMusix.Helpers;
 
 namespace TuneMusix.Model
 {
     public class Folder : ItemContainer<Track>, INotifyPropertyChanged
     {
-        private long id;
-        private long folderID;
-        private string url;
+        public readonly long ID;
+        private long _folderID;
+        private string _url;
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
-        private ObservableCollection<Folder> folderlist;
+        private ObservableCollection<Folder> _folderlist;
 
         public Folder(string name, string url, long ID) : base(name)
         {
             this.URL = url;
-            this.id = ID;
-            folderlist = new ObservableCollection<Folder>();
+            this.ID = ID;
+            _folderlist = new ObservableCollection<Folder>();
         }
 
         public Folder(string name, string url, long ID,long folderID) : base(name)
         {
             this.URL = url;
-            this.id = ID;
-            this.folderID = folderID;
-            folderlist = new ObservableCollection<Folder>();
+            this.ID = ID;
+            this._folderID = folderID;
+            _folderlist = new ObservableCollection<Folder>();
         }
 
 
@@ -39,9 +36,9 @@ namespace TuneMusix.Model
             if(folder == null)
                 throw new ArgumentNullException("You can't add Null to container");
 
-            if (!folderlist.Contains(folder))
+            if (!_folderlist.Contains(folder))
             {
-                folderlist.Add(folder);
+                _folderlist.Add(folder);
                 folder.FolderID = this.ID;
                 folder.Container = this;
                 RaisePropertyChanged("Folderlist");
@@ -66,7 +63,7 @@ namespace TuneMusix.Model
         {
             get
             {
-                return this.url;
+                return this._url;
             }
             set
             {
@@ -74,22 +71,19 @@ namespace TuneMusix.Model
                 {
                     throw new ArgumentNullException("URL mustn't be null.");
                 }
-                this.url = value;
+                this._url = value;
                 RaisePropertyChanged("URL");
                 IsModified = true;
                 OnContainerChanged();
             }
         }
-        public long ID
-        {
-            get { return this.id; }
-        }
+
         public long FolderID
         {
-            get { return this.folderID; }
+            get { return this._folderID; }
             set
             {
-                folderID = value;
+                _folderID = value;
                 IsModified = true;
                 RaisePropertyChanged("FolderID");
                 OnContainerChanged();
@@ -100,7 +94,7 @@ namespace TuneMusix.Model
         {
             get
             {
-                return this.folderlist;
+                return this._folderlist;
             }
         }
 

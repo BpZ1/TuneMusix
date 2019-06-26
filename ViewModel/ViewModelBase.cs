@@ -14,57 +14,57 @@ namespace TuneMusix.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
 
-        protected DataModel dataModel = DataModel.Instance;
+        protected DataModel _dataModel = DataModel.Instance;
 
         public ObservableCollection<Track> TrackList
         {
-            get { return dataModel.TrackList; }
+            get { return _dataModel.TrackList; }
         }
 
 
         public Track CurrentTrack
         {
-            get { return dataModel.CurrentTrack; }
+            get { return _dataModel.CurrentTrack; }
             set
             {
-                dataModel.CurrentTrack = value;
+                _dataModel.CurrentTrack = value;
                 RaisePropertyChanged("CurrentTrack");
             }
         }
 
         public ObservableList<Playlist> Playlists
         {
-            get { return dataModel.Playlists; }
+            get { return _dataModel.Playlists; }
             set
             {
-                dataModel.Playlists = value;
+                _dataModel.Playlists = value;
                 RaisePropertyChanged("Playlists");
             }
         }
 
         public Playlist CurrentPlaylist
         {
-            get { return dataModel.CurrentPlaylist; }
+            get { return _dataModel.CurrentPlaylist; }
             set
             {
-                dataModel.CurrentPlaylist = value;
+                _dataModel.CurrentPlaylist = value;
                 RaisePropertyChanged("CurrentPlaylist");
             }
         }
 
         public ObservableCollection<Folder> RootFolders
         {
-            get { return dataModel.RootFolders; }
+            get { return _dataModel.RootFolders; }
         }
         public List<Track> TrackQueue
         {
-            get { return dataModel.TrackQueue.ToList<Track>(); }
-            set { dataModel.TrackQueue = new ObservableList<Track>(value); }
+            get { return _dataModel.TrackQueue.ToList<Track>(); }
+            set { _dataModel.TrackQueue = new ObservableList<Track>(value); }
         }
         public int TrackQueueIndex
         {
-            get { return dataModel.QueueIndex; }
-            set { dataModel.QueueIndex = value; }
+            get { return _dataModel.QueueIndex; }
+            set { _dataModel.QueueIndex = value; }
         }
         
         internal void RaisePropertyChanged(string prop)

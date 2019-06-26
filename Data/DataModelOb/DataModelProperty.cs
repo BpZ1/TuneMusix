@@ -10,15 +10,15 @@ namespace TuneMusix.Data.DataModelOb
     public partial class DataModel
     {
         //list containing all tracks
-        public ObservableList<Track> TrackList => this.tracklist;
+        public ObservableList<Track> TrackList => this._tracklist;
         //currently loaded track
         public Track CurrentTrack
         {
-            get { return this.currentTrack; }
+            get { return this._currentTrack; }
             set
             {
-                if(currentTrack != null)
-                    this.currentTrack.IsCurrentTrack = false;
+                if(_currentTrack != null)
+                    this._currentTrack.IsCurrentTrack = false;
 
                 //Set new track to current track
                 if(value != null)
@@ -39,27 +39,27 @@ namespace TuneMusix.Data.DataModelOb
                         SaveTrack(value);
                     }
                 }
-                this.currentTrack = value;              
+                this._currentTrack = value;              
                 OnCurrentTrackChanged();
             }
         }
         //list containing all playlists
         public ObservableList<Playlist> Playlists
         {
-            get { return this.playlists; }
+            get { return this._playlists; }
             set
             {
-                this.playlists = value;
+                this._playlists = value;
                 OnDataModelChanged();
             }
         }
         //currently loaded playlist
         public Playlist CurrentPlaylist
         {
-            get { return this.currentPlaylist; }
+            get { return this._currentPlaylist; }
             set
             {
-                this.currentPlaylist = value;
+                this._currentPlaylist = value;
                 if(value != null)
                 {
                     TrackQueue = value.Itemlist;
@@ -70,29 +70,29 @@ namespace TuneMusix.Data.DataModelOb
         //Returns true if the current trackqueue is shuffled
         public bool TrackQueueIsShuffled
         {
-            get { return trackQueueIsShuffled; }
+            get { return _trackQueueIsShuffled; }
         }
         //list of all root folders
         public ObservableList<Folder> RootFolders
         {
-            get { return this.rootFolders; }
+            get { return this._rootFolders; }
         }
         //list of the tracks that are in the playing queue
         public ObservableList<Track> TrackQueue
         {
-            get { return this.trackQueue; }
+            get { return this._trackQueue; }
             set
             {
                 if(value != null)
                 {
-                    if(trackQueue != null)
+                    if(_trackQueue != null)
                     {
-                        if (!ListUtil.UnorderedEqual<Track>(value, trackQueue))
-                            trackQueueIsShuffled = false;
+                        if (!ListUtil.UnorderedEqual<Track>(value, _trackQueue))
+                            _trackQueueIsShuffled = false;
                     }
                        
                     //Shuffle track queue if shuffle is activated
-                    if (Options.Instance.Shuffle && !trackQueueIsShuffled)
+                    if (Options.Instance.Shuffle && !_trackQueueIsShuffled)
                         ShuffleTrackQueue();
 
                     if (value.Count > 0)
@@ -105,7 +105,7 @@ namespace TuneMusix.Data.DataModelOb
                     }
                 }
                  
-                this.trackQueue = value;
+                this._trackQueue = value;
                 this.QueueIndex = 0;
                
                
@@ -115,19 +115,19 @@ namespace TuneMusix.Data.DataModelOb
 
         public ObservableList<Album> Albumlist
         {
-            get { return albumlist; }
+            get { return _albumlist; }
             set
             {
-                albumlist = value;
+                _albumlist = value;
                 OnAlbumlistChanged();
             }
         }
         public ObservableList<Interpret> Interpretlist
         {
-            get { return interpretlist; }
+            get { return _interpretlist; }
             set
             {
-                interpretlist = value;
+                _interpretlist = value;
                 OnInterpretlistChanged();
             }
         }

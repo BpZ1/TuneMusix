@@ -22,42 +22,42 @@ namespace TuneMusix.Helpers
       
         public bool Repeat { get; set; }
 
-        private Complex[] fftValues = new Complex[2048];
-        private SingleBlockNotificationStream notificationStream;
-        private FftProvider fftProvider;
-        private IWaveSource soundSource;
-        private ISoundOut soundOut;
-        private bool isInitialized;
+        private Complex[] _fftValues = new Complex[2048];
+        private SingleBlockNotificationStream _notificationStream;
+        private FftProvider _fftProvider;
+        private IWaveSource _soundSource;
+        private ISoundOut _soundOut;
+        private bool _isInitialized;
 
 
         public AudioPlayerImpl(string url, float volume, int balance, bool isStereo, EffectQueue effects, bool effectsActive)
         {
-            soundSource = getSoundSource(url);
-            this.notificationStream = new SingleBlockNotificationStream(soundSource.ToSampleSource());
-            fftProvider = new FftProvider(soundSource.WaveFormat.Channels, FftSize.Fft2048);
-            soundOut = getSoundOut();
+            _soundSource = GetSoundSource(url);
+            this._notificationStream = new SingleBlockNotificationStream(_soundSource.ToSampleSource());
+            _fftProvider = new FftProvider(_soundSource.WaveFormat.Channels, FftSize.Fft2048);
+            _soundOut = GetSoundOut();
 
-            notificationStream.SingleBlockRead += addAudioSamples;
+            _notificationStream.SingleBlockRead += AddAudioSamples;
             //Apply effects if they are activated
             if (effectsActive)
-               soundSource = effects.Apply(soundSource);
+               _soundSource = effects.Apply(_soundSource);
 
-            if(soundSource != null)
+            if(_soundSource != null)
             {
-                soundOut.Initialize(notificationStream.ToWaveSource());
-                soundOut.Volume = volume;
-                isInitialized = true;
-                soundOut.Stopped += PlaybackStopped;
+                _soundOut.Initialize(_notificationStream.ToWaveSource());
+                _soundOut.Volume = volume;
+                _isInitialized = true;
+                _soundOut.Stopped += PlaybackStopped;
                 if (!isStereo)
-                    soundSource.ToMono();
+                    _soundSource.ToMono();
             }                       
         }
 
-        private void addAudioSamples(object sender, SingleBlockReadEventArgs e)
+        private void AddAudioSamples(object sender, SingleBlockReadEventArgs e)
         {
             try
             {
-                this.fftProvider.Add(e.Left, e.Right);
+                this._fftProvider.Add(e.Left, e.Right);
             }
             catch (Exception)
             {
@@ -71,22 +71,22 @@ namespace TuneMusix.Helpers
         /// <returns>True if the new data was calculated and false if not enough sampels were read.</returns>
         public bool GetFftData(float[] resultBuffer)
         {
-            if (!fftProvider.IsNewDataAvailable) return false;
+            if (!_fftProvider.IsNewDataAvailable) return false;
 
-            bool res = fftProvider.GetFftData(fftValues);
+            bool res = _fftProvider.GetFftData(_fftValues);
             //If the size of the returned array is smaller or equals the data will only be returned for that length
-            if (resultBuffer.Length <= fftValues.Length)
+            if (resultBuffer.Length <= _fftValues.Length)
             {             
                 for (int i = 0; i < resultBuffer.Length; i++)
                 {
-                    resultBuffer[i] = (float)Math.Sqrt(Math.Pow(fftValues[i].Imaginary, 2) + Math.Pow(fftValues[i].Real, 2));
+                    resultBuffer[i] = (float)Math.Sqrt(Math.Pow(_fftValues[i].Imaginary, 2) + Math.Pow(_fftValues[i].Real, 2));
                 }
             }
             else
             {
-                for (int i = 0; i < fftValues.Length; i++)
+                for (int i = 0; i < _fftValues.Length; i++)
                 {
-                    resultBuffer[i] = (float)Math.Sqrt(Math.Pow(fftValues[i].Imaginary, 2) + Math.Pow(fftValues[i].Real, 2));
+                    resultBuffer[i] = (float)Math.Sqrt(Math.Pow(_fftValues[i].Imaginary, 2) + Math.Pow(_fftValues[i].Real, 2));
                 }
             }    
             return res;
@@ -96,7 +96,7 @@ namespace TuneMusix.Helpers
         /// Checks if Wasapi is supported and then uses that or directsound as ISoundOut.
         /// </summary>
         /// <returns></returns>
-        private ISoundOut getSoundOut()
+        private ISoundOut GetSoundOut()
         {           
             if (WasapiOut.IsSupportedOnCurrentPlatform)
             {
@@ -110,7 +110,7 @@ namespace TuneMusix.Helpers
             }
         }
 
-        private IWaveSource getSoundSource(string url)
+        private IWaveSource GetSoundSource(string url)
         {
             IWaveSource waveSource;
             try
@@ -144,16 +144,16 @@ namespace TuneMusix.Helpers
         /// <param name="args"></param>
         private void PlaybackStopped(object source,EventArgs args)
         {           
-            if(soundSource == null || soundOut == null)
+            if(_soundSource == null || _soundOut == null)
             {
                 OnPlaybackFinished();
             }
-            if (soundOut.WaveSource != null)
+            if (_soundOut.WaveSource != null)
             {
                 try
                 {
-                    Console.WriteLine(soundSource.GetPosition().ToString() + " equals " + soundSource.GetLength().ToString());
-                    if ((TimeSpan.Compare(soundSource.GetPosition(), soundSource.GetLength())) >= 0)
+                    Console.WriteLine(_soundSource.GetPosition().ToString() + " equals " + _soundSource.GetLength().ToString());
+                    if ((TimeSpan.Compare(_soundSource.GetPosition(), _soundSource.GetLength())) >= 0)
                     {
                         OnPlaybackFinished();
                     }
@@ -170,9 +170,9 @@ namespace TuneMusix.Helpers
         /// </summary>
         public void Pause()
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
-                soundOut.Pause();
+                _soundOut.Pause();
             }
         }
         /// <summary>
@@ -180,9 +180,9 @@ namespace TuneMusix.Helpers
         /// </summary>
         public void Resume()
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
-                soundOut.Resume();
+                _soundOut.Resume();
             }
         }
         /// <summary>
@@ -190,9 +190,9 @@ namespace TuneMusix.Helpers
         /// </summary>
         public void Play()
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
-                soundOut.Play();             
+                _soundOut.Play();             
             }
         }
         /// <summary>
@@ -200,9 +200,9 @@ namespace TuneMusix.Helpers
         /// </summary>
         public void Stop()
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
-                soundOut.Stop();
+                _soundOut.Stop();
             }
         }
         /// <summary>
@@ -212,8 +212,8 @@ namespace TuneMusix.Helpers
         {
             set
             {
-                if (isInitialized)
-                    soundOut.Volume = value;
+                if (_isInitialized)
+                    _soundOut.Volume = value;
             }
         }
         /// <summary>
@@ -222,7 +222,7 @@ namespace TuneMusix.Helpers
         /// <returns></returns>
         public bool IsPlaying()
         {
-            if(soundOut.PlaybackState.Equals(PlaybackState.Playing))
+            if(_soundOut.PlaybackState.Equals(PlaybackState.Playing))
             {
                 return true;
             }
@@ -237,9 +237,9 @@ namespace TuneMusix.Helpers
         /// <returns></returns>
         public TimeSpan CurrentPosition()
         {
-            if (isInitialized && soundSource != null)
+            if (_isInitialized && _soundSource != null)
             {
-                return soundSource.GetPosition();
+                return _soundSource.GetPosition();
             }
             else return new TimeSpan();
         }
@@ -249,9 +249,9 @@ namespace TuneMusix.Helpers
         /// <param name="pos"></param>
         public void SetCurrentPosition(TimeSpan pos)
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
-                soundSource.SetPosition(pos);
+                _soundSource.SetPosition(pos);
             }
         }
         /// <summary>
@@ -260,7 +260,7 @@ namespace TuneMusix.Helpers
         /// <param name="balance"></param>
         public void SetBalance(int balance)
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
             }
         }
@@ -270,9 +270,9 @@ namespace TuneMusix.Helpers
         /// <returns></returns>
         public TimeSpan Length()
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
-                return soundSource.GetLength();
+                return _soundSource.GetLength();
             }
             else return new TimeSpan();
         }
@@ -281,11 +281,11 @@ namespace TuneMusix.Helpers
         /// </summary>
         public void Dispose()
         {
-            if (isInitialized)
+            if (_isInitialized)
             {
-                soundOut.Dispose();
-                soundSource.Dispose();
-                isInitialized = false;
+                _soundOut.Dispose();
+                _soundSource.Dispose();
+                _isInitialized = false;
             }
         }
 
@@ -294,9 +294,9 @@ namespace TuneMusix.Helpers
             get
             {
                 int sampleRate = 0;
-                if(soundSource != null)
+                if(_soundSource != null)
                 {
-                    return soundSource.WaveFormat.SampleRate;
+                    return _soundSource.WaveFormat.SampleRate;
 
                 }
                 return sampleRate;

@@ -11,7 +11,7 @@ namespace TuneMusix.Controls
 
         public FlatVisualization() : base() { }
 
-        protected override void updateGraphics()
+        protected override void UpdateGraphics()
         {
 
             if (this.RenderSize.Width < 1 || this.RenderSize.Height < 1) return;
@@ -25,7 +25,7 @@ namespace TuneMusix.Controls
             this.Children.Clear();
             int counter = 0;
             double xPosition = Spacing;
-            foreach (Shape bar in bars)
+            foreach (Shape bar in _bars)
             {
                 bar.Height = BarValues[counter] * heightUnit;
                 bar.Width = barWidth;

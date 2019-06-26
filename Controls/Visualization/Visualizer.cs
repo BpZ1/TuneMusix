@@ -9,6 +9,9 @@ using System.Windows.Threading;
 
 namespace TuneMusix.Controls
 {
+    /// <summary>
+    /// Bar chart visualization base class.
+    /// </summary>
     [DisplayName("Frquency Visualizer")]
     [Description("Visualizes frequency changes in the signal.")]
     [ToolboxItem(true)]
@@ -16,8 +19,8 @@ namespace TuneMusix.Controls
     {
         protected const double DEFAULT_SPACING = 2d;
         protected const int DEFAULE_BAR_COUNT = 20;
-        protected List<Shape> bars = new List<Shape>();
-        private DispatcherTimer timer;
+        protected List<Shape> _bars = new List<Shape>();
+        private DispatcherTimer _timer;
 
         #region Properties
 
@@ -53,17 +56,12 @@ namespace TuneMusix.Controls
         protected virtual void OnIsActiveChanged(bool oldValue, bool newValue)
         {
             if (newValue)
-                timer?.Start();
+                _timer?.Start();
             else
             {
-                timer?.Stop();
-                clear();
+                _timer?.Stop();
+                Clear();
             }
-        }
-
-        protected void clear()
-        {
-            this.Children.Clear();
         }
 
         public bool IsActive
@@ -169,7 +167,7 @@ namespace TuneMusix.Controls
             set
             {
                 SetValue(BarCountProperty, value);
-                createBars();
+                CreateBars();
             }
         }
 
@@ -383,7 +381,7 @@ namespace TuneMusix.Controls
 
         protected virtual void OnUpdateRateChanged(int oldValue, int newValue)
         {
-            timer.Interval = TimeSpan.FromMilliseconds(newValue);
+            _timer.Interval = TimeSpan.FromMilliseconds(newValue);
         }
 
         public int UpdateRate
@@ -410,7 +408,7 @@ namespace TuneMusix.Controls
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
             base.OnRenderSizeChanged(sizeInfo);
-            update();
+            Update();
         }
 
         public override void OnApplyTemplate()
@@ -421,40 +419,50 @@ namespace TuneMusix.Controls
 
         public Visualizer()
         {
-            createBars();
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(30);
-            timer.Tick += onTimerTick;
+            CreateBars();
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMilliseconds(30);
+            _timer.Tick += onTimerTick;
         }
 
-        private void createBars()
+        /// <summary>
+        /// Clears the list of children (shapes).
+        /// </summary>
+        protected void Clear()
+        {
+            this.Children.Clear();
+        }
+        /// <summary>
+        /// Creates the bars.
+        /// </summary>
+        private void CreateBars()
         {
             this.Children.Clear();
             for(int i = 0; i < BarCount; i++)
             {
                 Rectangle rect = new Rectangle();
                 rect.Fill = MainColor;
-                bars.Add(rect);
+                _bars.Add(rect);
             }
-            update();
+            Update();
         }
 
         #region Events
         private void onTimerTick(object sencer, EventArgs args)
         {
-            update();
+            Update();
         }
 
         private void onSizeChanged(object sender, EventArgs args)
         {
-            update();
+            Update();
         }
         #endregion
 
-        private void update()
+        private void Update()
         {
             if(IsActive)
-                updateGraphics();
+                UpdateGraphics();
         }
 
         /// <summary>
@@ -462,6 +470,6 @@ namespace TuneMusix.Controls
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        protected abstract void updateGraphics();
+        protected abstract void UpdateGraphics();
     }
 }

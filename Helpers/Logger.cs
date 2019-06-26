@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TuneMusix.Model;
 
 namespace TuneMusix.Helpers
@@ -11,8 +7,7 @@ namespace TuneMusix.Helpers
     /// Class for Logging of the Program
     /// </summary>
     static class Logger
-    {
-        
+    {    
         public static void Log(String lines)
         {
             Options options = Options.Instance;

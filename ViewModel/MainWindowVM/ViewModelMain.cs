@@ -14,43 +14,41 @@ namespace TuneMusix.ViewModel
         public RelayCommand DeleteTracks { get; set; }
         public RelayCommand ExitApplication { get; set; }
         public RelayCommand ExitButtonPressed { get; set; }
-        public RelayCommand DebugMethod { get; set; }  
         public RelayCommand OpenOptionsWindow { get; set; }
         public RelayCommand SaveData { get; set; }
+        public static SnackbarMessageQueue MessageQueue { get; set; }
 
         private AudioControls audioControls = AudioControls.Instance;
-        private Options options = Options.Instance;
-        private LoadingBarManager loadingBarManager = LoadingBarManager.Instance;
+        private Options _options = Options.Instance;
+        private LoadingBarManager _loadingBarManager = LoadingBarManager.Instance;
 
-        private bool infoTextVisible = false;
-        private bool progressVisible = false;
-        private int progress;
-        private string infoText;
+        private bool _infoTextVisible = false;
+        private bool _progressVisible = false;
+        private int _progress;
+        private string _infoText;
 
-        public static SnackbarMessageQueue MessageQueue { get; set; }
 
         //constructor
         public ViewModelMain()
         {
             //Startup loading
-            dataModel.DatabaseStartupLoading();
+            _dataModel.DatabaseStartupLoading();
             
             //notification
             MessageQueue = new SnackbarMessageQueue();
-            dataModel.DataModelChanged += onRootFoldersChanged;
-            loadingBarManager.ProgressChanged += onProgressChanged;
-            loadingBarManager.LoadingStarted += onLoadingStarted;
-            loadingBarManager.LoadingFinished += onLoadingFinished;
-            loadingBarManager.InfoTextChanged += onInfoTextChanged;
+            _dataModel.DataModelChanged += OnRootFoldersChanged;
+            _loadingBarManager.ProgressChanged += OnProgressChanged;
+            _loadingBarManager.LoadingStarted += OnLoadingStarted;
+            _loadingBarManager.LoadingFinished += OnLoadingFinished;
+            _loadingBarManager.InfoTextChanged += OnInfoTextChanged;
 
             //Relaycommands
-            GetFiles = new RelayCommand(getFiles);
-            AddFolder = new RelayCommand(addFolder);
-            ExitApplication = new RelayCommand(exitApplication);
-            ExitButtonPressed = new RelayCommand(exitButtonPressed);
-            SaveData = new RelayCommand(saveData);
-            OpenOptionsWindow = new RelayCommand(openOptionsWindow);
-            DebugMethod = new RelayCommand(debugMethod);
+            GetFiles = new RelayCommand(_getFiles);
+            AddFolder = new RelayCommand(_addFolder);
+            ExitApplication = new RelayCommand(_exitApplication);
+            ExitButtonPressed = new RelayCommand(_exitButtonPressed);
+            SaveData = new RelayCommand(_saveData);
+            OpenOptionsWindow = new RelayCommand(_openOptionsWindow);
         }
 
         /// <summary>
@@ -89,30 +87,30 @@ namespace TuneMusix.ViewModel
         //visibility state of the progress bar and its text
         public bool ProgressVisible
         {
-            get { return progressVisible; }
+            get { return _progressVisible; }
             set
             {
-                progressVisible = value;
+                _progressVisible = value;
                 RaisePropertyChanged("ProgressVisible");
             }
         }
         //visiblity state of the info text
         public bool InfoTextVisible
         {
-            get { return infoTextVisible; }
+            get { return _infoTextVisible; }
             set
             {
-                infoTextVisible = value;
+                _infoTextVisible = value;
                 RaisePropertyChanged("InfoTextVisible");
             }
         }
         //progress bar that shows the loading progress
         public int ProgressBarProgress
         {
-            get { return progress; }
+            get { return _progress; }
             set
             {
-                progress = value;
+                _progress = value;
                 RaisePropertyChanged("ProgressBarProgress");
                 RaisePropertyChanged("ProgressBarText");
             }
@@ -120,15 +118,15 @@ namespace TuneMusix.ViewModel
         //Text displayed on the progress bar
         public string ProgressBarText
         {
-            get { return (progress + "%"); }
+            get { return (_progress + "%"); }
         }
         //Info text shown besides the loading bar
         public string InfoText
         {
-            get { return infoText; }
+            get { return _infoText; }
             set
             {
-                infoText = value;
+                _infoText = value;
                 RaisePropertyChanged("InfoText");
             }
         }

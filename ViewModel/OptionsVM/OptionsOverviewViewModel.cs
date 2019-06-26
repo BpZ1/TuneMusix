@@ -11,8 +11,8 @@ namespace TuneMusix.ViewModel
 {
     class OptionsOverviewViewModel
     {
-        private Options options = Options.Instance;
-        private DataModel dataModel = DataModel.Instance;
+        private Options _options = Options.Instance;
+        private DataModel _dataModel = DataModel.Instance;
 
 
         public RelayCommand ExitOptionsWindow { get; set; }
@@ -21,23 +21,23 @@ namespace TuneMusix.ViewModel
 
         public OptionsOverviewViewModel()
         {
-            ExitOptionsWindow = new RelayCommand(exitOptionsWindow);
-            Apply = new RelayCommand(apply);
-            Cancel = new RelayCommand(cancel);
+            ExitOptionsWindow = new RelayCommand(_exitOptionsWindow);
+            Apply = new RelayCommand(_apply);
+            Cancel = new RelayCommand(_cancel);
         }
         /// <summary>
         /// Saves the options
         /// </summary>
         /// <param name="argument"></param>
-        private void apply(object argument)
+        private void _apply(object argument)
         {           
-            if (options.IsModified())
+            if (_options.IsModified())
             {
-                options.Save();
+                _options.Save();
             }
         }
 
-        private void cancel(object argument)
+        private void _cancel(object argument)
         {
             OptionsWindowView optionsWindow = argument as OptionsWindowView;
             optionsWindow.Close();
@@ -46,18 +46,18 @@ namespace TuneMusix.ViewModel
         /// Gets called when the window is closed.
         /// </summary>
         /// <param name="argument"></param>
-        private void exitOptionsWindow(object argument)
+        private void _exitOptionsWindow(object argument)
         {
             var eventArgs = argument as CancelEventArgs;
 
-            if (options.IsModified())
+            if (_options.IsModified())
             {
                 //Open a confirmation dialog to check if the user wants to save his changes.
-                DialogResult result = openDialog("Do you want to save the changes?");
+                DialogResult result = OpenDialog("Do you want to save the changes?");
 
                 if (result == DialogResult.Yes)
                 {
-                    options.Save();
+                    _options.Save();
                     eventArgs.Cancel = false;
                 }
                 else if (result == DialogResult.No)
@@ -82,7 +82,7 @@ namespace TuneMusix.ViewModel
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        private DialogResult openDialog(string message)
+        private DialogResult OpenDialog(string message)
         {
             DialogViewModelBase vm = new ConfirmationDialogViewModel(message);
             DialogResult result = DialogService.OpenDialog(vm);

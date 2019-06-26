@@ -6,8 +6,6 @@ namespace TuneMusix.Data.SQLDatabase
 {
     interface IDatabase
     {
-        
-   
         #region deletion methods
         void Delete(List<Track> tracks);
 

@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
@@ -11,24 +10,24 @@ namespace TuneMusix.ViewModel.Dialog
     /// </summary>
     class ConfirmationDialogViewModel : DialogViewModelBase
     {
-        private string messageBox = "";
-        private bool buttonPressed = false;
+        private string _messageBox = "";
+        private bool _buttonPressed = false;
 
         public ConfirmationDialogViewModel()
         {
-            yesCommand = new RelayCommand(onYesClick);
-            noCommand = new RelayCommand(onNoClick);
-            cancelCommand = new RelayCommand(onCancelClick);
-            exitButtonCommand = new RelayCommand(onExitClick);
+            yesCommand = new RelayCommand(OnYesClick);
+            noCommand = new RelayCommand(OnNoClick);
+            cancelCommand = new RelayCommand(OnCancelClick);
+            exitButtonCommand = new RelayCommand(OnExitClick);
         }
 
         public ConfirmationDialogViewModel(string message)
         {
-            messageBox = message;
-            yesCommand = new RelayCommand(onYesClick);
-            noCommand = new RelayCommand(onNoClick);
-            cancelCommand = new RelayCommand(onCancelClick);
-            exitButtonCommand = new RelayCommand(onExitClick);
+            _messageBox = message;
+            yesCommand = new RelayCommand(OnYesClick);
+            noCommand = new RelayCommand(OnNoClick);
+            cancelCommand = new RelayCommand(OnCancelClick);
+            exitButtonCommand = new RelayCommand(OnExitClick);
         }
 
         private ICommand yesCommand = null;
@@ -60,41 +59,41 @@ namespace TuneMusix.ViewModel.Dialog
 
         public string MessageBox
         {
-            get { return messageBox; }
-            set { messageBox = value; }
+            get { return _messageBox; }
+            set { _messageBox = value; }
         }
 
-        private void onYesClick(object parameter)
+        private void OnYesClick(object parameter)
         {
-            if (!buttonPressed)
+            if (!_buttonPressed)
             {
-                buttonPressed = true;
+                _buttonPressed = true;
                 this.CloseDialogWithResult(parameter as Window, DialogResult.Yes);
             }  
         }
 
-        private void onNoClick(object parameter)
+        private void OnNoClick(object parameter)
         {
-            if (!buttonPressed)
+            if (!_buttonPressed)
             {
-                buttonPressed = true;
+                _buttonPressed = true;
                 this.CloseDialogWithResult(parameter as Window, DialogResult.No);
             }
 
         }
 
-        private void onCancelClick(object parameter)
+        private void OnCancelClick(object parameter)
         {
-            if (!buttonPressed)
+            if (!_buttonPressed)
             {
-                buttonPressed = true;
+                _buttonPressed = true;
                 this.CloseDialogWithResult(parameter as Window, DialogResult.Undefined);
             }   
         }
         
-        private void onExitClick(object parameter)
+        private void OnExitClick(object parameter)
         {
-            if (!buttonPressed)
+            if (!_buttonPressed)
                 this.CloseDialogWithResult(parameter as Window, DialogResult.Undefined);
         }
     }
