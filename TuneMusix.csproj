@@ -211,6 +211,7 @@
     <Compile Include="Helpers\MediaPlayer\Effects\GargleEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\ReverbEffect.cs" />
     <Compile Include="Helpers\DelaySearch\DelayIterativeSearch.cs" />
+    <Compile Include="Helpers\Util\ObservableList.cs" />
     <Compile Include="Helpers\Util\TextFormatService.cs" />
     <Compile Include="Helpers\Util\TrackService.cs" />
     <Compile Include="Model\Album.cs" />
@@ -240,6 +241,9 @@
     <Compile Include="ViewModel\VisualizerViewModel.cs" />
     <Compile Include="View\AlbumPage.xaml.cs">
       <DependentUpon>AlbumPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Controls\AlbumItem.xaml.cs">
+      <DependentUpon>AlbumItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Controls\SwatchView.xaml.cs">
       <DependentUpon>SwatchView.xaml</DependentUpon>
@@ -323,6 +327,10 @@
       <DependentUpon>VisualizerPage.xaml</DependentUpon>
     </Compile>
     <Page Include="View\AlbumPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Controls\AlbumItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -499,9 +507,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
       <Visible>False</Visible>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
 
 
@@ -9,10 +10,7 @@ namespace TuneMusix.Data.DataModelOb
     public partial class DataModel
     {
         //list containing all tracks
-        public ObservableCollection<Track> TrackList
-        {
-            get { return this.tracklist; }
-        }
+        public ObservableList<Track> TrackList => this.tracklist;
         //currently loaded track
         public Track CurrentTrack
         {
@@ -46,7 +44,7 @@ namespace TuneMusix.Data.DataModelOb
             }
         }
         //list containing all playlists
-        public ObservableCollection<Playlist> Playlists
+        public ObservableList<Playlist> Playlists
         {
             get { return this.playlists; }
             set
@@ -75,12 +73,12 @@ namespace TuneMusix.Data.DataModelOb
             get { return trackQueueIsShuffled; }
         }
         //list of all root folders
-        public ObservableCollection<Folder> RootFolders
+        public ObservableList<Folder> RootFolders
         {
             get { return this.rootFolders; }
         }
         //list of the tracks that are in the playing queue
-        public ObservableCollection<Track> TrackQueue
+        public ObservableList<Track> TrackQueue
         {
             get { return this.trackQueue; }
             set
@@ -115,7 +113,7 @@ namespace TuneMusix.Data.DataModelOb
             }
         }
 
-        public ObservableCollection<Album> Albumlist
+        public ObservableList<Album> Albumlist
         {
             get { return albumlist; }
             set
@@ -124,7 +122,7 @@ namespace TuneMusix.Data.DataModelOb
                 OnAlbumlistChanged();
             }
         }
-        public ObservableCollection<Interpret> Interpretlist
+        public ObservableList<Interpret> Interpretlist
         {
             get { return interpretlist; }
             set

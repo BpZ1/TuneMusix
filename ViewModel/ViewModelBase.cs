@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using TuneMusix.Data.DataModelOb;
+using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
@@ -31,7 +32,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        public ObservableCollection<Playlist> Playlists
+        public ObservableList<Playlist> Playlists
         {
             get { return dataModel.Playlists; }
             set
@@ -58,7 +59,7 @@ namespace TuneMusix.ViewModel
         public List<Track> TrackQueue
         {
             get { return dataModel.TrackQueue.ToList<Track>(); }
-            set { dataModel.TrackQueue = new ObservableCollection<Track>(value); }
+            set { dataModel.TrackQueue = new ObservableList<Track>(value); }
         }
         public int TrackQueueIndex
         {

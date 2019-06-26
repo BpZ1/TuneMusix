@@ -13,7 +13,7 @@
                                       Margin="10" HorizontalContentAlignment="Stretch">
                 <ListView.View>
                     <GridView AllowsColumnReorder="false"  ColumnHeaderToolTip="Track Information">
-                        <GridViewColumn DisplayMemberBinding= "{Binding Title}"  Header="Title" Width="300"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Title}"  Header="Title" Width="300"/>
                         <GridViewColumn DisplayMemberBinding="{Binding Interpret}" Header="Interpret" Width="300"/>
                     </GridView>
                 </ListView.View>

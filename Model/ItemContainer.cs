@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Util;
 
 namespace TuneMusix.Model
 {
@@ -11,12 +12,12 @@ namespace TuneMusix.Model
     public abstract class ItemContainer<T>
     {
         protected string name;
-        protected ObservableCollection<T> itemlist;
+        protected ObservableList<T> itemlist;
 
         public ItemContainer(string name)
         {
             this.name = name;
-            itemlist = new ObservableCollection<T>();
+            itemlist = new ObservableList<T>();
         }
 
         public delegate void ContainerChangedEventHandler(object source);
@@ -48,7 +49,7 @@ namespace TuneMusix.Model
             }
 
         }
-        public ObservableCollection<T> Itemlist
+        public ObservableList<T> Itemlist
         {
             get { return itemlist; }
         }

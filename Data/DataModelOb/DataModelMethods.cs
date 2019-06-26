@@ -7,7 +7,7 @@ using System.Linq;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers.MediaPlayer;
 using System.Diagnostics;
-using System.Collections.ObjectModel;
+using TuneMusix.Helpers.Util;
 
 namespace TuneMusix.Data.DataModelOb
 {
@@ -209,7 +209,6 @@ namespace TuneMusix.Data.DataModelOb
         public int Add(List<Track> trackList)
         {
             int trackCount = trackList.Count;
-            int added = 0;
             List<Track> uniqueTracks = new List<Track>();
             foreach (Track t in trackList)
             {
@@ -218,29 +217,28 @@ namespace TuneMusix.Data.DataModelOb
                     //Check if Track is already loaded
                     if (!Contains(t))
                     {
-                        TrackList.Add(t); //add track to model
                         uniqueTracks.Add(t);
-                        added++;
                     }
                 }               
             }
-            if (added > 0)
+            if (uniqueTracks.Count > 0)
             {
                 //Add tracks to database
                 database.Insert(uniqueTracks);
+                TrackList.AddRange(uniqueTracks);
                 OnDataModelChanged();
-                DialogService.NotificationMessage(added + " tracks have been added.");
+                DialogService.NotificationMessage(uniqueTracks.Count + " tracks have been added.");
             }
-            if(trackCount > added)
-                DialogService.NotificationMessage((trackCount - added) + "could not be added because they already exist.");
+            if(trackCount > uniqueTracks.Count)
+                DialogService.NotificationMessage((trackCount - uniqueTracks.Count) + "could not be added because they already exist.");
 
-            return added;
+            return uniqueTracks.Count;
         }
         /// <summary>
         /// Creates Album and Interpret container if they don't already exist.
         /// </summary>
         /// <param name="track"></param>
-        private void createContainer(Track track)
+        private void CreateContainer(Track track)
         {
             foreach(Album album in Albumlist)
             {
@@ -506,7 +504,7 @@ namespace TuneMusix.Data.DataModelOb
             //Shuffle the queue
             List<Track> shuffledQueue = TrackQueue.ToList<Track>();
             ListUtil.Shuffle<Track>(shuffledQueue);
-            trackQueue = new ObservableCollection<Track>(shuffledQueue);
+            trackQueue = new ObservableList<Track>(shuffledQueue);
             QueueIndex = trackQueue.IndexOf(currentTrack);
             OnTrackQueueChanged();
         }
@@ -525,7 +523,7 @@ namespace TuneMusix.Data.DataModelOb
                 orderby track.Index
                 select track;
             //Set queue to the sorted list
-            trackQueue = new ObservableCollection<Track>(sortedList);
+            trackQueue = new ObservableList<Track>(sortedList);
             QueueIndex = trackQueue.IndexOf(currentTrack);
             OnTrackQueueChanged(); 
         }

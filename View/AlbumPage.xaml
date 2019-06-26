@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:controls="clr-namespace:TuneMusix.View.Controls"
       xmlns:local="clr-namespace:TuneMusix.View"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
@@ -19,8 +20,19 @@
       FontFamily="{DynamicResource MaterialDesignFont}"  >
     <Page.Resources>
         <vm:AlbumPageViewModel x:Key="AlbumPageViewModel"/>
+        <DataTemplate x:Key="AlbumTemplate">
+            <DockPanel LastChildFill="True">
+                <controls:AlbumItem DockPanel.Dock="Left" Width="Auto"/>
+            </DockPanel>
+        </DataTemplate>
     </Page.Resources>
-    <Grid>
-        <TextBlock Text="TODO"></TextBlock>
-    </Grid>
+    <DockPanel>
+        <ListView ItemsSource="{Binding AlbumList, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource AlbumTemplate}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="4"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
+    </DockPanel>
 </Page>

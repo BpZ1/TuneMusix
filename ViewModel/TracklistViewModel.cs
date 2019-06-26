@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.Enums;
+using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
 using TuneMusix.View.Dialog;
 using TuneMusix.ViewModel.Dialog;
@@ -216,7 +217,7 @@ namespace TuneMusix.ViewModel
             {
                 CurrentTrack = track;
                 dataModel.CurrentPlaylist = null;
-                dataModel.TrackQueue = new ObservableCollection<Track>(new List<Track>(){track});
+                dataModel.TrackQueue = new ObservableList<Track>(new List<Track>(){track});
                 dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(track);
             }
         }

@@ -109,8 +109,5 @@
                 </Grid>
             </Border>
         </materialDesign:DialogHost>
-
-
-
     </DockPanel>
 </Page>

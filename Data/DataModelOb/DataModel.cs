@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using TuneMusix.Data.SQLDatabase;
-using TuneMusix.Helpers.MediaPlayer.Effects;
+using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
 
 namespace TuneMusix.Data.DataModelOb
@@ -20,13 +20,13 @@ namespace TuneMusix.Data.DataModelOb
         private Playlist currentPlaylist;
         private Track currentTrack;
         private bool trackQueueIsShuffled;
-        private ObservableCollection<Playlist> playlists;
-        private ObservableCollection<Track> tracklist;
-        private ObservableCollection<Folder> rootFolders;
-        private ObservableCollection<Album> albumlist;
-        private ObservableCollection<Interpret> interpretlist;
-        private ObservableCollection<Track> selectedTracks = new ObservableCollection<Track>();
-        private ObservableCollection<Track> trackQueue = new ObservableCollection<Track>();
+        private ObservableList<Playlist> playlists;
+        private ObservableList<Track> tracklist;
+        private ObservableList<Folder> rootFolders;
+        private ObservableList<Album> albumlist;
+        private ObservableList<Interpret> interpretlist;
+        private ObservableList<Track> selectedTracks = new ObservableList<Track>();
+        private ObservableList<Track> trackQueue = new ObservableList<Track>();
 
         #region constructor and instance accessor
 
@@ -57,11 +57,11 @@ namespace TuneMusix.Data.DataModelOb
         public DataModel(List<Track> tracklist, List<Playlist> playlists, List<Folder> rootfolders,
             List<Album> albumlist, List<Interpret> interpretlist)
         {
-            this.tracklist = new ObservableCollection<Track>(tracklist);
-            this.rootFolders = new ObservableCollection<Folder>(rootfolders);
-            this.playlists = new ObservableCollection<Playlist>(playlists);
-            this.albumlist = new ObservableCollection<Album>(albumlist);
-            this.interpretlist = new ObservableCollection<Interpret>(interpretlist);
+            this.tracklist = new ObservableList<Track>(tracklist);
+            this.rootFolders = new ObservableList<Folder>(rootfolders);
+            this.playlists = new ObservableList<Playlist>(playlists);
+            this.albumlist = new ObservableList<Album>(albumlist);
+            this.interpretlist = new ObservableList<Interpret>(interpretlist);
 
             QueueIndex = 0;
             this.tracklist.CollectionChanged += dataModelChanged;
@@ -82,33 +82,27 @@ namespace TuneMusix.Data.DataModelOb
         public event DataModelChangedEventHandler InterpretlistChanged;
         protected virtual void OnCurrentTrackChanged()
         {
-            if (CurrentTrackChanged != null)
-                CurrentTrackChanged(this, CurrentTrack);
+            CurrentTrackChanged?.Invoke(this, CurrentTrack);
         }
         protected virtual void OnCurrentPlaylistChanged()
         {
-            if (CurrentPlaylistChanged != null)
-                CurrentPlaylistChanged(this, CurrentPlaylist);
+            CurrentPlaylistChanged?.Invoke(this, CurrentPlaylist);
         }
         protected virtual void OnDataModelChanged()
         {
-            if (DataModelChanged != null)
-                DataModelChanged(this, TrackList);
+            DataModelChanged?.Invoke(this, TrackList);
         }
         protected virtual void OnTrackQueueChanged()
         {
-            if (TrackQueueChanged != null)
-                TrackQueueChanged(this, TrackQueue);
+            TrackQueueChanged?.Invoke(this, TrackQueue);
         }
         protected virtual void OnAlbumlistChanged()
         {
-            if (AlbumlistChanged != null)
-                AlbumlistChanged(this, albumlist);
+            AlbumlistChanged?.Invoke(this, albumlist);
         }
         protected virtual void OnInterpretlistChanged()
         {
-            if (InterpretlistChanged != null)
-                InterpretlistChanged(this, interpretlist);
+            InterpretlistChanged?.Invoke(this, interpretlist);
         }
 
 
