@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
@@ -17,17 +16,14 @@ namespace TuneMusix.ViewModel
 {
     class PlaylistViewModel : ViewModelBase, IDragSource,IDropTarget
     {
-
         public RelayCommand OpenDialog { get; set; }
         public RelayCommand SelectionChanged { get; set; }
         public RelayCommand SelectPlaylist { get; set; }
         public RelayCommand SetPlaylistCurrent { get; set; }
         public RelayCommand DeletePlaylist { get; set; }
         public RelayCommand RenamePlaylistDialog { get; set; }
-
         public ObservableCollection<Track> SelectedTracks { get; set; }
         private bool _isDragging;
-
         private Playlist _selectedPlaylist;
 
         //constructor

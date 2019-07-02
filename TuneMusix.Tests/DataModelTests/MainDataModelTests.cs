@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TuneMusix.Data;
 using TuneMusix.Data.DataModelOb;
+using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
 
 namespace TuneMusix.Tests.DataModelTests
@@ -64,7 +65,7 @@ namespace TuneMusix.Tests.DataModelTests
         [TestMethod]
         public void ShuffleTest()
         {
-            dataModel.TrackQueue = new ObservableCollection<Track>() { track1, track2, track3, track4, track5 };
+            dataModel.TrackQueue = new ObservableList<Track>() { track1, track2, track3, track4, track5 };
 
             dataModel.ShuffleTrackQueue();
 

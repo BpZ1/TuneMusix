@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
-using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Helpers.MediaPlayer.Effects;
@@ -16,13 +15,9 @@ namespace TuneMusix.ViewModel.Effects
     {
         public BaseEffect SelectedItem { get; set; }
         private Options _options = Options.Instance;
-        private DataModel _dataModel = DataModel.Instance;
         public RelayCommand RemoveEffect { get; set; }
 
-        public ObservableCollection<BaseEffect> Effectlist
-        {
-            get { return AudioControls.Instance.EffectQueue.Effectlist; }
-        }
+        public ObservableCollection<BaseEffect> Effectlist => AudioControls.Instance.EffectQueue.Effectlist;
 
         public EffectsViewModel()
         {

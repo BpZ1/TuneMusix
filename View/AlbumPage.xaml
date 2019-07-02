@@ -21,18 +21,15 @@
     <Page.Resources>
         <vm:AlbumPageViewModel x:Key="AlbumPageViewModel"/>
         <DataTemplate x:Key="AlbumTemplate">
-            <DockPanel LastChildFill="True">
-                <controls:AlbumItem DockPanel.Dock="Left" Width="Auto"/>
-            </DockPanel>
+            <controls:AlbumItem />
         </DataTemplate>
     </Page.Resources>
-    <DockPanel>
-        <ListView ItemsSource="{Binding AlbumList, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource AlbumTemplate}">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Columns="4"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-        </ListView>
-    </DockPanel>
+    <ListView ItemsSource="{Binding AlbumList, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource AlbumTemplate}" 
+                  Width="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}}">
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <UniformGrid Columns="5"/>
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+    </ListView>
 </Page>
