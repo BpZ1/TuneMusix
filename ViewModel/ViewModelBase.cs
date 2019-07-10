@@ -16,7 +16,7 @@ namespace TuneMusix.ViewModel
 
         protected DataModel _dataModel = DataModel.Instance;
 
-        public ObservableCollection<Track> TrackList
+        public ObservableList<Track> TrackList
         {
             get { return _dataModel.TrackList; }
         }
@@ -56,10 +56,10 @@ namespace TuneMusix.ViewModel
         {
             get { return _dataModel.RootFolders; }
         }
-        public List<Track> TrackQueue
+        public ObservableList<Track> TrackQueue
         {
-            get { return _dataModel.TrackQueue.ToList<Track>(); }
-            set { _dataModel.TrackQueue = new ObservableList<Track>(value); }
+            get { return _dataModel.TrackQueue; }
+            set { _dataModel.TrackQueue = value; }
         }
         public int TrackQueueIndex
         {

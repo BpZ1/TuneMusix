@@ -17,7 +17,7 @@ namespace TuneMusix.ViewModel
 {
     class TracklistViewModel : ViewModelBase
     {
-        public ObservableCollection<Track> SelectedTracks { get; set; }
+        public ObservableList<Track> SelectedTracks { get; set; }
         private string _searchText;
 
         private const string DESCENDING_SORTED_ICON = "ChevronDown";
@@ -38,7 +38,7 @@ namespace TuneMusix.ViewModel
         public RelayCommand AddTracksToQueue { get; set; }
         public RelayCommand OpenNewPlaylistDialog { get; set; }
 
-        private ObservableCollection<Track> _filteredTracks;      
+        private ObservableList<Track> _filteredTracks;      
 
         //Constructor
         public TracklistViewModel()
@@ -48,7 +48,7 @@ namespace TuneMusix.ViewModel
             _sortedColumn = HeaderType.Title;
             _searchService = new DelayIterativeSearch(TrackList.ToArray());
             _searchService.SearchTaskCompleted += OnSearchCompleted;
-            SelectedTracks = new ObservableCollection<Track>();
+            SelectedTracks = new ObservableList<Track>();
             _filteredTracks = TrackList;
             queueSearchTask();
 
@@ -116,10 +116,13 @@ namespace TuneMusix.ViewModel
             if (listView == null) return;
 
             SelectedTracks.Clear();
+            //Create a temporary list to allow mass insertion for performance savings.
+            List<Track> currentSelection = new List<Track>();
             foreach (Track track in listView.SelectedItems)
             {
-                SelectedTracks.Add(track);
+                currentSelection.Add(track);
             }
+            SelectedTracks.AddRange(currentSelection);
             RaisePropertyChanged("SelectedItemsText");
         }
         private void _playTrack(object argument)
@@ -128,7 +131,7 @@ namespace TuneMusix.ViewModel
             if (SelectedTracks.Count > 0)
             {
                 CurrentPlaylist = null;
-                TrackQueue = SelectedTracks.ToList<Track>();
+                TrackQueue = SelectedTracks;
             }
         }
         /// <summary>
@@ -427,7 +430,7 @@ namespace TuneMusix.ViewModel
                 }
             }
             if (sortedList != null)
-                _filteredTracks = new ObservableCollection<Track>(sortedList);
+                _filteredTracks = new ObservableList<Track>(sortedList);
         }
         #region searching methods
         /// <summary>
@@ -446,7 +449,7 @@ namespace TuneMusix.ViewModel
         }
         private void OnSearchCompleted(object result)
         {
-            _filteredTracks = new ObservableCollection<Track>((List<Track>)result);
+            _filteredTracks = new ObservableList<Track>((List<Track>)result);
             sortListView();
             RaisePropertyChanged("FilteredTracks");
             RaisePropertyChanged("TrackDurationSum");

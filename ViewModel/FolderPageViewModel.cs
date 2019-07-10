@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
@@ -76,7 +77,7 @@ namespace TuneMusix.ViewModel
         {
             if (SelectedTrack != null)
             {
-                List<Track> templist = new List<Track>();
+                ObservableList<Track> templist = new ObservableList<Track>();
                 templist.Add(SelectedTrack);
                 TrackQueue = templist;
             }                

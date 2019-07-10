@@ -211,6 +211,7 @@
     <Compile Include="Helpers\MediaPlayer\Effects\GargleEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\ReverbEffect.cs" />
     <Compile Include="Helpers\DelaySearch\DelayIterativeSearch.cs" />
+    <Compile Include="Helpers\Util\ObservableHashSet.cs" />
     <Compile Include="Helpers\Util\ObservableList.cs" />
     <Compile Include="Helpers\Util\TextFormatService.cs" />
     <Compile Include="Helpers\Util\TrackService.cs" />
