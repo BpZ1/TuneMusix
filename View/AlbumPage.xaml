@@ -6,6 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:controls="clr-namespace:TuneMusix.View.Controls"
       xmlns:local="clr-namespace:TuneMusix.View"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="AlbumView"
@@ -17,19 +18,69 @@
       TextOptions.TextFormattingMode="Ideal"
       TextOptions.TextRenderingMode="Auto"
       Background="{DynamicResource MaterialDesignPaper}"
-      FontFamily="{DynamicResource MaterialDesignFont}"  >
+      FontFamily="{DynamicResource MaterialDesignFont}">
     <Page.Resources>
         <vm:AlbumPageViewModel x:Key="AlbumPageViewModel"/>
-        <DataTemplate x:Key="AlbumTemplate">
-            <controls:AlbumItem />
-        </DataTemplate>
     </Page.Resources>
-    <ListView ItemsSource="{Binding AlbumList, UpdateSourceTrigger=PropertyChanged}" ItemTemplate="{StaticResource AlbumTemplate}" 
-                  Width="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}}">
-        <ListView.ItemsPanel>
-            <ItemsPanelTemplate>
-                <UniformGrid Columns="5"/>
-            </ItemsPanelTemplate>
-        </ListView.ItemsPanel>
-    </ListView>
+  <ListView Name="AlbumList" ItemsSource="{Binding AlbumList, UpdateSourceTrigger=PropertyChanged}">
+    <i:Interaction.Triggers>
+      <i:EventTrigger EventName="SelectionChanged">
+        <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AlbumList}"/>
+      </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <ListView.ContextMenu>
+      <ContextMenu>
+        <MenuItem Command="{Binding PlayAlbum}">
+          <MenuItem.Header>
+            <StackPanel Orientation="Horizontal">
+              <materialDesign:PackIcon  Kind="Play" Margin="0,0,5,0"/>
+              <TextBlock Text="Play"/>
+            </StackPanel>
+          </MenuItem.Header>
+        </MenuItem>
+        <MenuItem Command="{Binding AddAlbumToQueue}">
+          <MenuItem.Header>
+            <StackPanel Orientation="Horizontal">
+              <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
+              <TextBlock Text="Add to queue"/>
+            </StackPanel>
+          </MenuItem.Header>
+        </MenuItem>
+        <MenuItem ItemsSource="{Binding Playlists}">
+          <MenuItem.Header>
+            <StackPanel Orientation="Horizontal">
+              <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
+              <TextBlock Text="Add to playlist"/>
+            </StackPanel>
+          </MenuItem.Header>
+          <MenuItem.ItemContainerStyle>
+            <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+              <Setter Property="Header" Value="{Binding Name}"/>
+              <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=MenuItem}, Path=DataContext.AddToPlaylist}" />
+              <Setter Property="CommandParameter" Value="{Binding}" />
+            </Style>
+          </MenuItem.ItemContainerStyle>
+        </MenuItem>
+        <MenuItem Command="{Binding DeleteAlbum}">
+          <MenuItem.Header>
+            <StackPanel Orientation="Horizontal">
+              <materialDesign:PackIcon  Kind="Delete" Margin="0,0,5,0"/>
+              <TextBlock Text="Delete"/>
+            </StackPanel>
+          </MenuItem.Header>
+        </MenuItem>
+      </ContextMenu>
+    </ListView.ContextMenu>
+    <ListView.ItemTemplate>
+      <DataTemplate>
+        <controls:AlbumItem>
+          <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDoubleClick">
+              <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type ListView}}, Path=DataContext.PlayAlbum}"/>
+            </i:EventTrigger>
+          </i:Interaction.Triggers>
+        </controls:AlbumItem>
+      </DataTemplate>
+    </ListView.ItemTemplate>
+  </ListView>
 </Page>
