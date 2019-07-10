@@ -21,7 +21,7 @@ namespace TuneMusix.Model
 
         private bool _isValid; //Checked on update
         private bool _isCurrentTrack;
-        private int _index; //original position in the trackqueue
+
         public Interpret InterpretContainer { get; set; }
         public Album AlbumContainer { get; set; }
         public bool IsModified { get; set; }
@@ -66,10 +66,7 @@ namespace TuneMusix.Model
 
         protected virtual void OnTrackChanged()
         {
-            if(TrackChanged != null)
-            {
-                TrackChanged(this);
-            }
+            TrackChanged?.Invoke(this);
         }
 
 
@@ -266,11 +263,7 @@ namespace TuneMusix.Model
         /// <summary>
         /// Index used to save potition for unshuffling.
         /// </summary>
-        public int Index
-        {
-            get { return this._index; }
-            set { this._index = value; }
-        }
+        public int Index { get; set; }
         public bool IsCurrentTrack
         {
             get { return _isCurrentTrack; }
