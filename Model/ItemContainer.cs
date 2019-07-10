@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using TuneMusix.Helpers.Util;
 
@@ -61,6 +62,29 @@ namespace TuneMusix.Model
                 return true;
             }
             return false;
+        }
+        /// <summary>
+        /// Adds all (NON DUPLICATE) items to the container.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns>Number of items that were actually added.</returns>
+        public virtual int AddRange(IEnumerable<T> items)
+        {
+            List<T> originalItems = new List<T>();
+            foreach(T item in items)
+            {
+                if (_itemlist.Contains(item))
+                {
+                    originalItems.Add(item);
+                }
+            }
+            _itemlist.AddRange(originalItems);
+            if(originalItems.Count > 0)
+            {
+                RaisePropertyChanged("Itemlist");
+                OnContainerChanged();
+            }
+            return originalItems.Count;
         }
         public virtual bool Remove(T item)
         {

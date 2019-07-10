@@ -11,12 +11,14 @@ namespace TuneMusix.Model
     {
         private static readonly string _defaultAlbumCover = "Resources/defaultAlbumCover.png";
         public Album(string name) : base(name) { }
-        
+
         private BitmapSource _image;
         public int TrackCount
         {
             get { return _itemlist.Count; }
         }
+   
+
         public BitmapSource Image
         {
             get

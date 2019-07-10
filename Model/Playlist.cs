@@ -56,5 +56,15 @@ namespace TuneMusix.Model
             return false;
         }
 
+        public override int AddRange(IEnumerable<Track> items)
+        {
+            int added = base.AddRange(items);
+            if(added > 0)
+            {
+                IsModified = true;
+            }
+            return added;
+        }
+
     }
 }
