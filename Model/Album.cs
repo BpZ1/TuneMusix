@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Media.Imaging;
@@ -9,17 +10,65 @@ namespace TuneMusix.Model
 {
     public class Album : ItemContainer<Track>
     {
-        private static readonly string _defaultAlbumCover = "Resources/defaultAlbumCover.png";
+        private static readonly int coverArtResolution = 500;
+        public static BitmapSource DefaultCover { get; set; }
         public Album(string name) : base(name) { }
 
         private BitmapSource _image;
+        public string Duration { get; set; }
+        public string Interpret { get; set; }
+
         public int TrackCount
         {
             get { return _itemlist.Count; }
         }
-   
 
-        public BitmapSource Image
+        protected override void OnContainerChanged()
+        {
+            UpdateDuration();
+            UpdateInterpret();
+            base.OnContainerChanged();
+        }
+
+        private void UpdateDuration()
+        {
+            string duration = "00:00:00";
+            foreach (Track track in Itemlist)
+            {
+                duration = TrackService.AddDurations(duration, track.Duration);
+            }
+            this.Duration = duration;
+        }
+
+        private void UpdateInterpret()
+        {
+            string interpret = "";
+            //Check which non duplicate interprets are found
+            HashSet<string> uniqueNames = new HashSet<string>();
+            foreach(Track track in Itemlist)
+            {
+                if (uniqueNames.Add(track.Interpret.ToLower()))
+                {
+                    if (!interpret.Equals(""))
+                    {
+                        interpret += ", " + track.Interpret;
+                    }
+                    else
+                    {
+                        interpret += track.Interpret;
+                    }
+                }
+            }
+            //Set the interpret to unknown if none was found.
+            if (interpret.Equals(""))
+            {
+                interpret = "Unknown";
+            }
+
+            Interpret = interpret;
+        }
+
+        public BitmapSource CoverArt
         {
             get
             {
@@ -48,23 +97,25 @@ namespace TuneMusix.Model
                     if(file.Tag.Pictures != null && file.Tag.Pictures.Length > 0)
                     {
                         var bin = (byte[])(file.Tag.Pictures[0].Data.Data);
-                        BitmapImage bitmap;
+                        //Load the first image of the file
                         using (var memoryStream = new MemoryStream(bin))
                         {
                             try
                             {
-                                memoryStream.Seek(0, SeekOrigin.Begin);
-                                
-                                bitmap = new BitmapImage();
-                                bitmap.BeginInit();
-                                bitmap.StreamSource = memoryStream;
-                                bitmap.EndInit();
-                                _image = bitmap;
-                            }
-                            catch (NotSupportedException e)
+                                Image image = Image.FromStream(memoryStream).GetThumbnailImage
+                              (
+                              coverArtResolution,
+                              coverArtResolution,
+                              null,
+                              IntPtr.Zero
+                              );
+                                CoverArt = Converter.ConvertBitmap(new Bitmap(image));
+                            }catch(Exception e)
                             {
-                                Logger.Log("Could not read cover image of '" + file.Tag.Title + "'.");
-                            }                         
+                                Logger.Log("Could not load cover art of track '" + track.Title + "'");
+                                Logger.LogException(e);
+                            }
+                          
                         }
                         //If an image was found end loop
                         if (_image != null)
@@ -76,24 +127,23 @@ namespace TuneMusix.Model
                 //If no image was found load the default image.
                 if (_image == null)
                 {
-                    LoadDefaultAlbumCover();
+                    SetDefaultCover();
                 }
             }
         }
 
+        private void SetDefaultCover()
+        {
+            if (DefaultCover == null)
+                LoadDefaultAlbumCover();
+                
+            this.CoverArt = DefaultCover;
+        }
+
         private void LoadDefaultAlbumCover()
         {
-            FileStream fileStream = new FileStream(_defaultAlbumCover, FileMode.Open, FileAccess.Read);
-
-            var img = new BitmapImage();
-            img.BeginInit();
-            img.StreamSource = fileStream;
-            img.EndInit();
-            this._image = img;
-            if (_image == null)
-            {
-                throw new FileNotFoundException("Could not find file at '" + _defaultAlbumCover + "'.");
-            }
+            BitmapSource image = Converter.ConvertBitmap(Resources.Resource.defaultAlbumCover);
+            DefaultCover = image;
         }
     }
 }
