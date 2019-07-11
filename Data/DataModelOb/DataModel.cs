@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers.Util;
@@ -10,11 +9,8 @@ namespace TuneMusix.Data.DataModelOb
 {
     public partial class DataModel
     {
-
         private readonly Database _database = Database.Instance;
         private SQLLoader _loader;
-
-        public int QueueIndex { get; set; }
         public double CurrentPosition { get; set; }
         public Folder SelectedFolder { get; set; }
         private Playlist _currentPlaylist;
@@ -25,7 +21,7 @@ namespace TuneMusix.Data.DataModelOb
         private ObservableList<Folder> _rootFolders;
         private ObservableList<Album> _albumlist;
         private ObservableList<Interpret> _interpretlist;
-        private ObservableList<Track> _trackQueue = new ObservableList<Track>();
+        public TrackQueue TrackQueue;
 
         #region constructor and instance accessor
 
@@ -51,17 +47,16 @@ namespace TuneMusix.Data.DataModelOb
             }
         }
 
-
         public DataModel(List<Track> tracklist, List<Playlist> playlists, List<Folder> rootfolders,
             List<Album> albumlist, List<Interpret> interpretlist)
         {
+            TrackQueue = new TrackQueue();
             this._tracklist = new ObservableList<Track>(tracklist);
             this._rootFolders = new ObservableList<Folder>(rootfolders);
             this._playlists = new ObservableList<Playlist>(playlists);
             this._albumlist = new ObservableList<Album>(albumlist);
             this._interpretlist = new ObservableList<Interpret>(interpretlist);
 
-            QueueIndex = 0;
             this._tracklist.CollectionChanged += CallOnDataModelChanged;
             this._playlists.CollectionChanged += CallOnDataModelChanged;
             this._rootFolders.CollectionChanged += CallOnDataModelChanged;
@@ -72,16 +67,10 @@ namespace TuneMusix.Data.DataModelOb
 
         #region events
         public delegate void DataModelChangedEventHandler(object source,object changedObject);     
-        public event DataModelChangedEventHandler CurrentTrackChanged;
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
         public event DataModelChangedEventHandler DataModelChanged;
-        public event DataModelChangedEventHandler TrackQueueChanged;
         public event DataModelChangedEventHandler AlbumlistChanged;
         public event DataModelChangedEventHandler InterpretlistChanged;
-        protected virtual void OnCurrentTrackChanged()
-        {
-            CurrentTrackChanged?.Invoke(this, CurrentTrack);
-        }
         protected virtual void OnCurrentPlaylistChanged()
         {
             CurrentPlaylistChanged?.Invoke(this, CurrentPlaylist);
@@ -89,10 +78,6 @@ namespace TuneMusix.Data.DataModelOb
         protected virtual void OnDataModelChanged()
         {
             DataModelChanged?.Invoke(this, TrackList);
-        }
-        protected virtual void OnTrackQueueChanged()
-        {
-            TrackQueueChanged?.Invoke(this, TrackQueue);
         }
         protected virtual void OnAlbumlistChanged()
         {
@@ -102,8 +87,6 @@ namespace TuneMusix.Data.DataModelOb
         {
             InterpretlistChanged?.Invoke(this, _interpretlist);
         }
-
-
 
         #endregion
         /// <summary>

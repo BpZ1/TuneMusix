@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using TuneMusix.Data.DataModelOb;
@@ -24,11 +22,10 @@ namespace TuneMusix.ViewModel
 
         public Track CurrentTrack
         {
-            get { return _dataModel.CurrentTrack; }
+            get { return _dataModel.TrackQueue.CurrentTrack; }
             set
             {
-                _dataModel.CurrentTrack = value;
-                RaisePropertyChanged("CurrentTrack");
+                _dataModel.TrackQueue.CurrentTrack = value;
             }
         }
 
@@ -56,20 +53,18 @@ namespace TuneMusix.ViewModel
         {
             get { return _dataModel.RootFolders; }
         }
+
         public ObservableList<Track> TrackQueue
         {
-            get { return _dataModel.TrackQueue; }
-            set { _dataModel.TrackQueue = value; }
+            get { return _dataModel.TrackQueue.Queue; }
+            set { _dataModel.TrackQueue.Queue = value; }
         }
-        public int TrackQueueIndex
-        {
-            get { return _dataModel.QueueIndex; }
-            set { _dataModel.QueueIndex = value; }
-        }
+
+        #region Event Methods
         
         internal void RaisePropertyChanged(string prop)
         {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -94,5 +89,6 @@ namespace TuneMusix.ViewModel
                     : !CloseWindowFlag;
             }));
         }
+        #endregion
     }
 }

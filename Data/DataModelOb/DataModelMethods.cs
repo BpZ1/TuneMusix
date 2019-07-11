@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
-using System.Linq;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers.MediaPlayer;
-using System.Diagnostics;
-using TuneMusix.Helpers.Util;
 
 namespace TuneMusix.Data.DataModelOb
 {
@@ -26,7 +23,7 @@ namespace TuneMusix.Data.DataModelOb
         public void RemoveTrackFromQueue(Track track)
         {
             //If the track is currently playing
-            if(CurrentTrack == track)
+            if (TrackQueue.CurrentTrack == track)
                 AudioControls.Instance.PlayNext();
 
             TrackQueue.Remove(track);
@@ -37,21 +34,12 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="track"></param>
         public void Delete(List<Track> tracks)
         {
-            bool queueChanged = false;
 
             foreach (Track track in tracks)
             {
                 if (TrackQueue != null)
                 {
-                    //check if the track is in the current queue
-                    if (TrackQueue.Remove(track))
-                    {
-                        if(CurrentTrack == track)
-                        {
-                            CurrentTrack = null;
-                        }
-                        queueChanged = true;
-                    }
+                    TrackQueue.Remove(track);
                 }
                 TrackList.Remove(track);
                 foreach (Playlist playlist in Playlists)
@@ -62,9 +50,6 @@ namespace TuneMusix.Data.DataModelOb
                 track.Dispose();
                 OnDataModelChanged();
             }
-            //Notify that queue has changed
-            if (queueChanged)
-                OnTrackQueueChanged();
 
             _database.Delete(tracks);
         }
@@ -103,32 +88,25 @@ namespace TuneMusix.Data.DataModelOb
             }
             OnDataModelChanged();
         }
+
+        public void Delete(Album album)
+        {
+           
+        }
         /// <summary>
         /// Recursive method for deletion of tracks in folders.
         /// </summary>
         /// <param name="folder"></param>
         private void DeleteFolderTracks(Folder folder)
         {
-            bool queueChanged = false;
-
             foreach (Track track in folder.Itemlist)
             {
                 TrackList.Remove(track);
                 if(TrackQueue != null)
                 {
-                    //check if the track is in the current queue
-                    if (TrackQueue.Remove(track))
-                    {
-                        if (CurrentTrack == track)
-                        {
-                            CurrentTrack = null;
-                        }
-                        queueChanged = true;
-                    }
+                    TrackQueue.Remove(track);
                 }             
             }
-            if (queueChanged)
-                OnTrackQueueChanged();
 
             foreach (Folder f in folder.Folderlist)
             {
@@ -483,74 +461,6 @@ namespace TuneMusix.Data.DataModelOb
         {      
             _database.Insert(track);
             track.IsModified = false;
-        }
-
-        /// <summary>
-        /// Shuffles the current trackqueue. 
-        /// </summary>
-        public void ShuffleTrackQueue()
-        {
-            Debug.WriteLine("Shuffling");
-            _trackQueueIsShuffled = true; //has to be set before setting the queue to avoid loop.
-            //Set the index of the tracks, to remember the original position             
-            if (_trackQueue == null) return;
-            int index = 0;
-            foreach (Track track in _trackQueue)
-            {
-                track.Index = index;
-                index++;
-            }
-
-            //Shuffle the queue
-            List<Track> shuffledQueue = TrackQueue.ToList<Track>();
-            ListUtil.Shuffle<Track>(shuffledQueue);
-            _trackQueue = new ObservableList<Track>(shuffledQueue);
-            QueueIndex = _trackQueue.IndexOf(_currentTrack);
-            OnTrackQueueChanged();
-        }
-        /// <summary>
-        /// Unshuffles the tracks by returning them to their original order.
-        /// </summary>
-        public void UnShuffleTrackQueue()
-        {
-            Debug.WriteLine("Unshuffling");
-            _trackQueueIsShuffled = false;//has to be set before setting the queue to avoid loop.
-            //Get the current queue
-            List<Track> tempList = TrackQueue.ToList<Track>();
-            //sort the queue after index
-            IEnumerable<Track> sortedList =
-                from track in tempList
-                orderby track.Index
-                select track;
-            //Set queue to the sorted list
-            _trackQueue = new ObservableList<Track>(sortedList);
-            QueueIndex = _trackQueue.IndexOf(_currentTrack);
-            OnTrackQueueChanged(); 
-        }
-
-        public void ChangeTrackQueuePosition(Track track, int position)
-        {
-            if (track == null)
-                throw new ArgumentNullException();
-
-            if (TrackQueue.Contains(track))
-            {
-                int pos1 = TrackQueue.IndexOf(track);
-                Logger.Log("Moved track from queue position " + pos1 + " to position " + position + ".");
-                if (position == TrackQueue.Count)//If the new position is at the end of the list
-                {
-                    TrackQueue.Move(pos1, position - 1);
-                    if (track.IsCurrentTrack)
-                        QueueIndex = position - 1;
-                }
-                else
-                {
-                    TrackQueue.Move(pos1, position);
-                    if (track.IsCurrentTrack)
-                        QueueIndex = position;
-                }
-                OnTrackQueueChanged();
-            }           
-        }
+        }    
     }
 }

@@ -131,7 +131,7 @@ namespace TuneMusix.ViewModel
             if (SelectedTracks.Count > 0)
             {
                 CurrentPlaylist = null;
-                TrackQueue = SelectedTracks;
+                TrackQueue = new ObservableList<Track>(SelectedTracks);
             }
         }
         /// <summary>
@@ -220,8 +220,7 @@ namespace TuneMusix.ViewModel
             {
                 CurrentTrack = track;
                 _dataModel.CurrentPlaylist = null;
-                _dataModel.TrackQueue = new ObservableList<Track>(new List<Track>(){track});
-                _dataModel.QueueIndex = _dataModel.TrackQueue.IndexOf(track);
+                TrackQueue = new ObservableList<Track>(new List<Track>(){track});
             }
         }
         private void _addTracksToQueue(object argument)
@@ -232,8 +231,7 @@ namespace TuneMusix.ViewModel
                 CurrentPlaylist = null;
                 foreach(Track track in SelectedTracks)
                 {
-                    if(!_dataModel.TrackQueue.Contains(track))
-                        _dataModel.TrackQueue.Add(track);
+                     _dataModel.TrackQueue.Add(track);
                 }
                 RaisePropertyChanged("TrackQueue");
             }

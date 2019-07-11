@@ -216,6 +216,7 @@
     <Compile Include="Model\Album.cs" />
     <Compile Include="Model\Interpret.cs" />
     <Compile Include="Model\ItemContainer.cs" />
+    <Compile Include="Model\TrackQueue.cs" />
     <Compile Include="Resources\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

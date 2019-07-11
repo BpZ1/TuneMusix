@@ -30,6 +30,7 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         private AudioPlayerImpl _player;
         private DataModel _dataModel = DataModel.Instance;
+        private TrackQueue _trackQueue;
         private Options _options = Options.Instance;
         //list containing all loaded effects
 
@@ -37,10 +38,11 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         private AudioControls()
         {
+            _trackQueue = _dataModel.TrackQueue;
             _effectQueue = new EffectQueue();
             _effectQueue.QueueChanged += OnEffectsChanged;
             //Events
-            _dataModel.CurrentTrackChanged += OnCurrentTrackChanged;
+            _trackQueue.CurrentTrackChanged += OnCurrentTrackChanged;
             _options.BalanceChanged += OnBalanceChanged;
             _options.VolumeChanged += OnVolumeChanged;        
         }
@@ -87,26 +89,26 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         private void OnPlaybackFinished(object source)
         {
+            //If no tracks are to be repeated
             if (_options.RepeatTrack == 0)
             {
-                if (_dataModel.QueueIndex+1 < _dataModel.TrackQueue.Count)
+                if (_trackQueue.QueueIndex != _trackQueue.Queue.Count - 1)
                 {
                     PlayNext();
                 }
             }
-            if (_options.RepeatTrack == 1)
+            //If all tracks are to be repeated
+            else if (_options.RepeatTrack == 1)
             {
-                if (_dataModel.TrackQueue.Count == 1)
-                {
-                    PlayTrack(_dataModel.CurrentTrack);
-                }
                 PlayNext();
             }
-            if (_options.RepeatTrack == 2)
+            //If only one track is to be repeated
+            else if (_options.RepeatTrack == 2)
             {
-                PlayTrack(_dataModel.CurrentTrack);
+                PlayTrack(_trackQueue.CurrentTrack);
                 this.Play();
             }
+
         }
 
         /// <summary>
@@ -133,7 +135,6 @@ namespace TuneMusix.Helpers.MediaPlayer
                 if (_player != null)
                     _player.Dispose();
 
-                _dataModel.QueueIndex--; //Correct queue index because of removed element
                 //If the track was playing before it was set to null play next track
                 if (IsPlaying)
                 {
@@ -169,7 +170,7 @@ namespace TuneMusix.Helpers.MediaPlayer
             {
                 //setting the old position
                 TimeSpan lastPosition = CurrentPosition;
-                PlayTrack(_dataModel.CurrentTrack);
+                PlayTrack(_trackQueue.CurrentTrack);
                 CurrentPosition = lastPosition;
                 if (!IsPlaying)
                 {
@@ -187,20 +188,8 @@ namespace TuneMusix.Helpers.MediaPlayer
         /// the first track in the queue will be played.
         /// </summary>
         public void PlayNext()
-        {          
-            if(_dataModel.TrackQueue.Count > 0)
-            {
-                _dataModel.QueueIndex++;
-                if (_dataModel.QueueIndex + 1 <= _dataModel.TrackQueue.Count)
-                {
-                    _dataModel.CurrentTrack = _dataModel.TrackQueue[_dataModel.QueueIndex];
-                }
-                if (_dataModel.QueueIndex + 1 > _dataModel.TrackQueue.Count)
-                {
-                    _dataModel.QueueIndex = 0;
-                    _dataModel.CurrentTrack = _dataModel.TrackQueue[_dataModel.QueueIndex];
-                }
-            }          
+        {
+            _trackQueue.IncrementQueueIndex();
         }
         /// <summary>
         /// Plays the previous song in the track queue.
@@ -209,24 +198,12 @@ namespace TuneMusix.Helpers.MediaPlayer
         /// </summary>
         public void PlayPrevious()
         {
-            if(_dataModel.TrackQueue.Count > 0)
-            {
-                if (_dataModel.QueueIndex > 0)
-                {
-                    _dataModel.QueueIndex--;
-                    _dataModel.CurrentTrack = _dataModel.TrackQueue[_dataModel.QueueIndex];
-                }
-                else
-                {
-                    _dataModel.QueueIndex = _dataModel.TrackQueue.Count - 1;
-                    _dataModel.CurrentTrack = _dataModel.TrackQueue[_dataModel.QueueIndex];
-                }
-            }          
+            _trackQueue.DecrementQueueIndex();     
         }
         /// <summary>
         /// Private method called by PlayTrack to create a new player
         /// </summary>
-        private void createPlayer(Track track)
+        private void CreatePlayer(Track track)
         {
             if (track != null)
             {
@@ -267,7 +244,7 @@ namespace TuneMusix.Helpers.MediaPlayer
                 _player = null;
                 Debug.WriteLine("Player Disposed");
             }
-            createPlayer(track);
+            CreatePlayer(track);
             this.Play();
         }
 
@@ -461,7 +438,7 @@ namespace TuneMusix.Helpers.MediaPlayer
         public void ShuffleChanged()
         {
             DialogResult result = DialogResult.Yes;
-            if (_dataModel.TrackQueue.Count > 500)
+            if (_trackQueue.Queue.Count > 500)
             {
                 result = DialogService.OpenDialog("Shuffling that many tracks can take a long time. Continue?");
 
@@ -472,7 +449,7 @@ namespace TuneMusix.Helpers.MediaPlayer
                 if (!_options.Shuffle)
                 {
                     //Shuffle the list
-                    _dataModel.ShuffleTrackQueue();
+                    _trackQueue.Shuffle();
 
                     //Change state after shuffling to avoid shuffle loop in setter of TrackQueue
                     _options.Shuffle = true;
@@ -485,12 +462,16 @@ namespace TuneMusix.Helpers.MediaPlayer
                     Options.Instance.SaveValues();
 
                     //Unshuffle the list
-                    _dataModel.UnShuffleTrackQueue();
+                    _trackQueue.UnShuffle();
                 }
             }
         }
 
-
+        /// <summary>
+        /// Returns the FFT data array.
+        /// </summary>
+        /// <param name="fftDataBuffer"></param>
+        /// <returns>FFT data array.</returns>
         public bool GetFFTData(float[] fftDataBuffer)
         {
             if(_player != null && isPlaying)
@@ -501,16 +482,6 @@ namespace TuneMusix.Helpers.MediaPlayer
             {
                 return false;
             }
-        }
-
-        public int GetFFTFrequencyIndex(int frequency)
-        {
-            double maxFrequency = 22050d;
-            if (_player != null)
-            {
-                maxFrequency = _player.SampleRate / 2.0d;          
-            }
-            return (int)((frequency / maxFrequency) * 1024d);
         }
     }
 }

@@ -28,12 +28,12 @@
     <DockPanel LastChildFill="True"  Margin="10,10,0,0"  dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
                 Background="Transparent" AllowDrop="True" >
         <Label DockPanel.Dock="Top" x:Name="label" Content="{Binding CurrentPlaylistName}" FontSize="18.667" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <ListView Name="AllTrackList" ItemsSource="{Binding CurrentPlaylistTracks, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+        <ListView Name="PlaylistTrackList" ItemsSource="{Binding CurrentPlaylistTracks, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                   Margin="10" DockPanel.Dock="Top" MouseDoubleClick="ListView_MouseDoubleClick" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" AllowDrop="True"
                   dd:DragDrop.DropHandler="{Binding}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=AllTrackList}"/>
+                    <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding ElementName=PlaylistTrackList}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <ListView.ContextMenu>

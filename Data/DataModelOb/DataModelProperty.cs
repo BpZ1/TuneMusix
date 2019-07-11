@@ -1,7 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using TuneMusix.Helpers;
-using TuneMusix.Helpers.Util;
+﻿using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
 
 
@@ -11,38 +8,7 @@ namespace TuneMusix.Data.DataModelOb
     {
         //list containing all tracks
         public ObservableList<Track> TrackList => this._tracklist;
-        //currently loaded track
-        public Track CurrentTrack
-        {
-            get { return this._currentTrack; }
-            set
-            {
-                if(_currentTrack != null)
-                    this._currentTrack.IsCurrentTrack = false;
-
-                //Set new track to current track
-                if(value != null)
-                {
-                    value.IsCurrentTrack = true;
-                    //Update the track and check if it is valid.
-                    FileParser parser = new FileParser();
-                    if (parser.UpdateTrack(value))
-                    {
-                        value.IsValid = true;
-                    }
-                    else
-                    {
-                        value.IsValid = false;
-                    }
-                    if (value.IsModified)
-                    {
-                        SaveTrack(value);
-                    }
-                }
-                this._currentTrack = value;              
-                OnCurrentTrackChanged();
-            }
-        }
+ 
         //list containing all playlists
         public ObservableList<Playlist> Playlists
         {
@@ -62,7 +28,7 @@ namespace TuneMusix.Data.DataModelOb
                 this._currentPlaylist = value;
                 if(value != null)
                 {
-                    TrackQueue = value.Itemlist;
+                    TrackQueue.Queue = value.Itemlist;
                 }            
                 OnCurrentPlaylistChanged();
             }
@@ -76,41 +42,6 @@ namespace TuneMusix.Data.DataModelOb
         public ObservableList<Folder> RootFolders
         {
             get { return this._rootFolders; }
-        }
-        //list of the tracks that are in the playing queue
-        public ObservableList<Track> TrackQueue
-        {
-            get { return this._trackQueue; }
-            set
-            {
-                if(value != null)
-                {
-                    if(_trackQueue != null)
-                    {
-                        if (!ListUtil.UnorderedEqual<Track>(value, _trackQueue))
-                            _trackQueueIsShuffled = false;
-                    }
-                       
-                    //Shuffle track queue if shuffle is activated
-                    if (Options.Instance.Shuffle && !_trackQueueIsShuffled)
-                        ShuffleTrackQueue();
-
-                    if (value.Count > 0)
-                    {
-                        CurrentTrack = value.First();
-                    }
-                    else
-                    {
-                        CurrentTrack = null;
-                    }
-                }
-                 
-                this._trackQueue = value;
-                this.QueueIndex = 0;
-               
-               
-                OnTrackQueueChanged();
-            }
         }
 
         public ObservableList<Album> Albumlist

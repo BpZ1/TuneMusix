@@ -9,31 +9,28 @@ using TuneMusix.Helpers;
 using TuneMusix.Model;
 using System;
 using System.Windows;
-using System.Collections.ObjectModel;
 
 namespace TuneMusix.ViewModel
 {
 
     class TrackQueueViewModel : ViewModelBase, INotifyPropertyChanged, IDragSource, IDropTarget
     {
-        private Track _selectedTrack;
+        public Track SelectedTrack { get; set; }
 
         //Relaycommands
         public RelayCommand PlayTrack { get; set; }
-        public RelayCommand DeleteSelectedTracks { get; set; }
+        public RelayCommand RemoveSelectedTrack { get; set; }
         public RelayCommand AddToPlaylist { get; set; }
         public RelayCommand TrackDoubleClicked { get; set; }
-        public RelayCommand SelectionChanged { get; set; }
 
         public TrackQueueViewModel()
         {
-            DeleteSelectedTracks = new RelayCommand(_deleteSelectedTrack);
+            RemoveSelectedTrack = new RelayCommand(_removeSelectedTrack);
             AddToPlaylist = new RelayCommand(_addToPlaylist);
-            SelectionChanged = new RelayCommand(_selectionChanged);
             PlayTrack = new RelayCommand(_playTrack);
             TrackDoubleClicked = new RelayCommand(_trackDoubleClicked);
        
-            _dataModel.TrackQueueChanged += OnTrackQueueChanged;
+            _dataModel.TrackQueue.TrackQueueChanged += OnTrackQueueChanged;
             Options.Instance.ColorChanged += OnColorChanged;
         }
 
@@ -44,24 +41,12 @@ namespace TuneMusix.ViewModel
         /// <param name="argument"></param>
         private void _playTrack(object argument)
         {
-            if(_selectedTrack != null)
+            if(SelectedTrack != null)
             {
-                _dataModel.QueueIndex = _dataModel.TrackQueue.IndexOf(_selectedTrack);
-                _dataModel.CurrentTrack = _selectedTrack;
+                CurrentTrack = SelectedTrack;
             }     
         }
-        /// <summary>
-        /// Changes the selected track.
-        /// </summary>
-        /// <param name="argument"></param>
-        private void _selectionChanged(object argument)
-        {
-            var listView = argument as ListView;
-            if(listView != null)
-            {
-                _selectedTrack = listView.SelectedItem as Track;
-            }
-        }
+
         private void _trackDoubleClicked(object argument)
         {
             if (argument == null)
@@ -71,7 +56,6 @@ namespace TuneMusix.ViewModel
             if (track != null)
             {
                 CurrentTrack = track;
-                _dataModel.QueueIndex = _dataModel.TrackQueue.IndexOf(track);
             }
         }
         /// <summary>
@@ -84,25 +68,21 @@ namespace TuneMusix.ViewModel
 
             if (selectedPlaylist != null)
             {
-                _dataModel.AddTracksToPlaylist(new List<Track>() { _selectedTrack }, selectedPlaylist);
+                _dataModel.AddTracksToPlaylist(new List<Track>() { SelectedTrack }, selectedPlaylist);
             }
         }
 
-        private void _deleteSelectedTrack(object argument)
+        private void _removeSelectedTrack(object argument)
         {
-            if(_selectedTrack != null)
+            if(SelectedTrack != null)
             {
-                _dataModel.RemoveTrackFromQueue(_selectedTrack);
+                _dataModel.RemoveTrackFromQueue(SelectedTrack);
                 RaisePropertyChanged("CurrentTrackQueue");
             }
         }
         #endregion
 
         #region properties
-        public ObservableCollection<Track> CurrentTrackQueue
-        {
-            get { return _dataModel.TrackQueue; }
-        }
         /// <summary>
         /// Brush that sets the highlight color of the current track in the trackqueue.
         /// </summary>
@@ -123,13 +103,13 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if(CurrentTrackQueue.Count > 0)
+                if(TrackQueue.Count > 0)
                 {
-                    return "Track Queue [" + CurrentTrackQueue.Count + "]" + " - "  + combinedTrackTimes();
+                    return "Track Queue [" + TrackQueue.Count + "]" + " - "  + combinedTrackTimes();
                 }
                 else
                 {
-                    return "Track Queue [" + CurrentTrackQueue.Count + "]";
+                    return "Track Queue [" + TrackQueue.Count + "]";
                 }
             }
         }
@@ -140,13 +120,13 @@ namespace TuneMusix.ViewModel
         }
         private void OnTrackQueueChanged(object source, object argument)
         {
-            RaisePropertyChanged("CurrentTrackQueue");
+            RaisePropertyChanged("TrackQueue");
             RaisePropertyChanged("HeaderText");
         }
         private String combinedTrackTimes()
         {
             String result = "";
-            foreach(Track track in CurrentTrackQueue)
+            foreach(Track track in TrackQueue)
             {
                 result = TrackService.AddDurations(result, track.Duration);
             }
@@ -201,8 +181,8 @@ namespace TuneMusix.ViewModel
             Track track = dropInfo.Data as Track;
             if (track != null && dropInfo != null)
             {
-                ListUtil.ChangeItemPosition(CurrentTrackQueue, track, dropInfo.UnfilteredInsertIndex);
-                RaisePropertyChanged("CurrentTrackQueue");
+                ListUtil.ChangeItemPosition(TrackQueue, track, dropInfo.UnfilteredInsertIndex);
+                RaisePropertyChanged("TrackQueue");
             }
         }
         #endregion

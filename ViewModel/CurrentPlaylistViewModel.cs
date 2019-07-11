@@ -16,7 +16,6 @@ namespace TuneMusix.ViewModel
     {
       
         public RelayCommand SelectionChanged { get; set; }
-        public RelayCommand SetPlaylistIndex { get; set; }
         public RelayCommand RemoveFromPlaylist { get; set; }
         public RelayCommand PlayTrack { get; set; }
         public RelayCommand TrackDoubleClicked { get; set; }
@@ -29,7 +28,6 @@ namespace TuneMusix.ViewModel
 
             SelectedTracks = new ObservableCollection<Track>();
             SelectionChanged = new RelayCommand(_selectionChanged);
-            SetPlaylistIndex = new RelayCommand(_indexChanged);
             PlayTrack = new RelayCommand(_playTrack);
             RemoveFromPlaylist = new RelayCommand(_removeFromCurrentPlaylist);
             TrackDoubleClicked = new RelayCommand(_trackDoubleClicked);
@@ -61,7 +59,6 @@ namespace TuneMusix.ViewModel
             {
                 Track selected = SelectedTracks.ToList<Track>().First();
                 CurrentTrack = selected;
-                _dataModel.QueueIndex = _dataModel.TrackQueue.IndexOf(selected);
             }
         }
 
@@ -70,19 +67,6 @@ namespace TuneMusix.ViewModel
             if (SelectedTracks != null && _dataModel.CurrentPlaylist != null)
             {
                 _dataModel.RemoveTracksFromPlaylist(SelectedTracks.ToList<Track>(), _dataModel.CurrentPlaylist);
-            }
-        }
-        /// <summary>
-        /// This method changes the index of the trackqueue to the currently selected track.
-        /// </summary>
-        /// <param name="argument"></param>
-        private void _indexChanged(object argument)
-        {
-            if (SelectedTracks != null && CurrentPlaylist != null)
-            {
-                var track = SelectedTracks.First();
-                _dataModel.CurrentTrack = track;
-                _dataModel.QueueIndex = _dataModel.CurrentPlaylist.Itemlist.IndexOf(track);
             }
         }
 
@@ -95,7 +79,6 @@ namespace TuneMusix.ViewModel
             if(track != null)
             {
                 CurrentTrack = track;
-                _dataModel.QueueIndex = _dataModel.TrackQueue.IndexOf(track);
             }
         }
         #endregion

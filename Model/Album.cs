@@ -91,7 +91,7 @@ namespace TuneMusix.Model
             if (Itemlist.Count > 0)
             {
                 //Loop through all tracks of the album until an image is found
-                foreach(Track track in Itemlist)
+                foreach (Track track in Itemlist)
                 {
                     TagLib.File file = TagLib.File.Create(track.SourceURL);
                     if(file.Tag.Pictures != null && file.Tag.Pictures.Length > 0)

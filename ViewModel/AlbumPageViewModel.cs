@@ -54,7 +54,7 @@ namespace TuneMusix.ViewModel
                     trackList.AddRange(album.Itemlist);
                 }
                 CurrentPlaylist = null;
-                DataModel.Instance.TrackQueue = new ObservableList<Track>(trackList);
+                TrackQueue = new ObservableList<Track>(trackList);
             }
         }
 
