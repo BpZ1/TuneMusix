@@ -3,7 +3,6 @@ using MaterialDesignThemes.Wpf;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Media;
 using TuneMusix.Helpers;
 using TuneMusix.Model;

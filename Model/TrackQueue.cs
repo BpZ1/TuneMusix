@@ -74,8 +74,16 @@ namespace TuneMusix.Model
                     {
                         CurrentTrack = null;
                     }
-                }            
-                this.QueueIndex = 0;
+                } 
+                if(!(value.Count == 0))
+                {
+                    this.QueueIndex = 0;
+                }
+                else
+                {
+                    _queueIndex = 0;
+                    SetCurrentTrack(null);
+                }
 
                 OnTrackQueueChanged(this, Queue);
             }

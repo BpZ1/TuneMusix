@@ -8,38 +8,77 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:TuneMusix.View.Controls"
              mc:Ignorable="d">
-  <Grid>
-    <Grid.ColumnDefinitions>
-      <!-- Cover art -->
-            <ColumnDefinition Width="200" Name="ImageColumn"/>
-      <!-- Info -->
-            <ColumnDefinition Width="Auto"/>
-    </Grid.ColumnDefinitions>
-    <Grid.RowDefinitions>
-            <RowDefinition Height="200"/>
-    </Grid.RowDefinitions>
-        <Grid x:Name="InfoGrid" Grid.Column="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="200"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-            <TextBlock Text="Name:" Grid.Column="0" Grid.Row="1"/>
-            <TextBlock Text="{Binding Name}" Grid.Column="1" Grid.Row="1"/>
-            <TextBlock Text="Tracks:" Grid.Column="0" Grid.Row="2"/>
-            <TextBlock Text="{Binding TrackCount}" Grid.Column="1" Grid.Row="2"/>
-            <TextBlock Text="Interpret:" Grid.Column="2" Grid.Row="1"/>
-            <TextBlock Text="{Binding Interpret}" Grid.Column="3" Grid.Row="1"/>
-            <TextBlock Text="Duration:" Grid.Column="2" Grid.Row="2"/>
-            <TextBlock Text="{Binding Duration}" Grid.Column="3" Grid.Row="2"/>
-        </Grid>
-        <Image Source="{Binding CoverArt}" Grid.Column="0" Grid.Row="0" Width="200"/>
-    </Grid>   
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Expander Grid.Column="2">
+        <Expander.Header>
+            <Grid>
+                <!-- Info grid -->
+                <Grid.ColumnDefinitions>
+                    <!-- Cover art -->
+                    <ColumnDefinition Width="200" Name="ImageColumn"/>
+                    <!-- Info -->
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="200"/>
+                </Grid.RowDefinitions>
+                <!-- Play button -->
+                <Button x:Name="PlayButton" Grid.Column="0" Panel.ZIndex="1000" Height="200" Width="200" Background="Transparent">
+                    <materialDesign:PackIcon x:Name="PlayIcon" Kind="Play" Height="200" Width="200"
+                                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Expander}},
+                        Path=IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </Button>
+                <!-- Covert Art -->
+                <Image Source="{Binding CoverArt}" Grid.Column="0" Grid.Row="0" Width="200"/>
+                <!-- Info Grid -->
+                <Grid x:Name="InfoGrid" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Column="0" Grid.Row="1" Margin="3">
+                        <TextBlock Text="Name:" FontSize="20" />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="1" Margin="3">
+                        <TextBlock Text="{Binding Name}" FontSize="20" />
+                    </Border>
+                    <Border Grid.Column="0"  Grid.Row="2" Margin="3">
+                        <TextBlock Text="Tracks:" FontSize="20" />
+                    </Border>
+                    <Border Grid.Column="1" Grid.Row="2" Margin="3">
+                        <TextBlock Text="{Binding TrackCount}" FontSize="20" />
+                    </Border>
+                    <Border Grid.Column="2" Grid.Row="1" Margin="3">
+                        <TextBlock Text="Interpret:" FontSize="20" />
+                    </Border>
+                    <Border Grid.Column="3" Grid.Row="1" Margin="3">
+                        <TextBlock Text="{Binding Interpret}" FontSize="20" />
+                    </Border>
+                    <Border Grid.Column="2" Grid.Row="2" Margin="3">
+                        <TextBlock Text="Duration:" FontSize="20" />
+                    </Border>
+                    <Border Grid.Column="3" Grid.Row="2" Margin="3">
+                        <TextBlock Text="{Binding Duration}" FontSize="20" />
+                    </Border>
+                </Grid>
+            </Grid>
+        </Expander.Header>
+        <ListView ItemsSource="{Binding Itemlist}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}"></TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Expander>
 </UserControl>
