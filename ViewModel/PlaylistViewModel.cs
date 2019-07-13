@@ -18,7 +18,6 @@ namespace TuneMusix.ViewModel
     {
         public RelayCommand OpenDialog { get; set; }
         public RelayCommand SelectionChanged { get; set; }
-        public RelayCommand SelectPlaylist { get; set; }
         public RelayCommand SetPlaylistCurrent { get; set; }
         public RelayCommand DeletePlaylist { get; set; }
         public RelayCommand RenamePlaylistDialog { get; set; }
@@ -32,8 +31,8 @@ namespace TuneMusix.ViewModel
             IsDragging = false;
 
             SelectedTracks = new ObservableCollection<Track>();
+            SelectionChanged = new RelayCommand(_selectionChanged);
             OpenDialog = new RelayCommand(_newPlaylistDialog);                    
-            SelectPlaylist = new RelayCommand(_selectPlaylist);
             SetPlaylistCurrent = new RelayCommand(_setPlaylistCurrent);
             DeletePlaylist = new RelayCommand(_deletePlaylist);
             RenamePlaylistDialog = new RelayCommand(_renamePlaylistDialog);
@@ -46,8 +45,12 @@ namespace TuneMusix.ViewModel
         /// sets the given playlist object as selected playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private void _selectPlaylist(object argument)
+        private void _selectionChanged(object argument)
         {
+            if(argument is Playlist)
+            {
+                Console.WriteLine("Works");
+            }
             var playlist = argument as Playlist;
             if(playlist != null)
             {
@@ -237,6 +240,7 @@ namespace TuneMusix.ViewModel
         /// </summary>
         public void DragCancelled()
         {
+            Console.WriteLine("Drag cancelled");
             IsDragging = false;
         }
 
@@ -252,6 +256,7 @@ namespace TuneMusix.ViewModel
         public void Dropped(IDropInfo dropInfo)
         {
             IsDragging = false;
+            Console.WriteLine("Dropped");
         }
         /// <summary>
         /// Method gets repeatedly called when an item is dragged over the element that is a

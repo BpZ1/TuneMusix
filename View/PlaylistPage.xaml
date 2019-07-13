@@ -42,10 +42,15 @@
                     <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" >
                         <TextBlock Margin="16" Text="Playlists" FontWeight="DemiBold" FontSize="18" FontFamily="Segoe UI"/>
                     </materialDesign:ColorZone>
-                    <ListView ScrollViewer.CanContentScroll="False" Grid.Row="1" ItemsSource="{Binding Playlists,UpdateSourceTrigger=PropertyChanged}" 
+                    <ListView Name="PlaylistListView" ScrollViewer.CanContentScroll="False" Grid.Row="1" ItemsSource="{Binding Playlists,UpdateSourceTrigger=PropertyChanged}" 
                              dd:DragDrop.IsDragSource="True" dd:DragDrop.DragAdornerTemplate="{StaticResource PlaylistDragAdorner}"
                              dd:DragDrop.IsDropTarget="True" dd:DragDrop.DragHandler="{Binding}" 
                              SelectionMode="Single" SelectedItem="{Binding SelectedPlaylist}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding Path=SelectedItem, ElementName=PlaylistListView}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding SetPlaylistCurrent}">
