@@ -19,6 +19,7 @@ namespace TuneMusix.ViewModel
         public RelayCommand OpenDialog { get; set; }
         public RelayCommand SelectionChanged { get; set; }
         public RelayCommand SetPlaylistCurrent { get; set; }
+        public RelayCommand PlayPlaylistButton { get; set; }
         public RelayCommand DeletePlaylist { get; set; }
         public RelayCommand RenamePlaylistDialog { get; set; }
         public ObservableCollection<Track> SelectedTracks { get; set; }
@@ -34,6 +35,7 @@ namespace TuneMusix.ViewModel
             SelectionChanged = new RelayCommand(_selectionChanged);
             OpenDialog = new RelayCommand(_newPlaylistDialog);                    
             SetPlaylistCurrent = new RelayCommand(_setPlaylistCurrent);
+            PlayPlaylistButton = new RelayCommand(_playPlaylistButton);
             DeletePlaylist = new RelayCommand(_deletePlaylist);
             RenamePlaylistDialog = new RelayCommand(_renamePlaylistDialog);
 
@@ -41,16 +43,21 @@ namespace TuneMusix.ViewModel
             _dataModel.DataModelChanged += OnDataModelChanged;
             
         }
+
+        private void _playPlaylistButton(object argument)
+        {
+            Playlist playlist = argument as Playlist;
+            if(playlist != null)
+            {
+                CurrentPlaylist = playlist;
+            }
+        }
         /// <summary>
         /// sets the given playlist object as selected playlist.
         /// </summary>
         /// <param name="argument"></param>
         private void _selectionChanged(object argument)
         {
-            if(argument is Playlist)
-            {
-                Console.WriteLine("Works");
-            }
             var playlist = argument as Playlist;
             if(playlist != null)
             {
@@ -240,7 +247,6 @@ namespace TuneMusix.ViewModel
         /// </summary>
         public void DragCancelled()
         {
-            Console.WriteLine("Drag cancelled");
             IsDragging = false;
         }
 
@@ -256,7 +262,6 @@ namespace TuneMusix.ViewModel
         public void Dropped(IDropInfo dropInfo)
         {
             IsDragging = false;
-            Console.WriteLine("Dropped");
         }
         /// <summary>
         /// Method gets repeatedly called when an item is dragged over the element that is a
