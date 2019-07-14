@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Controls;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
@@ -16,6 +15,7 @@ namespace TuneMusix.ViewModel
         public List<Album> SelectedAlbums { get; set; }
         public RelayCommand SelectionChanged { get; set; }
         public RelayCommand PlayAlbum { get; set; }
+        public RelayCommand PlayButtonPushed { get; set; }
         public RelayCommand DeleteAlbum { get; set; }
         public RelayCommand AddToPlaylist { get; set; }
         public RelayCommand AddAlbumToQueue { get; set; }
@@ -25,6 +25,7 @@ namespace TuneMusix.ViewModel
             SelectedAlbums = new List<Album>();
             SelectionChanged = new RelayCommand(_selectionChanged);
             PlayAlbum = new RelayCommand(_playAlbum);
+            PlayButtonPushed = new RelayCommand(_playButtonPushed);
             DeleteAlbum = new RelayCommand(_deleteAlbum);
             AddToPlaylist = new RelayCommand(_addToPlaylist);
             AddAlbumToQueue = new RelayCommand(_addAlbumToQueue);
@@ -42,6 +43,15 @@ namespace TuneMusix.ViewModel
                 currentSelection.Add(track);
             }
             SelectedAlbums.AddRange(currentSelection);
+        }
+
+        private void _playButtonPushed(object argument)
+        {
+            Album album = argument as Album;
+            if(album != null)
+            {
+                TrackQueue = new ObservableList<Track>(album.Itemlist);
+            }
         }
 
         private void _playAlbum(object argument)
@@ -67,8 +77,10 @@ namespace TuneMusix.ViewModel
 
                 if(result == DialogResult.Yes)
                 {
-                    //TODO Implement
-                    //DataModel.Instance.Delete(SelectedAlbum);
+                    foreach(Album album in SelectedAlbums)
+                    {
+                        DataModel.Instance.Delete(album);
+                    }
                 }
             }
             else
