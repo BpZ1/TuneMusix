@@ -8,6 +8,11 @@ using TuneMusix.Helpers.Util;
 
 namespace TuneMusix.Model
 {
+    /// <summary>
+    /// The track queue holds the current track that is about to be played and the queued tracks that 
+    /// are played after that. If the current track or the queue is changed, it will automatically notify the 
+    /// audio controller and relay the changes.
+    /// </summary>
     public class TrackQueue
     {
         private ObservableList<Track> _queue;
@@ -20,7 +25,7 @@ namespace TuneMusix.Model
             _queue = new ObservableList<Track>();
         }
 
-
+        #region Events
         public delegate void TrackQueueEventHandler(object sender, object argument);
         public event TrackQueueEventHandler TrackQueueChanged;
         public event TrackQueueEventHandler CurrentTrackChanged;
@@ -34,7 +39,9 @@ namespace TuneMusix.Model
         {
             CurrentTrackChanged?.Invoke(sender, argument);
         }
+        #endregion
 
+        #region Properties
         public int QueueIndex
         {
             get { return _queueIndex; }
@@ -88,7 +95,20 @@ namespace TuneMusix.Model
                 OnTrackQueueChanged(this, Queue);
             }
         }
-
+        /// <summary>
+        /// The track that is currently being played.
+        /// </summary>
+        public Track CurrentTrack
+        {
+            get { return this._currentTrack; }
+            set
+            {
+                SetCurrentTrack(value);
+                //Update the index
+                _queueIndex = _queue.IndexOf(value);
+            }
+        }
+        #endregion
         /// <summary>
         /// Increases the queue index by 1.
         /// If the index is at the end of the queue it will be set to 0 again.
@@ -167,17 +187,7 @@ namespace TuneMusix.Model
             _currentTrack = track;
             OnCurrentTrackChanged(this, _currentTrack);
         }
-
-        public Track CurrentTrack
-        {
-            get { return this._currentTrack; }
-            set
-            {
-                SetCurrentTrack(value);
-                //Update the index
-                _queueIndex = _queue.IndexOf(value);
-            }
-        }
+        
 
         private void SaveTrack(Track track)
         {
@@ -228,7 +238,11 @@ namespace TuneMusix.Model
             _queueIndex = _queue.IndexOf(_currentTrack);
             OnTrackQueueChanged(this, Queue);
         }
-
+        /// <summary>
+        /// Changes the queue position of a track.
+        /// </summary>
+        /// <param name="track">Track of which the position is to be changed.</param>
+        /// <param name="position">New position</param>
         public void ChangeTrackQueuePosition(Track track, int position)
         {
             if (track == null)
@@ -285,7 +299,11 @@ namespace TuneMusix.Model
             }
             return false;
         }
-
+        /// <summary>
+        /// Removes multiple tracks from the queue.
+        /// </summary>
+        /// <param name="tracks">Tracks to be removed</param>
+        /// <returns>Number of tracks that were actually removed.</returns>
         public int RemoveRange(IEnumerable<Track> tracks)
         {
             int counter = 0;
@@ -300,7 +318,11 @@ namespace TuneMusix.Model
             }
             return counter;
         }
-
+        /// <summary>
+        /// Adds a track to the queue.
+        /// </summary>
+        /// <param name="track">Track to be added to the queue.</param>
+        /// <returns>True if the track was added, false if the track was already in the queue</returns>
         public bool Add(Track track)
         {
             if (!Queue.Contains(track))
@@ -311,7 +333,11 @@ namespace TuneMusix.Model
             }
             return false;
         }
-
+        /// <summary>
+        /// Adds multiple tracks to the queue.
+        /// </summary>
+        /// <param name="tracks">Tracks to be added to the queue.</param>
+        /// <returns>Number of tracks that were actually added to the queue.</returns>
         public int Add(IEnumerable<Track> tracks)
         {
             int counter = 0;
