@@ -29,15 +29,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        public ObservableList<Playlist> Playlists
-        {
-            get { return _dataModel.Playlists; }
-            set
-            {
-                _dataModel.Playlists = value;
-                RaisePropertyChanged("Playlists");
-            }
-        }
+        public ObservableList<Playlist> Playlists => _dataModel.Playlists;
 
         public Playlist CurrentPlaylist
         {

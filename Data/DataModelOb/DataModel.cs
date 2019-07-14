@@ -14,14 +14,12 @@ namespace TuneMusix.Data.DataModelOb
         public double CurrentPosition { get; set; }
         public Folder SelectedFolder { get; set; }
         private Playlist _currentPlaylist;
-        private Track _currentTrack;
-        private bool _trackQueueIsShuffled;
-        private ObservableList<Playlist> _playlists;
-        private ObservableList<Track> _tracklist;
-        private ObservableList<Folder> _rootFolders;
-        private ObservableList<Album> _albumlist;
-        private ObservableList<Interpret> _interpretlist;
-        public TrackQueue TrackQueue;
+        private readonly ObservableList<Playlist> _playlists;
+        private readonly ObservableList<Track> _tracklist;
+        private readonly ObservableList<Folder> _rootFolders;
+        private readonly ObservableList<Album> _albumlist;
+        private readonly ObservableList<Interpret> _interpretlist;
+        public readonly TrackQueue TrackQueue;
 
         #region constructor and instance accessor
 

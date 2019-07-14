@@ -184,6 +184,7 @@
     <Compile Include="Data\SQLDatabase\DatabaseSelection.cs" />
     <Compile Include="Helpers\Container\OptionsIDContainer.cs" />
     <Compile Include="Helpers\Exceptions\PlayerException.cs" />
+    <Compile Include="Helpers\Util\BindingProxy.cs" />
     <Compile Include="Helpers\Util\Converter.cs" />
     <Compile Include="Helpers\Dialogs\DialogResult.cs" />
     <Compile Include="Helpers\Dialogs\DialogService.cs" />

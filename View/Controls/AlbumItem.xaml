@@ -4,11 +4,60 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:util="clr-namespace:TuneMusix.Helpers.Util"
              mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <util:BindingProxy Data="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Page}, Path=DataContext}" x:Key="dcProxy"/>
     </UserControl.Resources>
     <Expander Grid.Column="2">
+        <Expander.ContextMenu>
+            <ContextMenu>
+                <MenuItem Command="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuPlayAlbum}"
+                          CommandParameter="{Binding}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="Play" Margin="0,0,5,0"/>
+                            <TextBlock Text="Play"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem Command="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuAddAlbumToQueue}"
+                          CommandParameter="{Binding}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
+                            <TextBlock Text="Add to queue"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+                <MenuItem ItemsSource="{Binding Playlists}" Command="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuAddAlbumToPlaylist}"
+                          CommandParameter="{Binding}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
+                            <TextBlock Text="Add to playlist"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Command" Value="{Binding Source={StaticResource dcProxy}, Path=Data.AddToPlaylist}" />
+                            <Setter Property="CommandParameter" Value="{Binding}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Command="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuDeleteAlbum}">
+                    <MenuItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="Delete" Margin="0,0,5,0"/>
+                            <TextBlock Text="Delete"/>
+                        </StackPanel>
+                    </MenuItem.Header>
+                </MenuItem>
+            </ContextMenu>
+        </Expander.ContextMenu>
         <Expander.Header>
             <Grid>
                 <!-- Info grid -->
@@ -40,12 +89,19 @@
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
+                        <!--Spacing column-->
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <!--Spacing column-->
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <!--Spacing column-->
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <!-- Album name info-->
                     <TextBlock Text="Name:" FontSize="20" Grid.Row="0" Grid.Column="0"/>
-                    <TextBlock Text="{Binding Name}" FontSize="20" Grid.Row="0" Grid.Column="2"/>
+                    <TextBlock Text="{Binding Name}" FontSize="20" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="5"/>
                     <!-- Album interpret info-->
                     <TextBlock Text="Interpret:" FontSize="20" Grid.Row="1" Grid.Column="0"/>
                     <TextBlock Text="{Binding Interpret}" FontSize="20" Grid.Row="1" Grid.Column="2"/>
@@ -55,15 +111,76 @@
                     <!-- Album duration info-->
                     <TextBlock Text="Duration:" FontSize="20" Grid.Row="3" Grid.Column="0"/>
                     <TextBlock Text="{Binding Duration}" FontSize="20" Grid.Row="3" Grid.Column="2"/>
+                    <!-- Album year info-->
+                    <TextBlock Text="Year:" FontSize="20" Grid.Row="1" Grid.Column="4"/>
+                    <TextBlock Text="{Binding Year}" FontSize="20" Grid.Row="1" Grid.Column="6"/>
+                    <!-- Album genre info-->
+                    <TextBlock Text="Genre:" FontSize="20" Grid.Row="2" Grid.Column="4"/>
+                    <TextBlock Text="{Binding Genre}" FontSize="20" Grid.Row="2" Grid.Column="6"/>
                 </Grid>
             </Grid>
         </Expander.Header>
-        <ListView ItemsSource="{Binding Itemlist}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Title}"></TextBlock>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+        <!--Album Track list-->
+        <ListView Name="AlbumTrackList" ItemsSource="{Binding Itemlist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  Margin="10">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Page}, Path=DataContext.TrackSelectionChanged}"
+                                           CommandParameter="{Binding ElementName=AlbumTrackList}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Page}, Path=DataContext.AlbumTrackDoubleClick}"
+                                           CommandParameter="{Binding ElementName=AlbumTrackList}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuPlayTracks}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="Play" Margin="0,0,5,0"/>
+                                <TextBlock Text="Play"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                    <MenuItem ItemsSource="{Binding Source={StaticResource dcProxy}, Path=Data.Playlists}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
+                                <TextBlock Text="Add to playlist"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem">
+                                <Setter Property="Header" Value="{Binding Name}"/>
+                                <Setter Property="Command" Value="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuAddTracksToPlaylist}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+                    <MenuItem Command="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuDeleteTracks}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon  Kind="PlaylistMinus" Margin="0,0,5,0"/>
+                                <TextBlock Text="Remove"/>
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
+                    <GridViewColumn Header="Titel" DisplayMemberBinding="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" Width="300"/>
+                    <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Path=Duration, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                    <GridViewColumn Header="Rating" Width="250" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <materialDesign:RatingBar Value="{Binding Rating,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Foreground="Gold" Margin="0" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
         </ListView>
     </Expander>
 </UserControl>

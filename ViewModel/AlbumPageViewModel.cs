@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
@@ -11,38 +12,97 @@ namespace TuneMusix.ViewModel
     class AlbumPageViewModel : ViewModelBase
     {
         public ObservableList<Album> AlbumList => DataModel.Instance.Albumlist;
-
-        public List<Album> SelectedAlbums { get; set; }
-        public RelayCommand SelectionChanged { get; set; }
-        public RelayCommand PlayAlbum { get; set; }
+        public ObservableList<Album> SelectedAlbums { get; set; } = new ObservableList<Album>();
+        public ObservableList<Track> SelectedTracks { get; set; } = new ObservableList<Track>();
+        public RelayCommand AlbumSelectionChanged { get; set; }
+        public RelayCommand TrackSelectionChanged { get; set; }
         public RelayCommand PlayButtonPushed { get; set; }
-        public RelayCommand DeleteAlbum { get; set; }
-        public RelayCommand AddToPlaylist { get; set; }
-        public RelayCommand AddAlbumToQueue { get; set; }
+        public RelayCommand ContextMenuPlayAlbum { get; set; }
+        public RelayCommand ContextMenuDeleteAlbum { get; set; }
+        public RelayCommand ContextMenuAddAlbumToPlaylist { get; set; }
+        public RelayCommand ContextMenuAddAlbumToQueue { get; set; }
+        public RelayCommand ContextMenuPlayTracks { get; set; }
+        public RelayCommand ContextMenuAddTracksToPlaylist { get; set; }
+        public RelayCommand ContextMenuDeleteTracks { get; set; }
+        public RelayCommand AlbumTrackDoubleClick { get; set; }
 
         public AlbumPageViewModel()
         {
-            SelectedAlbums = new List<Album>();
-            SelectionChanged = new RelayCommand(_selectionChanged);
-            PlayAlbum = new RelayCommand(_playAlbum);
+            AlbumSelectionChanged = new RelayCommand(_albumSelectionChanged);
+            TrackSelectionChanged = new RelayCommand(_trackSelectionChanged);
+            ContextMenuPlayAlbum = new RelayCommand(_contextMenuPlayAlbum);
             PlayButtonPushed = new RelayCommand(_playButtonPushed);
-            DeleteAlbum = new RelayCommand(_deleteAlbum);
-            AddToPlaylist = new RelayCommand(_addToPlaylist);
-            AddAlbumToQueue = new RelayCommand(_addAlbumToQueue);
+            ContextMenuDeleteAlbum = new RelayCommand(_contextMenuDeleteAlbum);
+            ContextMenuAddAlbumToPlaylist = new RelayCommand(_contextMenuAddAlbumToPlaylist);
+            ContextMenuAddAlbumToQueue = new RelayCommand(_contextMenuAddAlbumToQueue);
+            ContextMenuPlayTracks = new RelayCommand(_contextMenuPlayTracks);
+            ContextMenuAddTracksToPlaylist = new RelayCommand(_contextMenuAddTracksToPlaylist);
+            ContextMenuDeleteTracks = new RelayCommand(_contextMenuDeleteTracks);
+            AlbumTrackDoubleClick = new RelayCommand(_albumTrackDoubleClick);
+        }
+        private void _albumTrackDoubleClick(object argument)
+        {
+            Console.WriteLine(argument.GetType().ToString());
         }
 
-        private void _selectionChanged(object argument)
+        private void _contextMenuDeleteTracks(object argument)
+        {
+            if (SelectedTracks.Count > 0)
+            {
+                DialogResult result = DialogService.OpenDialog("Are you sure you want to delete "
+                    + SelectedTracks.Count + " tracks?");
+
+                if (result == DialogResult.Yes)
+                {
+                    List<Track> toBeDeletedTracks = new List<Track>(SelectedTracks);
+
+                    _dataModel.Delete(toBeDeletedTracks);
+                }
+            }
+            else
+            {
+                DialogService.NotificationMessage("No track was selected.");
+            }
+        }
+        private void _contextMenuAddTracksToPlaylist(object argument)
+        {
+            Playlist selectedPlaylist = argument as Playlist;
+            if (selectedPlaylist == null) return;
+
+            selectedPlaylist.AddRange(SelectedTracks);
+        }
+
+        private void _contextMenuPlayTracks(object argument)
+        {
+            TrackQueue = SelectedTracks;
+        }
+
+        private void _albumSelectionChanged(object argument)
         {
             var listView = argument as ListView;
             if (listView == null) return;
 
             SelectedAlbums.Clear();
             List<Album> currentSelection = new List<Album>();
-            foreach (Album track in listView.SelectedItems)
+            foreach (Album album in listView.SelectedItems)
+            {
+                currentSelection.Add(album);
+            }
+            SelectedAlbums.AddRange(currentSelection);
+        }
+
+        private void _trackSelectionChanged(object argument)
+        {
+            var listView = argument as ListView;
+            if (listView == null) return;
+
+            SelectedTracks.Clear();
+            List<Track> currentSelection = new List<Track>();
+            foreach (Track track in listView.SelectedItems)
             {
                 currentSelection.Add(track);
             }
-            SelectedAlbums.AddRange(currentSelection);
+            SelectedTracks.AddRange(currentSelection);
         }
 
         private void _playButtonPushed(object argument)
@@ -54,7 +114,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void _playAlbum(object argument)
+        private void _contextMenuPlayAlbum(object argument)
         {
             if(SelectedAlbums.Count > 0)
             {
@@ -68,7 +128,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void _deleteAlbum(object argument)
+        private void _contextMenuDeleteAlbum(object argument)
         {
             if(SelectedAlbums.Count > 0)
             {
@@ -77,7 +137,9 @@ namespace TuneMusix.ViewModel
 
                 if(result == DialogResult.Yes)
                 {
-                    foreach(Album album in SelectedAlbums)
+                    List<Album> toBeDeletedAlbums = new List<Album>(SelectedAlbums);
+
+                    foreach(Album album in toBeDeletedAlbums)
                     {
                         DataModel.Instance.Delete(album);
                     }
@@ -89,7 +151,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void _addToPlaylist(object argument)
+        private void _contextMenuAddAlbumToPlaylist(object argument)
         {
             Playlist selectedPlaylist = argument as Playlist;
             if(selectedPlaylist != null)
@@ -109,7 +171,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void _addAlbumToQueue(object argument)
+        private void _contextMenuAddAlbumToQueue(object argument)
         {
             if (SelectedAlbums.Count > 0)
             {

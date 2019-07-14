@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -17,6 +16,8 @@ namespace TuneMusix.Model
         private BitmapSource _image;
         public string Duration { get; set; }
         public string Interpret { get; set; }
+        public string Genre { get; set; }
+        public int Year { get; set; }
 
         public int TrackCount
         {
@@ -27,7 +28,41 @@ namespace TuneMusix.Model
         {
             UpdateDuration();
             UpdateInterpret();
+            UpdateGenre();
+            if (Itemlist.Count > 0)
+            {
+                Track track = Itemlist[0];
+                Year = track.Year;
+            }
             base.OnContainerChanged();
+        }
+
+        private void UpdateGenre()
+        {
+            string genre = "";
+            //Check which non duplicate genres are found
+            HashSet<string> uniqueNames = new HashSet<string>();
+            foreach (Track track in Itemlist)
+            {
+                if (uniqueNames.Add(track.Interpret.ToLower()))
+                {
+                    if (!genre.Equals(""))
+                    {
+                        genre += ", " + track.Genre;
+                    }
+                    else
+                    {
+                        genre += track.Genre;
+                    }
+                }
+            }
+            //Set the interpret to unknown if none was found.
+            if (genre.Equals(""))
+            {
+                genre = "Unknown";
+            }
+
+            Interpret = genre;
         }
 
         private void UpdateDuration()

@@ -91,7 +91,9 @@ namespace TuneMusix.Data.DataModelOb
 
         public void Delete(Album album)
         {
-           
+            Albumlist.Remove(album);
+            TrackList.RemoveRange(album.Itemlist);
+            TrackQueue.RemoveRange(album.Itemlist);
         }
         /// <summary>
         /// Recursive method for deletion of tracks in folders.
