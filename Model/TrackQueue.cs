@@ -142,8 +142,12 @@ namespace TuneMusix.Model
 
             if (track != null)
             {
+                //If the queue does not contain the track the track will be set as the only item of the queue.
                 if (!_queue.Contains(track))
-                    throw new Exception("The track is not contained in the queue.");
+                {
+                    _queue.Clear();
+                    _queue.Add(track);
+                }
 
                 track.IsCurrentTrack = true;
                 //Update the track and check if it is valid.
@@ -282,7 +286,7 @@ namespace TuneMusix.Model
             return false;
         }
 
-        public int Remove(IEnumerable<Track> tracks)
+        public int RemoveRange(IEnumerable<Track> tracks)
         {
             int counter = 0;
             foreach(Track track in tracks)
