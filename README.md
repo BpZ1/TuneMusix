@@ -1,28 +1,28 @@
 # TuneMusix
 Audio and playlist manager
 
-#Current Features
+# Current Features
 
 ## Track List
-<img src="Docs/tracklist.png" width="400"/>
+<img src="Docs/tracklist.png" width="600"/>
 
 ## Playlists
-<img src="Docs/playlists.png" width="400"/>
+<img src="Docs/playlists.png" width="600"/>
 
 ## Album View
-<img src="Docs/albumlist.png" width="400"/>
+<img src="Docs/albumlist.png" width="600"/>
 
 ## Track Queue 
-<img src="Docs/albumandqueue.png" width="400"/>
+<img src="Docs/albumandqueue.png" width="600"/>
 
 ## Visual Customization
-<img src="Docs/visualcustomization.png" width="400"/>
+<img src="Docs/visualcustomization.png" width="600"/>
 
 ## Effects
-<img src="Docs/effectqueue.png" width="400"/>
+<img src="Docs/effectqueue.png" width="600"/>
 
 ## Audio Visualizer
-<img src="Docs/visualizer.png" width="400"/>
+<img src="Docs/visualizer.png" width="600"/>
 
 
 # License
