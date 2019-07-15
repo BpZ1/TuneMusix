@@ -445,7 +445,7 @@ namespace TuneMusix.ViewModel
             _searchText = "";
             queueSearchTask();  
         }
-        private void OnSearchCompleted(object result)
+        private void OnSearchCompleted(object sender, object result)
         {
             _filteredTracks = new ObservableList<Track>((List<Track>)result);
             sortListView();

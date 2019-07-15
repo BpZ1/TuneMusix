@@ -14,13 +14,13 @@ namespace TuneMusix.ViewModel
     /// </summary>
     class CurrentPlaylistViewModel : ViewModelBase, IDropTarget, IDragSource
     {
-      
+        public ObservableCollection<Track> SelectedTracks { get; set; }
         public RelayCommand SelectionChanged { get; set; }
         public RelayCommand RemoveFromPlaylist { get; set; }
         public RelayCommand PlayTrack { get; set; }
         public RelayCommand TrackDoubleClicked { get; set; }
         public RelayCommand OnItemDrop { get; set; }
-        public ObservableCollection<Track> SelectedTracks { get; set; }
+        public RelayCommand AddToPlaylist { get; set; }
 
 
         public CurrentPlaylistViewModel()
@@ -31,10 +31,18 @@ namespace TuneMusix.ViewModel
             PlayTrack = new RelayCommand(_playTrack);
             RemoveFromPlaylist = new RelayCommand(_removeFromCurrentPlaylist);
             TrackDoubleClicked = new RelayCommand(_trackDoubleClicked);
+            AddToPlaylist = new RelayCommand(_addToPlaylist);
 
             _dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
         }
         #region commands
+        private void _addToPlaylist(object argument)
+        {
+            Playlist playlist = argument as Playlist;
+            if (playlist == null) return;
+
+            playlist.AddRange(SelectedTracks);
+        }
         /// <summary>
         /// Changes the selection of the playlist.
         /// </summary>

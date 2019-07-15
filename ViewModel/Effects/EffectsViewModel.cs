@@ -41,7 +41,7 @@ namespace TuneMusix.ViewModel.Effects
 
         internal void RaisePropertyChanged(string prop)
         {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
         #region notifyInterface
         public event PropertyChangedEventHandler PropertyChanged;
@@ -120,7 +120,6 @@ namespace TuneMusix.ViewModel.Effects
                 AudioControls.Instance.
                     EffectQueue.ChangeEffectListPosition(effect, dropInfo.UnfilteredInsertIndex);
             }
-            _options.Modified = true;
         }
         #endregion
     }

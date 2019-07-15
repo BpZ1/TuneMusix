@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
-using TuneMusix.Data.DataModelOb;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
+using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Model;
 using TuneMusix.View.OptionsWindow;
 using TuneMusix.ViewModel.Dialog;
@@ -12,8 +12,6 @@ namespace TuneMusix.ViewModel
     class OptionsOverviewViewModel
     {
         private Options _options = Options.Instance;
-        private DataModel _dataModel = DataModel.Instance;
-
 
         public RelayCommand ExitOptionsWindow { get; set; }
         public RelayCommand Apply { get; set; }
@@ -25,6 +23,7 @@ namespace TuneMusix.ViewModel
             Apply = new RelayCommand(_apply);
             Cancel = new RelayCommand(_cancel);
         }
+
         /// <summary>
         /// Saves the options
         /// </summary>

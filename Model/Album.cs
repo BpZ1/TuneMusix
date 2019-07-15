@@ -9,20 +9,86 @@ namespace TuneMusix.Model
 {
     public class Album : ItemContainer<Track>
     {
-        private static readonly int coverArtResolution = 500;
-        public static BitmapSource DefaultCover { get; set; }
-        public Album(string name) : base(name) { }
-
+        private static readonly int _coverArtResolution = 500;
+        private static BitmapSource _defaultCover;
         private BitmapSource _image;
-        public string Duration { get; set; }
-        public string Interpret { get; set; }
-        public string Genre { get; set; }
-        public int Year { get; set; }
+        private string _interpret;
+        private string _duration;
+        private string _genre;
+        private int _year;
+
+        public Album(string name) : base(name) { }
+        #region Properties
+        public static BitmapSource DefaultCover
+        {
+            get
+            {
+                if(_defaultCover == null)
+                    _defaultCover = Converter.ConvertBitmap(Resources.Resource.defaultAlbumCover);
+
+                return _defaultCover;
+            }
+        }
+        public string Duration
+        {
+            get { return _duration; }
+            set
+            {
+                _duration = value;
+                RaisePropertyChanged("Duration");
+            }
+        }
+        public string Interpret
+        {
+            get { return _interpret; }
+            set
+            {
+                _interpret = value;
+                RaisePropertyChanged("Interpret");
+            }
+        }
+        public string Genre
+        {
+            get { return _genre; }
+            set
+            {
+                _genre = value;
+                RaisePropertyChanged("Genre");
+            }
+        }
+
+        public int Year
+        {
+            get { return _year; }
+            set
+            {
+                _year = value;
+                RaisePropertyChanged("Year");
+            }
+        }
 
         public int TrackCount
         {
             get { return _itemlist.Count; }
         }
+
+        public BitmapSource CoverArt
+        {
+            get
+            {
+                if(_image == null)
+                {
+                    _image = LoadImage();
+                }
+                return _image;
+            }
+            set
+            {
+                _image = value;
+                RaisePropertyChanged("CoverArt");
+            }
+        }
+        #endregion
 
         protected override void OnContainerChanged()
         {
@@ -99,37 +165,19 @@ namespace TuneMusix.Model
             {
                 interpret = "Unknown";
             }
-
             Interpret = interpret;
         }
 
-        public BitmapSource CoverArt
+        private BitmapSource LoadImage()
         {
-            get
-            {
-                if(_image == null)
-                {
-                    LoadCoverArt();
-                }
-                return _image;
-            }
-            set { _image = value; }
-        }
-
-        /// <summary>
-        /// Loads the cover art for the first found cover art.
-        /// If no art is found on any of the tracks the default will be used.
-        /// </summary>
-        /// <returns></returns>
-        public void LoadCoverArt()
-        {
+            BitmapSource result = null;
             if (Itemlist.Count > 0)
             {
                 //Loop through all tracks of the album until an image is found
                 foreach (Track track in Itemlist)
                 {
                     TagLib.File file = TagLib.File.Create(track.SourceURL);
-                    if(file.Tag.Pictures != null && file.Tag.Pictures.Length > 0)
+                    if (file.Tag.Pictures != null && file.Tag.Pictures.Length > 0)
                     {
                         var bin = (byte[])(file.Tag.Pictures[0].Data.Data);
                         //Load the first image of the file
@@ -139,46 +187,34 @@ namespace TuneMusix.Model
                             {
                                 Image image = Image.FromStream(memoryStream).GetThumbnailImage
                               (
-                              coverArtResolution,
-                              coverArtResolution,
+                              _coverArtResolution,
+                              _coverArtResolution,
                               null,
                               IntPtr.Zero
                               );
-                                CoverArt = Converter.ConvertBitmap(new Bitmap(image));
-                            }catch(Exception e)
+                                result = Converter.ConvertBitmap(new Bitmap(image));
+                            }
+                            catch (Exception e)
                             {
                                 Logger.Log("Could not load cover art of track '" + track.Title + "'");
                                 Logger.LogException(e);
                             }
-                          
+
                         }
                         //If an image was found end loop
-                        if (_image != null)
+                        if (result != null)
                         {
                             break;
                         }
                     }
                 }
                 //If no image was found load the default image.
-                if (_image == null)
+                if (result == null)
                 {
-                    SetDefaultCover();
+                    result = Album.DefaultCover;
                 }
             }
-        }
-
-        private void SetDefaultCover()
-        {
-            if (DefaultCover == null)
-                LoadDefaultAlbumCover();
-                
-            this.CoverArt = DefaultCover;
-        }
-
-        private void LoadDefaultAlbumCover()
-        {
-            BitmapSource image = Converter.ConvertBitmap(Resources.Resource.defaultAlbumCover);
-            DefaultCover = image;
+            return result;
         }
     }
 }

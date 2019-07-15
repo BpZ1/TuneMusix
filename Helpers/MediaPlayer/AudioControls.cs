@@ -149,12 +149,12 @@ namespace TuneMusix.Helpers.MediaPlayer
             }
         }
 
-        private void OnVolumeChanged(object volume)
+        private void OnVolumeChanged(object sender, object volume)
         {
             if (_player != null) _player.Volume = GetFloatVolume((int)volume);
         }
 
-        private void OnBalanceChanged(object balance)
+        private void OnBalanceChanged(object sender, object balance)
         {
             var Balance = (int)balance;
             this.Balance = Balance;

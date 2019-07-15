@@ -3,12 +3,53 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 
 namespace TuneMusix.ViewModel.Effects
 {
     class AddEffectsViewModel : IDragSource
     {
+        private AudioControls _audioControls = AudioControls.Instance;
+        public RelayCommand AddEffect { get; set; }
+
+        public AddEffectsViewModel()
+        {
+            AddEffect = new RelayCommand(_addEffect);
+        }
+
+        private void _addEffect(object argument)
+        {
+            string effectType = argument as string;
+            switch (effectType)
+            {
+                case "Distortion":
+                    _audioControls.EffectQueue.ChangeEffectListPosition(new DistortionEffect(), _audioControls.EffectQueue.Count);
+                    break;
+                case "Chorus":
+                    _audioControls.EffectQueue.ChangeEffectListPosition(new ChorusEffect(), _audioControls.EffectQueue.Count);
+                    break;
+                case "Compressor":
+                    _audioControls.EffectQueue.ChangeEffectListPosition(new CompressorEffect(), _audioControls.EffectQueue.Count);
+                    break;
+                case "Echo":
+                    _audioControls.EffectQueue.ChangeEffectListPosition(new EchoEffect(), _audioControls.EffectQueue.Count);
+                    break;
+                case "Equalizer":
+                    _audioControls.EffectQueue.ChangeEffectListPosition(new EqualizerEffect(), _audioControls.EffectQueue.Count);
+                    break;
+                case "Gargle":
+                    _audioControls.EffectQueue.ChangeEffectListPosition(new GargleEffect(), _audioControls.EffectQueue.Count);
+                    break;
+                case "Reverb":
+                    _audioControls.EffectQueue.ChangeEffectListPosition(new ReverbEffect(), _audioControls.EffectQueue.Count);
+                    break;
+                case "Flanger":
+                    _audioControls.EffectQueue.ChangeEffectListPosition(new FlangerEffect(), _audioControls.EffectQueue.Count);
+                    break;
+
+            }          
+        }
 
         bool IDragSource.CanStartDrag(IDragInfo dragInfo)
         {

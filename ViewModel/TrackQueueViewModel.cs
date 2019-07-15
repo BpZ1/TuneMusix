@@ -113,7 +113,7 @@ namespace TuneMusix.ViewModel
             }
         }
         #endregion
-        private void OnColorChanged()
+        private void OnColorChanged(object sender)
         {
             RaisePropertyChanged("HighlightColor");
         }

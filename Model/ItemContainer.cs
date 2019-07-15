@@ -19,8 +19,7 @@ namespace TuneMusix.Model
             _itemlist = new ObservableList<T>();
         }
 
-        public delegate void ContainerChangedEventHandler(object source);
-
+        public delegate void ContainerChangedEventHandler(object sender);
         public event ContainerChangedEventHandler ContainerChanged;
 
         protected virtual void OnContainerChanged()
@@ -73,7 +72,7 @@ namespace TuneMusix.Model
             List<T> originalItems = new List<T>();
             foreach(T item in items)
             {
-                if (_itemlist.Contains(item))
+                if (!_itemlist.Contains(item))
                 {
                     originalItems.Add(item);
                 }

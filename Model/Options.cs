@@ -39,43 +39,23 @@ namespace TuneMusix.Model
 
         private Options() { }
 
-        private bool _modified;
         private bool _effectsActive = true;
         private bool _loggerActive;
         private int _volume;      
-        private bool _shuffle;
         private bool _askConfirmation = true;
         private bool _muted = false;
         //Values of the swatch for the database.
         private bool _theme;
-        private int _primaryColorIndex;
-        private int _accentColorIndex;
 
-        public delegate void OptionsChangedEventHandler();
+        public delegate void OptionsChangedEventHandler(object sender);
 
         public event OptionsChangedEventHandler ColorChanged;
 
         protected virtual void OnColorChanged()
         {
-            ColorChanged?.Invoke();
+            ColorChanged?.Invoke(this);
         }
 
-
-        public bool Modified
-        {
-            private get { return _modified; }
-            set { _modified = value; }
-        }
-
-        //tracks in queue will shuffle randomly when set to true.
-        public bool Shuffle
-        {
-            get { return _shuffle; }
-            set
-            {
-                _shuffle = value;
-            }
-        }
         // 0 = No repeat
         // 1 = Repeat all
         // 2 = repeat track
@@ -98,7 +78,7 @@ namespace TuneMusix.Model
         }
 
         #region events
-        public delegate void OptionsEventHandler(object changed);
+        public delegate void OptionsEventHandler(object sender,object changed);
 
         public event OptionsEventHandler VolumeChanged;
         public event OptionsEventHandler RepeatChanged;
@@ -108,27 +88,30 @@ namespace TuneMusix.Model
 
         protected virtual void OnVolumeChanged()
         {
-            VolumeChanged?.Invoke(this.Volume);
+            VolumeChanged?.Invoke(this, this.Volume);
         }
         protected virtual void OnRepeatChanged()
         {
-            RepeatChanged?.Invoke(this.RepeatTrack);
+            RepeatChanged?.Invoke(this, this.RepeatTrack);
         }
         protected virtual void OnBalanceChanged()
         {
-            BalanceChanged?.Invoke(this.Balance);
+            BalanceChanged?.Invoke(this, this.Balance);
         }
         protected virtual void OnEffectsActiveChanged()
         {
-            EffectsActiveChanged?.Invoke(_effectsActive);
+            EffectsActiveChanged?.Invoke(this, _effectsActive);
         }
         protected virtual void OnIsStereoChanged()
         {
-            IsStereoChanged?.Invoke(isStereo);
+            IsStereoChanged?.Invoke(this, isStereo);
         }
         #endregion
 
-        #region getter and setter
+        #region Properties
+        public bool Modified { get; set; }
+        //tracks in queue will shuffle randomly when set to true.
+        public bool Shuffle { get; set; }
         /// <summary>
         /// Defines the primary color for the application.
         /// </summary>
@@ -144,7 +127,7 @@ namespace TuneMusix.Model
                     //Get swatch from list to get index.
                     var swatchList = new SwatchesProvider().Swatches.ToList();
                     var swatch = swatchList.Single(s => s.Name.Equals(value.Name));
-                    _primaryColorIndex = swatchList.IndexOf(swatch);
+                    PrimaryColorIndex = swatchList.IndexOf(swatch);
                     OnColorChanged();
                     Modified = true;
                 }
@@ -166,7 +149,7 @@ namespace TuneMusix.Model
                     //Get swatch from list to get index.
                     var swatchList = new SwatchesProvider().Swatches.ToList();
                     var swatch = swatchList.Single(s =>  s.Name.Equals(value.Name) );
-                    _accentColorIndex = swatchList.IndexOf(swatch);
+                    AccentColorIndex = swatchList.IndexOf(swatch);
                     OnColorChanged();
                     Modified = true;
                 }
@@ -190,17 +173,11 @@ namespace TuneMusix.Model
         /// <summary>
         /// Returns the index of the swatch that is set as accent color.
         /// </summary>
-        public int PrimaryColorIndex
-        {
-            get { return _primaryColorIndex; }
-        }
+        public int PrimaryColorIndex { get; private set; }
         /// <summary>
         /// Returns the index of the swatch that is set as accent color.
         /// </summary>
-        public int AccentColorIndex
-        {
-            get { return _accentColorIndex; }
-        }
+        public int AccentColorIndex { get; private set; }
 
         public bool IsStereo
         {
@@ -314,6 +291,9 @@ namespace TuneMusix.Model
             if (Modified)
                 return true;
 
+            if (AudioControls.Instance.EffectQueue.IsModified)
+                return true;
+
             foreach(BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist)
             {
                 if (effect.IsModified)
@@ -333,6 +313,7 @@ namespace TuneMusix.Model
                 manager.UpdateOptions(IDGenerator.GetID(false), this);
                 manager.UpdateEffectQueue(AudioControls.Instance.EffectQueue.Effectlist.ToList<BaseEffect>());
                 Modified = false;
+                AudioControls.Instance.EffectQueue.IsModified = false;
                 foreach (BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist)
                 {
                     effect.IsModified = false;
@@ -351,11 +332,11 @@ namespace TuneMusix.Model
         public void SetOptions(int volume, bool shuffle, int repeatTrack, int primaryColorIndex, int accentColorIndex, bool theme, bool askConfirmation)
         {
             this._volume = volume;
-            this._shuffle = shuffle;
+            this.Shuffle = shuffle;
             this.repeatTrack = repeatTrack;
             this._askConfirmation = askConfirmation;
-            this._primaryColorIndex = primaryColorIndex;
-            this._accentColorIndex = accentColorIndex;
+            this.PrimaryColorIndex = primaryColorIndex;
+            this.AccentColorIndex = accentColorIndex;
             this._theme = theme;
 
             //set colors

@@ -39,7 +39,10 @@ namespace TuneMusix.ViewModel
             ContextMenuAddTracksToPlaylist = new RelayCommand(_contextMenuAddTracksToPlaylist);
             ContextMenuDeleteTracks = new RelayCommand(_contextMenuDeleteTracks);
             AlbumTrackDoubleClick = new RelayCommand(_albumTrackDoubleClick);
+
         }
+
+
         private void _albumTrackDoubleClick(object argument)
         {
             Console.WriteLine(argument.GetType().ToString());
