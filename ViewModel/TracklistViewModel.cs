@@ -220,7 +220,6 @@ namespace TuneMusix.ViewModel
             {
                 CurrentTrack = track;
                 _dataModel.CurrentPlaylist = null;
-                TrackQueue = new ObservableList<Track>(new List<Track>(){track});
             }
         }
         private void _addTracksToQueue(object argument)

@@ -9,9 +9,16 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"   
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignWidth="300">
     <Grid>
-        <Expander >
+        <materialDesign:ColorZone Mode="PrimaryMid">
+            <Expander Background="Transparent">
+            <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}" Background="White"/>
+                    <Label Content="Equalizer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+                </StackPanel>
+            </Expander.Header>
             <materialDesign:ColorZone Mode="PrimaryLight">
                 <Grid Height="250">
                     <Grid.ColumnDefinitions>
@@ -39,12 +46,6 @@
                 </Grid>
             </materialDesign:ColorZone>
         </Expander>
-
-        <materialDesign:ColorZone Mode="PrimaryMid" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}"/>
-                <Label Content="Equalizer" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
-            </StackPanel>
         </materialDesign:ColorZone>
     </Grid>
 </UserControl>

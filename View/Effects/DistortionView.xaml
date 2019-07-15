@@ -8,9 +8,17 @@
              FontFamily="{DynamicResource MaterialDesignFont}"   
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
+             d:DesignWidth="300"
              >
     <Grid>
-        <Expander >
+        <materialDesign:ColorZone Mode="PrimaryMid">
+            <Expander Background="Transparent">
+            <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                        <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}" Background="White"/>
+                    <Label Content="Distortion" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+                </StackPanel>
+            </Expander.Header>
             <StackPanel>
                 <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
@@ -33,7 +41,7 @@
                 <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
                         <Label Content="Post EQ Center Frequency" FontWeight="Bold"/>
-                        <Slider Grid.Column="1" Value="{Binding PostEQCenterFrequency,Mode=TwoWay}" Maximum="8000" ToolTip="{Binding PostEQCenterFrequency}" Minimum="100"/>                   
+                        <Slider Grid.Column="1" Value="{Binding PostEQCenterFrequency,Mode=TwoWay}" Maximum="8000" ToolTip="{Binding PostEQCenterFrequency}" Minimum="100"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
                 <materialDesign:ColorZone Mode="PrimaryLight">
@@ -44,12 +52,6 @@
                 </materialDesign:ColorZone>
             </StackPanel>
         </Expander>
-
-        <materialDesign:ColorZone Mode="PrimaryMid" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}"/>
-                <Label Content="Distortion" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
-            </StackPanel>
         </materialDesign:ColorZone>
     </Grid>
 </UserControl>

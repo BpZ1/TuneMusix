@@ -8,9 +8,17 @@
              FontFamily="{DynamicResource MaterialDesignFont}"   
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
+             d:DesignWidth="300"
              >
     <Grid>
-        <Expander >
+        <materialDesign:ColorZone Mode="PrimaryMid">
+            <Expander Background="Transparent">
+                <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                        <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}" Background="White" />
+                        <Label Content="Compressor" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+                </StackPanel>
+            </Expander.Header>
             <StackPanel>
                 <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
@@ -50,12 +58,6 @@
                 </materialDesign:ColorZone>
             </StackPanel>
         </Expander>
-
-        <materialDesign:ColorZone Mode="PrimaryMid" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}"/>
-                <Label Content="Compressor" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
-            </StackPanel>
         </materialDesign:ColorZone>
     </Grid>
 </UserControl>

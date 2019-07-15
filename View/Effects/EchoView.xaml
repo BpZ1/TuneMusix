@@ -8,9 +8,16 @@
              FontFamily="{DynamicResource MaterialDesignFont}"   
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignWidth="300">
     <Grid>
-        <Expander >
+        <materialDesign:ColorZone Mode="PrimaryMid">
+            <Expander Background="Transparent">
+            <Expander.Header>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}" Background="White"/>
+                    <Label Content="Echo" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
+                </StackPanel>
+            </Expander.Header>
             <StackPanel>
                 <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel>
@@ -33,7 +40,7 @@
                 <materialDesign:ColorZone Mode="PrimaryLight">
                     <StackPanel Orientation="Horizontal">
                         <Label Content="Pan Delay" FontWeight="Bold"/>
-                        <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" ToolTip="{Binding}" IsChecked="{Binding PanDelay,Mode=TwoWay}" Margin="60,0,0,0"  />                  
+                        <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" VerticalAlignment="Center" ToolTip="{Binding}" IsChecked="{Binding PanDelay,Mode=TwoWay}" Margin="60,0,0,0"  />
                     </StackPanel>
                 </materialDesign:ColorZone>
                 <materialDesign:ColorZone Mode="PrimaryLight">
@@ -53,12 +60,6 @@
                 </materialDesign:ColorZone>
             </StackPanel>
         </Expander>
-
-        <materialDesign:ColorZone Mode="PrimaryMid" VerticalAlignment="Top" Margin="0,0,50,0" Height="48">
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Name="EnableCheckbox" IsChecked="{Binding IsActive,Mode=TwoWay}"/>
-                <Label Content="Echo" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13.333" FontWeight="Bold" />
-            </StackPanel>
         </materialDesign:ColorZone>
     </Grid>
 </UserControl>

@@ -33,14 +33,16 @@ namespace TuneMusix.Helpers
         public AudioPlayerImpl(string url, float volume, int balance, bool isStereo, EffectQueue effects, bool effectsActive)
         {
             _soundSource = GetSoundSource(url);
+            //Apply effects if they are activated
+            if (effectsActive)
+                _soundSource = effects.Apply(_soundSource);
+
             this._notificationStream = new SingleBlockNotificationStream(_soundSource.ToSampleSource());
             _fftProvider = new FftProvider(_soundSource.WaveFormat.Channels, FftSize.Fft2048);
             _soundOut = GetSoundOut();
 
             _notificationStream.SingleBlockRead += AddAudioSamples;
-            //Apply effects if they are activated
-            if (effectsActive)
-               _soundSource = effects.Apply(_soundSource);
+            
 
             if(_soundSource != null)
             {
@@ -152,7 +154,6 @@ namespace TuneMusix.Helpers
             {
                 try
                 {
-                    Console.WriteLine(_soundSource.GetPosition().ToString() + " equals " + _soundSource.GetLength().ToString());
                     if ((TimeSpan.Compare(_soundSource.GetPosition(), _soundSource.GetLength())) >= 0)
                     {
                         OnPlaybackFinished();

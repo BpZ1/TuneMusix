@@ -241,7 +241,6 @@ namespace TuneMusix.Helpers.MediaPlayer
             if (_player != null)
             {
                 _player.Dispose();
-                _player = null;
                 Debug.WriteLine("Player Disposed");
             }
             CreatePlayer(track);
@@ -308,13 +307,7 @@ namespace TuneMusix.Helpers.MediaPlayer
 
         #region Fields
 
-        public EffectQueue EffectQueue
-        {
-            get
-            {
-                return _effectQueue;
-            }
-        }
+        public EffectQueue EffectQueue => _effectQueue;
 
         /// <summary>
         /// Returns true of the player is currently playing a track.
