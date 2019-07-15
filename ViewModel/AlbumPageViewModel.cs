@@ -40,12 +40,23 @@ namespace TuneMusix.ViewModel
             ContextMenuDeleteTracks = new RelayCommand(_contextMenuDeleteTracks);
             AlbumTrackDoubleClick = new RelayCommand(_albumTrackDoubleClick);
 
+            DataModel.Instance.AlbumlistChanged += OnAlbumlistChanged;
         }
 
-
+        private void OnAlbumlistChanged(object sender, object argument)
+        {
+            RaisePropertyChanged("AlbumList");
+        }
         private void _albumTrackDoubleClick(object argument)
         {
-            Console.WriteLine(argument.GetType().ToString());
+            ListView listView = argument as ListView;
+            if (listView == null) return;
+
+            Track track = listView.SelectedItem as Track;
+            if (track != null)
+            {
+                _dataModel.TrackQueue.CurrentTrack = track;
+            }
         }
 
         private void _contextMenuDeleteTracks(object argument)
