@@ -62,9 +62,9 @@
             <Grid>
                 <!-- Info grid -->
                 <Grid.ColumnDefinitions>
-                    <!-- Cover art -->
+                    <!-- Cover art column-->
                     <ColumnDefinition Width="200" Name="ImageColumn"/>
-                    <!-- Info -->
+                    <!-- Info column-->
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -78,7 +78,7 @@
                         Path=IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </Button>
                 <!-- Covert Art -->
-                <Image Source="{Binding CoverArt}" Grid.Column="0" Grid.Row="0" Width="200"/>
+                <Image Source="{Binding CoverArt, Mode=OneTime}" Grid.Column="0" Grid.Row="0" Width="200"/>
                 <!-- Info Grid -->
                 <Grid Grid.Column="1" Margin="10,0,0,0">
                     <Grid.RowDefinitions>
@@ -121,7 +121,7 @@
             </Grid>
         </Expander.Header>
         <!--Album Track list-->
-        <ListView Name="AlbumTrackList" ItemsSource="{Binding Itemlist}" ScrollViewer.VerticalScrollBarVisibility="Auto"
+        <ListView Name="AlbumTrackList" ItemsSource="{Binding Itemlist, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
                   Margin="10">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">

@@ -6,7 +6,6 @@
       xmlns:vm="clr-namespace:TuneMusix.ViewModel.Effects"
       xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:local="clr-namespace:TuneMusix.View.OptionsWindow"
       DataContext="{DynamicResource AddEffectsViewModel}"
       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
       Background="{DynamicResource MaterialDesignPaper}"
@@ -32,15 +31,19 @@
             <ListViewItem Name="DistortionItem">
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                        <Label Content="Distortion"/>
+                        <Button Command="{Binding AddEffect}" CommandParameter="Distortion">
+                            <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Button>
+                        <Label Content="Distortion" VerticalAlignment="Center"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
             </ListViewItem>
             <ListViewItem Name="EchoItem">
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Button Command="{Binding AddEffect}" CommandParameter="Echo">
+                            <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Button>
                         <Label Content="Echo"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
@@ -48,7 +51,9 @@
             <ListViewItem Name="CompressorItem">
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Button Command="{Binding AddEffect}" CommandParameter="Compressor">
+                            <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Button>
                         <Label Content="Compressor"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
@@ -56,7 +61,9 @@
             <ListViewItem Name="ChorusItem">
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Button Command="{Binding AddEffect}" CommandParameter="Chorus">
+                            <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Button>
                         <Label Content="Chorus"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
@@ -64,7 +71,9 @@
             <ListViewItem Name="Equalizer10Item">
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Button Command="{Binding AddEffect}" CommandParameter="Equalizer">
+                            <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Button>
                         <Label Content="Equalizer"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
@@ -72,7 +81,9 @@
             <ListViewItem Name="FlangerItem">
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Button Command="{Binding AddEffect}" CommandParameter="Flanger">
+                            <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Button>
                         <Label Content="Flanger"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
@@ -80,7 +91,9 @@
             <ListViewItem Name="ReverbItem">
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Button Command="{Binding AddEffect}" CommandParameter="Reverb">
+                            <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Button>
                         <Label Content="Reverb"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
@@ -88,12 +101,13 @@
             <ListViewItem Name="GargleItem">
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        <Button Command="{Binding AddEffect}" CommandParameter="Gargle">
+                            <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                        </Button>
                         <Label Content="Gargle"/>
                     </StackPanel>
                 </materialDesign:ColorZone>
             </ListViewItem>
         </ListView>
-
     </DockPanel>
 </Page>

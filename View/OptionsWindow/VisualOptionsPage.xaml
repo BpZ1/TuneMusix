@@ -5,7 +5,6 @@
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:controls="clr-namespace:TuneMusix.View.Controls"
-      xmlns:local="clr-namespace:TuneMusix.View.OptionsWindow"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       DataContext="{DynamicResource VisualOptionsViewModel}"
       mc:Ignorable="d" 

@@ -6,8 +6,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:TuneMusix.ViewModel"
         xmlns:command="http://www.galasoft.ch/mvvmlight"
-        xmlns:local="clr-namespace:TuneMusix.View"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         DataContext="{DynamicResource OptionsOverviewViewModel}" 
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"

@@ -3,10 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TuneMusix.View.Controls"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-             xmlns:materialDesignColors="clr-namespace:MaterialDesignColors;assembly=MaterialDesignColors"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="300">
     <UserControl.Resources>
@@ -48,14 +45,7 @@
                     </Border.Background>
                     <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ApplyPrimaryColor, Mode=OneTime}"
                                         CommandParameter="{Binding}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Primary" />
-                            <Viewbox Width="16" Height="16">
-                                <Canvas Width="24" Height="24">
-                                    <Path Style="{StaticResource PalettePath}" />
-                                </Canvas>
-                            </Viewbox>
-                        </StackPanel>
+                        <TextBlock Text="Primary" />
                     </Button>
                 </Border>
                 <Border Grid.Row="1" Grid.Column="1" 
@@ -66,14 +56,7 @@
                     </Border.Background>
                     <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ApplyAccentColor, Mode=OneTime}"
                                             CommandParameter="{Binding}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Accent" />
-                            <Viewbox Width="16" Height="16">
-                                <Canvas Width="24" Height="24">
-                                    <Path Style="{StaticResource PalettePath}" />
-                                </Canvas>
-                            </Viewbox>
-                        </StackPanel>
+                        <TextBlock Text="Accent" />
                     </Button>
                 </Border>
             </Grid>

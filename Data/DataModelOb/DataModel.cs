@@ -61,10 +61,8 @@ namespace TuneMusix.Data.DataModelOb
         }
         #endregion
 
-
-
         #region events
-        public delegate void DataModelChangedEventHandler(object source,object changedObject);     
+        public delegate void DataModelChangedEventHandler(object sender,object changedObject);     
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
         public event DataModelChangedEventHandler DataModelChanged;
         public event DataModelChangedEventHandler AlbumlistChanged;

@@ -49,7 +49,7 @@ namespace TuneMusix.Helpers
         }
 
         #region events
-        public delegate void SearchEventHandler(object obj);
+        public delegate void SearchEventHandler(object sender,object argument);
         public event SearchEventHandler SearchTaskCompleted;
 
         /// <summary>
@@ -58,8 +58,7 @@ namespace TuneMusix.Helpers
         /// <param name="result"></param>
         protected virtual void OnSearchTaskCompleted(object result)
         {
-            if (SearchTaskCompleted != null)
-                SearchTaskCompleted(result);
+            SearchTaskCompleted?.Invoke(this, result);
         }
         #endregion
 

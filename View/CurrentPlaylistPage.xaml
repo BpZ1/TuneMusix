@@ -6,9 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
-      xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-      xmlns:local="clr-namespace:TuneMusix.View"
-      xmlns:system="clr-namespace:System;assembly=mscorlib"
+      xmlns:util="clr-namespace:TuneMusix.Helpers.Util"
       mc:Ignorable="d" 
       d:DesignHeight="624" d:DesignWidth="1199.23"
       DataContext="{DynamicResource CurrentPlaylistViewModel}"
@@ -24,6 +22,7 @@
       >
     <Page.Resources>
         <vm:CurrentPlaylistViewModel x:Key="CurrentPlaylistViewModel"/>
+        <util:BindingProxy Data="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Page}, Path=DataContext}" x:Key="dcProxy"/>
     </Page.Resources>
     <DockPanel LastChildFill="True"  Margin="10,10,0,0"  dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}"
                 Background="Transparent" AllowDrop="True" >
@@ -56,12 +55,12 @@
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
                                 <Setter Property="Header" Value="{Binding Name}"/>
-                                <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=MenuItem}, Path=DataContext.AddToPlaylist}" />
+                                <Setter Property="Command" Value="{Binding Source={StaticResource dcProxy}, Path=Data.AddToPlaylist}" />
                                 <Setter Property="CommandParameter" Value="{Binding}" />
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem Command="{Binding DeleteSelectedTracks}">
+                    <MenuItem Command="{Binding RemoveFromPlaylist}">
                         <MenuItem.Header>
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon  Kind="PlaylistMinus" Margin="0,0,5,0"/>

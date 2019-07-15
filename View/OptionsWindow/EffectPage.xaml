@@ -7,7 +7,6 @@
       xmlns:vm="clr-namespace:TuneMusix.ViewModel.Effects"
       xmlns:effectsView="clr-namespace:TuneMusix.View.Effects"
       xmlns:effects="clr-namespace:TuneMusix.Helpers.MediaPlayer.Effects"
-      xmlns:local="clr-namespace:TuneMusix.View.OptionsWindow"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       DataContext="{DynamicResource EffectsViewModel}"
