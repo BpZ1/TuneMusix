@@ -13,8 +13,8 @@
         FontFamily="{DynamicResource MaterialDesignFont}"   
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Name="OptionsWindow"
-        Title="OptionsWindow" Height="500" Width="700">
+        Name="Options"
+        Title="Options" Height="500" Width="700">
     <Window.Resources>
         <vm:OptionsOverviewViewModel x:Key="OptionsOverviewViewModel"/>
     </Window.Resources>
