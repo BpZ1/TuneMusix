@@ -20,7 +20,7 @@
     <Page.Resources>
         <vm:AlbumPageViewModel x:Key="AlbumPageViewModel"/>
     </Page.Resources>
-    <ListView Name="AlbumList" ItemsSource="{Binding AlbumList, UpdateSourceTrigger=PropertyChanged}">
+    <ListView Name="AlbumList" ItemsSource="{Binding AlbumList, UpdateSourceTrigger=PropertyChanged}" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True">
         <ListView.ItemContainerStyle>
             <Style TargetType="ListViewItem">
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
