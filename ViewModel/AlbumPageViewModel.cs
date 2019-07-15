@@ -6,6 +6,7 @@ using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
+using TuneMusix.View.Controls;
 
 namespace TuneMusix.ViewModel
 {
@@ -25,6 +26,8 @@ namespace TuneMusix.ViewModel
         public RelayCommand ContextMenuAddTracksToPlaylist { get; set; }
         public RelayCommand ContextMenuDeleteTracks { get; set; }
         public RelayCommand AlbumTrackDoubleClick { get; set; }
+        public RelayCommand OnExpanderExpand { get; set; }
+        public RelayCommand OnExpanderCollapsed { get; set; }
 
         public AlbumPageViewModel()
         {
@@ -39,8 +42,21 @@ namespace TuneMusix.ViewModel
             ContextMenuAddTracksToPlaylist = new RelayCommand(_contextMenuAddTracksToPlaylist);
             ContextMenuDeleteTracks = new RelayCommand(_contextMenuDeleteTracks);
             AlbumTrackDoubleClick = new RelayCommand(_albumTrackDoubleClick);
-
+            OnExpanderExpand = new RelayCommand(_onExpanderExpand);
+            OnExpanderCollapsed = new RelayCommand(_onExpanderCollapsed);
             DataModel.Instance.AlbumlistChanged += OnAlbumlistChanged;
+        }
+
+        private void _onExpanderExpand(object argument)
+        {
+            Expander expander = argument as Expander;
+            expander.Content = new AlbumContentControl();
+        }
+
+        private void _onExpanderCollapsed(object argument)
+        {
+            Expander expander = argument as Expander;
+            expander.Content = null;
         }
 
         private void OnAlbumlistChanged(object sender, object argument)

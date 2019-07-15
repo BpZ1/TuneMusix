@@ -248,6 +248,9 @@
     <Compile Include="View\AlbumPage.xaml.cs">
       <DependentUpon>AlbumPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Controls\AlbumContentControl.xaml.cs">
+      <DependentUpon>AlbumContentControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Controls\AlbumItem.xaml.cs">
       <DependentUpon>AlbumItem.xaml</DependentUpon>
     </Compile>
@@ -333,6 +336,10 @@
       <DependentUpon>VisualizerPage.xaml</DependentUpon>
     </Compile>
     <Page Include="View\AlbumPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Controls\AlbumContentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

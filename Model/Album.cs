@@ -9,7 +9,7 @@ namespace TuneMusix.Model
 {
     public class Album : ItemContainer<Track>
     {
-        private static readonly int _coverArtResolution = 500;
+        private static readonly int _coverArtResolution = 200;
         private static BitmapSource _defaultCover;
         private BitmapSource _image;
         private string _interpret;

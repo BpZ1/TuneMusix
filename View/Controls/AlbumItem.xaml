@@ -11,7 +11,15 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <util:BindingProxy Data="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Page}, Path=DataContext}" x:Key="dcProxy"/>
     </UserControl.Resources>
-    <Expander Grid.Column="2">
+    <Expander Grid.Column="2" Name="AlbumExpander">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Expanded">
+                <i:InvokeCommandAction Command="{Binding Source={StaticResource dcProxy}, Path=Data.OnExpanderExpand}" CommandParameter="{Binding ElementName=AlbumExpander}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="Collapsed">
+                <i:InvokeCommandAction Command="{Binding Source={StaticResource dcProxy}, Path=Data.OnExpanderExpand}" CommandParameter="{Binding ElementName=AlbumExpander}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
         <Expander.ContextMenu>
             <ContextMenu>
                 <MenuItem Command="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuPlayAlbum}"
@@ -121,66 +129,6 @@
             </Grid>
         </Expander.Header>
         <!--Album Track list-->
-        <ListView Name="AlbumTrackList" ItemsSource="{Binding Itemlist, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  Margin="10">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Page}, Path=DataContext.TrackSelectionChanged}"
-                                           CommandParameter="{Binding ElementName=AlbumTrackList}"/>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType=Page}, Path=DataContext.AlbumTrackDoubleClick}"
-                                           CommandParameter="{Binding ElementName=AlbumTrackList}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            <ListView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Command="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuPlayTracks}">
-                        <MenuItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon  Kind="Play" Margin="0,0,5,0"/>
-                                <TextBlock Text="Play"/>
-                            </StackPanel>
-                        </MenuItem.Header>
-                    </MenuItem>
-                    <MenuItem ItemsSource="{Binding Source={StaticResource dcProxy}, Path=Data.Playlists}">
-                        <MenuItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon  Kind="PlaylistPlus" Margin="0,0,5,0"/>
-                                <TextBlock Text="Add to playlist"/>
-                            </StackPanel>
-                        </MenuItem.Header>
-                        <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem">
-                                <Setter Property="Header" Value="{Binding Name}"/>
-                                <Setter Property="Command" Value="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuAddTracksToPlaylist}" />
-                                <Setter Property="CommandParameter" Value="{Binding}" />
-                            </Style>
-                        </MenuItem.ItemContainerStyle>
-                    </MenuItem>
-                    <MenuItem Command="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuDeleteTracks}">
-                        <MenuItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <materialDesign:PackIcon  Kind="PlaylistMinus" Margin="0,0,5,0"/>
-                                <TextBlock Text="Remove"/>
-                            </StackPanel>
-                        </MenuItem.Header>
-                    </MenuItem>
-                </ContextMenu>
-            </ListView.ContextMenu>
-            <ListView.View>
-                <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                    <GridViewColumn Header="Titel" DisplayMemberBinding="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" Width="300"/>
-                    <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Path=Duration, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
-                    <GridViewColumn Header="Rating" Width="250" >
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <materialDesign:RatingBar Value="{Binding Rating,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Foreground="Gold" Margin="0" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        
     </Expander>
 </UserControl>
