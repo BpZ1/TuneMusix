@@ -115,7 +115,7 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 playlistTracks.Add(new PlaylistTrack(track.ID, playlist.ID));
             }
-            this.delete(playlistTracks);
+            delete(playlistTracks);
         }
 
         private void delete(List<PlaylistTrack> playlistTracks)
@@ -123,11 +123,12 @@ namespace TuneMusix.Data.SQLDatabase
             List<SQLiteCommand> commandList = new List<SQLiteCommand>();
             foreach (PlaylistTrack track in playlistTracks)
             {
-                SQLiteCommand command = new SQLiteCommand("DELETE FROM playlisttracks WHERE trackID=@trackID,playlistID=@playlistID;", _dbConnection);
+                SQLiteCommand command = new SQLiteCommand("DELETE FROM playlisttracks WHERE trackID=@trackID AND playlistID=@playlistID;", _dbConnection);
                 command.Parameters.AddWithValue("trackID", track.TrackID);
                 command.Parameters.AddWithValue("playlistID", track.PlaylistID);
                 commandList.Add(command);
             }
+            OpenDBConnection();
             try
             {
                 _beginCommand.ExecuteNonQuery();
@@ -146,14 +147,15 @@ namespace TuneMusix.Data.SQLDatabase
         public void Delete(Playlist playlist, Track track)
         {
             PlaylistTrack playlistTrack = new PlaylistTrack(track.ID, playlist.ID);
-            this.Delete(playlistTrack);
+            Delete(playlistTrack);
         }
 
         private void Delete(PlaylistTrack playlistTrack)
         {
-            SQLiteCommand command = new SQLiteCommand("DELETE FROM playlisttracks WHERE trackID=@trackID,playlistID=@playlistID;", _dbConnection);
+            SQLiteCommand command = new SQLiteCommand("DELETE FROM playlisttracks WHERE trackID=@trackID AND playlistID=@playlistID;", _dbConnection);
             command.Parameters.AddWithValue("trackID", playlistTrack.TrackID);
-            command.Parameters.AddWithValue("playlistID", playlistTrack.PlaylistID);           
+            command.Parameters.AddWithValue("playlistID", playlistTrack.PlaylistID);
+            OpenDBConnection();
             try
             {
                 _beginCommand.ExecuteNonQuery();
