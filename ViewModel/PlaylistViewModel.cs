@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
@@ -17,18 +16,15 @@ namespace TuneMusix.ViewModel
 {
     class PlaylistViewModel : ViewModelBase, IDragSource,IDropTarget
     {
-
         public RelayCommand OpenDialog { get; set; }
         public RelayCommand SelectionChanged { get; set; }
-        public RelayCommand SelectPlaylist { get; set; }
         public RelayCommand SetPlaylistCurrent { get; set; }
+        public RelayCommand PlayPlaylistButton { get; set; }
         public RelayCommand DeletePlaylist { get; set; }
         public RelayCommand RenamePlaylistDialog { get; set; }
-
         public ObservableCollection<Track> SelectedTracks { get; set; }
-        private bool isDragging;
-
-        private Playlist selectedPlaylist;
+        private bool _isDragging;
+        private Playlist _selectedPlaylist;
 
         //constructor
         public PlaylistViewModel()
@@ -36,21 +32,31 @@ namespace TuneMusix.ViewModel
             IsDragging = false;
 
             SelectedTracks = new ObservableCollection<Track>();
-            OpenDialog = new RelayCommand(newPlaylistDialog);                    
-            SelectPlaylist = new RelayCommand(selectPlaylist);
-            SetPlaylistCurrent = new RelayCommand(setPlaylistCurrent);
-            DeletePlaylist = new RelayCommand(deletePlaylist);
-            RenamePlaylistDialog = new RelayCommand(renamePlaylistDialog);
+            SelectionChanged = new RelayCommand(_selectionChanged);
+            OpenDialog = new RelayCommand(_newPlaylistDialog);                    
+            SetPlaylistCurrent = new RelayCommand(_setPlaylistCurrent);
+            PlayPlaylistButton = new RelayCommand(_playPlaylistButton);
+            DeletePlaylist = new RelayCommand(_deletePlaylist);
+            RenamePlaylistDialog = new RelayCommand(_renamePlaylistDialog);
 
             //events
-            dataModel.DataModelChanged += OnDataModelChanged;
+            _dataModel.DataModelChanged += OnDataModelChanged;
             
+        }
+
+        private void _playPlaylistButton(object argument)
+        {
+            Playlist playlist = argument as Playlist;
+            if(playlist != null)
+            {
+                CurrentPlaylist = playlist;
+            }
         }
         /// <summary>
         /// sets the given playlist object as selected playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private void selectPlaylist(object argument)
+        private void _selectionChanged(object argument)
         {
             var playlist = argument as Playlist;
             if(playlist != null)
@@ -61,10 +67,10 @@ namespace TuneMusix.ViewModel
         //getter and setter
         public Playlist SelectedPlaylist
         {
-            get { return this.selectedPlaylist; }
+            get { return this._selectedPlaylist; }
             set
             {
-                this.selectedPlaylist = value;
+                this._selectedPlaylist = value;
                 RaisePropertyChanged("SelectedPlaylist");
             }
         }
@@ -79,7 +85,7 @@ namespace TuneMusix.ViewModel
         /// 
         /// </summary>
         /// <param name="argument"></param>
-        private async void renamePlaylistDialog(object argument)
+        private async void _renamePlaylistDialog(object argument)
         {
             var view = new GetTextDialog
             {
@@ -123,7 +129,7 @@ namespace TuneMusix.ViewModel
         /// Open the dialog for adding a playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private async void newPlaylistDialog(object argument)
+        private async void _newPlaylistDialog(object argument)
         {
             var view = new GetTextDialog
             {
@@ -160,7 +166,7 @@ namespace TuneMusix.ViewModel
             {
                 if (dataContext.TextBoxText.Count<char>() >= 2)
                 {
-                    dataModel.AddPlaylist(dataContext.TextBoxText);
+                    _dataModel.AddPlaylist(dataContext.TextBoxText);
                 }
                 else
                 {
@@ -177,18 +183,18 @@ namespace TuneMusix.ViewModel
         /// set the current playlist to the selected.
         /// </summary>
         /// <param name="argument"></param>
-        private void setPlaylistCurrent(object argument)
+        private void _setPlaylistCurrent(object argument)
         {
             if (SelectedPlaylist != null)
             {
-                dataModel.CurrentPlaylist = SelectedPlaylist;
+                _dataModel.CurrentPlaylist = SelectedPlaylist;
             }
         }
         /// <summary>
         /// delets the currently selected playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private void deletePlaylist(object argument)
+        private void _deletePlaylist(object argument)
         {
             if (SelectedPlaylist != null)
             {
@@ -199,7 +205,7 @@ namespace TuneMusix.ViewModel
                         CurrentPlaylist = null;
                     }
                 }
-                dataModel.Delete(SelectedPlaylist);
+                _dataModel.Delete(SelectedPlaylist);
                 SelectedPlaylist = null;
             }
         }
@@ -219,10 +225,10 @@ namespace TuneMusix.ViewModel
         }
         public bool IsDragging
         {
-            get { return this.isDragging; }
+            get { return this._isDragging; }
             set
             {
-                this.isDragging = value;
+                this._isDragging = value;
                 RaisePropertyChanged("IsDragging");
             }
         }
@@ -280,7 +286,7 @@ namespace TuneMusix.ViewModel
         {
             if (dropInfo.VisualTarget.GetType() == typeof(Button))
             {
-                deletePlaylist(null);
+                _deletePlaylist(null);
             }
         }
         #endregion

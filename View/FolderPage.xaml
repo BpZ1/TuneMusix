@@ -6,7 +6,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:model="clr-namespace:TuneMusix.Model"
-      xmlns:local="clr-namespace:TuneMusix.View"
       mc:Ignorable="d" 
       d:DesignHeight="623" d:DesignWidth="1195"
       Title="TracklistPage"

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MaterialDesignThemes;
 using System.Windows;
 using TuneMusix.Helpers;
-using TuneMusix.View.Dialog;
 
 namespace TuneMusix.ViewModel.Dialog
 {

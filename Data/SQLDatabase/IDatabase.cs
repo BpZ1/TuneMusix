@@ -6,10 +6,8 @@ namespace TuneMusix.Data.SQLDatabase
 {
     interface IDatabase
     {
-        
-   
         #region deletion methods
-        void Delete(List<Track> tracks);
+        void Delete(IEnumerable<Track> tracks);
 
         /// <summary>
         /// deletes a track from the tracks database.
@@ -17,7 +15,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// <param name="track"></param>
         void Delete(Track track);
 
-        void Delete(List<Folder> folders);
+        void Delete(IEnumerable<Folder> folders);
 
         /// <summary>
         /// Deletes a folder from the folders database.
@@ -36,7 +34,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         /// <param name="playlist"></param>
         /// <param name="tracklist"></param>
-        void Delete(Playlist playlist, List<Track> tracks);
+        void Delete(Playlist playlist, IEnumerable<Track> tracks);
 
         /// <summary>
         /// Deletes a single Track from a playlist in the database.
@@ -53,7 +51,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// <param name="track"></param>
         void Insert(Track track);
 
-        void Insert(List<Track> tracklist);
+        void Insert(IEnumerable<Track> tracklist);
 
         /// <summary>
         /// Inserts a list of folders into the database.
@@ -61,7 +59,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// is a high propability that the folder contains other folders.
         /// </summary>
         /// <param name="folders"></param>
-        void Insert(List<Folder> folders);
+        void Insert(IEnumerable<Folder> folders);
 
         /// <summary>
         /// Adds a playlist to the database.
@@ -80,7 +78,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// Clears the effect queue table and updates it with new values.
         /// </summary>
         /// <param name="effectQueue"></param>
-        void UpdateEffectQueue(List<BaseEffect> effectQueue);
+        void UpdateEffectQueue(IEnumerable<BaseEffect> effectQueue);
         #endregion
 
         #region selection methods

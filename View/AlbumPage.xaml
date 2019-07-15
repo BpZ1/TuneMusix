@@ -1,0 +1,40 @@
+﻿<Page x:Class="TuneMusix.View.AlbumView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:vm="clr-namespace:TuneMusix.ViewModel"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:controls="clr-namespace:TuneMusix.View.Controls"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="AlbumView"
+      DataContext="{DynamicResource AlbumPageViewModel}"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      TextElement.FontWeight="Regular"
+      TextElement.FontSize="13"
+      TextOptions.TextFormattingMode="Ideal"
+      TextOptions.TextRenderingMode="Auto"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{DynamicResource MaterialDesignFont}">
+    <Page.Resources>
+        <vm:AlbumPageViewModel x:Key="AlbumPageViewModel"/>
+    </Page.Resources>
+    <ListView Name="AlbumList" ItemsSource="{Binding AlbumList, UpdateSourceTrigger=PropertyChanged}" VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True">
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            </Style>
+        </ListView.ItemContainerStyle>
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="SelectionChanged">
+                <i:InvokeCommandAction Command="{Binding AlbumSelectionChanged}" CommandParameter="{Binding ElementName=AlbumList}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <controls:AlbumItem/>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</Page>

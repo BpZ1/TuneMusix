@@ -14,7 +14,7 @@ namespace TuneMusix.Data.DataModelOb
     /// </summary>
     public partial class DataModel
     {
-        private Stopwatch sw = new Stopwatch();
+        private Stopwatch _stopWatch = new Stopwatch();
 
         /// <summary>
         /// Adds Tracks from their url to the datamodel and database.
@@ -22,11 +22,11 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="urls"></param>
         public void AddTracks(List<string> urls)
         {
-            sw.Start();
+            _stopWatch.Start();
             FileParser fp = new FileParser();
             BackgroundWorker worker = new BackgroundWorker();
-            worker.RunWorkerCompleted += onTracksAdded_Completed;
-            worker.ProgressChanged += onTracksAdded_ProgressChanged;
+            worker.RunWorkerCompleted += OnTracksAddedCompleted;
+            worker.ProgressChanged += OnTracksAddedProgressChanged;
             worker.WorkerReportsProgress = true;
             worker.DoWork += new DoWorkEventHandler(fp.CreateTracks);
             worker.RunWorkerAsync(urls);
@@ -37,11 +37,11 @@ namespace TuneMusix.Data.DataModelOb
         {
             if (!Contains(folderUrl))
             {
-                sw.Start();
+                _stopWatch.Start();
                 FileParser fp = new FileParser();
                 BackgroundWorker worker = new BackgroundWorker();
-                worker.RunWorkerCompleted += onTracksAdded_Completed;
-                worker.ProgressChanged += onTracksAdded_ProgressChanged;
+                worker.RunWorkerCompleted += OnTracksAddedCompleted;
+                worker.ProgressChanged += OnTracksAddedProgressChanged;
                 worker.WorkerReportsProgress = true;
                 worker.DoWork += new DoWorkEventHandler(fp.CreateFolder);
                 worker.RunWorkerAsync(folderUrl);
@@ -53,12 +53,16 @@ namespace TuneMusix.Data.DataModelOb
             }
         }
 
-        //is called when the backgroundworker completed his work
-        private void onTracksAdded_Completed(object sender, RunWorkerCompletedEventArgs e)
+        /// <summary>
+        /// Is called when the backgroundworker completed his work
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTracksAddedCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             Debug.WriteLine("Loading of tracks completed.");
-            sw.Stop();
-            Debug.WriteLine("Loading took " + sw.Elapsed);
+            _stopWatch.Stop();
+            Debug.WriteLine("Loading took " + _stopWatch.Elapsed);
 
             if(e.Error != null)
             {
@@ -86,8 +90,12 @@ namespace TuneMusix.Data.DataModelOb
             }
             LoadingBarManager.Instance.EndLoading();
         }
-
-        private void onTracksAdded_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        /// <summary>
+        /// Is called to update the loading bar.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTracksAddedProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             //update loading bar
             LoadingBarManager.Instance.Progress = e.ProgressPercentage;

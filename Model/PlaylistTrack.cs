@@ -5,13 +5,13 @@
     /// </summary>
     public class PlaylistTrack
     {
+        public long TrackID { get; set; }
+        public long PlaylistID { get; set; }
+
         public PlaylistTrack(long trackId,long playlistId)
         {
             this.TrackID = trackId;
             this.PlaylistID = playlistId;
         }
-
-        public long TrackID { get; set; }
-        public long PlaylistID { get; set; }
     }
 }

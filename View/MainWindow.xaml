@@ -80,21 +80,21 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="_Edit">
-                    <MenuItem Header="_Debug" Command="{Binding DebugMethod}">
+                <MenuItem Header="Help">
+                    <MenuItem Header="Help">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="ContentCopy" />
+                            <materialDesign:PackIcon Kind="Help"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="_...">
+                    <MenuItem Header="About">
                         <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="ContentPaste" />
+                            <materialDesign:PackIcon Kind="Exclamation"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
             </Menu>
             <!-- Music Player -->
-            <Frame DockPanel.Dock="Top" Source="MusicPlayerPage.xaml"/>
+            <Frame  Source="MusicPlayerPage.xaml" DockPanel.Dock="Top"/>
             <!-- Track Queue -->
             <Expander ExpandDirection="Right" DockPanel.Dock="Right">
                 <Expander.Header>
@@ -121,6 +121,12 @@
                 </TabItem>
                 <TabItem Header="Folders">
                     <Frame Source="FolderPage.xaml"/>
+                </TabItem>
+                <TabItem Header="Album">
+                    <Frame Source="AlbumPage.xaml"/>
+                </TabItem>
+                <TabItem Header="Visualizer">
+                    <Frame Source="VisualizerPage.xaml"/>
                 </TabItem>
             </dragablz:TabablzControl>
            

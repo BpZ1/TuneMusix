@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using TagLib;
-using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
 
@@ -64,7 +63,7 @@ namespace TuneMusix.Helpers
                 List<string> urlData = (List<string>)data;
                 foreach (string url in urlData)
                 {
-                    tracks.Add(getAudioData(url));
+                    tracks.Add(GetAudioData(url));
                 }
                 float progress = (float)Interlocked.Increment(ref progressCounter) / (float)listCount * 100;
                 worker.ReportProgress((int)Math.Round(progress));
@@ -120,7 +119,7 @@ namespace TuneMusix.Helpers
             WaitCallback folderCreation = (data) =>
             {
                 string folderUrl = (string)data;
-                Folder folder = this.createFolder(folderUrl);
+                Folder folder = this.CreateFolder(folderUrl);
 
                 //get the files from the folder
                 string[] files = Directory.GetFiles(folderUrl);
@@ -129,7 +128,7 @@ namespace TuneMusix.Helpers
                     string extention = Path.GetExtension(file);
                     if (extention.Equals(".mp3"))
                     {
-                        Track audio = getAudioData(file);
+                        Track audio = GetAudioData(file);
                         if (audio != null)
                         {
                             folder.Add(audio);
@@ -150,7 +149,7 @@ namespace TuneMusix.Helpers
                 Thread.Sleep(100);
             }
             Options.Instance.SaveValues();
-            e.Result = folderSort(url, folderList.ToList<Folder>());
+            e.Result = FolderSort(url, folderList.ToList<Folder>());
         }
 
         /// <summary>
@@ -158,7 +157,7 @@ namespace TuneMusix.Helpers
         /// </summary>
         /// <param name="url">URL of the Audiofile</param>
         /// <returns>Track</returns>
-        private Track getAudioData(string url)
+        private Track GetAudioData(string url)
         {
             IDGenerator IDgen = IDGenerator.Instance;
             try
@@ -207,7 +206,7 @@ namespace TuneMusix.Helpers
 
 
         //creates a folder from a given url
-        private Folder createFolder(string url)
+        private Folder CreateFolder(string url)
         {
             string[] URLs = url.Split('\\');
             Folder folder = new Folder(URLs.Last(), url, IDGenerator.GetID(false));
@@ -216,7 +215,7 @@ namespace TuneMusix.Helpers
 
 
         //Puts all folders in their matching parent folder
-        private Folder folderSort(string rootUrl, List<Folder> folders)
+        private Folder FolderSort(string rootUrl, List<Folder> folders)
         {
             Folder root = null;
             foreach (Folder fold1 in folders)
@@ -269,7 +268,7 @@ namespace TuneMusix.Helpers
                 int year = (int)file.Tag.Year;
                 Track temporaryCompTrack = new Track(null, 0, title, interpret, album, year, comm, genre, null);
 
-                checkTrackModification(track, temporaryCompTrack);
+                CheckTrackModification(track, temporaryCompTrack);
 
             }
             catch (UnauthorizedAccessException ex)
@@ -293,7 +292,7 @@ namespace TuneMusix.Helpers
             return true;
         }
 
-        private void checkTrackModification(Track oldTrack, Track newTrack)
+        private void CheckTrackModification(Track oldTrack, Track newTrack)
         {
             //Check what need to be updated.
             bool modified = false;

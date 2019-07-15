@@ -4,31 +4,31 @@ namespace TuneMusix.ViewModel
     partial class ViewModelMain
     {
 
-        private void onRootFoldersChanged(object source,object obj)
+        private void OnRootFoldersChanged(object source,object obj)
         {
              RaisePropertyChanged("TrackList");
         }
 
-        private void onProgressChanged(object obj)
+        private void OnProgressChanged(object obj)
         {
             int progress = (int)obj;
             ProgressBarProgress = progress;             
         } 
 
-        private void onLoadingStarted(object obj)
+        private void OnLoadingStarted(object obj)
         {
             ProgressVisible = true;
             InfoTextVisible = true;
             InfoText = "Loading tracks...";
         }
 
-        private void onInfoTextChanged(object obj)
+        private void OnInfoTextChanged(object obj)
         {
             var message = obj as string;
             InfoText = message;
         }
 
-        private void onLoadingFinished(object obj)
+        private void OnLoadingFinished(object obj)
         {
             ProgressVisible = false;
             InfoTextVisible = false;

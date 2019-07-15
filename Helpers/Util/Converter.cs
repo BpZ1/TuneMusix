@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 
 namespace TuneMusix.Helpers
 {
@@ -79,6 +79,23 @@ namespace TuneMusix.Helpers
                 result += seconds;
             }
             return result;
+        }
+        /// <summary>
+        /// Converts a <see cref="Bitmap"/> to a <see cref="BitmapSource"/>.
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static BitmapSource ConvertBitmap(Bitmap bitmap)
+        {
+            BitmapSource bitmapSource = Imaging.CreateBitmapSourceFromHBitmap
+                (
+                bitmap.GetHbitmap(),
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions()
+                );
+
+            return bitmapSource;
         }
     }
 }

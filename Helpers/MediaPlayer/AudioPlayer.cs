@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TuneMusix.Model;
 
 namespace TuneMusix.Helpers.MediaPlayer
 {
@@ -45,6 +40,10 @@ namespace TuneMusix.Helpers.MediaPlayer
         /// </summary>
         /// <returns></returns>
         TimeSpan Length();
+        /// <summary>
+        /// Returns the sample rate of the current Track.
+        /// </summary>
+        int SampleRate { get; }
 
         /// <summary>
         /// Sets the volume of the current playback

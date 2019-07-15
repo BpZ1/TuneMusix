@@ -16,7 +16,9 @@ namespace TuneMusix.Helpers
         {
             if (execute == null)
                 throw new ArgumentNullException("execute");
-            _execute = execute; _canExecute = canExecute;
+
+            _execute = execute;
+            _canExecute = canExecute;
         }
         #endregion // Constructors 
         #region ICommand Members 

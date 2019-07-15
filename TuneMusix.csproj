@@ -69,7 +69,7 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
@@ -116,7 +116,6 @@
       <HintPath>packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
       <HintPath>packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
       <Private>True</Private>
@@ -139,7 +138,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="system.windows.controls.ribbon" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\MvvmLightLibs.5.4.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -168,10 +166,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Visualization\FlatVisualization.cs" />
     <Compile Include="Controls\FormattedSlider.cs" />
     <Compile Include="Controls\FormattedSlider.Designer.cs">
       <DependentUpon>FormattedSlider.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Visualization\Visualizer.cs" />
     <Compile Include="Data\DataModelOb\DataModelMethods.cs" />
     <Compile Include="Data\SQLDatabase\IDatabase.cs" />
     <Compile Include="Data\SQLDatabase\SQLLoader.cs" />
@@ -182,7 +182,9 @@
     <Compile Include="Data\SQLDatabase\DatabaseDeletion.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseInsertion.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseSelection.cs" />
-    <Compile Include="Helpers\Container\OptionsIDContainer.cs" />
+    <Compile Include="Helpers\Util\OptionsIDContainer.cs" />
+    <Compile Include="Helpers\Exceptions\PlayerException.cs" />
+    <Compile Include="Helpers\Util\BindingProxy.cs" />
     <Compile Include="Helpers\Util\Converter.cs" />
     <Compile Include="Helpers\Dialogs\DialogResult.cs" />
     <Compile Include="Helpers\Dialogs\DialogService.cs" />
@@ -207,12 +209,21 @@
     <Compile Include="Helpers\MediaPlayer\Effects\FlangerEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\GargleEffect.cs" />
     <Compile Include="Helpers\MediaPlayer\Effects\ReverbEffect.cs" />
-    <Compile Include="Helpers\DelaySearch\DelayIterativeSearch.cs" />
+    <Compile Include="Helpers\Util\DelayIterativeSearch.cs" />
+    <Compile Include="Helpers\Util\ObservableHashSet.cs" />
+    <Compile Include="Helpers\Util\ObservableList.cs" />
     <Compile Include="Helpers\Util\TextFormatService.cs" />
     <Compile Include="Helpers\Util\TrackService.cs" />
     <Compile Include="Model\Album.cs" />
     <Compile Include="Model\Interpret.cs" />
     <Compile Include="Model\ItemContainer.cs" />
+    <Compile Include="Model\TrackQueue.cs" />
+    <Compile Include="Resources\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\AlbumPageViewModel.cs" />
     <Compile Include="ViewModel\Dialog\ConfirmationDialogViewModel.cs" />
     <Compile Include="ViewModel\Dialog\DialogViewModelBase.cs" />
     <Compile Include="ViewModel\Dialog\WarningDialog.cs" />
@@ -233,6 +244,16 @@
     <Compile Include="ViewModel\TrackQueueViewModel.cs" />
     <Compile Include="ViewModel\MainWindowVM\ViewModelMainEvents.cs" />
     <Compile Include="ViewModel\MainWindowVM\ViewModelMainMenuMethods.cs" />
+    <Compile Include="ViewModel\VisualizerViewModel.cs" />
+    <Compile Include="View\AlbumPage.xaml.cs">
+      <DependentUpon>AlbumPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Controls\AlbumContentControl.xaml.cs">
+      <DependentUpon>AlbumContentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Controls\AlbumItem.xaml.cs">
+      <DependentUpon>AlbumItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Controls\SwatchView.xaml.cs">
       <DependentUpon>SwatchView.xaml</DependentUpon>
     </Compile>
@@ -311,6 +332,21 @@
     <Compile Include="View\TrackQueuePage.xaml.cs">
       <DependentUpon>TrackQueuePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\VisualizerPage.xaml.cs">
+      <DependentUpon>VisualizerPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="View\AlbumPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Controls\AlbumContentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Controls\AlbumItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Controls\SwatchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -437,6 +473,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\VisualizerPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -455,6 +495,10 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
@@ -481,7 +525,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Images\" />
+    <Resource Include="Resources\defaultAlbumCover.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

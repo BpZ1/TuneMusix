@@ -15,70 +15,47 @@ namespace TuneMusix.Model
     /// and have to be saved to the database.
     /// </summary>
     public partial class Options
-    {
-
-        
-        private static volatile Options instance;
-        private static object lockObject = new Object();
+    { 
+        private static volatile Options _instance;
+        private static object _lockObject = new Object();
 
         public static Options Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    lock (lockObject)
+                    lock (_lockObject)
                     {
-                        if (instance == null)
+                        if (_instance == null)
                         {
-                            instance = new Options();
+                            _instance = new Options();
                         }
                     }
                 }
-                return instance;
+                return _instance;
             }
         }
 
         private Options() { }
 
-        private bool modified;
-        private bool effectsActive = true;
-        private bool loggerActive;
-        private int volume;      
-        private bool shuffle;
-        private bool askConfirmation = true;
-        private bool muted = false;
+        private bool _effectsActive = true;
+        private bool _loggerActive;
+        private int _volume;      
+        private bool _askConfirmation = true;
+        private bool _muted = false;
         //Values of the swatch for the database.
-        private bool theme;
-        private int primaryColorIndex;
-        private int accentColorIndex;
+        private bool _theme;
 
-        public delegate void OptionsChangedEventHandler();
+        public delegate void OptionsChangedEventHandler(object sender);
 
         public event OptionsChangedEventHandler ColorChanged;
 
         protected virtual void OnColorChanged()
         {
-            if (ColorChanged != null)
-                ColorChanged();
+            ColorChanged?.Invoke(this);
         }
 
-
-        public bool Modified
-        {
-            private get { return modified; }
-            set { modified = value; }
-        }
-
-        //tracks in queue will shuffle randomly when set to true.
-        public bool Shuffle
-        {
-            get { return shuffle; }
-            set
-            {
-                shuffle = value;
-            }
-        }
         // 0 = No repeat
         // 1 = Repeat all
         // 2 = repeat track
@@ -92,16 +69,16 @@ namespace TuneMusix.Model
         /// </summary>
         public bool Muted
         {
-            get { return muted; }
+            get { return _muted; }
             set
             {
-                muted = value;
+                _muted = value;
                 SaveValues();
             }
         }
 
         #region events
-        public delegate void OptionsEventHandler(object changed);
+        public delegate void OptionsEventHandler(object sender,object changed);
 
         public event OptionsEventHandler VolumeChanged;
         public event OptionsEventHandler RepeatChanged;
@@ -111,42 +88,30 @@ namespace TuneMusix.Model
 
         protected virtual void OnVolumeChanged()
         {
-            if (VolumeChanged != null)
-            {
-                VolumeChanged(this.Volume);
-            }
+            VolumeChanged?.Invoke(this, this.Volume);
         }
         protected virtual void OnRepeatChanged()
         {
-            if (RepeatChanged != null)
-            {
-                RepeatChanged(this.RepeatTrack);
-            }
+            RepeatChanged?.Invoke(this, this.RepeatTrack);
         }
         protected virtual void OnBalanceChanged()
         {
-            if (BalanceChanged != null)
-            {
-                BalanceChanged(this.Balance);
-            }
+            BalanceChanged?.Invoke(this, this.Balance);
         }
         protected virtual void OnEffectsActiveChanged()
         {
-            if (EffectsActiveChanged != null)
-            {
-                EffectsActiveChanged(effectsActive);
-            }
+            EffectsActiveChanged?.Invoke(this, _effectsActive);
         }
         protected virtual void OnIsStereoChanged()
         {
-            if (IsStereoChanged != null)
-            {
-                IsStereoChanged(isStereo);
-            }
+            IsStereoChanged?.Invoke(this, isStereo);
         }
         #endregion
 
-        #region getter and setter
+        #region Properties
+        public bool Modified { get; set; }
+        //tracks in queue will shuffle randomly when set to true.
+        public bool Shuffle { get; set; }
         /// <summary>
         /// Defines the primary color for the application.
         /// </summary>
@@ -162,7 +127,7 @@ namespace TuneMusix.Model
                     //Get swatch from list to get index.
                     var swatchList = new SwatchesProvider().Swatches.ToList();
                     var swatch = swatchList.Single(s => s.Name.Equals(value.Name));
-                    primaryColorIndex = swatchList.IndexOf(swatch);
+                    PrimaryColorIndex = swatchList.IndexOf(swatch);
                     OnColorChanged();
                     Modified = true;
                 }
@@ -184,7 +149,7 @@ namespace TuneMusix.Model
                     //Get swatch from list to get index.
                     var swatchList = new SwatchesProvider().Swatches.ToList();
                     var swatch = swatchList.Single(s =>  s.Name.Equals(value.Name) );
-                    accentColorIndex = swatchList.IndexOf(swatch);
+                    AccentColorIndex = swatchList.IndexOf(swatch);
                     OnColorChanged();
                     Modified = true;
                 }
@@ -199,26 +164,20 @@ namespace TuneMusix.Model
             set
             {
                 new PaletteHelper().SetLightDark(value);
-                theme = value;
+                _theme = value;
                 OnColorChanged();
                 Modified = true;
             }
-            get { return theme; }
+            get { return _theme; }
         }
         /// <summary>
         /// Returns the index of the swatch that is set as accent color.
         /// </summary>
-        public int PrimaryColorIndex
-        {
-            get { return primaryColorIndex; }
-        }
+        public int PrimaryColorIndex { get; private set; }
         /// <summary>
         /// Returns the index of the swatch that is set as accent color.
         /// </summary>
-        public int AccentColorIndex
-        {
-            get { return accentColorIndex; }
-        }
+        public int AccentColorIndex { get; private set; }
 
         public bool IsStereo
         {
@@ -234,10 +193,10 @@ namespace TuneMusix.Model
         /// </summary>
         public bool EffectsActive
         {
-            get { return effectsActive; }
+            get { return _effectsActive; }
             set
             {
-                this.effectsActive = value;
+                this._effectsActive = value;
                 Modified = true;
             }
         }
@@ -246,19 +205,19 @@ namespace TuneMusix.Model
         /// </summary>
         public int Volume
         {
-            get { return this.volume; }
+            get { return this._volume; }
             set
             {
                 //Volume is saved in an event that is called when the slider
                 //is released. 
                 if (value > 100)
                 {                    
-                    this.volume = 100;
+                    this._volume = 100;
                     OnVolumeChanged();
                 }
                 else
                 {
-                    this.volume = value;
+                    this._volume = value;
                     OnVolumeChanged();
                 }
 
@@ -283,10 +242,10 @@ namespace TuneMusix.Model
         /// </summary>
         public bool LoggerActive
         {
-            get { return this.loggerActive; }
+            get { return this._loggerActive; }
             set
             {
-                this.loggerActive = value;
+                this._loggerActive = value;
                 Modified = true;
             }
         }
@@ -313,10 +272,10 @@ namespace TuneMusix.Model
         /// </summary>
         public bool AskConfirmation
         {
-            get { return askConfirmation; }
+            get { return _askConfirmation; }
             set
             {
-                askConfirmation = value;
+                _askConfirmation = value;
                 Modified = true;
             }
         }
@@ -330,6 +289,9 @@ namespace TuneMusix.Model
         public bool IsModified()
         {
             if (Modified)
+                return true;
+
+            if (AudioControls.Instance.EffectQueue.IsModified)
                 return true;
 
             foreach(BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist)
@@ -351,6 +313,7 @@ namespace TuneMusix.Model
                 manager.UpdateOptions(IDGenerator.GetID(false), this);
                 manager.UpdateEffectQueue(AudioControls.Instance.EffectQueue.Effectlist.ToList<BaseEffect>());
                 Modified = false;
+                AudioControls.Instance.EffectQueue.IsModified = false;
                 foreach (BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist)
                 {
                     effect.IsModified = false;
@@ -368,13 +331,13 @@ namespace TuneMusix.Model
 
         public void SetOptions(int volume, bool shuffle, int repeatTrack, int primaryColorIndex, int accentColorIndex, bool theme, bool askConfirmation)
         {
-            this.volume = volume;
-            this.shuffle = shuffle;
+            this._volume = volume;
+            this.Shuffle = shuffle;
             this.repeatTrack = repeatTrack;
-            this.askConfirmation = askConfirmation;
-            this.primaryColorIndex = primaryColorIndex;
-            this.accentColorIndex = accentColorIndex;
-            this.theme = theme;
+            this._askConfirmation = askConfirmation;
+            this.PrimaryColorIndex = primaryColorIndex;
+            this.AccentColorIndex = accentColorIndex;
+            this._theme = theme;
 
             //set colors
             var swatches = new SwatchesProvider().Swatches.ToArray();

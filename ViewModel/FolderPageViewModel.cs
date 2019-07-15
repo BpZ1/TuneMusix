@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
+using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
@@ -22,40 +23,40 @@ namespace TuneMusix.ViewModel
         //constructor
         public FolderPageViewModel()
         {
-            DeleteSelected = new RelayCommand(deleteSelected);
-            PlayTrack = new RelayCommand(playTrack);
-            SelectedItemChanged = new RelayCommand(selectedItemChanged);
-            FolderDoubleClicked = new RelayCommand(folderDoubleClicked);
-            TrackDoubleClicked = new RelayCommand(trackDoubleClicked);
+            DeleteSelected = new RelayCommand(_deleteSelected);
+            PlayTrack = new RelayCommand(_playTrack);
+            SelectedItemChanged = new RelayCommand(_selectedItemChanged);
+            FolderDoubleClicked = new RelayCommand(_folderDoubleClicked);
+            TrackDoubleClicked = new RelayCommand(_trackDoubleClicked);
 
             //events
-            dataModel.DataModelChanged += onRootlistChanged;
+            _dataModel.DataModelChanged += OnRootlistChanged;
         }
         //method gets called whenever rootfolders in the datamodel change.
-        private void onRootlistChanged(object source,object obj)
+        private void OnRootlistChanged(object source,object obj)
         {
             RaisePropertyChanged("RootFolders");
         }
 
-        private void deleteSelected(object argument)
+        private void _deleteSelected(object argument)
         {
             if (SelectedFolder != null)
             {
-                dataModel.Delete(SelectedFolder);
+                _dataModel.Delete(SelectedFolder);
                 SelectedFolder = null;
             }
             else if(SelectedTrack != null)
             {
                 List<Track> selectedTracks = new List<Track>();
                 selectedTracks.Add(SelectedTrack);
-                dataModel.Delete(selectedTracks.ToList<Track>());
+                _dataModel.Delete(selectedTracks.ToList<Track>());
             }                    
         }
         /// <summary>
         /// changes the selected items in the datamodel.
         /// </summary>
         /// <param name="argument"></param>
-        private void selectedItemChanged(object argument)
+        private void _selectedItemChanged(object argument)
         {
             if (argument != null)
             {
@@ -72,22 +73,22 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void playTrack(object argument)
+        private void _playTrack(object argument)
         {
             if (SelectedTrack != null)
             {
-                List<Track> templist = new List<Track>();
+                ObservableList<Track> templist = new ObservableList<Track>();
                 templist.Add(SelectedTrack);
                 TrackQueue = templist;
             }                
         }
 
-        private void folderDoubleClicked(object argument)
+        private void _folderDoubleClicked(object argument)
         {
             throw new NotImplementedException();
         }
 
-        private void trackDoubleClicked(object argument)
+        private void _trackDoubleClicked(object argument)
         {
             throw new NotImplementedException();
         }

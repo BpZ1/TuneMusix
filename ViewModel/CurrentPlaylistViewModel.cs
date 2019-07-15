@@ -14,34 +14,40 @@ namespace TuneMusix.ViewModel
     /// </summary>
     class CurrentPlaylistViewModel : ViewModelBase, IDropTarget, IDragSource
     {
-      
+        public ObservableCollection<Track> SelectedTracks { get; set; }
         public RelayCommand SelectionChanged { get; set; }
-        public RelayCommand SetPlaylistIndex { get; set; }
         public RelayCommand RemoveFromPlaylist { get; set; }
         public RelayCommand PlayTrack { get; set; }
         public RelayCommand TrackDoubleClicked { get; set; }
         public RelayCommand OnItemDrop { get; set; }
-        public ObservableCollection<Track> SelectedTracks { get; set; }
+        public RelayCommand AddToPlaylist { get; set; }
 
 
         public CurrentPlaylistViewModel()
         {
 
             SelectedTracks = new ObservableCollection<Track>();
-            SelectionChanged = new RelayCommand(selectionChanged);
-            SetPlaylistIndex = new RelayCommand(indexChanged);
-            PlayTrack = new RelayCommand(playTrack);
-            RemoveFromPlaylist = new RelayCommand(removeFromCurrentPlaylist);
-            TrackDoubleClicked = new RelayCommand(trackDoubleClicked);
+            SelectionChanged = new RelayCommand(_selectionChanged);
+            PlayTrack = new RelayCommand(_playTrack);
+            RemoveFromPlaylist = new RelayCommand(_removeFromCurrentPlaylist);
+            TrackDoubleClicked = new RelayCommand(_trackDoubleClicked);
+            AddToPlaylist = new RelayCommand(_addToPlaylist);
 
-            dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
+            _dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
         }
         #region commands
+        private void _addToPlaylist(object argument)
+        {
+            Playlist playlist = argument as Playlist;
+            if (playlist == null) return;
+
+            playlist.AddRange(SelectedTracks);
+        }
         /// <summary>
         /// Changes the selection of the playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private void selectionChanged(object argument)
+        private void _selectionChanged(object argument)
         {
             var listView = argument as ListView;
             if (listView != null && SelectedTracks != null)
@@ -54,39 +60,25 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void playTrack(object argument)
+        private void _playTrack(object argument)
         {
             if (SelectedTracks == null) return;
             if (SelectedTracks.Count > 0)
             {
                 Track selected = SelectedTracks.ToList<Track>().First();
                 CurrentTrack = selected;
-                dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(selected);
             }
         }
 
-        private void removeFromCurrentPlaylist(object argument)
+        private void _removeFromCurrentPlaylist(object argument)
         {
-            if (SelectedTracks != null && dataModel.CurrentPlaylist != null)
+            if (SelectedTracks != null && _dataModel.CurrentPlaylist != null)
             {
-                dataModel.RemoveTracksFromPlaylist(SelectedTracks.ToList<Track>(), dataModel.CurrentPlaylist);
-            }
-        }
-        /// <summary>
-        /// This method changes the index of the trackqueue to the currently selected track.
-        /// </summary>
-        /// <param name="argument"></param>
-        private void indexChanged(object argument)
-        {
-            if (SelectedTracks != null && CurrentPlaylist != null)
-            {
-                var track = SelectedTracks.First();
-                dataModel.CurrentTrack = track;
-                dataModel.QueueIndex = dataModel.CurrentPlaylist.Itemlist.IndexOf(track);
+                _dataModel.RemoveTracksFromPlaylist(SelectedTracks.ToList<Track>(), _dataModel.CurrentPlaylist);
             }
         }
 
-        private void trackDoubleClicked(object argument)
+        private void _trackDoubleClicked(object argument)
         {
             if (argument == null)
                 throw new ArgumentNullException();
@@ -95,7 +87,6 @@ namespace TuneMusix.ViewModel
             if(track != null)
             {
                 CurrentTrack = track;
-                dataModel.QueueIndex = dataModel.TrackQueue.IndexOf(track);
             }
         }
         #endregion
@@ -132,7 +123,7 @@ namespace TuneMusix.ViewModel
                         if (track != null && dropInfo != null)
                         {
                             ListUtil.ChangeItemPosition<Track>(CurrentPlaylistTracks, track, dropInfo.UnfilteredInsertIndex);
-                            dataModel.CurrentPlaylist.IsModified = true;
+                            _dataModel.CurrentPlaylist.IsModified = true;
                             RaisePropertyChanged("CurrentPlaylistTracks");
                         }
                     }
@@ -142,7 +133,7 @@ namespace TuneMusix.ViewModel
             if(dropInfo.Data.GetType() == typeof(Playlist))
             {
                 Playlist playlist = dropInfo.Data as Playlist;
-                dataModel.CurrentPlaylist = playlist;
+                _dataModel.CurrentPlaylist = playlist;
             }
                  
         }
@@ -186,9 +177,9 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if(dataModel.CurrentPlaylist != null)
+                if(_dataModel.CurrentPlaylist != null)
                 {
-                    return dataModel.CurrentPlaylist.Name;
+                    return _dataModel.CurrentPlaylist.Name;
                 }
                 else
                 {
@@ -200,9 +191,9 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if (dataModel.CurrentPlaylist != null)
+                if (_dataModel.CurrentPlaylist != null)
                 {
-                    return dataModel.CurrentPlaylist.Itemlist;
+                    return _dataModel.CurrentPlaylist.Itemlist;
                 }
                 else
                 {

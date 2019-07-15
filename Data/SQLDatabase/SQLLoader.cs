@@ -16,8 +16,8 @@ namespace TuneMusix.Data.SQLDatabase
     /// </summary>
     public class SQLLoader
     {
-        private Database database = Database.Instance;
-        private IDGenerator IDgen = IDGenerator.Instance;
+        private Database _database = Database.Instance;
+        private IDGenerator _idGen = IDGenerator.Instance;
 
         /// <summary>
         /// Loads all data from the database and 
@@ -37,29 +37,29 @@ namespace TuneMusix.Data.SQLDatabase
             loadingBar.StartLoading("Loading data...");
 
             #region loading data         
-            long idgen = database.GetIDCounterStand();
+            long idgen = _database.GetIDCounterStand();
             if (idgen == 0 || idgen == 1)
             {
                 idgen = 2;
             }
-            IDgen.Initialize(idgen);
-            database.LoadOptions();
+            _idGen.Initialize(idgen);
+            _database.LoadOptions();
 
             loadingBar.Progress = 5;
-            List<Folder> FolderList = database.GetFolders();
+            List<Folder> FolderList = _database.GetFolders();
             loadingBar.Progress = 10;
-            List<Track> tracklist = database.GetTracks();
+            List<Track> tracklist = _database.GetTracks();
             loadingBar.Progress = 20;
-            List<Playlist> playlists = database.GetPlaylists();
+            List<Playlist> playlists = _database.GetPlaylists();
             loadingBar.Progress = 25;
 
             #endregion
 
 
             #region sorting
-            folderSort(FolderList);
+            FolderSort(FolderList);
             loadingBar.Progress = 50;
-            trackSort(FolderList, tracklist);
+            TrackSort(FolderList, tracklist);
             loadingBar.Progress = 80;
             List<Folder> rootList = new List<Folder>();
 
@@ -68,10 +68,10 @@ namespace TuneMusix.Data.SQLDatabase
                 if (folder.FolderID == 1)
                     rootList.Add(folder);
             }
-            playlistSort(playlists, tracklist);
+            PlaylistSort(playlists, tracklist);
             loadingBar.Progress = 90;
-            List<Album> albumList = createAlbums(tracklist);
-            List<Interpret> interpretList = createInterprets(tracklist);
+            List<Album> albumList = CreateAlbums(tracklist);
+            List<Interpret> interpretList = CreateInterprets(tracklist);
             loadingBar.Progress = 100;
             #endregion
 
@@ -91,8 +91,8 @@ namespace TuneMusix.Data.SQLDatabase
         public void LoadOptions()
         {
             AudioControls audio = AudioControls.Instance;
-            database.LoadOptions();
-            List<BaseEffect> effectlist = database.GetEffects();
+            _database.LoadOptions();
+            List<BaseEffect> effectlist = _database.GetEffects();
             audio.EffectQueue.Clear();
             foreach(BaseEffect effect in effectlist)
             {
@@ -106,7 +106,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         /// <param name="tracklist"></param>
         /// <returns></returns>
-        private List<Album> createAlbums(List<Track> tracklist)
+        private List<Album> CreateAlbums(List<Track> tracklist)
         {
             Dictionary<string, List<Track>> albumDictionary = new Dictionary<string, List<Track>>();
             //Create an entry for every new string found (case insensitive).
@@ -132,7 +132,7 @@ namespace TuneMusix.Data.SQLDatabase
                 foreach(Track track in entry.Value)
                 {
                     album.Add(track);
-                    track.albumContainer = album;
+                    track.AlbumContainer = album;
                 }
                 albums.Add(album);
             }
@@ -143,7 +143,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         /// <param name="tracklist"></param>
         /// <returns></returns>
-        private List<Interpret> createInterprets(List<Track> tracklist)
+        private List<Interpret> CreateInterprets(List<Track> tracklist)
         {
             Dictionary<string, List<Track>> interpretDictionary = new Dictionary<string, List<Track>>();
             //Create an entry for every new string found (case insensitive).
@@ -169,7 +169,7 @@ namespace TuneMusix.Data.SQLDatabase
                 foreach (Track track in entry.Value)
                 {
                     interpret.Add(track);
-                    track.interpretContainer = interpret;
+                    track.InterpretContainer = interpret;
                 }
                 interprets.Add(interpret);
             }
@@ -181,7 +181,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         /// <param name="folderlist">List of folders.</param>
         /// <returns>Rootfolder(s) of the given Folder</returns>
-        private void folderSort(List<Folder> folderlist)
+        private void FolderSort(List<Folder> folderlist)
         {
             foreach (Folder a in folderlist)
             {              
@@ -203,7 +203,7 @@ namespace TuneMusix.Data.SQLDatabase
         /// <param name="FolderList">List of folders.</param>
         /// <param name="tracklist">List of tracks.</param>
         /// <returns>List of sorted folders</returns>
-        private void trackSort(List<Folder> FolderList, List<Track> tracklist)
+        private void TrackSort(List<Folder> FolderList, List<Track> tracklist)
         {
             List<Folder> tempFolderList = FolderList;
             foreach (Track track in tracklist)
@@ -225,12 +225,12 @@ namespace TuneMusix.Data.SQLDatabase
         /// </summary>
         /// <param name="playlists">List of playlists.</param>
         /// <param name="tracklist">List of all tracks.</param>
-        private void playlistSort(List<Playlist> playlists, List<Track> tracklist)
+        private void PlaylistSort(List<Playlist> playlists, List<Track> tracklist)
         {
             List<Playlist> sortedList = new List<Playlist>();
             foreach(Playlist playlist in playlists)
             {
-                List<PlaylistTrack> playlistTracks = database.GetPlaylistTracks(playlist);
+                List<PlaylistTrack> playlistTracks = _database.GetPlaylistTracks(playlist);
                 foreach(PlaylistTrack playlistTrack in playlistTracks)
                 {
                     foreach(Track track in tracklist)

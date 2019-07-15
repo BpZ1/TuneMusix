@@ -33,7 +33,7 @@ namespace TuneMusix.Tests.HelperTests
         }
 
         [TestMethod]
-        public void ContainsTest()
+        public void Contains()
         {
             setTracks();
 
@@ -59,7 +59,7 @@ namespace TuneMusix.Tests.HelperTests
         }
 
         [TestMethod]
-        public void AddDurationValidTest()
+        public void AddDurationValid()
         {
             string duration1 = "11:24:44";
             string duration2 = "43";
@@ -77,14 +77,14 @@ namespace TuneMusix.Tests.HelperTests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void NullArgumentAddDurationTest()
+        public void NullArgumentAddDuration()
         {
             TrackService.AddDurations(null, null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
-        public void InvalidArgumentAddDurationTest()
+        public void InvalidArgumentAddDuration()
         {
             TrackService.AddDurations("ab:as:dd", "dd");
         }

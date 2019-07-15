@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Model;
-using System.Linq;
 using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Helpers.MediaPlayer;
-using System.Diagnostics;
-using System.Collections.ObjectModel;
 
 namespace TuneMusix.Data.DataModelOb
 {
@@ -19,14 +16,14 @@ namespace TuneMusix.Data.DataModelOb
         /// </summary>
         public void DatabaseStartupLoading()
         {
-            loader = new SQLLoader();
-            loader.LoadFromDB();
+            _loader = new SQLLoader();
+            _loader.LoadFromDB();
             OnDataModelChanged();
         }
         public void RemoveTrackFromQueue(Track track)
         {
             //If the track is currently playing
-            if(CurrentTrack == track)
+            if (TrackQueue.CurrentTrack == track)
                 AudioControls.Instance.PlayNext();
 
             TrackQueue.Remove(track);
@@ -35,38 +32,33 @@ namespace TuneMusix.Data.DataModelOb
         /// Deletes a track from the folder, tracklist and database.
         /// </summary>
         /// <param name="track"></param>
-        public void Delete(List<Track> tracks)
+        public void Delete(IEnumerable<Track> tracks)
         {
-            bool queueChanged = false;
-
+            TrackQueue.RemoveRange(tracks);
+            TrackList.RemoveRange(tracks);
             foreach (Track track in tracks)
             {
-                if (TrackQueue != null)
-                {
-                    //check if the track is in the current queue
-                    if (TrackQueue.Remove(track))
-                    {
-                        if(CurrentTrack == track)
-                        {
-                            CurrentTrack = null;
-                        }
-                        queueChanged = true;
-                    }
-                }
-                TrackList.Remove(track);
                 foreach (Playlist playlist in Playlists)
                 {
                     //delete only from the object because database has foreign keys.
                     playlist.Itemlist.Remove(track);                                
                 }
+                Folder folder = track.Container;
+                Album album = track.AlbumContainer;
                 track.Dispose();
-                OnDataModelChanged();
-            }
-            //Notify that queue has changed
-            if (queueChanged)
-                OnTrackQueueChanged();
 
-            database.Delete(tracks);
+                if (folder.IsEmpty)
+                {
+                    Delete(folder);
+                }
+                if (album.IsEmpty)
+                {
+                    Albumlist.Remove(album);
+                    OnAlbumlistChanged();
+                }
+            }
+            _database.Delete(tracks);
+            OnDataModelChanged();
         }
         /// <summary>
         /// Deletes a single Playlist. The tracks will not be deleted.
@@ -76,7 +68,7 @@ namespace TuneMusix.Data.DataModelOb
         {         
             if(Playlists.Remove(playlist))
             {
-                database.Delete(playlist);
+                _database.Delete(playlist);
                 if (CurrentPlaylist == playlist)
                 {
                     CurrentPlaylist = null;
@@ -89,7 +81,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="folder"></param>
         public void Delete(Folder folder)
         {
-            database.Delete(folder);
+            _database.Delete(folder);
             DeleteFolderTracks(folder);
 
             //Delete reference from container
@@ -103,32 +95,20 @@ namespace TuneMusix.Data.DataModelOb
             }
             OnDataModelChanged();
         }
+
+        public void Delete(Album album)
+        {
+            Albumlist.Remove(album);
+            Delete(album.Itemlist);
+        }
         /// <summary>
         /// Recursive method for deletion of tracks in folders.
         /// </summary>
         /// <param name="folder"></param>
         private void DeleteFolderTracks(Folder folder)
         {
-            bool queueChanged = false;
-
-            foreach (Track track in folder.Itemlist)
-            {
-                TrackList.Remove(track);
-                if(TrackQueue != null)
-                {
-                    //check if the track is in the current queue
-                    if (TrackQueue.Remove(track))
-                    {
-                        if (CurrentTrack == track)
-                        {
-                            CurrentTrack = null;
-                        }
-                        queueChanged = true;
-                    }
-                }             
-            }
-            if (queueChanged)
-                OnTrackQueueChanged();
+            TrackList.RemoveRange(folder.Itemlist);
+            TrackQueue.RemoveRange(folder.Itemlist);
 
             foreach (Folder f in folder.Folderlist)
             {
@@ -192,7 +172,7 @@ namespace TuneMusix.Data.DataModelOb
                 if (!Contains(track))
                 {
                     TrackList.Add(track);
-                    database.Insert(track);
+                    _database.Insert(track);
                     OnDataModelChanged();
                     return true;
                 }
@@ -209,7 +189,6 @@ namespace TuneMusix.Data.DataModelOb
         public int Add(List<Track> trackList)
         {
             int trackCount = trackList.Count;
-            int added = 0;
             List<Track> uniqueTracks = new List<Track>();
             foreach (Track t in trackList)
             {
@@ -218,63 +197,67 @@ namespace TuneMusix.Data.DataModelOb
                     //Check if Track is already loaded
                     if (!Contains(t))
                     {
-                        TrackList.Add(t); //add track to model
                         uniqueTracks.Add(t);
-                        added++;
+                        CreateContainer(t);
                     }
-                }               
+                }
             }
-            if (added > 0)
+            if (uniqueTracks.Count > 0)
             {
                 //Add tracks to database
-                database.Insert(uniqueTracks);
+                _database.Insert(uniqueTracks);
+                TrackList.AddRange(uniqueTracks);
                 OnDataModelChanged();
-                DialogService.NotificationMessage(added + " tracks have been added.");
+                DialogService.NotificationMessage(uniqueTracks.Count + " tracks have been added.");
             }
-            if(trackCount > added)
-                DialogService.NotificationMessage((trackCount - added) + "could not be added because they already exist.");
+            if(trackCount > uniqueTracks.Count)
+                DialogService.NotificationMessage((trackCount - uniqueTracks.Count) + "could not be added because they already exist.");
 
-            return added;
+            return uniqueTracks.Count;
         }
         /// <summary>
         /// Creates Album and Interpret container if they don't already exist.
         /// </summary>
         /// <param name="track"></param>
-        private void createContainer(Track track)
+        private void CreateContainer(Track track)
         {
+            //Create a new album or add to an existing album.
+            Album targetAlbum = null;
             foreach(Album album in Albumlist)
             {
                 if (track.Album.ToLower().Equals(album.Name.ToLower()))
                 {
-                    album.Add(track);
-                    track.albumContainer = album;
+                    targetAlbum = album;
+                    break;         
                 }
-                else
-                {
-                    Album newAlbum = new Album(track.Album);
-                    newAlbum.Add(track);
-                    track.albumContainer = newAlbum;
-                    Albumlist.Add(newAlbum);                 
-                }               
             }
-            OnAlbumlistChanged();
+            if (targetAlbum == null)
+            {
+                targetAlbum = new Album(track.Album);
+                Albumlist.Add(targetAlbum);
+                OnAlbumlistChanged();
+            }
+            targetAlbum.Add(track);
+            track.AlbumContainer = targetAlbum;
 
+            //Create a new interpret or add to an existing interpret.
+            Interpret targetInterpret = null;
             foreach(Interpret interpret in Interpretlist)
             {
                 if (track.Interpret.ToLower().Equals(interpret.Name.ToLower()))
                 {
-                    interpret.Add(track);
-                    track.interpretContainer = interpret;
-                }
-                else
-                {
-                    Interpret newInterpret = new Interpret(track.Interpret);
-                    newInterpret.Add(track);
-                    track.interpretContainer = newInterpret;
-                    Interpretlist.Add(newInterpret);
+                    targetInterpret = interpret;
+                    break;
                 }
             }
-            OnInterpretlistChanged();
+            if(targetInterpret == null)
+            {
+                targetInterpret = new Interpret(track.Interpret);
+                Interpretlist.Add(targetInterpret);
+                OnInterpretlistChanged();
+            }
+            targetInterpret.Add(track);
+            track.InterpretContainer = targetInterpret;
         }
 
         /// <summary>
@@ -304,7 +287,7 @@ namespace TuneMusix.Data.DataModelOb
                     }
                     Console.WriteLine("Tracks added: " + tracks.Count);
                     folder.FolderID = 1;
-                    database.Insert(folders);
+                    _database.Insert(folders);
                     RootFolders.Add(folder);
                     Add(tracks);
                 }
@@ -340,7 +323,7 @@ namespace TuneMusix.Data.DataModelOb
             {
                 Playlist playlist = new Playlist(name,IDGenerator.GetID(true));
                 Playlists.Add(playlist);
-                database.Insert(playlist);
+                _database.Insert(playlist);
                 OnDataModelChanged();
                 return playlist;
             }
@@ -426,7 +409,7 @@ namespace TuneMusix.Data.DataModelOb
                     tracklist.Remove(track);
                 }
             }
-            database.Delete(playlist, tracklist);
+            _database.Delete(playlist, tracklist);
         }
         /// <summary>
         /// Removes the track from the playlist and the connection of both from the database.
@@ -437,7 +420,7 @@ namespace TuneMusix.Data.DataModelOb
         {
             if (playlist.Itemlist.Remove(track))
             {
-                database.Delete(playlist, track);
+                _database.Delete(playlist, track);
             }
         }
 
@@ -449,7 +432,7 @@ namespace TuneMusix.Data.DataModelOb
         {
             foreach (Playlist playlist in playlists)
             {
-                database.Insert(playlist);
+                _database.Insert(playlist);
                 playlist.IsModified = false;
             }
         }
@@ -459,7 +442,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="tracklist"></param>
         public void SaveTracks(List<Track> tracklist)
         {
-            database.Insert(tracklist);
+            _database.Insert(tracklist);
             foreach (Track track in tracklist)
             {
                 track.IsModified = false;
@@ -471,7 +454,7 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="folderlist"></param>
         public void SaveFolders(List<Folder> folderlist)
         {
-            database.Insert(folderlist);
+            _database.Insert(folderlist);
             foreach(Folder folder in folderlist)
             {
                 folder.IsModified = false;
@@ -483,76 +466,8 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="track"></param>
         public void SaveTrack(Track track)
         {      
-            database.Insert(track);
+            _database.Insert(track);
             track.IsModified = false;
-        }
-
-        /// <summary>
-        /// Shuffles the current trackqueue. 
-        /// </summary>
-        public void ShuffleTrackQueue()
-        {
-            Debug.WriteLine("Shuffling");
-            trackQueueIsShuffled = true; //has to be set before setting the queue to avoid loop.
-            //Set the index of the tracks, to remember the original position             
-            if (trackQueue == null) return;
-            int index = 0;
-            foreach (Track track in trackQueue)
-            {
-                track.Index = index;
-                index++;
-            }
-
-            //Shuffle the queue
-            List<Track> shuffledQueue = TrackQueue.ToList<Track>();
-            ListUtil.Shuffle<Track>(shuffledQueue);
-            trackQueue = new ObservableCollection<Track>(shuffledQueue);
-            QueueIndex = trackQueue.IndexOf(currentTrack);
-            OnTrackQueueChanged();
-        }
-        /// <summary>
-        /// Unshuffles the tracks by returning them to their original order.
-        /// </summary>
-        public void UnShuffleTrackQueue()
-        {
-            Debug.WriteLine("Unshuffling");
-            trackQueueIsShuffled = false;//has to be set before setting the queue to avoid loop.
-            //Get the current queue
-            List<Track> tempList = TrackQueue.ToList<Track>();
-            //sort the queue after index
-            IEnumerable<Track> sortedList =
-                from track in tempList
-                orderby track.Index
-                select track;
-            //Set queue to the sorted list
-            trackQueue = new ObservableCollection<Track>(sortedList);
-            QueueIndex = trackQueue.IndexOf(currentTrack);
-            OnTrackQueueChanged(); 
-        }
-
-        public void ChangeTrackQueuePosition(Track track, int position)
-        {
-            if (track == null)
-                throw new ArgumentNullException();
-
-            if (TrackQueue.Contains(track))
-            {
-                int pos1 = TrackQueue.IndexOf(track);
-                Logger.Log("Moved track from queue position " + pos1 + " to position " + position + ".");
-                if (position == TrackQueue.Count)//If the new position is at the end of the list
-                {
-                    TrackQueue.Move(pos1, position - 1);
-                    if (track.IsCurrentTrack)
-                        QueueIndex = position - 1;
-                }
-                else
-                {
-                    TrackQueue.Move(pos1, position);
-                    if (track.IsCurrentTrack)
-                        QueueIndex = position;
-                }
-                OnTrackQueueChanged();
-            }           
-        }
+        }    
     }
 }

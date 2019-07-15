@@ -10,8 +10,8 @@ namespace TuneMusix.ViewModel
     partial class MusicPlayerViewModel : ViewModelBase
     {
         //------------------------------------------------------
-        private Options options = Options.Instance;
-        private AudioControls audioControls = AudioControls.Instance;
+        private Options _options = Options.Instance;
+        private AudioControls _audioControls = AudioControls.Instance;
 
         //-------------RelayCommands----------------------------------------
         public RelayCommand SliderDraggingOn { get; set; }
@@ -41,38 +41,38 @@ namespace TuneMusix.ViewModel
         private const string REPEAT_OFF_ICON = "repeatoff";
 
         //-------------Fields----------------------------------
-        private Timer timer;
-        private double currentPosition;
-        private bool dragging;
-        private DispatcherTimer dispatcherTimer;
+        private Timer _timer;
+        private double _currentPosition;
+        private bool _dragging;
+        private DispatcherTimer _dispatcherTimer;
 
 
         //Constructor
         public MusicPlayerViewModel()
         {
-            dragging = false;
-            timer = new Timer(100);
+            _dragging = false;
+            _timer = new Timer(100);
             VolumeSliderVisible = false;
 
             //RelayCommands
-            PositionSlider_MouseUp = new RelayCommand(leftMouseUp_Slider);
-            SliderDraggingOn = new RelayCommand(sliderDraggingOn);
-            SliderDraggingOff = new RelayCommand(sliderDraggingOff);
-            PlayButton = new RelayCommand(playButton);
-            NextTrack = new RelayCommand(nextTrack);
-            PreviousTrack = new RelayCommand(previousTrack);
-            RepeatButton = new RelayCommand(onRepeatButtonClicked);
-            VolumeButton = new RelayCommand(onVolumeButtonClicked);
-            VolumeButtonReleased = new RelayCommand(onVolumeButtonReleased);
-            ShuffleButton = new RelayCommand(shuffleButton);
-            OpenVolumePopup = new RelayCommand(openVolumePopup);
-            CloseVolumePopup = new RelayCommand(startPopupClosingTimer);
+            PositionSlider_MouseUp = new RelayCommand(_leftMouseUpSlider);
+            SliderDraggingOn = new RelayCommand(_sliderDraggingOn);
+            SliderDraggingOff = new RelayCommand(_sliderDraggingOff);
+            PlayButton = new RelayCommand(_playButton);
+            NextTrack = new RelayCommand(_nextTrack);
+            PreviousTrack = new RelayCommand(_previousTrack);
+            RepeatButton = new RelayCommand(_onRepeatButtonClicked);
+            VolumeButton = new RelayCommand(_onVolumeButtonClicked);
+            VolumeButtonReleased = new RelayCommand(_onVolumeButtonReleased);
+            ShuffleButton = new RelayCommand(_shuffleButton);
+            OpenVolumePopup = new RelayCommand(_openVolumePopup);
+            CloseVolumePopup = new RelayCommand(_startPopupClosingTimer);
 
             //Events
-            timer.Elapsed += OnTimeElapsed;
-            dataModel.CurrentTrackChanged += OnTrackChanged;
-            audioControls.PlaystateChanged += onPlaystateChanged;
-            dataModel.CurrentPlaylistChanged += onCurrentPlaylistChanged;
+            _timer.Elapsed += OnTimeElapsed;
+            _dataModel.TrackQueue.CurrentTrackChanged += OnTrackChanged;
+            _audioControls.PlaystateChanged += OnPlaystateChanged;
+            _dataModel.CurrentPlaylistChanged += OnCurrentPlaylistChanged;
         }
 
         public bool VolumeSliderVisible
@@ -87,7 +87,7 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if (audioControls.IsPlaying)
+                if (_audioControls.IsPlaying)
                 {
                     return PAUS_ICON;
                 }
@@ -99,7 +99,7 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if (audioControls.Mute)
+                if (_audioControls.Mute)
                 {
                     return VOLUME_OFF_ICON;
                 }
@@ -123,11 +123,11 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                return this.currentPosition;
+                return this._currentPosition;
             }
             set
             {
-                currentPosition = value;
+                _currentPosition = value;
                 RaisePropertyChanged("CurrentSliderPosition");
             }
         }
@@ -135,16 +135,16 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                return audioControls.CurrentPosition.TotalSeconds;
+                return _audioControls.CurrentPosition.TotalSeconds;
             }
             set
             {
-                audioControls.CurrentPosition = TimeSpan.FromSeconds(value);
+                _audioControls.CurrentPosition = TimeSpan.FromSeconds(value);
             }
         }
         public string SliderPostionString
         {
-            get { return Converter.TimeSpanToString(TimeSpan.FromSeconds(this.currentPosition)); }
+            get { return Converter.TimeSpanToString(TimeSpan.FromSeconds(this._currentPosition)); }
         }
         public string PositionTime
         {
@@ -158,8 +158,8 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if(dataModel.CurrentPlaylist != null){
-                    return dataModel.CurrentPlaylist.Name;
+                if(_dataModel.CurrentPlaylist != null){
+                    return _dataModel.CurrentPlaylist.Name;
                 }
                 else
                 {
@@ -174,7 +174,7 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-               return audioControls.IsLoaded;
+               return _audioControls.IsLoaded;
             }
         }
         /// <summary>
@@ -191,7 +191,7 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                return audioControls.Length.TotalSeconds;
+                return _audioControls.Length.TotalSeconds;
             }
         }
         //Value of the volume slider
@@ -199,11 +199,11 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                return options.Volume;
+                return _options.Volume;
             }
             set
             {
-                options.Volume = value;
+                _options.Volume = value;
                 RaisePropertyChanged("Volume");
                 RaisePropertyChanged("VolumeButtonIcon");
             }
@@ -227,7 +227,7 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if (options.Shuffle)
+                if (_options.Shuffle)
                 {
                     return SHUFFLE_ON_ICON;
                 }
@@ -244,10 +244,10 @@ namespace TuneMusix.ViewModel
         /// </summary>
         public int RepeatTrack
         {
-            get { return options.RepeatTrack; }
+            get { return _options.RepeatTrack; }
             set
             {
-                options.RepeatTrack = value;
+                _options.RepeatTrack = value;
                 RaisePropertyChanged("RepeatTrack");                     
             }
         }

@@ -2,33 +2,25 @@
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
 using TuneMusix.Helpers;
 
 namespace TuneMusix.Controls
 {
+    /// <summary>
+    /// Slider that displays the tooltip value in time format.
+    /// </summary>
     public partial class FormattedSlider : Slider
     {
-        private System.Windows.Controls.ToolTip _autoToolTip;
-        private string _autoToolTipFormat;
-        private bool _isTimeValue;
+        private ToolTip _autoToolTip;
 
         /// <summary>
         /// Gets/sets a format string used to modify the auto tooltip's content.
         /// Note: This format string must contain exactly one placeholder value,
         /// which is used to hold the tooltip's original content.
         /// </summary>
-        public string AutoToolTipFormat
-        {
-            get { return _autoToolTipFormat; }
-            set { _autoToolTipFormat = value; }
-        }
+        public string AutoToolTipFormat { get; set; }
 
-        public bool IsTimeValue
-        {
-            get { return _isTimeValue; }
-            set { _isTimeValue = value; }
-        }
+        public bool IsTimeValue { get; set; }
 
 
         protected override void OnThumbDragStarted(DragStartedEventArgs e)
@@ -48,9 +40,9 @@ namespace TuneMusix.Controls
             //Format the sting using the formater.
             if (!string.IsNullOrEmpty(this.AutoToolTipFormat))
             {
-                this.AutoToolTip.Content = string.Format(
-                    this.AutoToolTipFormat,
-                    this.AutoToolTip.Content);
+                AutoToolTip.Content = string.Format(
+                    AutoToolTipFormat,
+                    AutoToolTip.Content);
             }
             //Format the string if it is a time value in seconds.
             if (IsTimeValue)
@@ -61,8 +53,7 @@ namespace TuneMusix.Controls
             }
         }
 
-
-        private System.Windows.Controls.ToolTip AutoToolTip
+        private ToolTip AutoToolTip
         {
             get
             {
@@ -72,7 +63,7 @@ namespace TuneMusix.Controls
                         "_autoToolTip",
                         BindingFlags.NonPublic | BindingFlags.Instance);
 
-                    _autoToolTip = field.GetValue(this) as System.Windows.Controls.ToolTip;
+                    _autoToolTip = field.GetValue(this) as ToolTip;
                 }
 
                 return _autoToolTip;

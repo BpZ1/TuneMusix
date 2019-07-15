@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
-using TuneMusix.Data.DataModelOb;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Helpers.MediaPlayer.Effects;
@@ -15,18 +14,14 @@ namespace TuneMusix.ViewModel.Effects
     class EffectsViewModel : INotifyPropertyChanged,IDragSource,IDropTarget
     {
         public BaseEffect SelectedItem { get; set; }
-        private Options options = Options.Instance;
-        private DataModel dataModel = DataModel.Instance;
+        private Options _options = Options.Instance;
         public RelayCommand RemoveEffect { get; set; }
 
-        public ObservableCollection<BaseEffect> Effectlist
-        {
-            get { return AudioControls.Instance.EffectQueue.Effectlist; }
-        }
+        public ObservableCollection<BaseEffect> Effectlist => AudioControls.Instance.EffectQueue.Effectlist;
 
         public EffectsViewModel()
         {
-            RemoveEffect = new RelayCommand(removeEffect);
+            RemoveEffect = new RelayCommand(_removeEffect);
             AudioControls.Instance.EffectQueue.QueueChanged += OnEffectQueueChanged;
         }
 
@@ -35,18 +30,18 @@ namespace TuneMusix.ViewModel.Effects
             RaisePropertyChanged("Effectlist");
         }
 
-        private void removeEffect(object argument)
+        private void _removeEffect(object argument)
         {
             if(SelectedItem != null)
             {
                 AudioControls.Instance.EffectQueue.Remove(SelectedItem);
-                options.Modified = true;
+                _options.Modified = true;
             }      
         }
 
         internal void RaisePropertyChanged(string prop)
         {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
         #region notifyInterface
         public event PropertyChangedEventHandler PropertyChanged;
@@ -125,7 +120,6 @@ namespace TuneMusix.ViewModel.Effects
                 AudioControls.Instance.
                     EffectQueue.ChangeEffectListPosition(effect, dropInfo.UnfilteredInsertIndex);
             }
-            options.Modified = true;
         }
         #endregion
     }

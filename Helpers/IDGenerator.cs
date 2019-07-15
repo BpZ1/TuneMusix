@@ -1,6 +1,4 @@
 ﻿using System.Threading;
-using TuneMusix.Data.DataModelOb;
-using TuneMusix.Data.SQLDatabase;
 using TuneMusix.Exceptions;
 using TuneMusix.Model;
 
@@ -12,8 +10,8 @@ namespace TuneMusix.Helpers
     public class IDGenerator
     {
         public static long IDCounter;
-        private static bool IsInit = false;
-        private static object lockObject = new object();
+        private static bool _isInitialized = false;
+        private static readonly object _lockObject = new object();
 
         private static IDGenerator instance;
 
@@ -32,7 +30,7 @@ namespace TuneMusix.Helpers
         public void Initialize(long init)
         {
             IDCounter = init;
-            IsInit = true;
+            _isInitialized = true;
         }
 
         /// <summary>
@@ -42,13 +40,13 @@ namespace TuneMusix.Helpers
         /// <returns></returns>
         public static long GetID(bool saving)
         {
-            if (IsInit && !saving)
+            if (_isInitialized && !saving)
             {
                 return Interlocked.Increment(ref IDCounter)-1;
             }
-            else if(IsInit && saving)
+            else if(_isInitialized && saving)
             {
-                lock (lockObject)
+                lock (_lockObject)
                 {
                     long id = Interlocked.Increment(ref IDCounter);
                     Options.Instance.SaveValues();

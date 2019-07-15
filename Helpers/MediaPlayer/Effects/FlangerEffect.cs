@@ -5,32 +5,31 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
     public class FlangerEffect : BaseEffect
     {
-
-        private DmoFlangerEffect flanger;
-        private bool isInitialized;
-        private float delay = 2;
-        private float depth = 100;
-        private float feedback = -50;
-        private float frequency = 0.25f;
-        private float wet_DryMix = 50;
-        private int waveForm = 1;
+        private DmoFlangerEffect _flanger;
+        private bool _isInitialized;
+        private float _delay = 2;
+        private float _depth = 100;
+        private float _feedback = -50;
+        private float _frequency = 0.25f;
+        private float _wet_DryMix = 50;
+        private int _waveForm = 1;
         
         public FlangerEffect()
         {
             IsActive = true;
-            isInitialized = false;
+            _isInitialized = false;
         }
 
         public FlangerEffect(float delay,float depth,float feedback,float frequency,float wetDryMix,int waveForm)
         {
             IsActive = true;
-            this.delay = delay;
-            this.depth = depth;
-            this.feedback = feedback;
-            this.frequency = frequency;
-            wet_DryMix = wetDryMix;
-            this.waveForm = waveForm;
-            isInitialized = false;
+            this._delay = delay;
+            this._depth = depth;
+            this._feedback = feedback;
+            this._frequency = frequency;
+            _wet_DryMix = wetDryMix;
+            this._waveForm = waveForm;
+            _isInitialized = false;
         }
 
         public override IWaveSource Apply(IWaveSource waveSource)
@@ -43,92 +42,92 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         private DmoFlangerEffect createFlanger(IWaveSource waveSource)
         {
-            flanger = new DmoFlangerEffect(waveSource);
-            isInitialized = true;
-            flanger.Delay = delay;
-            flanger.Depth = depth;
-            flanger.Feedback = feedback;
-            flanger.Frequency = frequency;
-            flanger.WetDryMix = wet_DryMix;
-            flanger.Waveform = (FlangerWaveform)waveForm;
-            return flanger;
+            _flanger = new DmoFlangerEffect(waveSource);
+            _isInitialized = true;
+            _flanger.Delay = _delay;
+            _flanger.Depth = _depth;
+            _flanger.Feedback = _feedback;
+            _flanger.Frequency = _frequency;
+            _flanger.WetDryMix = _wet_DryMix;
+            _flanger.Waveform = (FlangerWaveform)_waveForm;
+            return _flanger;
         }
 
         public float Delay
         {
-            get { return delay; }
+            get { return _delay; }
             set
             {
-                delay = value;
+                _delay = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    flanger.Delay = delay;
+                    _flanger.Delay = _delay;
                 }
             }
         }
         public float Depth
         {
-            get { return depth; }
+            get { return _depth; }
             set
             {
-                depth = value;
+                _depth = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    flanger.Depth = depth;
+                    _flanger.Depth = _depth;
                 }
             }
         }
         public float Feedback
         {
-            get { return feedback; }
+            get { return _feedback; }
             set
             {
-                feedback = value;
+                _feedback = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    flanger.Delay = feedback;
+                    _flanger.Delay = _feedback;
                 }
             }
         }
         public float Frequency
         {
-            get { return frequency; }
+            get { return _frequency; }
             set
             {
-                frequency = value;
+                _frequency = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    flanger.Frequency = frequency;
+                    _flanger.Frequency = _frequency;
                 }
             }
         }
         public float Wet_DryMix
         {
-            get { return wet_DryMix; }
+            get { return _wet_DryMix; }
             set
             {
-                wet_DryMix = value;
+                _wet_DryMix = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    flanger.WetDryMix = wet_DryMix;
+                    _flanger.WetDryMix = _wet_DryMix;
                 }
             }
         }
         public int WaveForm
         {
-            get { return waveForm; }
+            get { return _waveForm; }
             set
             {
-                waveForm = value;
+                _waveForm = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    flanger.Waveform = (FlangerWaveform)waveForm;
+                    _flanger.Waveform = (FlangerWaveform)_waveForm;
                 }
             }
         }

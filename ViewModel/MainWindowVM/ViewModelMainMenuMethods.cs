@@ -19,7 +19,7 @@ namespace TuneMusix.ViewModel
         /// Opens a File Dialog to select Audio Files
         /// </summary>
         /// <param name="parameter"></param>
-        private void getFiles(object parameter)
+        private void _getFiles(object parameter)
         {
             var watch = new Stopwatch();
             watch.Start();
@@ -38,14 +38,14 @@ namespace TuneMusix.ViewModel
                 {
                     URLList.Add(url);
                 }
-                dataModel.AddTracks(URLList);
+                _dataModel.AddTracks(URLList);
             }
 
             watch.Stop();
             Debug.WriteLine("Time: " + watch.ElapsedMilliseconds);
         }
 
-        private void openOptionsWindow(object argument)
+        private void _openOptionsWindow(object argument)
         {
             var win = new OptionsWindowView();
             win.ShowDialog();
@@ -54,12 +54,12 @@ namespace TuneMusix.ViewModel
         /// Saved the changed data to the database.
         /// </summary>
         /// <param name="argument"></param>
-        private void saveData(object argument)
+        private void _saveData(object argument)
         {
             //get modified files from the datamodel
-            List<Folder> saveFolders = dataModel.GetAllFolders(true);
-            List<Playlist> savePlaylists = checkPlaylistsModified();
-            List<Track> saveTracks = checkTracksModified();
+            List<Folder> saveFolders = _dataModel.GetAllFolders(true);
+            List<Playlist> savePlaylists = CheckPlaylistsModified();
+            List<Track> saveTracks = CheckTracksModified();
 
             int modifiedCount = saveTracks.Count + savePlaylists.Count + saveFolders.Count;
 
@@ -69,9 +69,9 @@ namespace TuneMusix.ViewModel
                 //Save data to database
                 Database dbManager = Database.Instance;
 
-                dataModel.SavePlaylists(savePlaylists);
-                dataModel.SaveTracks(saveTracks);
-                dataModel.SaveFolders(saveFolders);
+                _dataModel.SavePlaylists(savePlaylists);
+                _dataModel.SaveTracks(saveTracks);
+                _dataModel.SaveFolders(saveFolders);
 
                 dbManager.Insert(saveTracks);
                 dbManager.Insert(saveFolders);
@@ -87,10 +87,10 @@ namespace TuneMusix.ViewModel
         /// Returns a list of all modified tracks in the datamodel.
         /// </summary>
         /// <returns></returns>
-        private List<Track> checkTracksModified()
+        private List<Track> CheckTracksModified()
         {
             List<Track> modifiedTracks = new List<Track>();
-            foreach (Track track in dataModel.TrackList)
+            foreach (Track track in _dataModel.TrackList)
             {
                 if (track.IsModified)
                     modifiedTracks.Add(track);
@@ -103,10 +103,10 @@ namespace TuneMusix.ViewModel
         /// Returns a list of all modified playlists in the datamodel.
         /// </summary>
         /// <returns></returns>
-        private List<Playlist> checkPlaylistsModified()
+        private List<Playlist> CheckPlaylistsModified()
         {
             List<Playlist> modifiedPlaylists = new List<Playlist>();
-            foreach (Playlist playlist in dataModel.Playlists)
+            foreach (Playlist playlist in _dataModel.Playlists)
             {
                 if (playlist.IsModified)
                     modifiedPlaylists.Add(playlist);
@@ -115,7 +115,7 @@ namespace TuneMusix.ViewModel
             return modifiedPlaylists;
         }
 
-        private void exitButtonPressed(object argument)
+        private void _exitButtonPressed(object argument)
         {
             var window = argument as Window;
             window.Close();
@@ -125,13 +125,13 @@ namespace TuneMusix.ViewModel
         /// Gets called when the exit button is pressed or the window is closed.
         /// </summary>
         /// <param name="argument"></param>
-        private void exitApplication(object argument)
+        private void _exitApplication(object argument)
         {
             var eventArgs = argument as CancelEventArgs;
 
-            int count = dataModel.GetAllFolders(true).Count + checkPlaylistsModified().Count + checkTracksModified().Count;
+            int count = _dataModel.GetAllFolders(true).Count + CheckPlaylistsModified().Count + CheckTracksModified().Count;
             //Ask if data should be saved.
-            if (count > 0 && options.AskConfirmation)
+            if (count > 0 && _options.AskConfirmation)
             {
                 DialogViewModelBase vm = new ConfirmationDialogViewModel("Do you want to close without saving?");
                 DialogResult result = DialogService.OpenDialog(vm);
@@ -163,16 +163,11 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        private void debugMethod(object argument)
-        {
-            DialogService.WarnMessage("DEBUG","This is a debug message!");
-        }
-
         /// <summary>
         /// Adds the folder via the selected URL to the datamodel and database.
         /// </summary>
         /// <param name="argument"></param>
-        public void addFolder(object argument)
+        public void _addFolder(object argument)
         {
             var watch = new Stopwatch();
             watch.Start();
@@ -182,7 +177,7 @@ namespace TuneMusix.ViewModel
             if (folderbrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderbrowser.SelectedPath))
             {
                 
-                dataModel.AddTracks(folderbrowser.SelectedPath);
+                _dataModel.AddTracks(folderbrowser.SelectedPath);
             }
 
             watch.Stop();

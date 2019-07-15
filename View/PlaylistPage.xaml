@@ -6,10 +6,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:vm="clr-namespace:TuneMusix.ViewModel"
       xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
-      xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-      xmlns:local="clr-namespace:TuneMusix.View"
       xmlns:controls="clr-namespace:TuneMusix.View.Controls"
-      xmlns:system="clr-namespace:System;assembly=mscorlib"
       mc:Ignorable="d" 
       d:DesignHeight="624" d:DesignWidth="510.73"
       Title="PlaylistPage"
@@ -42,10 +39,15 @@
                     <materialDesign:ColorZone Mode="PrimaryMid" Grid.Row="0" >
                         <TextBlock Margin="16" Text="Playlists" FontWeight="DemiBold" FontSize="18" FontFamily="Segoe UI"/>
                     </materialDesign:ColorZone>
-                    <ListView ScrollViewer.CanContentScroll="False" Grid.Row="1" ItemsSource="{Binding Playlists,UpdateSourceTrigger=PropertyChanged}" 
+                    <ListView Name="PlaylistListView" ScrollViewer.CanContentScroll="False" Grid.Row="1" ItemsSource="{Binding Playlists,UpdateSourceTrigger=PropertyChanged}" 
                              dd:DragDrop.IsDragSource="True" dd:DragDrop.DragAdornerTemplate="{StaticResource PlaylistDragAdorner}"
                              dd:DragDrop.IsDropTarget="True" dd:DragDrop.DragHandler="{Binding}" 
                              SelectionMode="Single" SelectedItem="{Binding SelectedPlaylist}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SelectionChanged}" CommandParameter="{Binding Path=SelectedItem, ElementName=PlaylistListView}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <ListView.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Command="{Binding SetPlaylistCurrent}">
@@ -109,8 +111,5 @@
                 </Grid>
             </Border>
         </materialDesign:DialogHost>
-
-
-
     </DockPanel>
 </Page>

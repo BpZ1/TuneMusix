@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using TuneMusix.Model;
 
 namespace TuneMusix.Helpers
@@ -67,10 +62,6 @@ namespace TuneMusix.Helpers
 
             int[] times = new int[4];
             int counter = 3;
-            for(int i = 5; i > 1; i--)
-            {
-                Console.Out.WriteLine("");
-            }
             for(int i = times1.Length - 1; i > -1; i--)
             {
                 int number = 0;

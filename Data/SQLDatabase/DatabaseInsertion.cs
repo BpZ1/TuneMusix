@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
 using TuneMusix.Helpers;
@@ -52,9 +51,9 @@ namespace TuneMusix.Data.SQLDatabase
                                                                 "value10," +
                                                                 "value11) ";
         
-        private SQLiteCommand createCommand(string prefix, Track track)
+        private SQLiteCommand CreateCommand(string prefix, Track track)
         {
-            SQLiteCommand sqlcommand = new SQLiteCommand(prefix + " " + TRACK_COMMAND, dbConnection);
+            SQLiteCommand sqlcommand = new SQLiteCommand(prefix + " " + TRACK_COMMAND, _dbConnection);
             sqlcommand.Parameters.AddWithValue("ID", track.ID);
             if (track.FolderID == 0)
             {
@@ -80,7 +79,7 @@ namespace TuneMusix.Data.SQLDatabase
         public void Insert(Track track)
         {
             Logger.Log("Track: '" + track.SourceURL + "' added to database");
-            SQLiteCommand sqlcommand = createCommand("INSERT OR REPLACE INTO", track);       
+            SQLiteCommand sqlcommand = CreateCommand("INSERT OR REPLACE INTO", track);       
 
             OpenDBConnection();
             try
@@ -93,23 +92,23 @@ namespace TuneMusix.Data.SQLDatabase
             }
         }
 
-        public void Insert(List<Track> tracklist)
+        public void Insert(IEnumerable<Track> tracklist)
         {
             List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
             
             foreach (Track track in tracklist)
             {
-                commandlist.Add(createCommand("INSERT OR REPLACE INTO", track));
+                commandlist.Add(CreateCommand("INSERT OR REPLACE INTO", track));
             }
             OpenDBConnection();
             try
             {
-                beginCommand.ExecuteNonQuery();
+                _beginCommand.ExecuteNonQuery();
                 foreach (SQLiteCommand command in commandlist)
                 {
                     command.ExecuteNonQuery();
                 }
-                endCommand.ExecuteNonQuery();
+                _endCommand.ExecuteNonQuery();
             }
             finally
             {
@@ -118,7 +117,7 @@ namespace TuneMusix.Data.SQLDatabase
             Debug.WriteLine("Tracks were added to DB");
         }
       
-        public void Insert(List<Folder> folders)
+        public void Insert(IEnumerable<Folder> folders)
         {
             List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
             foreach (Folder f in folders)
@@ -131,7 +130,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                          "@folderID," +
                                                                                          "@URL," +
                                                                                          "@name);",
-                                                                                         dbConnection);
+                                                                                         _dbConnection);
                 command.Parameters.AddWithValue("ID",f.ID);
                 if (f.FolderID == 1)
                 {
@@ -148,12 +147,12 @@ namespace TuneMusix.Data.SQLDatabase
             OpenDBConnection();
             try
             {
-                beginCommand.ExecuteNonQuery();
+                _beginCommand.ExecuteNonQuery();
                 foreach (SQLiteCommand com in commandlist)
                 {
                     com.ExecuteNonQuery();
                 }
-                endCommand.ExecuteNonQuery();
+                _endCommand.ExecuteNonQuery();
             }
             finally
             {
@@ -171,7 +170,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                             "name) " +
                                                                                      "VALUES(@ID," +
                                                                                             "@name);",
-                                                                                             dbConnection);
+                                                                                             _dbConnection);
             playlistInsertCommand.Parameters.AddWithValue("ID", playlist.ID);
             playlistInsertCommand.Parameters.AddWithValue("name", playlist.Name);
             commandlist.Add(playlistInsertCommand);
@@ -185,7 +184,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                                "playlistID) " +
                                                                                          "VALUES(@trackID," +
                                                                                                 "@playlistID)",
-                                                                                                 dbConnection);
+                                                                                                 _dbConnection);
                     command.Parameters.AddWithValue("trackID", track.ID);
                     command.Parameters.AddWithValue("playlistID", playlist.ID);
                     commandlist.Add(command);
@@ -195,13 +194,13 @@ namespace TuneMusix.Data.SQLDatabase
             OpenDBConnection();
             try
             {
-                beginCommand.ExecuteNonQuery();
+                _beginCommand.ExecuteNonQuery();
 
                 foreach(SQLiteCommand command in commandlist)
                 {
                     command.ExecuteNonQuery();
                 }
-                endCommand.ExecuteNonQuery();
+                _endCommand.ExecuteNonQuery();
             }
             finally
             {
@@ -225,11 +224,11 @@ namespace TuneMusix.Data.SQLDatabase
         /// <param name="options"></param>
         public void UpdateOptions(long IDGenStand, Options options)
         {
-            SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM options",dbConnection);
-            SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",dbConnection);
+            SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM options",_dbConnection);
+            SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",_dbConnection);
             //Query
             SQLiteCommand sqlAddCommand = new SQLiteCommand("INSERT INTO options (IDgen,volume,shuffle,repeatTrack,primaryColor,accentColor,theme,askConfirmation)"+
-                " VALUES (@IDgen,@volume,@shuffle,@repeatTrack,@primaryColor,@accentColor,@theme,@askConfirmation);", dbConnection);
+                " VALUES (@IDgen,@volume,@shuffle,@repeatTrack,@primaryColor,@accentColor,@theme,@askConfirmation);", _dbConnection);
 
             //Set values
             sqlAddCommand.Parameters.AddWithValue("IDgen", IDGenStand);
@@ -247,9 +246,9 @@ namespace TuneMusix.Data.SQLDatabase
                 sqlClearCommand.ExecuteNonQuery();
                 sqlVacuum.ExecuteNonQuery();
 
-                beginCommand.ExecuteNonQuery();             
+                _beginCommand.ExecuteNonQuery();             
                 sqlAddCommand.ExecuteNonQuery();
-                endCommand.ExecuteNonQuery();
+                _endCommand.ExecuteNonQuery();
             }
             finally
             {
@@ -257,10 +256,10 @@ namespace TuneMusix.Data.SQLDatabase
             }
         }
   
-        public void UpdateEffectQueue(List<BaseEffect> effectQueue)
+        public void UpdateEffectQueue(IEnumerable<BaseEffect> effectQueue)
         {
-            SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM effectsqueue",dbConnection);
-            SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",dbConnection);
+            SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM effectsqueue",_dbConnection);
+            SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",_dbConnection);
             List<SQLiteCommand> effectInsertCommands = new List<SQLiteCommand>();
             int i = 1;
             foreach (BaseEffect effect in effectQueue)
@@ -286,7 +285,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                        "@Value9," +
                                                                                        "@Phase," +
                                                                                        "@waveform);"
-                                                                                       ,dbConnection);
+                                                                                       ,_dbConnection);
                     command.Parameters.AddWithValue("Index",i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
@@ -324,7 +323,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                            "@Value9," +
                                                                                            "@Value10," +
                                                                                            "@Value11);"
-                                                                                           ,dbConnection);
+                                                                                           ,_dbConnection);
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else  command.Parameters.AddWithValue("Isactive", 0);
@@ -362,7 +361,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                      "@Value9," +
                                                                                      "@Pandelay,"+
                                                                                      "@Value11);"
-                                                                                     ,dbConnection);
+                                                                                     ,_dbConnection);
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
@@ -401,7 +400,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                         "@Value9," +
                                                                                         "@Waveform,"+
                                                                                         "@Value11);"
-                                                                                        ,dbConnection);
+                                                                                        ,_dbConnection);
 
                    command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
@@ -440,7 +439,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                            "@Value9," +
                                                                                            "@Value10," +
                                                                                            "@Value11);"
-                                                                                           , dbConnection);
+                                                                                           , _dbConnection);
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
@@ -478,7 +477,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                        "@Value9," +
                                                                                        "@Value10," +
                                                                                        "@Value11);"
-                                                                                       ,dbConnection);
+                                                                                       ,_dbConnection);
 
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
@@ -517,7 +516,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                           "@Filter10," +
                                                                                           "@Value10," +
                                                                                           "@Value11);"
-                                                                                          ,dbConnection);
+                                                                                          ,_dbConnection);
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
                     else command.Parameters.AddWithValue("Isactive", 0);
@@ -555,7 +554,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                        "@Value9," +
                                                                                        "@Rate," +
                                                                                        "@Waveshape);"
-                                                                                       ,dbConnection);
+                                                                                       ,_dbConnection);
 
                     command.Parameters.AddWithValue("Index", i);
                     if (currentEffect.IsActive) command.Parameters.AddWithValue("Isactive", 1);
@@ -585,12 +584,12 @@ namespace TuneMusix.Data.SQLDatabase
                 sqlClearCommand.ExecuteNonQuery();
                 sqlVacuum.ExecuteNonQuery();
 
-                beginCommand.ExecuteNonQuery();
+                _beginCommand.ExecuteNonQuery();
                 foreach (SQLiteCommand command in effectInsertCommands)
                 {
                     command.ExecuteNonQuery();
                 }
-                endCommand.ExecuteNonQuery();
+                _endCommand.ExecuteNonQuery();
             }
             finally
             {

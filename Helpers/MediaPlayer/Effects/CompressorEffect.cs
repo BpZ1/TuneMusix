@@ -1,29 +1,23 @@
 ﻿using CSCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CSCore.Streams.Effects;
-using TuneMusix.Model;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
     public class CompressorEffect : BaseEffect
     {
-        private DmoCompressorEffect compressor;
-        private bool isInitialized;
-        private float attack = 10;
-        private float gain = 0;
-        private float preDelay = 4;
-        private float ratio = 3;
-        private float release = 200;
-        private float treshold = -20;
+        private DmoCompressorEffect _compressor;
+        private bool _isInitialized;
+        private float _attack = 10;
+        private float _gain = 0;
+        private float _preDelay = 4;
+        private float _ratio = 3;
+        private float _release = 200;
+        private float _treshold = -20;
 
         public CompressorEffect()
         {
             IsActive = true;
-            isInitialized = false;
+            _isInitialized = false;
         }
         public CompressorEffect(
             float attack,
@@ -33,13 +27,13 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             float trashold)
         {
             IsActive = true;
-            this.attack = attack;
-            this.gain = gain;
-            this.preDelay = preDelay;
-            this.ratio = ratio;
-            this.release = release;
-            treshold = trashold;
-            isInitialized = false;
+            this._attack = attack;
+            this._gain = gain;
+            this._preDelay = preDelay;
+            this._ratio = ratio;
+            this._release = release;
+            _treshold = trashold;
+            _isInitialized = false;
         }
 
 
@@ -52,92 +46,92 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         }
         private DmoCompressorEffect createCompressor(IWaveSource waveSource)
         {
-            compressor = new DmoCompressorEffect(waveSource);
-            isInitialized = true;
-            compressor.Attack = attack;
-            compressor.Gain = gain;
-            compressor.Predelay = preDelay;
-            compressor.Ratio = ratio;
-            compressor.Release = release;
-            compressor.Threshold = treshold;
-            return compressor;
+            _compressor = new DmoCompressorEffect(waveSource);
+            _isInitialized = true;
+            _compressor.Attack = _attack;
+            _compressor.Gain = _gain;
+            _compressor.Predelay = _preDelay;
+            _compressor.Ratio = _ratio;
+            _compressor.Release = _release;
+            _compressor.Threshold = _treshold;
+            return _compressor;
         }
 
         public float Attack
         {
-            get { return attack; }
+            get { return _attack; }
             set
             {
-                attack = value;
+                _attack = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    compressor.Attack = attack;
+                    _compressor.Attack = _attack;
                 }
             }
         }
         public float Gain
         {
-            get { return gain; }
+            get { return _gain; }
             set
             {
-                gain = value;
+                _gain = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    compressor.Gain = gain;
+                    _compressor.Gain = _gain;
                 }
             }
         }
         public float Predelay
         {
-            get { return preDelay; }
+            get { return _preDelay; }
             set
             {
-                preDelay = value;
+                _preDelay = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    compressor.Predelay = preDelay;
+                    _compressor.Predelay = _preDelay;
                 }
             }
         }
         public float Ratio
         {
-            get { return ratio; }
+            get { return _ratio; }
             set
             {
-                ratio = value;
+                _ratio = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    compressor.Ratio = ratio;
+                    _compressor.Ratio = _ratio;
                 }
             }
         }
         public float Release
         {
-            get { return release; }
+            get { return _release; }
             set
             {
-                release = value;
+                _release = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    compressor.Release = release;
+                    _compressor.Release = _release;
                 }
             }
         }
         public float Treshold
         {
-            get { return treshold; }
+            get { return _treshold; }
             set
             {
-                treshold = value;
+                _treshold = value;
                 IsModified = true;
-                if (isInitialized)
+                if (_isInitialized)
                 {
-                    compressor.Threshold = treshold;
+                    _compressor.Threshold = _treshold;
                 }
             }
         }

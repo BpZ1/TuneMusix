@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using TuneMusix.Data.DataModelOb;
+using TuneMusix.Helpers.Util;
 using TuneMusix.Model;
 
 namespace TuneMusix.ViewModel
@@ -13,62 +12,51 @@ namespace TuneMusix.ViewModel
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
 
-        protected DataModel dataModel = DataModel.Instance;
+        protected DataModel _dataModel = DataModel.Instance;
 
-        public ObservableCollection<Track> TrackList
+        public ObservableList<Track> TrackList
         {
-            get { return dataModel.TrackList; }
+            get { return _dataModel.TrackList; }
         }
 
 
         public Track CurrentTrack
         {
-            get { return dataModel.CurrentTrack; }
+            get { return _dataModel.TrackQueue.CurrentTrack; }
             set
             {
-                dataModel.CurrentTrack = value;
-                RaisePropertyChanged("CurrentTrack");
+                _dataModel.TrackQueue.CurrentTrack = value;
             }
         }
 
-        public ObservableCollection<Playlist> Playlists
-        {
-            get { return dataModel.Playlists; }
-            set
-            {
-                dataModel.Playlists = value;
-                RaisePropertyChanged("Playlists");
-            }
-        }
+        public ObservableList<Playlist> Playlists => _dataModel.Playlists;
 
         public Playlist CurrentPlaylist
         {
-            get { return dataModel.CurrentPlaylist; }
+            get { return _dataModel.CurrentPlaylist; }
             set
             {
-                dataModel.CurrentPlaylist = value;
+                _dataModel.CurrentPlaylist = value;
                 RaisePropertyChanged("CurrentPlaylist");
             }
         }
 
         public ObservableCollection<Folder> RootFolders
         {
-            get { return dataModel.RootFolders; }
+            get { return _dataModel.RootFolders; }
         }
-        public List<Track> TrackQueue
+
+        public ObservableList<Track> TrackQueue
         {
-            get { return dataModel.TrackQueue.ToList<Track>(); }
-            set { dataModel.TrackQueue = new ObservableCollection<Track>(value); }
+            get { return _dataModel.TrackQueue.Queue; }
+            set { _dataModel.TrackQueue.Queue = value; }
         }
-        public int TrackQueueIndex
-        {
-            get { return dataModel.QueueIndex; }
-            set { dataModel.QueueIndex = value; }
-        }
+
+        #region Event Methods
         
         internal void RaisePropertyChanged(string prop)
         {
-            if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs(prop)); }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -93,5 +81,6 @@ namespace TuneMusix.ViewModel
                     : !CloseWindowFlag;
             }));
         }
+        #endregion
     }
 }
