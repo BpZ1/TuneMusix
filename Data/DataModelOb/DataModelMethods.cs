@@ -32,26 +32,33 @@ namespace TuneMusix.Data.DataModelOb
         /// Deletes a track from the folder, tracklist and database.
         /// </summary>
         /// <param name="track"></param>
-        public void Delete(List<Track> tracks)
+        public void Delete(IEnumerable<Track> tracks)
         {
-
+            TrackQueue.RemoveRange(tracks);
+            TrackList.RemoveRange(tracks);
             foreach (Track track in tracks)
             {
-                if (TrackQueue != null)
-                {
-                    TrackQueue.Remove(track);
-                }
-                TrackList.Remove(track);
                 foreach (Playlist playlist in Playlists)
                 {
                     //delete only from the object because database has foreign keys.
                     playlist.Itemlist.Remove(track);                                
                 }
+                Folder folder = track.Container;
+                Album album = track.AlbumContainer;
                 track.Dispose();
-                OnDataModelChanged();
-            }
 
+                if (folder.IsEmpty)
+                {
+                    Delete(folder);
+                }
+                if (album.IsEmpty)
+                {
+                    Albumlist.Remove(album);
+                    OnAlbumlistChanged();
+                }
+            }
             _database.Delete(tracks);
+            OnDataModelChanged();
         }
         /// <summary>
         /// Deletes a single Playlist. The tracks will not be deleted.
@@ -92,8 +99,7 @@ namespace TuneMusix.Data.DataModelOb
         public void Delete(Album album)
         {
             Albumlist.Remove(album);
-            TrackList.RemoveRange(album.Itemlist);
-            TrackQueue.RemoveRange(album.Itemlist);
+            Delete(album.Itemlist);
         }
         /// <summary>
         /// Recursive method for deletion of tracks in folders.
@@ -101,14 +107,8 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="folder"></param>
         private void DeleteFolderTracks(Folder folder)
         {
-            foreach (Track track in folder.Itemlist)
-            {
-                TrackList.Remove(track);
-                if(TrackQueue != null)
-                {
-                    TrackQueue.Remove(track);
-                }             
-            }
+            TrackList.RemoveRange(folder.Itemlist);
+            TrackQueue.RemoveRange(folder.Itemlist);
 
             foreach (Folder f in folder.Folderlist)
             {
@@ -198,8 +198,9 @@ namespace TuneMusix.Data.DataModelOb
                     if (!Contains(t))
                     {
                         uniqueTracks.Add(t);
+                        CreateContainer(t);
                     }
-                }               
+                }
             }
             if (uniqueTracks.Count > 0)
             {
@@ -220,39 +221,43 @@ namespace TuneMusix.Data.DataModelOb
         /// <param name="track"></param>
         private void CreateContainer(Track track)
         {
+            //Create a new album or add to an existing album.
+            Album targetAlbum = null;
             foreach(Album album in Albumlist)
             {
                 if (track.Album.ToLower().Equals(album.Name.ToLower()))
                 {
-                    album.Add(track);
-                    track.AlbumContainer = album;
+                    targetAlbum = album;
+                    break;         
                 }
-                else
-                {
-                    Album newAlbum = new Album(track.Album);
-                    newAlbum.Add(track);
-                    track.AlbumContainer = newAlbum;
-                    Albumlist.Add(newAlbum);                 
-                }               
             }
-            OnAlbumlistChanged();
+            if (targetAlbum == null)
+            {
+                targetAlbum = new Album(track.Album);
+                Albumlist.Add(targetAlbum);
+                OnAlbumlistChanged();
+            }
+            targetAlbum.Add(track);
+            track.AlbumContainer = targetAlbum;
 
+            //Create a new interpret or add to an existing interpret.
+            Interpret targetInterpret = null;
             foreach(Interpret interpret in Interpretlist)
             {
                 if (track.Interpret.ToLower().Equals(interpret.Name.ToLower()))
                 {
-                    interpret.Add(track);
-                    track.InterpretContainer = interpret;
-                }
-                else
-                {
-                    Interpret newInterpret = new Interpret(track.Interpret);
-                    newInterpret.Add(track);
-                    track.InterpretContainer = newInterpret;
-                    Interpretlist.Add(newInterpret);
+                    targetInterpret = interpret;
+                    break;
                 }
             }
-            OnInterpretlistChanged();
+            if(targetInterpret == null)
+            {
+                targetInterpret = new Interpret(track.Interpret);
+                Interpretlist.Add(targetInterpret);
+                OnInterpretlistChanged();
+            }
+            targetInterpret.Add(track);
+            track.InterpretContainer = targetInterpret;
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ namespace TuneMusix.Data.SQLDatabase
 {
     public sealed partial class Database : IDatabase
     {
-        public void Delete(List<Track> tracks)
+        public void Delete(IEnumerable<Track> tracks)
         {
             List<SQLiteCommand> commands = new List<SQLiteCommand>();
             foreach (Track track in tracks)
@@ -48,7 +48,7 @@ namespace TuneMusix.Data.SQLDatabase
                 CloseDBConnection();
             }
         }
-        public void Delete(List<Folder> folders)
+        public void Delete(IEnumerable<Folder> folders)
         {
             List<SQLiteCommand> commands = new List<SQLiteCommand>();
             foreach (Folder folder in folders)
@@ -108,7 +108,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
         }
        
-        public void Delete(Playlist playlist, List<Track> tracks)
+        public void Delete(Playlist playlist, IEnumerable<Track> tracks)
         {
             List<PlaylistTrack> playlistTracks = new List<PlaylistTrack>();
             foreach (Track track in tracks)
@@ -118,7 +118,7 @@ namespace TuneMusix.Data.SQLDatabase
             delete(playlistTracks);
         }
 
-        private void delete(List<PlaylistTrack> playlistTracks)
+        private void delete(IEnumerable<PlaylistTrack> playlistTracks)
         {
             List<SQLiteCommand> commandList = new List<SQLiteCommand>();
             foreach (PlaylistTrack track in playlistTracks)

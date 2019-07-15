@@ -43,10 +43,23 @@ namespace TuneMusix.Model
             }
 
         }
-        public ObservableList<T> Itemlist
+
+        public virtual bool IsEmpty
         {
-            get { return _itemlist; }
+            get
+            {
+                if (Itemlist.Count == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
+
+        public ObservableList<T> Itemlist => _itemlist;
         #endregion
         public virtual bool Add(T item)
         {

@@ -92,7 +92,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
         }
 
-        public void Insert(List<Track> tracklist)
+        public void Insert(IEnumerable<Track> tracklist)
         {
             List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
             
@@ -117,7 +117,7 @@ namespace TuneMusix.Data.SQLDatabase
             Debug.WriteLine("Tracks were added to DB");
         }
       
-        public void Insert(List<Folder> folders)
+        public void Insert(IEnumerable<Folder> folders)
         {
             List<SQLiteCommand> commandlist = new List<SQLiteCommand>();
             foreach (Folder f in folders)
@@ -256,7 +256,7 @@ namespace TuneMusix.Data.SQLDatabase
             }
         }
   
-        public void UpdateEffectQueue(List<BaseEffect> effectQueue)
+        public void UpdateEffectQueue(IEnumerable<BaseEffect> effectQueue)
         {
             SQLiteCommand sqlClearCommand = new SQLiteCommand("DELETE FROM effectsqueue",_dbConnection);
             SQLiteCommand sqlVacuum = new SQLiteCommand("VACUUM",_dbConnection);

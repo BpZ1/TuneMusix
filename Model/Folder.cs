@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
+using TuneMusix.Helpers.Util;
 
 namespace TuneMusix.Model
 {
@@ -13,13 +13,12 @@ namespace TuneMusix.Model
         private string _url;
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
-        private ObservableCollection<Folder> _folderlist;
 
         public Folder(string name, string url, long ID) : base(name)
         {
             this.URL = url;
             this.ID = ID;
-            _folderlist = new ObservableCollection<Folder>();
+            Folderlist = new ObservableList<Folder>();
         }
 
         public Folder(string name, string url, long ID,long folderID) : base(name)
@@ -27,7 +26,7 @@ namespace TuneMusix.Model
             this.URL = url;
             this.ID = ID;
             this._folderID = folderID;
-            _folderlist = new ObservableCollection<Folder>();
+            Folderlist = new ObservableList<Folder>();
         }
 
 
@@ -36,9 +35,9 @@ namespace TuneMusix.Model
             if(folder == null)
                 throw new ArgumentNullException("You can't add Null to container");
 
-            if (!_folderlist.Contains(folder))
+            if (!Folderlist.Contains(folder))
             {
-                _folderlist.Add(folder);
+                Folderlist.Add(folder);
                 folder.FolderID = this.ID;
                 folder.Container = this;
                 RaisePropertyChanged("Folderlist");
@@ -57,6 +56,30 @@ namespace TuneMusix.Model
                 return true;
             }
             return false;
+        }
+
+        public override bool IsEmpty
+        {
+            get
+            {
+                if(base.IsEmpty && Folderlist.Count == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    //Check if the subfolders are empty
+                    bool foldersEmpty = true;
+                    foreach(Folder folder in Folderlist)
+                    {
+                        if (!folder.IsEmpty)
+                        {
+                            foldersEmpty = false;
+                        }
+                    }
+                    return foldersEmpty;
+                }
+            }
         }
 
         public string URL
@@ -90,13 +113,7 @@ namespace TuneMusix.Model
             }
         }
 
-        public ObservableCollection<Folder> Folderlist
-        {
-            get
-            {
-                return this._folderlist;
-            }
-        }
+        public ObservableList<Folder> Folderlist { get; private set; }
 
         CompositeCollection cc = new CompositeCollection();
         
