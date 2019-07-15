@@ -3,26 +3,26 @@ Audio and playlist manager
 
 #Current Features
 
-##Track List
-<img src="Docs/tracklist.png" width="200"/>
+## Track List
+<img src="Docs/tracklist.png" width="400"/>
 
-##Playlists
-<img src="Docs/playlists.png" width="200"/>
+## Playlists
+<img src="Docs/playlists.png" width="400"/>
 
-##Album View
-<img src="Docs/albumlist.png" width="200"/>
+## Album View
+<img src="Docs/albumlist.png" width="400"/>
 
-##Track Queue 
-<img src="Docs/albumandqueue.png" width="200"/>
+## Track Queue 
+<img src="Docs/albumandqueue.png" width="400"/>
 
-##Visual Customization
-<img src="Docs/visualcustomization.png" width="200"/>
+## Visual Customization
+<img src="Docs/visualcustomization.png" width="400"/>
 
-##Effects
-<img src="Docs/effectqueue.png" width="200"/>
+## Effects
+<img src="Docs/effectqueue.png" width="400"/>
 
-##Audio Visualizer
-<img src="Docs/visualizer.png" width="200"/>
+## Audio Visualizer
+<img src="Docs/visualizer.png" width="400"/>
 
 
 # License
