@@ -11,49 +11,53 @@ namespace TuneMusix.ViewModel.Effects
     class AddEffectsViewModel : IDragSource
     {
         private AudioControls _audioControls = AudioControls.Instance;
-        public RelayCommand AddEffect { get; set; }
+        public RelayCommand AddEffectCommand { get; set; }
 
         public AddEffectsViewModel()
         {
-            AddEffect = new RelayCommand(_addEffect);
+            AddEffectCommand = new RelayCommand( AddEffect );
         }
 
-        private void _addEffect(object argument)
+        private void AddEffect( object argument )
         {
             string effectType = argument as string;
-            switch (effectType)
+            if ( !Enum.TryParse<EffectType>( effectType, true, out var effect ) )
             {
-                case "Distortion":
-                    _audioControls.EffectQueue.ChangeEffectListPosition(new DistortionEffect(), _audioControls.EffectQueue.Count);
+                throw new ArgumentException( $"Invalid effect type: {effectType}." );
+            }
+            switch ( effect )
+            {
+                case EffectType.Distortion:
+                    _audioControls.EffectQueue.ChangeEffectListPosition( new DistortionEffect(), _audioControls.EffectQueue.Count );
                     break;
-                case "Chorus":
-                    _audioControls.EffectQueue.ChangeEffectListPosition(new ChorusEffect(), _audioControls.EffectQueue.Count);
+                case EffectType.Chorus:
+                    _audioControls.EffectQueue.ChangeEffectListPosition( new ChorusEffect(), _audioControls.EffectQueue.Count );
                     break;
-                case "Compressor":
-                    _audioControls.EffectQueue.ChangeEffectListPosition(new CompressorEffect(), _audioControls.EffectQueue.Count);
+                case EffectType.Compressor:
+                    _audioControls.EffectQueue.ChangeEffectListPosition( new CompressorEffect(), _audioControls.EffectQueue.Count );
                     break;
-                case "Echo":
-                    _audioControls.EffectQueue.ChangeEffectListPosition(new EchoEffect(), _audioControls.EffectQueue.Count);
+                case EffectType.Echo:
+                    _audioControls.EffectQueue.ChangeEffectListPosition( new EchoEffect(), _audioControls.EffectQueue.Count );
                     break;
-                case "Equalizer":
-                    _audioControls.EffectQueue.ChangeEffectListPosition(new EqualizerEffect(), _audioControls.EffectQueue.Count);
+                case EffectType.Equalizer:
+                    _audioControls.EffectQueue.ChangeEffectListPosition( new EqualizerEffect(), _audioControls.EffectQueue.Count );
                     break;
-                case "Gargle":
-                    _audioControls.EffectQueue.ChangeEffectListPosition(new GargleEffect(), _audioControls.EffectQueue.Count);
+                case EffectType.Gargle:
+                    _audioControls.EffectQueue.ChangeEffectListPosition( new GargleEffect(), _audioControls.EffectQueue.Count );
                     break;
-                case "Reverb":
-                    _audioControls.EffectQueue.ChangeEffectListPosition(new ReverbEffect(), _audioControls.EffectQueue.Count);
+                case EffectType.Reverb:
+                    _audioControls.EffectQueue.ChangeEffectListPosition( new ReverbEffect(), _audioControls.EffectQueue.Count );
                     break;
-                case "Flanger":
-                    _audioControls.EffectQueue.ChangeEffectListPosition(new FlangerEffect(), _audioControls.EffectQueue.Count);
+                case EffectType.Flanger:
+                    _audioControls.EffectQueue.ChangeEffectListPosition( new FlangerEffect(), _audioControls.EffectQueue.Count );
                     break;
 
-            }          
+            }
         }
 
-        bool IDragSource.CanStartDrag(IDragInfo dragInfo)
+        bool IDragSource.CanStartDrag( IDragInfo dragInfo )
         {
-            if (dragInfo != null) return true;
+            if ( dragInfo != null ) return true;
             else return false;
         }
 
@@ -62,56 +66,56 @@ namespace TuneMusix.ViewModel.Effects
 
         }
 
-        void IDragSource.Dropped(IDropInfo dropInfo)
+        void IDragSource.Dropped( IDropInfo dropInfo )
         {
 
         }
 
-        void IDragSource.StartDrag(IDragInfo dragInfo)
+        void IDragSource.StartDrag( IDragInfo dragInfo )
         {
             ListViewItem item = dragInfo.SourceItem as ListViewItem;
-            if(item != null)
+            if ( item != null )
             {
-                if (item.Name.Equals("DistortionItem"))
+                if ( item.Name.Equals( "DistortionItem" ) )
                 {
                     dragInfo.Data = new DistortionEffect();
                 }
-                if (item.Name.Equals("ChorusItem"))
+                if ( item.Name.Equals( "ChorusItem" ) )
                 {
                     dragInfo.Data = new ChorusEffect();
                 }
-                if (item.Name.Equals("FlangerItem"))
+                if ( item.Name.Equals( "FlangerItem" ) )
                 {
                     dragInfo.Data = new FlangerEffect();
                 }
-                if (item.Name.Equals("Equalizer10Item"))
+                if ( item.Name.Equals( "Equalizer10Item" ) )
                 {
                     dragInfo.Data = new EqualizerEffect();
                 }
-                if (item.Name.Equals("ReverbItem"))
+                if ( item.Name.Equals( "ReverbItem" ) )
                 {
                     dragInfo.Data = new ReverbEffect();
                 }
-                if (item.Name.Equals("CompressorItem"))
+                if ( item.Name.Equals( "CompressorItem" ) )
                 {
                     dragInfo.Data = new CompressorEffect();
                 }
-                if (item.Name.Equals("GargleItem"))
+                if ( item.Name.Equals( "GargleItem" ) )
                 {
                     dragInfo.Data = new GargleEffect();
                 }
-                if (item.Name.Equals("EchoItem"))
+                if ( item.Name.Equals( "EchoItem" ) )
                 {
                     dragInfo.Data = new EchoEffect();
                 }
             }
-            
-            dragInfo.Effects = DragDropEffects.Copy;        
+
+            dragInfo.Effects = DragDropEffects.Copy;
         }
 
-        bool IDragSource.TryCatchOccurredException(Exception exception)
+        bool IDragSource.TryCatchOccurredException( Exception exception )
         {
-            Logger.LogException(exception);
+            Logger.LogException( exception );
             throw exception;
         }
     }

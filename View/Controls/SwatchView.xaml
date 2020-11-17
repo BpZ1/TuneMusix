@@ -43,7 +43,7 @@
                     <Border.Background>
                         <SolidColorBrush Color="{Binding ExemplarHue.Color, Mode=OneTime}" />
                     </Border.Background>
-                    <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ApplyPrimaryColor, Mode=OneTime}"
+                    <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ApplyPrimaryColorCommand, Mode=OneTime}"
                                         CommandParameter="{Binding}">
                         <TextBlock Text="Primary" />
                     </Button>
@@ -54,7 +54,7 @@
                     <Border.Background>
                         <SolidColorBrush Color="{Binding AccentExemplarHue.Color, Mode=OneTime}" />
                     </Border.Background>
-                    <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ApplyAccentColor, Mode=OneTime}"
+                    <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ApplyAccentColorCommand, Mode=OneTime}"
                                             CommandParameter="{Binding}">
                         <TextBlock Text="Accent" />
                     </Button>

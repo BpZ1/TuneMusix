@@ -20,9 +20,9 @@ namespace TuneMusix.Helpers
         private bool workDone = false;
         private int SPLITNUMBER = 50; //Number of tracks per thread
 
-        public FileParser(){ }
+        public FileParser() { }
 
-        public FileParser(int splitSize)
+        public FileParser( int splitSize )
         {
             SPLITNUMBER = splitSize;
         }
@@ -33,53 +33,53 @@ namespace TuneMusix.Helpers
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void CreateTracks(object sender, DoWorkEventArgs e)
+        public void CreateTracks( object sender, DoWorkEventArgs e )
         {
-            BackgroundWorker worker = (BackgroundWorker)sender;
+            BackgroundWorker worker = ( BackgroundWorker ) sender;
             ConcurrentBag<Track> resultList = new ConcurrentBag<Track>();
-            List<string> urls = (List<string>)e.Argument;
+            List<string> urls = ( List<string> ) e.Argument;
             int size = urls.Count;
-            
+
             //split the list in parts of a given size
-            IEnumerable<List<string>> splitLists = ListUtil.SplitList(urls, SPLITNUMBER);
+            IEnumerable<List<string>> splitLists = ListUtil.SplitList( urls, SPLITNUMBER );
             int listCount = splitLists.Count<List<string>>();
             int progressCounter = 0;
 
             //Callback called by the thread once it did its work
-            Action<List<Track>> resultCallback = (result) =>
+            Action<List<Track>> resultCallback = ( result ) =>
             {
-                foreach (Track t in result)
+                foreach ( Track t in result )
                 {
-                    resultList.Add(t);
+                    resultList.Add( t );
                 }
-                if (resultList.Count == urls.Count)
+                if ( resultList.Count == urls.Count )
                     workDone = true;
             };
 
             //workload for the threadpool
-            WaitCallback createTracks = (data) =>
+            WaitCallback createTracks = ( data ) =>
             {
                 List<Track> tracks = new List<Track>();
-                List<string> urlData = (List<string>)data;
-                foreach (string url in urlData)
+                List<string> urlData = ( List<string> ) data;
+                foreach ( string url in urlData )
                 {
-                    tracks.Add(GetAudioData(url));
+                    tracks.Add( GetAudioData( url ) );
                 }
-                float progress = (float)Interlocked.Increment(ref progressCounter) / (float)listCount * 100;
-                worker.ReportProgress((int)Math.Round(progress));
-                resultCallback(tracks);
+                float progress = ( float ) Interlocked.Increment( ref progressCounter ) / ( float ) listCount * 100;
+                worker.ReportProgress( ( int ) Math.Round( progress ) );
+                resultCallback( tracks );
             };
 
             //start the threads
-            foreach(List<string> list in splitLists)
+            foreach ( List<string> list in splitLists )
             {
-                ThreadPool.QueueUserWorkItem(createTracks, list);
+                ThreadPool.QueueUserWorkItem( createTracks, list );
             }
 
             //wait for the threads to finish
-            while (!workDone)
+            while ( !workDone )
             {
-                Thread.Sleep(100);
+                Thread.Sleep( 100 );
             }
             Options.Instance.SaveValues();
             e.Result = resultList.ToList<Track>();
@@ -91,65 +91,65 @@ namespace TuneMusix.Helpers
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void CreateFolder(object sender, DoWorkEventArgs e)
+        public void CreateFolder( object sender, DoWorkEventArgs e )
         {
-            BackgroundWorker worker = (BackgroundWorker)sender;
-            string url = (string)e.Argument;
+            BackgroundWorker worker = ( BackgroundWorker ) sender;
+            string url = ( string ) e.Argument;
             //list of all folder urls
-            List<string> directoryUrls = Directory.EnumerateDirectories(url, "*", SearchOption.AllDirectories).ToList<string>();
-            directoryUrls.Add(url);
+            List<string> directoryUrls = Directory.EnumerateDirectories( url, "*", SearchOption.AllDirectories ).ToList<string>();
+            directoryUrls.Add( url );
 
             int folderCount = directoryUrls.Count;
             int folderLoadCounter = 0;
 
             //list for saving the folders created by the threads
             ConcurrentBag<Folder> folderList = new ConcurrentBag<Folder>();
-            
+
             //gets called after a folder was successfully created
-            Action<Folder> resultCallback = (result) =>
+            Action<Folder> resultCallback = ( result ) =>
             {
-                folderList.Add(result);
-                float progress = (float)Interlocked.Increment(ref folderLoadCounter) / (float)folderCount * 100;
-                worker.ReportProgress((int)Math.Round(progress));
-                if (folderList.Count == directoryUrls.Count)
+                folderList.Add( result );
+                float progress = ( float ) Interlocked.Increment( ref folderLoadCounter ) / ( float ) folderCount * 100;
+                worker.ReportProgress( ( int ) Math.Round( progress ) );
+                if ( folderList.Count == directoryUrls.Count )
                     workDone = true;
             };
 
             //creates a folder
-            WaitCallback folderCreation = (data) =>
+            WaitCallback folderCreation = ( data ) =>
             {
-                string folderUrl = (string)data;
-                Folder folder = this.CreateFolder(folderUrl);
+                string folderUrl = ( string ) data;
+                Folder folder = this.CreateFolder( folderUrl );
 
                 //get the files from the folder
-                string[] files = Directory.GetFiles(folderUrl);
-                foreach (string file in files)
+                string[] files = Directory.GetFiles( folderUrl );
+                foreach ( string file in files )
                 {
-                    string extention = Path.GetExtension(file);
-                    if (extention.Equals(".mp3"))
+                    string extention = Path.GetExtension( file );
+                    if ( extention.Equals( ".mp3" ) )
                     {
-                        Track audio = GetAudioData(file);
-                        if (audio != null)
+                        Track audio = GetAudioData( file );
+                        if ( audio != null )
                         {
-                            folder.Add(audio);
+                            folder.Add( audio );
                             audio.IsModified = false;
                         }
                     }
                 }
-                resultCallback(folder);
+                resultCallback( folder );
             };
             //start the threads
-            foreach (string dirUrl in directoryUrls)
+            foreach ( string dirUrl in directoryUrls )
             {
-                ThreadPool.QueueUserWorkItem(folderCreation, dirUrl);
+                ThreadPool.QueueUserWorkItem( folderCreation, dirUrl );
             }
             //wait for all threads to finish their work
-            while (!workDone)
+            while ( !workDone )
             {
-                Thread.Sleep(100);
+                Thread.Sleep( 100 );
             }
             Options.Instance.SaveValues();
-            e.Result = FolderSort(url, folderList.ToList<Folder>());
+            e.Result = FolderSort( url, folderList.ToList<Folder>() );
         }
 
         /// <summary>
@@ -157,80 +157,81 @@ namespace TuneMusix.Helpers
         /// </summary>
         /// <param name="url">URL of the Audiofile</param>
         /// <returns>Track</returns>
-        private Track GetAudioData(string url)
+        private Track GetAudioData( string url )
         {
             IDGenerator IDgen = IDGenerator.Instance;
             try
             {
-                if (url == null) return null;
+                if ( url == null ) return null;
 
-                TagLib.File f = TagLib.File.Create(url);
+                TagLib.File f = TagLib.File.Create( url );
                 string title = f.Tag.Title;
-                if(title == null){
-                    title = Path.GetFileNameWithoutExtension(f.Name);
-                }
-                else if (title.Equals(""))
+                if ( title == null )
                 {
-                    title = Path.GetFileNameWithoutExtension(f.Name);
+                    title = Path.GetFileNameWithoutExtension( f.Name );
+                }
+                else if ( title.Equals( "" ) )
+                {
+                    title = Path.GetFileNameWithoutExtension( f.Name );
                 }
                 string interpret = f.Tag.FirstAlbumArtist;
                 string album = f.Tag.Album;
                 string comm = f.Tag.Comment;
                 string genre = f.Tag.FirstGenre;
-                int year = (int)f.Tag.Year;
-                string duration = Converter.TimeSpanToString(f.Properties.Duration);
-                Track track = new Track(url, IDGenerator.GetID(false),title, interpret, album, year, comm, genre, duration);
+                int year = ( int ) f.Tag.Year;
+                string duration = Converter.TimeSpanToString( f.Properties.Duration );
+                Track track = new Track( IDGenerator.GetID( false ), year, url, title, interpret, album, comm, genre, duration );
                 return track;
             }
-            catch (UnauthorizedAccessException ex)
+            catch ( UnauthorizedAccessException ex )
             {
-                Logger.LogException(ex);
+                Logger.LogException( ex );
                 return null;
             }
-            catch (FileNotFoundException ex)
+            catch ( FileNotFoundException ex )
             {
-                Logger.LogException(ex);
+                Logger.LogException( ex );
                 return null;
             }
-            catch (IOException ex)
+            catch ( IOException ex )
             {
-                Logger.LogException(ex);
+                Logger.LogException( ex );
                 return null;
             }
-            catch (CorruptFileException ex)
+            catch ( CorruptFileException ex )
             {
-                Logger.LogException(ex);
+                Logger.LogException( ex );
                 return null;
             }
         }
 
 
         //creates a folder from a given url
-        private Folder CreateFolder(string url)
+        private Folder CreateFolder( string url )
         {
-            string[] URLs = url.Split('\\');
-            Folder folder = new Folder(URLs.Last(), url, IDGenerator.GetID(false));
+            string[] URLs = url.Split( '\\' );
+            Folder folder = new Folder( URLs.Last(), url, IDGenerator.GetID( false ) );
             return folder;
         }
 
 
         //Puts all folders in their matching parent folder
-        private Folder FolderSort(string rootUrl, List<Folder> folders)
+        private Folder FolderSort( string rootUrl, List<Folder> folders )
         {
             Folder root = null;
-            foreach (Folder fold1 in folders)
+            foreach ( Folder fold1 in folders )
             {
-                string parent = Directory.GetParent(fold1.URL).FullName;
-                foreach(Folder fold2 in folders)
+                string parent = Directory.GetParent( fold1.URL ).FullName;
+                foreach ( Folder fold2 in folders )
                 {
-                    if (parent.Equals(fold2.URL))
+                    if ( parent.Equals( fold2.URL ) )
                     {
-                        fold2.Add(fold1);
+                        fold2.Add( fold1 );
                         fold1.Container = fold2;
                     }
                     fold2.IsModified = false;
                 }
-                if (fold1.URL.Equals(rootUrl))
+                if ( fold1.URL.Equals( rootUrl ) )
                     root = fold1;
 
                 fold1.IsModified = false;
@@ -244,90 +245,90 @@ namespace TuneMusix.Helpers
         /// <param name="track"></param>
         /// <returns>True if the file was successfully updated.
         /// and False if the file was not found or could not be read.</returns>
-        public bool UpdateTrack(Track track)
+        public bool UpdateTrack( Track track )
         {
             try
             {
-                if (track == null)
+                if ( track == null )
                     throw new ArgumentNullException();
 
-                TagLib.File file = TagLib.File.Create(track.SourceURL);
+                TagLib.File file = TagLib.File.Create( track.SourceURL.Value );
                 string title = file.Tag.Title;
-                if (title == null)
+                if ( title == null )
                 {
-                    title = Path.GetFileNameWithoutExtension(file.Name);
+                    title = Path.GetFileNameWithoutExtension( file.Name );
                 }
-                else if (title.Equals(""))
+                else if ( title.Equals( "" ) )
                 {
-                    title = Path.GetFileNameWithoutExtension(file.Name);
+                    title = Path.GetFileNameWithoutExtension( file.Name );
                 }
                 string interpret = file.Tag.FirstAlbumArtist;
                 string album = file.Tag.Album;
                 string comm = file.Tag.Comment;
                 string genre = file.Tag.FirstGenre;
-                int year = (int)file.Tag.Year;
-                Track temporaryCompTrack = new Track(null, 0, title, interpret, album, year, comm, genre, null);
+                int year = ( int ) file.Tag.Year;
+                Track temporaryCompTrack = new Track( 0, year, null, title, interpret, album, comm, genre, null );
 
-                CheckTrackModification(track, temporaryCompTrack);
+                CheckTrackModification( track, temporaryCompTrack );
 
             }
-            catch (UnauthorizedAccessException ex)
+            catch ( UnauthorizedAccessException ex )
             {
-                Logger.LogException(ex);
-                DialogService.WarnMessage("File not accessable", ex.Message);
+                Logger.LogException( ex );
+                DialogService.WarnMessage( "File not accessable", ex.Message );
                 return false;
             }
-            catch (FileNotFoundException ex)
+            catch ( FileNotFoundException ex )
             {
-                Logger.LogException(ex);
-                DialogService.WarnMessage("File not found", ex.Message);
+                Logger.LogException( ex );
+                DialogService.WarnMessage( "File not found", ex.Message );
                 return false;
             }
-            catch (IOException ex)
+            catch ( IOException ex )
             {
-                DialogService.WarnMessage("Error while reading file", ex.Message);
-                Logger.LogException(ex);
+                DialogService.WarnMessage( "Error while reading file", ex.Message );
+                Logger.LogException( ex );
                 return false;
             }
             return true;
         }
 
-        private void CheckTrackModification(Track oldTrack, Track newTrack)
+        private void CheckTrackModification( Track oldTrack, Track newTrack )
         {
             //Check what need to be updated.
             bool modified = false;
 
-            if (!oldTrack.Title.Equals(newTrack.Title) && newTrack.Title != null)
+            if ( !oldTrack.Title.Equals( newTrack.Title ) && newTrack.Title != null )
             {
                 oldTrack.Title = newTrack.Title;
                 modified = true;
             }
-            if (!oldTrack.Interpret.Equals(newTrack.Interpret) && newTrack.Interpret != null)
+            if ( !oldTrack.Interpret.Equals( newTrack.Interpret ) && newTrack.Interpret != null )
             {
                 oldTrack.Interpret = newTrack.Interpret;
                 modified = true;
             }
-            if (!oldTrack.Album.Equals(newTrack.Album) && newTrack.Album != null)
+            if ( !oldTrack.Album.Equals( newTrack.Album ) && newTrack.Album != null )
             {
                 oldTrack.Album = newTrack.Album;
                 modified = true;
             }
-            if (!oldTrack.Comm.Equals(newTrack.Comm) && newTrack.Comm != null)
+            if ( !oldTrack.Comm.Equals( newTrack.Comm ) && newTrack.Comm != null )
             {
                 oldTrack.Comm = newTrack.Comm;
                 modified = true;
             }
-            if (!oldTrack.Genre.Equals(newTrack.Genre) && newTrack.Genre != null)
+            if ( !oldTrack.Genre.Equals( newTrack.Genre ) && newTrack.Genre != null )
             {
                 oldTrack.Genre = newTrack.Genre;
                 modified = true;
             }
-            if (!oldTrack.Year.Equals(newTrack.Year))
+            if ( !oldTrack.Year.Equals( newTrack.Year ) )
             {
                 oldTrack.Year = newTrack.Year;
                 modified = true;
             }
-            if (!modified)
+            if ( !modified )
                 oldTrack.IsModified = false;
         }
     }

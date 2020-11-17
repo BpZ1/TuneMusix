@@ -16,14 +16,14 @@
         <materialDesign:ColorZone Mode="PrimaryDark" DockPanel.Dock="Top">
             <Label Content="General" Foreground="#DDFFFFFF"></Label>
         </materialDesign:ColorZone>
-        <StackPanel>
-            <materialDesign:ColorZone Mode="PrimaryLight" Grid.Column="0">
+        <StackPanel Margin="2">
+            <materialDesign:ColorZone Mode="PrimaryLight" Grid.Column="0" Margin="2">
                 <StackPanel Orientation="Horizontal" ToolTip="Logging file will be in the application directory.">
                     <Label Content="Logging active" Foreground="#DDFFFFFF" IsEnabled="{Binding Path=IsChecked, ElementName=LoggerCheckBox}"/>
                     <CheckBox IsChecked="{Binding LoggerActive,Mode=TwoWay}" Name="LoggerCheckBox"/>
                 </StackPanel>
             </materialDesign:ColorZone>
-            <materialDesign:ColorZone Mode="PrimaryLight" Grid.Column="0">
+            <materialDesign:ColorZone Mode="PrimaryLight" Grid.Column="0" Margin="2">
                 <StackPanel Orientation="Horizontal" ToolTip="Ask for confirmation when closing windows with unsaved content.">
                     <Label Content="Confirmation windows" Foreground="#DDFFFFFF" IsEnabled="{Binding Path=IsChecked, ElementName=ConfirmationCheckBox}"/>
                     <CheckBox IsChecked="{Binding AskConfirmation, Mode=TwoWay}" Name="ConfirmationCheckBox"/>

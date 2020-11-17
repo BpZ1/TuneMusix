@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="clr-namespace:TuneMusix.ViewModel"
+        xmlns:vm="clr-namespace:TuneMusix.ViewModel.OptionsViewModel"
         xmlns:command="http://www.galasoft.ch/mvvmlight"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         DataContext="{DynamicResource OptionsOverviewViewModel}" 
@@ -13,14 +13,14 @@
         FontFamily="{DynamicResource MaterialDesignFont}"   
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Name="Options"
+        Name="OptionsWindow"
         Title="Options" Height="500" Width="700">
     <Window.Resources>
         <vm:OptionsOverviewViewModel x:Key="OptionsOverviewViewModel"/>
     </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
-            <command:EventToCommand Command="{Binding ExitOptionsWindow}" PassEventArgsToCommand="True" ></command:EventToCommand>
+            <command:EventToCommand Command="{Binding ExitOptionsWindowCommand}" PassEventArgsToCommand="True" ></command:EventToCommand>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid Background="Transparent">
@@ -44,10 +44,10 @@
                 </TabItem>
             </dragablz:TabablzControl>
     </Grid>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Margin="4">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Apply" Command="{Binding Apply}" CommandParameter="{Binding ElementName=OptionsWindow}"/>
-                <Button Content="Cancel" Command="{Binding Cancel}" CommandParameter="{Binding ElementName=OptionsWindow}"/>
+                <Button Content="Apply" Command="{Binding ApplyCommand}" CommandParameter="{Binding ElementName=OptionsWindow}" Margin="0,0,10,0"/>
+                <Button Content="Cancel" Command="{Binding CancelCommand}" CommandParameter="{Binding ElementName=OptionsWindow}" Margin="0,0,10,0"/>
             </StackPanel>
         </Grid>
     </Grid>

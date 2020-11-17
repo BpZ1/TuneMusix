@@ -182,14 +182,18 @@
     <Compile Include="Data\SQLDatabase\DatabaseDeletion.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseInsertion.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseSelection.cs" />
+    <Compile Include="Helpers\EffectType.cs" />
+    <Compile Include="Helpers\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Helpers\ObservableValue.cs" />
+    <Compile Include="Helpers\RepeatType.cs" />
     <Compile Include="Helpers\Util\OptionsIDContainer.cs" />
     <Compile Include="Helpers\Exceptions\PlayerException.cs" />
     <Compile Include="Helpers\Util\BindingProxy.cs" />
     <Compile Include="Helpers\Util\Converter.cs" />
     <Compile Include="Helpers\Dialogs\DialogResult.cs" />
     <Compile Include="Helpers\Dialogs\DialogService.cs" />
-    <Compile Include="Helpers\Enums\HeaderType.cs" />
-    <Compile Include="Helpers\Enums\SortingType.cs" />
+    <Compile Include="Helpers\HeaderType.cs" />
+    <Compile Include="Helpers\SortingType.cs" />
     <Compile Include="Helpers\Exceptions\ClassNotInitializedException.cs" />
     <Compile Include="Helpers\Exceptions\ConnectionNotSetException.cs" />
     <Compile Include="Helpers\Exceptions\FileNotFoundException.cs" />
@@ -508,7 +512,6 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="Testexe\Debug.rar" />
-    <None Include="TuneMusix_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

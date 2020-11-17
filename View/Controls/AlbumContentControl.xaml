@@ -42,7 +42,7 @@
                     </MenuItem.Header>
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem">
-                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Header" Value="{Binding Name.Value}"/>
                             <Setter Property="Command" Value="{Binding Source={StaticResource dcProxy}, Path=Data.ContextMenuAddTracksToPlaylist}" />
                             <Setter Property="CommandParameter" Value="{Binding}" />
                         </Style>
@@ -60,8 +60,8 @@
         </ListView.ContextMenu>
         <ListView.View>
             <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                <GridViewColumn Header="Titel" DisplayMemberBinding="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" Width="300"/>
-                <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Path=Duration, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                <GridViewColumn Header="Titel" DisplayMemberBinding="{Binding Path=Title.Value, UpdateSourceTrigger=PropertyChanged}" Width="300"/>
+                <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Path=Duration.Value, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                 <GridViewColumn Header="Rating" Width="250" >
                     <GridViewColumn.CellTemplate>
                         <DataTemplate>

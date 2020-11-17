@@ -158,7 +158,7 @@ namespace TuneMusix.Model
         private void SetCurrentTrack(Track track)
         {
             if (_currentTrack != null)
-                _currentTrack.IsCurrentTrack = false;
+                _currentTrack.IsCurrentTrack.Value = false;
 
             if (track != null)
             {
@@ -169,16 +169,16 @@ namespace TuneMusix.Model
                     _queue.Add(track);
                 }
 
-                track.IsCurrentTrack = true;
+                track.IsCurrentTrack.Value = true;
                 //Update the track and check if it is valid.
                 FileParser parser = new FileParser();
                 if (parser.UpdateTrack(track))
                 {
-                    track.IsValid = true;
+                    track.IsValid.Value = true;
                 }
                 else
                 {
-                    track.IsValid = false;
+                    track.IsValid.Value = false;
                 }
 
                 if (track.IsModified)
@@ -245,38 +245,44 @@ namespace TuneMusix.Model
         /// <param name="position">New position</param>
         public void ChangeTrackQueuePosition(Track track, int position)
         {
-            if (track == null)
+            if( track == null)
+            {
                 throw new ArgumentNullException();
+            }
 
-            if (_queue.Contains(track))
+            if( _queue.Contains( track ) )
             {
                 int pos1 = _queue.IndexOf(track);
                 Logger.Log("Moved track from queue position " + pos1 + " to position " + position + ".");
-                if (position == _queue.Count)//If the new position is at the end of the list
+                if ( position == _queue.Count )//If the new position is at the end of the list
                 {
-                    _queue.Move(pos1, position - 1);
-                    if (track.IsCurrentTrack)
+                    _queue.Move( pos1, position - 1 );
+                    if ( track.IsCurrentTrack.Value )
+                    {
                         QueueIndex = position - 1;
+                    }
                 }
                 else
                 {
-                    _queue.Move(pos1, position);
-                    if (track.IsCurrentTrack)
+                    _queue.Move( pos1, position );
+                    if( track.IsCurrentTrack.Value )
+                    {
                         QueueIndex = position;
+                    }
                 }
-                OnTrackQueueChanged(this, Queue);
+                OnTrackQueueChanged( this, Queue );
             }
         }
 
-        private bool RemoveTrack(Track track)
+        private bool RemoveTrack( Track track )
         {
-            if (Queue.Remove(track))
+            if ( Queue.Remove( track ) )
             {
                 //If the current track is the one to be removed
-                if (CurrentTrack == track)
+                if ( CurrentTrack == track )
                 {
                     //If there is more than one track in the queue just switch to the next track.
-                    if (_queue.Count > 1)
+                    if ( _queue.Count > 1 )
                     {
                         IncrementQueueIndex();
                     }
@@ -290,11 +296,11 @@ namespace TuneMusix.Model
             return false;
         }
 
-        public bool Remove(Track track)
+        public bool Remove( Track track )
         {
-            if (RemoveTrack(track))
+            if ( RemoveTrack( track ) )
             {
-                OnTrackQueueChanged(this, Queue);
+                OnTrackQueueChanged( this, Queue );
                 return true;
             }
             return false;
@@ -304,17 +310,19 @@ namespace TuneMusix.Model
         /// </summary>
         /// <param name="tracks">Tracks to be removed</param>
         /// <returns>Number of tracks that were actually removed.</returns>
-        public int RemoveRange(IEnumerable<Track> tracks)
+        public int RemoveRange( IEnumerable<Track> tracks )
         {
             int counter = 0;
-            foreach(Track track in tracks)
+            foreach( Track track in tracks )
             {
-                if (RemoveTrack(track))
+                if ( RemoveTrack( track ))
+                {
                     counter++;
+                }
             }
-            if(counter > 0)
+            if( counter > 0 )
             {
-                OnTrackQueueChanged(this, Queue);
+                OnTrackQueueChanged( this, Queue );
             }
             return counter;
         }
@@ -323,12 +331,12 @@ namespace TuneMusix.Model
         /// </summary>
         /// <param name="track">Track to be added to the queue.</param>
         /// <returns>True if the track was added, false if the track was already in the queue</returns>
-        public bool Add(Track track)
+        public bool Add( Track track )
         {
-            if (!Queue.Contains(track))
+            if (!Queue.Contains( track ) )
             {
-                Queue.Add(track);
-                OnTrackQueueChanged(this, Queue);
+                Queue.Add( track );
+                OnTrackQueueChanged( this, Queue );
                 return true;
             }
             return false;
@@ -338,20 +346,20 @@ namespace TuneMusix.Model
         /// </summary>
         /// <param name="tracks">Tracks to be added to the queue.</param>
         /// <returns>Number of tracks that were actually added to the queue.</returns>
-        public int Add(IEnumerable<Track> tracks)
+        public int Add( IEnumerable<Track> tracks )
         {
             int counter = 0;
-            foreach(Track track in tracks)
+            foreach( Track track in tracks )
             {
-                if (!Queue.Contains(track))
+                if ( !Queue.Contains( track ) )
                 {
-                    Queue.Add(track);
+                    Queue.Add( track );
                     counter++;
                 }
             }
-            if(counter > 0)
+            if( counter > 0 )
             {
-                OnTrackQueueChanged(this, Queue);
+                OnTrackQueueChanged( this, Queue );
             }          
             return counter;
         }

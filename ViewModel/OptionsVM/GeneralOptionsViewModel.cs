@@ -7,7 +7,6 @@ namespace TuneMusix.ViewModel
     {
         private Options options = Options.Instance;
 
-
         public bool LoggerActive
         {
             get { return options.LoggerActive; }

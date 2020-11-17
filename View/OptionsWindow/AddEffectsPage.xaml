@@ -31,7 +31,7 @@
             <ListViewItem Name="DistortionItem">
                 <materialDesign:ColorZone Mode="PrimaryDark">
                     <StackPanel Orientation="Horizontal">
-                        <Button Command="{Binding AddEffect}" CommandParameter="Distortion">
+                        <Button Command="{Binding AddEffectCommand}" CommandParameter="Distortion">
                             <materialDesign:PackIcon Kind="Plus" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </Button>
                         <Label Content="Distortion" VerticalAlignment="Center"/>

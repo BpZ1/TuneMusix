@@ -27,7 +27,7 @@ namespace TuneMusix.ViewModel
         public RelayCommand OpenVolumePopup { get; set; }
         public RelayCommand CloseVolumePopup { get; set; }
 
-       //---------------Constants----------------------------------
+        //---------------Constants----------------------------------
         private const string PLAY_ICON = "PlayCircleOutline";
         private const string PAUS_ICON = "PauseCircleOutline";
         private const string VOLUME_HIGH_ICON = "VolumeHigh";
@@ -42,7 +42,6 @@ namespace TuneMusix.ViewModel
 
         //-------------Fields----------------------------------
         private Timer _timer;
-        private double _currentPosition;
         private bool _dragging;
         private DispatcherTimer _dispatcherTimer;
 
@@ -51,22 +50,22 @@ namespace TuneMusix.ViewModel
         public MusicPlayerViewModel()
         {
             _dragging = false;
-            _timer = new Timer(100);
+            _timer = new Timer( 100 );
             VolumeSliderVisible = false;
 
             //RelayCommands
-            PositionSlider_MouseUp = new RelayCommand(_leftMouseUpSlider);
-            SliderDraggingOn = new RelayCommand(_sliderDraggingOn);
-            SliderDraggingOff = new RelayCommand(_sliderDraggingOff);
-            PlayButton = new RelayCommand(_playButton);
-            NextTrack = new RelayCommand(_nextTrack);
-            PreviousTrack = new RelayCommand(_previousTrack);
-            RepeatButton = new RelayCommand(_onRepeatButtonClicked);
-            VolumeButton = new RelayCommand(_onVolumeButtonClicked);
-            VolumeButtonReleased = new RelayCommand(_onVolumeButtonReleased);
-            ShuffleButton = new RelayCommand(_shuffleButton);
-            OpenVolumePopup = new RelayCommand(_openVolumePopup);
-            CloseVolumePopup = new RelayCommand(_startPopupClosingTimer);
+            PositionSlider_MouseUp = new RelayCommand( _leftMouseUpSlider );
+            SliderDraggingOn = new RelayCommand( _sliderDraggingOn );
+            SliderDraggingOff = new RelayCommand( _sliderDraggingOff );
+            PlayButton = new RelayCommand( _playButton );
+            NextTrack = new RelayCommand( _nextTrack );
+            PreviousTrack = new RelayCommand( _previousTrack );
+            RepeatButton = new RelayCommand( _onRepeatButtonClicked );
+            VolumeButton = new RelayCommand( _onVolumeButtonClicked );
+            VolumeButtonReleased = new RelayCommand( _onVolumeButtonReleased );
+            ShuffleButton = new RelayCommand( _shuffleButton );
+            OpenVolumePopup = new RelayCommand( _openVolumePopup );
+            CloseVolumePopup = new RelayCommand( _startPopupClosingTimer );
 
             //Events
             _timer.Elapsed += OnTimeElapsed;
@@ -75,62 +74,45 @@ namespace TuneMusix.ViewModel
             _dataModel.CurrentPlaylistChanged += OnCurrentPlaylistChanged;
         }
 
-        public bool VolumeSliderVisible
-        {
-            get;
-            set;
-        }
+        public bool VolumeSliderVisible { get; set; }
 
         #region getter and setter
         //Getter and setter  
-        public string PlayButtonIcon
-        {
-            get
-            {
-                if (_audioControls.IsPlaying)
-                {
-                    return PAUS_ICON;
-                }
-                return PLAY_ICON;        
-            }
-        }
+        public string PlayButtonIcon => _audioControls.IsPlaying ? PAUS_ICON : PLAY_ICON;
+
         //Returns the string for the volume button icon
         public string VolumeButtonIcon
         {
             get
             {
-                if (_audioControls.Mute)
+                if ( _audioControls.Mute )
                 {
                     return VOLUME_OFF_ICON;
                 }
                 else
                 {
                     int vol = Volume;
-                    if (vol >= 60)
+                    if ( vol >= 60 )
+                    {
                         return VOLUME_HIGH_ICON;
+                    }
 
-                    if (vol < 60 && vol >= 30)
+                    if ( vol < 60 && vol >= 30 )
+                    {
                         return VOLUME_MEDIUM_ICON;
+                    }
 
-                    if (vol > 0 && vol < 30)
+                    if ( vol > 0 && vol < 30 )
+                    {
                         return VOLUME_LOW_ICON;
+                    }
 
                     return VOLUME_OFF_ICON;
-                }        
+                }
             }
         }
-        public double CurrentSliderPosition
-        {
-            get
-            {
-                return this._currentPosition;
-            }
-            set
-            {
-                _currentPosition = value;
-                RaisePropertyChanged("CurrentSliderPosition");
-            }
-        }
+        public ObservableValue<double> CurrentSliderPosition { get; set; } = new ObservableValue<double>();
+
         public double CurrentPosition
         {
             get
@@ -139,44 +121,20 @@ namespace TuneMusix.ViewModel
             }
             set
             {
-                _audioControls.CurrentPosition = TimeSpan.FromSeconds(value);
+                _audioControls.CurrentPosition = TimeSpan.FromSeconds( value );
             }
         }
-        public string SliderPostionString
-        {
-            get { return Converter.TimeSpanToString(TimeSpan.FromSeconds(this._currentPosition)); }
-        }
-        public string PositionTime
-        {
-            get
-            {
-                TimeSpan position = TimeSpan.FromSeconds(CurrentPosition);
-                return position.ToString();
-            }
-        }
-        public string CurrentPlaylistName
-        {
-            get
-            {
-                if(_dataModel.CurrentPlaylist != null){
-                    return _dataModel.CurrentPlaylist.Name;
-                }
-                else
-                {
-                    return "...";
-                }
-            }
-        }
+        public string SliderPostionString => Converter.TimeSpanToString( TimeSpan.FromSeconds( CurrentPosition ) );
+
+        public string PositionTime => TimeSpan.FromSeconds( CurrentPosition ).ToString();
+
+        public string CurrentPlaylistName => _dataModel.CurrentPlaylist != null ? _dataModel.CurrentPlaylist.Name : "...";
+
         /// <summary>
         /// Returns true if the current AudioPlayer is not null.
         /// </summary>
-        public bool TrackLoaded
-        {
-            get
-            {
-               return _audioControls.IsLoaded;
-            }
-        }
+        public bool TrackLoaded => _audioControls.IsLoaded;
+
         /// <summary>
         /// Changes the balance for playback (not yet implemented!).
         /// </summary>
@@ -187,13 +145,8 @@ namespace TuneMusix.ViewModel
         /// <summary>
         /// Returns the length of the currently loaded track.
         /// </summary>
-        public double Length
-        {
-            get
-            {
-                return _audioControls.Length.TotalSeconds;
-            }
-        }
+        public double Length => _audioControls.Length.TotalSeconds;
+
         //Value of the volume slider
         public int Volume
         {
@@ -204,68 +157,46 @@ namespace TuneMusix.ViewModel
             set
             {
                 _options.Volume = value;
-                RaisePropertyChanged("Volume");
-                RaisePropertyChanged("VolumeButtonIcon");
+                RaisePropertyChanged( "Volume" );
+                RaisePropertyChanged( "VolumeButtonIcon" );
             }
         }
         //Position of the current track playback
-        public string CurrentTrackName
-        {
-            get
-            {
-                if (CurrentTrack != null)
-                {
-                    return CurrentTrack.Name;
-                }
-                else
-                {
-                    return "...";
-                }
-            }
-        }
-        public string ShuffleButtonIcon
-        {
-            get
-            {
-                if (_options.Shuffle)
-                {
-                    return SHUFFLE_ON_ICON;
-                }
-                else
-                {
-                    return SHUFFLE_OFF_ICON;
-                }
-            }
-        }
+        public string CurrentTrackName => CurrentTrack != null ? CurrentTrack.Name : "...";
+
+        public string ShuffleButtonIcon => _options.Shuffle ? SHUFFLE_ON_ICON : SHUFFLE_OFF_ICON;
+
         /// <summary>
         /// 0 = No repeat
         /// 1 = Repeat all
         /// 2 = repeat track
         /// </summary>
-        public int RepeatTrack
+        public RepeatType RepeatTrack
         {
             get { return _options.RepeatTrack; }
             set
             {
                 _options.RepeatTrack = value;
-                RaisePropertyChanged("RepeatTrack");                     
+                RaisePropertyChanged( nameof( RepeatTrack ) );
             }
         }
         public string RepeatButtonIcon
         {
             get
             {
-                if (RepeatTrack == 0)
+                switch ( RepeatTrack )
                 {
-                    return REPEAT_OFF_ICON;
-                }
-                else if (RepeatTrack == 1)
-                {
-                    return REPEAT_ICON;
-                }
-                else
-                {
-                    return REPEAT_ONCE_ICON;
+                    case RepeatType.NoRepeat:
+                        return REPEAT_OFF_ICON;
+
+                    case RepeatType.RepeatAll:
+                        return REPEAT_ICON;
+
+                    case RepeatType.RepeatCurrent:
+                        return REPEAT_ONCE_ICON;
+
+                    default:
+                        throw new ArgumentOutOfRangeException( $"Invalid value for RepeatTrack: {RepeatTrack}" );
                 }
             }
         }

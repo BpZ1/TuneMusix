@@ -8,24 +8,22 @@ namespace TuneMusix.Model
 {
     public class Folder : ItemContainer<Track>, INotifyPropertyChanged
     {
-        public readonly long ID;
-        private long _folderID;
+        public readonly long Id;
+        private long _folderId;
         private string _url;
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
 
         public Folder(string name, string url, long ID) : base(name)
         {
-            this.URL = url;
-            this.ID = ID;
+            URL = url;
+            Id = ID;
             Folderlist = new ObservableList<Folder>();
         }
 
-        public Folder(string name, string url, long ID,long folderID) : base(name)
+        public Folder(string name, string url, long ID,long folderID) : this(name, url, ID)
         {
-            this.URL = url;
-            this.ID = ID;
-            this._folderID = folderID;
+            _folderId = folderID;
             Folderlist = new ObservableList<Folder>();
         }
 
@@ -33,25 +31,27 @@ namespace TuneMusix.Model
         public bool Add(Folder folder)
         {
             if(folder == null)
+            {
                 throw new ArgumentNullException("You can't add Null to container");
+            }
 
             if (!Folderlist.Contains(folder))
             {
                 Folderlist.Add(folder);
-                folder.FolderID = this.ID;
+                folder.FolderId = this.Id;
                 folder.Container = this;
-                RaisePropertyChanged("Folderlist");
+                NotifyPropertyChanged("Folderlist");
                 OnContainerChanged();
                 return true;
             }
             return false;          
         }
 
-        public override bool Add(Track track)
+        public override bool Add( Track track )
         {
-            if (base.Add(track))
+            if ( base.Add( track ) )
             {
-                track.FolderID = this.ID;
+                track.FolderID.Value = Id;
                 track.Container = this;
                 return true;
             }
@@ -62,7 +62,7 @@ namespace TuneMusix.Model
         {
             get
             {
-                if(base.IsEmpty && Folderlist.Count == 0)
+                if( base.IsEmpty && Folderlist.Count == 0 )
                 {
                     return true;
                 }
@@ -70,9 +70,9 @@ namespace TuneMusix.Model
                 {
                     //Check if the subfolders are empty
                     bool foldersEmpty = true;
-                    foreach(Folder folder in Folderlist)
+                    foreach( Folder folder in Folderlist )
                     {
-                        if (!folder.IsEmpty)
+                        if ( !folder.IsEmpty )
                         {
                             foldersEmpty = false;
                         }
@@ -86,7 +86,7 @@ namespace TuneMusix.Model
         {
             get
             {
-                return this._url;
+                return _url;
             }
             set
             {
@@ -95,27 +95,25 @@ namespace TuneMusix.Model
                     throw new ArgumentNullException("URL mustn't be null.");
                 }
                 this._url = value;
-                RaisePropertyChanged("URL");
+                NotifyPropertyChanged("URL");
                 IsModified = true;
                 OnContainerChanged();
             }
         }
 
-        public long FolderID
+        public long FolderId
         {
-            get { return this._folderID; }
+            get { return this._folderId; }
             set
             {
-                _folderID = value;
+                _folderId = value;
                 IsModified = true;
-                RaisePropertyChanged("FolderID");
+                NotifyPropertyChanged("FolderID");
                 OnContainerChanged();
             }
         }
 
         public ObservableList<Folder> Folderlist { get; private set; }
-
-        CompositeCollection cc = new CompositeCollection();
         
         /// <summary>
         /// Returns a IList for the Treeview

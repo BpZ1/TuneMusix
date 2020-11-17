@@ -50,7 +50,7 @@
                     </MenuItem.Header>
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
-                            <Setter Property="Header" Value="{Binding Name}"/>
+                            <Setter Property="Header" Value="{Binding Name.Value}"/>
                             <Setter Property="Command" Value="{Binding Source={StaticResource dcProxy}, Path=Data.AddToPlaylist}" />
                             <Setter Property="CommandParameter" Value="{Binding}" />
                         </Style>
@@ -109,26 +109,26 @@
                     </Grid.ColumnDefinitions>
                     <!-- Album name info-->
                     <TextBlock Text="Name:" FontSize="20" Grid.Row="0" Grid.Column="0"/>
-                    <TextBlock Text="{Binding Name}" FontSize="20" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="5"/>
+                    <TextBlock Text="{Binding Name.Value}" FontSize="20" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="5"/>
                     <!-- Album interpret info-->
                     <TextBlock Text="Interpret:" FontSize="20" Grid.Row="1" Grid.Column="0"/>
-                    <TextBlock Text="{Binding Interpret}" FontSize="20" Grid.Row="1" Grid.Column="2"/>
+                    <TextBlock Text="{Binding Interpret.Value}" FontSize="20" Grid.Row="1" Grid.Column="2"/>
                     <!-- Album track count info-->
                     <TextBlock Text="Tracks:" FontSize="20" Grid.Row="2" Grid.Column="0"/>
-                    <TextBlock Text="{Binding TrackCount}" FontSize="20" Grid.Row="2" Grid.Column="2"/>
+                    <TextBlock Text="{Binding TrackCount.Value}" FontSize="20" Grid.Row="2" Grid.Column="2"/>
                     <!-- Album duration info-->
                     <TextBlock Text="Duration:" FontSize="20" Grid.Row="3" Grid.Column="0"/>
-                    <TextBlock Text="{Binding Duration}" FontSize="20" Grid.Row="3" Grid.Column="2"/>
+                    <TextBlock Text="{Binding Duration.Value}" FontSize="20" Grid.Row="3" Grid.Column="2"/>
                     <!-- Album year info-->
                     <TextBlock Text="Year:" FontSize="20" Grid.Row="1" Grid.Column="4"/>
-                    <TextBlock Text="{Binding Year}" FontSize="20" Grid.Row="1" Grid.Column="6"/>
+                    <TextBlock Text="{Binding Year.Value}" FontSize="20" Grid.Row="1" Grid.Column="6"/>
                     <!-- Album genre info-->
                     <TextBlock Text="Genre:" FontSize="20" Grid.Row="2" Grid.Column="4"/>
-                    <TextBlock Text="{Binding Genre}" FontSize="20" Grid.Row="2" Grid.Column="6"/>
+                    <TextBlock Text="{Binding Genre.Value}" FontSize="20" Grid.Row="2" Grid.Column="6"/>
                 </Grid>
             </Grid>
         </Expander.Header>
         <!--Album Track list-->
-        
+
     </Expander>
 </UserControl>

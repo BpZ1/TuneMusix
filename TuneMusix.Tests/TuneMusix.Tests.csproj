@@ -100,6 +100,7 @@
     <Compile Include="HelperTests\AudioControlsTests.cs" />
     <Compile Include="HelperTests\ConverterTests.cs" />
     <Compile Include="HelperTests\FileParserTests.cs" />
+    <Compile Include="HelperTests\ObservableValueTests.cs" />
     <Compile Include="HelperTests\TrackServiceTests.cs" />
     <Compile Include="ModelTests\ContainerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -72,17 +72,17 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                    <GridViewColumn Header="Titel" DisplayMemberBinding="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" Width="300"/>
+                    <GridViewColumn Header="Titel" DisplayMemberBinding="{Binding Path=Title.Value, UpdateSourceTrigger=PropertyChanged}" Width="300"/>
                     <!--      Interpret column         -->
-                    <GridViewColumn Header="Interpret" DisplayMemberBinding="{Binding Path=Interpret, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                    <GridViewColumn Header="Interpret" DisplayMemberBinding="{Binding Path=Interpret.Value, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
                     <!--      Album column         -->
-                    <GridViewColumn Header="Album" DisplayMemberBinding="{Binding Path=Album, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
-                        <!--      Year column         -->
-                    <GridViewColumn Header="Year" DisplayMemberBinding="{Binding Path=Year, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
+                    <GridViewColumn Header="Album" DisplayMemberBinding="{Binding Path=Album.Value, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                    <!--      Year column         -->
+                    <GridViewColumn Header="Year" DisplayMemberBinding="{Binding Path=Year.Value, UpdateSourceTrigger=PropertyChanged}" Width="100"/>
                     <!--      Genre column         -->
-                    <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Path=Genre, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                    <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Path=Genre.Value, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                     <!--      Duration column         -->
-                    <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Path=Duration, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+                    <GridViewColumn Header="Duration" DisplayMemberBinding="{Binding Path=Duration.Value, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
                     <GridViewColumn Header="Rating" Width="250" >
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>

@@ -15,7 +15,7 @@ namespace TuneMusix.Model
     /// and have to be saved to the database.
     /// </summary>
     public partial class Options
-    { 
+    {
         private static volatile Options _instance;
         private static object _lockObject = new Object();
 
@@ -23,11 +23,11 @@ namespace TuneMusix.Model
         {
             get
             {
-                if (_instance == null)
+                if ( _instance == null )
                 {
-                    lock (_lockObject)
+                    lock ( _lockObject )
                     {
-                        if (_instance == null)
+                        if ( _instance == null )
                         {
                             _instance = new Options();
                         }
@@ -41,29 +41,29 @@ namespace TuneMusix.Model
 
         private bool _effectsActive = true;
         private bool _loggerActive;
-        private int _volume;      
+        private int _volume;
         private bool _askConfirmation = true;
         private bool _muted = false;
         //Values of the swatch for the database.
         private bool _theme;
 
-        public delegate void OptionsChangedEventHandler(object sender);
+        public delegate void OptionsChangedEventHandler( object sender );
 
         public event OptionsChangedEventHandler ColorChanged;
 
         protected virtual void OnColorChanged()
         {
-            ColorChanged?.Invoke(this);
+            ColorChanged?.Invoke( this );
         }
 
         // 0 = No repeat
         // 1 = Repeat all
         // 2 = repeat track
-        private int repeatTrack;
+        private RepeatType _repeatTrack;
         //balance of the playback
         private int balance;
         private bool isStereo;
-       
+
         /// <summary>
         /// Boolean representing the current muted option.
         /// </summary>
@@ -78,7 +78,7 @@ namespace TuneMusix.Model
         }
 
         #region events
-        public delegate void OptionsEventHandler(object sender,object changed);
+        public delegate void OptionsEventHandler( object sender, object changed );
 
         public event OptionsEventHandler VolumeChanged;
         public event OptionsEventHandler RepeatChanged;
@@ -88,23 +88,23 @@ namespace TuneMusix.Model
 
         protected virtual void OnVolumeChanged()
         {
-            VolumeChanged?.Invoke(this, this.Volume);
+            VolumeChanged?.Invoke( this, this.Volume );
         }
         protected virtual void OnRepeatChanged()
         {
-            RepeatChanged?.Invoke(this, this.RepeatTrack);
+            RepeatChanged?.Invoke( this, this.RepeatTrack );
         }
         protected virtual void OnBalanceChanged()
         {
-            BalanceChanged?.Invoke(this, this.Balance);
+            BalanceChanged?.Invoke( this, this.Balance );
         }
         protected virtual void OnEffectsActiveChanged()
         {
-            EffectsActiveChanged?.Invoke(this, _effectsActive);
+            EffectsActiveChanged?.Invoke( this, _effectsActive );
         }
         protected virtual void OnIsStereoChanged()
         {
-            IsStereoChanged?.Invoke(this, isStereo);
+            IsStereoChanged?.Invoke( this, isStereo );
         }
         #endregion
 
@@ -119,15 +119,15 @@ namespace TuneMusix.Model
         {
             set
             {
-                if(value != null)
+                if ( value != null )
                 {
                     var paletteHelper = new PaletteHelper();
-                    paletteHelper.ReplacePrimaryColor(value);
+                    paletteHelper.ReplacePrimaryColor( value );
 
                     //Get swatch from list to get index.
                     var swatchList = new SwatchesProvider().Swatches.ToList();
-                    var swatch = swatchList.Single(s => s.Name.Equals(value.Name));
-                    PrimaryColorIndex = swatchList.IndexOf(swatch);
+                    var swatch = swatchList.Single( s => s.Name.Equals( value.Name ) );
+                    PrimaryColorIndex = swatchList.IndexOf( swatch );
                     OnColorChanged();
                     Modified = true;
                 }
@@ -141,15 +141,15 @@ namespace TuneMusix.Model
         {
             set
             {
-                if (value != null)
+                if ( value != null )
                 {
                     var paletteHelper = new PaletteHelper();
-                    paletteHelper.ReplaceAccentColor(value);
+                    paletteHelper.ReplaceAccentColor( value );
 
                     //Get swatch from list to get index.
                     var swatchList = new SwatchesProvider().Swatches.ToList();
-                    var swatch = swatchList.Single(s =>  s.Name.Equals(value.Name) );
-                    AccentColorIndex = swatchList.IndexOf(swatch);
+                    var swatch = swatchList.Single( s => s.Name.Equals( value.Name ) );
+                    AccentColorIndex = swatchList.IndexOf( swatch );
                     OnColorChanged();
                     Modified = true;
                 }
@@ -163,7 +163,7 @@ namespace TuneMusix.Model
         {
             set
             {
-                new PaletteHelper().SetLightDark(value);
+                new PaletteHelper().SetLightDark( value );
                 _theme = value;
                 OnColorChanged();
                 Modified = true;
@@ -210,8 +210,8 @@ namespace TuneMusix.Model
             {
                 //Volume is saved in an event that is called when the slider
                 //is released. 
-                if (value > 100)
-                {                    
+                if ( value > 100 )
+                {
                     this._volume = 100;
                     OnVolumeChanged();
                 }
@@ -254,15 +254,15 @@ namespace TuneMusix.Model
         /// 1 = Repeat all
         /// 2 = repeat track
         /// </summary>
-        public int RepeatTrack
+        public RepeatType RepeatTrack
         {
             get
             {
-                return this.repeatTrack;
+                return _repeatTrack;
             }
             set
             {
-                this.repeatTrack = value;
+                _repeatTrack = value;
                 SaveValues();
                 OnRepeatChanged();
             }
@@ -281,22 +281,22 @@ namespace TuneMusix.Model
         }
 
         #endregion
-  
+
         /// <summary>
         /// Returns true if any value in options or the effectqueue has changed.
         /// </summary>
         /// <returns></returns>
         public bool IsModified()
         {
-            if (Modified)
+            if ( Modified )
                 return true;
 
-            if (AudioControls.Instance.EffectQueue.IsModified)
+            if ( AudioControls.Instance.EffectQueue.IsModified )
                 return true;
 
-            foreach(BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist)
+            foreach ( BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist )
             {
-                if (effect.IsModified)
+                if ( effect.IsModified )
                     return true;
             }
             return false;
@@ -306,34 +306,34 @@ namespace TuneMusix.Model
         /// </summary>
         public void Save()
         {
-            if (IsModified())
+            if ( IsModified() )
             {
                 DataModel dataModel = DataModel.Instance;
                 Database manager = Database.Instance;
-                manager.UpdateOptions(IDGenerator.GetID(false), this);
-                manager.UpdateEffectQueue(AudioControls.Instance.EffectQueue.Effectlist.ToList<BaseEffect>());
+                manager.UpdateOptions( IDGenerator.GetID( false ), this );
+                manager.UpdateEffectQueue( AudioControls.Instance.EffectQueue.Effectlist.ToList<BaseEffect>() );
                 Modified = false;
                 AudioControls.Instance.EffectQueue.IsModified = false;
-                foreach (BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist)
+                foreach ( BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist )
                 {
                     effect.IsModified = false;
                 }
-                Logger.Log("Options and effects saved to database");
+                Logger.Log( "Options and effects saved to database" );
             }
         }
 
         public void SaveValues()
         {
             Database manager = Database.Instance;
-            manager.UpdateOptions(IDGenerator.GetID(false), this);
-            Logger.Log("Options saved to database");
+            manager.UpdateOptions( IDGenerator.GetID( false ), this );
+            Logger.Log( "Options saved to database" );
         }
 
-        public void SetOptions(int volume, bool shuffle, int repeatTrack, int primaryColorIndex, int accentColorIndex, bool theme, bool askConfirmation)
+        public void SetOptions( int volume, bool shuffle, RepeatType repeatTrack, int primaryColorIndex, int accentColorIndex, bool theme, bool askConfirmation )
         {
             this._volume = volume;
             this.Shuffle = shuffle;
-            this.repeatTrack = repeatTrack;
+            this._repeatTrack = repeatTrack;
             this._askConfirmation = askConfirmation;
             this.PrimaryColorIndex = primaryColorIndex;
             this.AccentColorIndex = accentColorIndex;
@@ -342,15 +342,15 @@ namespace TuneMusix.Model
             //set colors
             var swatches = new SwatchesProvider().Swatches.ToArray();
             var palette = new PaletteHelper();
-            palette.ReplacePrimaryColor(swatches[primaryColorIndex]);
-            palette.ReplaceAccentColor(swatches[accentColorIndex]);
-            palette.SetLightDark(theme);
+            palette.ReplacePrimaryColor( swatches[primaryColorIndex] );
+            palette.ReplaceAccentColor( swatches[accentColorIndex] );
+            palette.SetLightDark( theme );
 
             OnColorChanged();
             OnRepeatChanged();
             OnVolumeChanged();
         }
 
-        
+
     }
 }

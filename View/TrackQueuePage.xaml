@@ -19,17 +19,17 @@
       FontFamily="{DynamicResource MaterialDesignFont}"   
       DataContext="{DynamicResource TrackQueueViewModel}"
       Title="TrackQueuePage">
-     <Page.Resources>
+    <Page.Resources>
         <vm:TrackQueueViewModel x:Key="TrackQueueViewModel"/>
         <Style x:Key="ItemContStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding IsCurrentTrack}" Value="True">
+                <DataTrigger Binding="{Binding IsCurrentTrack.Value}" Value="True">
                     <Setter Property="Background" 
                             Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type Page}},Path=DataContext.HighlightColor, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-     </Page.Resources>
+    </Page.Resources>
     <DockPanel>
         <TextBlock Text="{Binding HeaderText,UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top"/>
         <ListBox Name="QueueListBox" ItemsSource="{Binding TrackQueue, UpdateSourceTrigger=PropertyChanged}" ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -37,18 +37,18 @@
               DockPanel.Dock="Top" SelectionMode="Single" ItemContainerStyle="{StaticResource ItemContStyle}" MouseDoubleClick="ListView_MouseDoubleClick" SelectedItem="{Binding SelectedTrack}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
-                    <i:InvokeCommandAction Command="{Binding PlayTrack}"  CommandParameter="{Binding ElementName=QueueListBox}"/>
+                    <i:InvokeCommandAction Command="{Binding PlayTrackCommand}"  CommandParameter="{Binding ElementName=QueueListBox}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Title}" Width="300"/>
+                    <TextBlock Text="{Binding Title.Value}" Width="300"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <!-- Context Menu-->
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding PlayTrack}" Header="Play"/>
+                    <MenuItem Command="{Binding PlayTrackCommand}" Header="Play"/>
                     <MenuItem ItemsSource="{Binding Playlists}" Header="Add to playlist">
                         <MenuItem.ItemContainerStyle>
                             <Style TargetType="MenuItem">
@@ -58,7 +58,7 @@
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-                    <MenuItem Command="{Binding RemoveSelectedTrack}" Header="Remove"/>
+                    <MenuItem Command="{Binding RemoveSelectedTrackCommand}" Header="Remove"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>

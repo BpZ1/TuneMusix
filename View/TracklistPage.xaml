@@ -108,7 +108,7 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView x:Name="TrackElements" AllowsColumnReorder="true"  ColumnHeaderToolTip="Track Information">
-                    <GridViewColumn x:Name="TitleColumn" DisplayMemberBinding="{Binding Path=Title, UpdateSourceTrigger=PropertyChanged}" Width="300" >
+                    <GridViewColumn x:Name="TitleColumn" DisplayMemberBinding="{Binding Path=Title.Value, UpdateSourceTrigger=PropertyChanged}" Width="300" >
                         <GridViewColumnHeader>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
@@ -122,7 +122,7 @@
                         </GridViewColumnHeader>
                     </GridViewColumn>
                     <!--      Interpret column         -->
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret, UpdateSourceTrigger=PropertyChanged}" Width="200">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Interpret.Value, UpdateSourceTrigger=PropertyChanged}" Width="200">
                         <GridViewColumnHeader>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
@@ -136,7 +136,7 @@
                         </GridViewColumnHeader>
                     </GridViewColumn>
                     <!--      Album column         -->
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Album, UpdateSourceTrigger=PropertyChanged}" Width="200">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Album.Value, UpdateSourceTrigger=PropertyChanged}" Width="200">
                         <GridViewColumnHeader>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
@@ -150,7 +150,7 @@
                         </GridViewColumnHeader>
                     </GridViewColumn>
                     <!--      Year column         -->
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Year, UpdateSourceTrigger=PropertyChanged}" Width="100">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Year.Value, UpdateSourceTrigger=PropertyChanged}" Width="100">
                         <GridViewColumnHeader>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
@@ -164,7 +164,7 @@
                         </GridViewColumnHeader>
                     </GridViewColumn>
                     <!--      Genre column         -->
-                    <GridViewColumn DisplayMemberBinding="{Binding Path=Genre, UpdateSourceTrigger=PropertyChanged}" Width="150">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Genre.Value, UpdateSourceTrigger=PropertyChanged}" Width="150">
                         <GridViewColumnHeader>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
@@ -205,7 +205,7 @@
                         </GridViewColumnHeader>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <materialDesign:RatingBar Value="{Binding Rating,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Foreground="Gold" Margin="0" />
+                                <materialDesign:RatingBar Value="{Binding Rating.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Orientation="Horizontal" Foreground="Gold" Margin="0" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

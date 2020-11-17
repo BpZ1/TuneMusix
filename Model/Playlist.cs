@@ -7,48 +7,48 @@ namespace TuneMusix.Model
     /// </summary>
     public class Playlist : ItemContainer<Track>
     {
-        public readonly long ID;
+        public readonly long Id;
         public bool IsModified { get; set; }
 
-        public Playlist(string name, long ID) : base(name)
+        public Playlist( string name, long id ) : base( name )
         {
-            this.ID = ID;
+            Id = id;
         }
 
-        public Playlist(string name, Track track, long ID) : base(name)
+        public Playlist( string name, Track track, long id ) : base( name )
         {
-            this.ID = ID;
-            if (track != null)
+            this.Id = id;
+            if ( track != null )
             {
-                Itemlist.Add(track);
+                Itemlist.Add( track );
             }
         }
 
-        public Playlist(string name, List<Track> tracks, long ID) : base(name)
+        public Playlist( string name, List<Track> tracks, long id ) : base( name )
         {
-            this.ID = ID;
-            foreach (Track track in tracks)
+            this.Id = id;
+            foreach ( Track track in tracks )
             {
-                if (track != null)
+                if ( track != null )
                 {
-                    Itemlist.Add(track);
+                    Itemlist.Add( track );
                 }
             }
         }
 
-        public override string Name
+        public new string Name
         {
-            get { return base.Name; }
+            get { return base.Name.Value; }
             set
             {
-                base.Name = value;
+                base.Name.Value = value;
                 IsModified = true;
             }
         }
 
-        public override bool Add(Track track)
+        public override bool Add( Track track )
         {
-            if (base.Add(track))
+            if ( base.Add( track ) )
             {
                 IsModified = true;
                 return true;
@@ -56,10 +56,10 @@ namespace TuneMusix.Model
             return false;
         }
 
-        public override int AddRange(IEnumerable<Track> items)
+        public override int AddRange( IEnumerable<Track> items )
         {
-            int added = base.AddRange(items);
-            if(added > 0)
+            int added = base.AddRange( items );
+            if ( added > 0 )
             {
                 IsModified = true;
             }

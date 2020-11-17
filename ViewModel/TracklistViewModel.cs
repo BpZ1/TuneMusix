@@ -38,7 +38,7 @@ namespace TuneMusix.ViewModel
         public RelayCommand AddTracksToQueue { get; set; }
         public RelayCommand OpenNewPlaylistDialog { get; set; }
 
-        private ObservableList<Track> _filteredTracks;      
+        private ObservableList<Track> _filteredTracks;
 
         //Constructor
         public TracklistViewModel()
@@ -46,23 +46,23 @@ namespace TuneMusix.ViewModel
             _searchText = "";
             _sortingType = SortingType.Ascending;
             _sortedColumn = HeaderType.Title;
-            _searchService = new DelayIterativeSearch(TrackList.ToArray());
+            _searchService = new DelayIterativeSearch( TrackList.ToArray() );
             _searchService.SearchTaskCompleted += OnSearchCompleted;
             SelectedTracks = new ObservableList<Track>();
             _filteredTracks = TrackList;
             queueSearchTask();
 
             #region commands
-            DeleteSelectedTracks = new RelayCommand(_deleteSelectedTracks);
-            AddToPlaylist = new RelayCommand(_addToPlaylist);
-            SelectionChanged = new RelayCommand(_selectionChanged);
-            PlayTrack = new RelayCommand(_playTrack);
-            SearchChanged = new RelayCommand(_searchChanged);
-            DeleteSearch = new RelayCommand(_deleteSearch);
-            ColumnClicked = new RelayCommand(_columnClicked);
-            TrackDoubleClicked = new RelayCommand(_trackDoubleClicked);
-            AddTracksToQueue = new RelayCommand(_addTracksToQueue);
-            OpenNewPlaylistDialog = new RelayCommand(_newPlaylistDialog);
+            DeleteSelectedTracks = new RelayCommand( _deleteSelectedTracks );
+            AddToPlaylist = new RelayCommand( _addToPlaylist );
+            SelectionChanged = new RelayCommand( _selectionChanged );
+            PlayTrack = new RelayCommand( _playTrack );
+            SearchChanged = new RelayCommand( _searchChanged );
+            DeleteSearch = new RelayCommand( _deleteSearch );
+            ColumnClicked = new RelayCommand( _columnClicked );
+            TrackDoubleClicked = new RelayCommand( _trackDoubleClicked );
+            AddTracksToQueue = new RelayCommand( _addTracksToQueue );
+            OpenNewPlaylistDialog = new RelayCommand( _newPlaylistDialog );
             #endregion
             //events
             _dataModel.DataModelChanged += OnTrackListChanged;
@@ -77,7 +77,7 @@ namespace TuneMusix.ViewModel
         }
         public string SelectedItemsText
         {
-            get { return "Selected items: " + SelectedTracks.Count; }
+            get { return $"Selected items: {SelectedTracks.Count}"; }
         }
         /// <summary>
         /// Text contained in the search box.
@@ -93,58 +93,58 @@ namespace TuneMusix.ViewModel
         /// Deletes all selected tracks from the tracklist.
         /// </summary>
         /// <param name="argument"></param>
-        private void _deleteSelectedTracks(object argument)
+        private void _deleteSelectedTracks( object argument )
         {
-            _dataModel.Delete(SelectedTracks.ToList<Track>());
+            _dataModel.Delete( SelectedTracks.ToList<Track>() );
         }
         /// <summary>
         /// Adds all selected tracks to the playlist with the given id.
         /// </summary>
         /// <param name="argument"></param>
-        private void _addToPlaylist(object argument)
+        private void _addToPlaylist( object argument )
         {
             Playlist selectedPlaylist = argument as Playlist;
 
-            if (selectedPlaylist != null)
+            if ( selectedPlaylist != null )
             {
-                _dataModel.AddTracksToPlaylist(SelectedTracks.ToList<Track>(), selectedPlaylist);
+                _dataModel.AddTracksToPlaylist( SelectedTracks.ToList<Track>(), selectedPlaylist );
             }
         }
-        private void _selectionChanged(object argument)
+        private void _selectionChanged( object argument )
         {
             var listView = argument as ListView;
-            if (listView == null) return;
+            if ( listView == null ) return;
 
             SelectedTracks.Clear();
             //Create a temporary list to allow mass insertion for performance savings.
             List<Track> currentSelection = new List<Track>();
-            foreach (Track track in listView.SelectedItems)
+            foreach ( Track track in listView.SelectedItems )
             {
-                currentSelection.Add(track);
+                currentSelection.Add( track );
             }
-            SelectedTracks.AddRange(currentSelection);
-            RaisePropertyChanged("SelectedItemsText");
+            SelectedTracks.AddRange( currentSelection );
+            RaisePropertyChanged( "SelectedItemsText" );
         }
-        private void _playTrack(object argument)
+        private void _playTrack( object argument )
         {
-            if (SelectedTracks == null) return;
-            if (SelectedTracks.Count > 0)
+            if ( SelectedTracks == null ) return;
+            if ( SelectedTracks.Count > 0 )
             {
                 CurrentPlaylist = null;
-                TrackQueue = new ObservableList<Track>(SelectedTracks);
+                TrackQueue = new ObservableList<Track>( SelectedTracks );
             }
         }
         /// <summary>
         /// Called every time the text in the textbox changes
         /// </summary>
         /// <param name="argument"></param>
-        private void _searchChanged(object argument)
+        private void _searchChanged( object argument )
         {
-            if (((string)argument).Equals(_searchText))
+            if ( ( ( string ) argument ).Equals( _searchText ) )
                 return;
-            
-            _searchText = (string)argument;         
-            queueSearchTask();                       
+
+            _searchText = ( string ) argument;
+            queueSearchTask();
         }
         /// <summary>
         /// Changes the type of the column to sort.
@@ -152,11 +152,11 @@ namespace TuneMusix.ViewModel
         /// clicked that is already sorted.
         /// </summary>
         /// <param name="argument"></param>
-        private void _columnClicked(object argument)
+        private void _columnClicked( object argument )
         {
             var columnType = argument as string;
             HeaderType previousType = _sortedColumn;
-            switch (columnType)
+            switch ( columnType )
             {
                 case "TitleColumn":
                     _sortedColumn = HeaderType.Title;
@@ -187,9 +187,9 @@ namespace TuneMusix.ViewModel
                     break;
             }
             //If column did not change change sorting mode.
-            if (previousType == _sortedColumn)
+            if ( previousType == _sortedColumn )
             {
-                if (_sortingType == SortingType.Ascending)
+                if ( _sortingType == SortingType.Ascending )
                 {
                     _sortingType = SortingType.Descending;
                 }
@@ -197,42 +197,42 @@ namespace TuneMusix.ViewModel
                 {
                     _sortingType = SortingType.Ascending;
                 }
-                RaisePropertyChanged("SortingIcon");
+                RaisePropertyChanged( "SortingIcon" );
             }
-            RaisePropertyChanged("TitleSorted");
-            RaisePropertyChanged("InterpretSorted");
-            RaisePropertyChanged("AlbumSorted");
-            RaisePropertyChanged("YearSorted");
-            RaisePropertyChanged("GenreSorted");
-            RaisePropertyChanged("RatingSorted");
-            RaisePropertyChanged("DurationSorted");
+            RaisePropertyChanged( "TitleSorted" );
+            RaisePropertyChanged( "InterpretSorted" );
+            RaisePropertyChanged( "AlbumSorted" );
+            RaisePropertyChanged( "YearSorted" );
+            RaisePropertyChanged( "GenreSorted" );
+            RaisePropertyChanged( "RatingSorted" );
+            RaisePropertyChanged( "DurationSorted" );
             //start sorting
-            sortListView();
-            RaisePropertyChanged("FilteredTracks");
+            SortListView();
+            RaisePropertyChanged( "FilteredTracks" );
         }
-        private void _trackDoubleClicked(object argument)
+        private void _trackDoubleClicked( object argument )
         {
-            if (argument == null)
+            if ( argument == null )
                 throw new ArgumentNullException();
 
             var track = argument as Track;
-            if (track != null)
+            if ( track != null )
             {
                 CurrentTrack = track;
                 _dataModel.CurrentPlaylist = null;
             }
         }
-        private void _addTracksToQueue(object argument)
+        private void _addTracksToQueue( object argument )
         {
-            if (SelectedTracks == null) return;
-            if (SelectedTracks.Count > 0)
+            if ( SelectedTracks == null ) return;
+            if ( SelectedTracks.Count > 0 )
             {
                 CurrentPlaylist = null;
-                foreach(Track track in SelectedTracks)
+                foreach ( Track track in SelectedTracks )
                 {
-                     _dataModel.TrackQueue.Add(track);
+                    _dataModel.TrackQueue.Add( track );
                 }
-                RaisePropertyChanged("TrackQueue");
+                RaisePropertyChanged( "TrackQueue" );
             }
         }
         #region playlist creation
@@ -240,21 +240,21 @@ namespace TuneMusix.ViewModel
         /// Open the dialog for adding a playlist.
         /// </summary>
         /// <param name="argument"></param>
-        private async void _newPlaylistDialog(object argument)
+        private async void _newPlaylistDialog( object argument )
         {
             var view = new GetTextDialog
             {
-                DataContext = new GetTextViewModel("New playlist")               
+                DataContext = new GetTextViewModel( "New playlist" )
             };
             //show the dialog
-            var result = await DialogHost.Show(view, "DialogHost", OpenedEventHandler, playlistDialogClosingHandler);
+            var result = await DialogHost.Show( view, "DialogHost", OpenedEventHandler, playlistDialogClosingHandler );
         }
         /// <summary>
         /// Intercept the open and affect the dialog using eventArgs.Session.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventargs"></param>
-        private void OpenedEventHandler(object sender, DialogOpenedEventArgs eventargs)
+        private void OpenedEventHandler( object sender, DialogOpenedEventArgs eventargs )
         {
         }
 
@@ -263,200 +263,160 @@ namespace TuneMusix.ViewModel
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="eventArgs"></param>
-        private void playlistDialogClosingHandler(object sender, DialogClosingEventArgs eventArgs)
+        private void playlistDialogClosingHandler( object sender, DialogClosingEventArgs eventArgs )
         {
-            if ((bool)eventArgs.Parameter == false) return;
+            if ( ( bool ) eventArgs.Parameter == false ) return;
 
             //chancel the closing
             eventArgs.Cancel();
             var content = eventArgs.Session.Content as GetTextDialog;
-            eventArgs.Session.UpdateContent(new GetTextDialog());
+            eventArgs.Session.UpdateContent( new GetTextDialog() );
             var dataContext = content.DataContext as GetTextViewModel;
-            if (dataContext != null)
+            if ( dataContext != null )
             {
-                if (dataContext.TextBoxText.Count<char>() >= 2)
+                if ( dataContext.TextBoxText.Count<char>() >= 2 )
                 {
-                    Playlist playlist = _dataModel.AddPlaylist(dataContext.TextBoxText);
-                    if(playlist != null)
+                    Playlist playlist = _dataModel.AddPlaylist( dataContext.TextBoxText );
+                    if ( playlist != null )
                     {
-                        _dataModel.AddTracksToPlaylist(SelectedTracks.ToList(), playlist);
-                    }             
+                        _dataModel.AddTracksToPlaylist( SelectedTracks.ToList(), playlist );
+                    }
                 }
                 else
                 {
-                    DialogService.NotificationMessage("The name has to be longer than two characters.");
+                    DialogService.NotificationMessage( "The name has to be longer than two characters." );
                 }
             }
-            Task.Factory.StartNew(() => { }).ContinueWith((t, _) => eventArgs.Session.Close(false), null,
-                         TaskScheduler.FromCurrentSynchronizationContext());
+            Task.Factory.StartNew( () => { } ).ContinueWith( ( t, _ ) => eventArgs.Session.Close( false ), null,
+                         TaskScheduler.FromCurrentSynchronizationContext() );
 
         }
         #endregion
         #endregion
 
         #region methods
-        private void OnTrackListChanged(object source,object obj)
+        private void OnTrackListChanged( object source, object obj )
         {
             _filteredTracks = TrackList;
             _searchService.Itemlist = TrackList.ToArray();
             queueSearchTask();
         }
-        private void sortListView()
+        private void SortListView()
         {
-            Logger.Log("Sorting " + _sortedColumn);
+            Logger.Log( $"Sorting {_sortedColumn}" );
 
             IEnumerable<Track> sortedList = null;
 
-            if (_sortedColumn == HeaderType.Album)
+            if ( _sortedColumn == HeaderType.Album )
             {
-                if(_sortingType == SortingType.Ascending)
+                if ( _sortingType == SortingType.Ascending )
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Album ascending
-                       select track;
+                    sortedList = FilteredTracks.OrderBy( track => track.Album.Value );
                 }
                 else
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Album descending
-                       select track;
+                    sortedList = FilteredTracks.OrderByDescending( track => track.Album.Value );
                 }
             }
-            if (_sortedColumn == HeaderType.Duration)
+            if ( _sortedColumn == HeaderType.Duration )
             {
-                if (_sortingType == SortingType.Ascending)
+                if ( _sortingType == SortingType.Ascending )
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Duration ascending
-                       select track;
+                    sortedList = FilteredTracks.OrderBy( track => track.Duration );
                 }
                 else
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Duration descending
-                       select track;
+                    sortedList = FilteredTracks.OrderByDescending( track => track.Duration );
                 }
             }
-            if (_sortedColumn == HeaderType.Genre)
+            if ( _sortedColumn == HeaderType.Genre )
             {
-                if (_sortingType == SortingType.Ascending)
+                if ( _sortingType == SortingType.Ascending )
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Genre ascending
-                       select track;
+                    sortedList = FilteredTracks.OrderBy( track => track.Genre.Value );
                 }
                 else
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Genre descending
-                       select track;
+                    sortedList = FilteredTracks.OrderByDescending( track => track.Genre.Value );
                 }
             }
-            if (_sortedColumn == HeaderType.Interpret)
+            if ( _sortedColumn == HeaderType.Interpret )
             {
-                if (_sortingType == SortingType.Ascending)
+                if ( _sortingType == SortingType.Ascending )
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Interpret ascending
-                       select track;
+                    sortedList = FilteredTracks.OrderBy( track => track.Interpret.Value );
                 }
                 else
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Interpret descending
-                       select track;
+                    sortedList = FilteredTracks.OrderByDescending( track => track.Interpret.Value );
                 }
             }
-            if (_sortedColumn == HeaderType.Rating)
+            if ( _sortedColumn == HeaderType.Rating )
             {
-                if (_sortingType == SortingType.Ascending)
+                if ( _sortingType == SortingType.Ascending )
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Rating ascending
-                       select track;
+                    sortedList = FilteredTracks.OrderBy( track => track.Rating.Value );
                 }
                 else
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Rating descending
-                       select track;
+                    sortedList = FilteredTracks.OrderByDescending( track => track.Rating.Value );
                 }
             }
-            if (_sortedColumn == HeaderType.Title)
+            if ( _sortedColumn == HeaderType.Title )
             {
-                if (_sortingType == SortingType.Ascending)
+                if ( _sortingType == SortingType.Ascending )
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Title ascending
-                       select track;
+                    sortedList = FilteredTracks.OrderBy( track => track.Title.Value );
                 }
                 else
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Title descending
-                       select track;
+                    sortedList = FilteredTracks.OrderByDescending( track => track.Title.Value );
                 }
             }
-            if (_sortedColumn == HeaderType.Year)
+            if ( _sortedColumn == HeaderType.Year )
             {
-                if (_sortingType == SortingType.Ascending)
+                if ( _sortingType == SortingType.Ascending )
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Year ascending
-                       select track;
+                    sortedList = FilteredTracks.OrderBy( track => track.Year.Value );
                 }
                 else
                 {
-                    sortedList =
-                       from track in FilteredTracks
-                       orderby track.Year descending
-                       select track;
+                    sortedList = FilteredTracks.OrderByDescending( track => track.Year.Value );
                 }
             }
-            if (sortedList != null)
-                _filteredTracks = new ObservableList<Track>(sortedList);
+            if ( sortedList != null )
+            {
+                _filteredTracks = new ObservableList<Track>( sortedList );
+            }
         }
         #region searching methods
         /// <summary>
         /// Deletes the search text and updates the list.
         /// </summary>
         /// <param name="argument"></param>
-        private void _deleteSearch(object argument)
+        private void _deleteSearch( object argument )
         {
-            if (_searchText.Equals(""))
+            if ( _searchText.Equals( "" ) )
                 return;
 
-            SearchBoxText = "";          
-            RaisePropertyChanged("SearchBoxText");
+            SearchBoxText = "";
+            RaisePropertyChanged( "SearchBoxText" );
             _searchText = "";
-            queueSearchTask();  
+            queueSearchTask();
         }
-        private void OnSearchCompleted(object sender, object result)
+        private void OnSearchCompleted( object sender, object result )
         {
-            _filteredTracks = new ObservableList<Track>((List<Track>)result);
-            sortListView();
-            RaisePropertyChanged("FilteredTracks");
-            RaisePropertyChanged("TrackDurationSum");
+            _filteredTracks = new ObservableList<Track>( ( List<Track> ) result );
+            SortListView();
+            RaisePropertyChanged( "FilteredTracks" );
+            RaisePropertyChanged( "TrackDurationSum" );
         }
         /// <summary>
         /// Queues a search task and sorts and updates the view on completion.
         /// </summary>
         private void queueSearchTask()
         {
-            _searchService.QueueSearchTask(_searchText);
+            _searchService.QueueSearchTask( _searchText );
         }
         #endregion
         #endregion
@@ -467,84 +427,63 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if (_sortingType == SortingType.Ascending)
+                if ( _sortingType == SortingType.Ascending )
                 {
                     return ASCENDING_SORTED_ICON;
                 }
                 else
                 {
                     return DESCENDING_SORTED_ICON;
-                }               
+                }
             }
         }
         public bool TitleSorted
         {
             get
             {
-                if (_sortedColumn == HeaderType.Title)
-                    return true;
-
-                return false;
+                return _sortedColumn == HeaderType.Title;
             }
         }
         public bool InterpretSorted
         {
             get
             {
-                if (_sortedColumn == HeaderType.Interpret)
-                    return true;
-
-                return false;
+                return _sortedColumn == HeaderType.Interpret;
             }
         }
         public bool AlbumSorted
         {
             get
             {
-                if (_sortedColumn == HeaderType.Album)
-                    return true;
-
-                return false;
+                return _sortedColumn == HeaderType.Album;
             }
         }
         public bool YearSorted
         {
             get
             {
-                if (_sortedColumn == HeaderType.Year)
-                    return true;
-
-                return false;
+                return _sortedColumn == HeaderType.Year;
             }
         }
         public bool GenreSorted
         {
             get
             {
-                if (_sortedColumn == HeaderType.Genre)
-                    return true;
-
-                return false;
+                return _sortedColumn == HeaderType.Genre;
             }
         }
         public bool RatingSorted
         {
             get
             {
-                if (_sortedColumn == HeaderType.Rating)
-                    return true;
-
-                return false;
+                return _sortedColumn == HeaderType.Rating;
             }
         }
         public bool DurationSorted
         {
             get
             {
-                if (_sortedColumn == HeaderType.Duration)
-                    return true;
-
-                return false;
+                return _sortedColumn == HeaderType.Duration;
             }
         }
 
@@ -552,17 +491,15 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                string result = "Total playtime: [";
-                result += sumAllTracks();
-                return result + "]";
+                return $"Total playtime: [{sumAllTracks()}]";
             }
         }
         private string sumAllTracks()
         {
             string returnValue = "";
-            foreach(Track track in _filteredTracks)
+            foreach ( Track track in _filteredTracks )
             {
-                returnValue = TrackService.AddDurations(returnValue, track.Duration);
+                returnValue = TrackService.AddDurations( returnValue, track.Duration );
             }
             return returnValue;
         }

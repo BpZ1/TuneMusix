@@ -1,13 +1,13 @@
 ﻿using GongSolutions.Wpf.DragDrop;
 using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
-using System;
-using System.Windows;
 
 namespace TuneMusix.ViewModel
 {
@@ -17,42 +17,41 @@ namespace TuneMusix.ViewModel
         public Track SelectedTrack { get; set; }
 
         //Relaycommands
-        public RelayCommand PlayTrack { get; set; }
-        public RelayCommand RemoveSelectedTrack { get; set; }
-        public RelayCommand AddToPlaylist { get; set; }
-        public RelayCommand TrackDoubleClicked { get; set; }
+        public RelayCommand PlayTrackCommand { get; set; }
+        public RelayCommand RemoveSelectedTrackCommand { get; set; }
+        public RelayCommand AddToPlaylistCommand { get; set; }
+        public RelayCommand TrackDoubleClickedCommand { get; set; }
 
         public TrackQueueViewModel()
         {
-            RemoveSelectedTrack = new RelayCommand(_removeSelectedTrack);
-            AddToPlaylist = new RelayCommand(_addToPlaylist);
-            PlayTrack = new RelayCommand(_playTrack);
-            TrackDoubleClicked = new RelayCommand(_trackDoubleClicked);
-       
+            RemoveSelectedTrackCommand = new RelayCommand( RemoveSelectedTrack );
+            AddToPlaylistCommand = new RelayCommand( AddToPlaylist );
+            PlayTrackCommand = new RelayCommand( PlayTrack );
+            TrackDoubleClickedCommand = new RelayCommand( TrackDoubleClicked );
+
             _dataModel.TrackQueue.TrackQueueChanged += OnTrackQueueChanged;
             Options.Instance.ColorChanged += OnColorChanged;
         }
 
-        #region commands
         /// <summary>
         /// Changed the current track to the selected track.
         /// </summary>
         /// <param name="argument"></param>
-        private void _playTrack(object argument)
+        private void PlayTrack( object argument )
         {
-            if(SelectedTrack != null)
+            if ( SelectedTrack != null )
             {
                 CurrentTrack = SelectedTrack;
-            }     
+            }
         }
 
-        private void _trackDoubleClicked(object argument)
+        private void TrackDoubleClicked( object argument )
         {
-            if (argument == null)
+            if ( argument == null )
                 throw new ArgumentNullException();
 
             var track = argument as Track;
-            if (track != null)
+            if ( track != null )
             {
                 CurrentTrack = track;
             }
@@ -61,27 +60,25 @@ namespace TuneMusix.ViewModel
         /// Adds the selected track to a playlist
         /// </summary>
         /// <param name="obj"></param>
-        private void _addToPlaylist(object argument)
+        private void AddToPlaylist( object argument )
         {
             Playlist selectedPlaylist = argument as Playlist;
 
-            if (selectedPlaylist != null)
+            if ( selectedPlaylist != null )
             {
-                _dataModel.AddTracksToPlaylist(new List<Track>() { SelectedTrack }, selectedPlaylist);
+                _dataModel.AddTracksToPlaylist( new List<Track>() { SelectedTrack }, selectedPlaylist );
             }
         }
 
-        private void _removeSelectedTrack(object argument)
+        private void RemoveSelectedTrack( object argument )
         {
-            if(SelectedTrack != null)
+            if ( SelectedTrack != null )
             {
-                _dataModel.RemoveTrackFromQueue(SelectedTrack);
-                RaisePropertyChanged("CurrentTrackQueue");
+                _dataModel.RemoveTrackFromQueue( SelectedTrack );
+                RaisePropertyChanged( nameof( TrackQueue ) );
             }
         }
-        #endregion
 
-        #region properties
         /// <summary>
         /// Brush that sets the highlight color of the current track in the trackqueue.
         /// </summary>
@@ -91,7 +88,7 @@ namespace TuneMusix.ViewModel
             {
                 var palette = new PaletteHelper().QueryPalette();
                 var hue = palette.AccentSwatch.AccentHues.ToArray()[palette.AccentHueIndex];
-                return new SolidColorBrush(hue.Color);
+                return new SolidColorBrush( hue.Color );
             }
         }
         /// <summary>
@@ -102,45 +99,45 @@ namespace TuneMusix.ViewModel
         {
             get
             {
-                if(TrackQueue.Count > 0)
+                if ( TrackQueue.Count > 0 )
                 {
-                    return "Track Queue [" + TrackQueue.Count + "]" + " - "  + combinedTrackTimes();
+                    return $"Track Queue [{TrackQueue.Count}] - {CombinedTrackTimes()}";
                 }
                 else
                 {
-                    return "Track Queue [" + TrackQueue.Count + "]";
+                    return $"Track Queue [{TrackQueue.Count}]";
                 }
             }
         }
-        #endregion
-        private void OnColorChanged(object sender)
+
+        private void OnColorChanged( object sender )
         {
-            RaisePropertyChanged("HighlightColor");
+            RaisePropertyChanged( nameof( HighlightColor ) );
         }
-        private void OnTrackQueueChanged(object source, object argument)
+        private void OnTrackQueueChanged( object source, object argument )
         {
-            RaisePropertyChanged("TrackQueue");
-            RaisePropertyChanged("HeaderText");
+            RaisePropertyChanged( nameof( TrackQueue ) );
+            RaisePropertyChanged( nameof( HeaderText ) );
         }
-        private String combinedTrackTimes()
+        private string CombinedTrackTimes()
         {
-            String result = "";
-            foreach(Track track in TrackQueue)
+            var result = "";
+            foreach ( Track track in TrackQueue )
             {
-                result = TrackService.AddDurations(result, track.Duration);
+                result = TrackService.AddDurations( result, track.Duration );
             }
             return result;
         }
         #region drag and drop
-        public void StartDrag(IDragInfo dragInfo)
+        public void StartDrag( IDragInfo dragInfo )
         {
             dragInfo.Data = dragInfo.SourceItem;
             dragInfo.Effects = DragDropEffects.Copy;
         }
 
-        public bool CanStartDrag(IDragInfo dragInfo)
+        public bool CanStartDrag( IDragInfo dragInfo )
         {
-            if (dragInfo != null)
+            if ( dragInfo != null )
             {
                 return true;
             }
@@ -150,7 +147,7 @@ namespace TuneMusix.ViewModel
             }
         }
 
-        public void Dropped(IDropInfo dropInfo)
+        public void Dropped( IDropInfo dropInfo )
         {
         }
 
@@ -158,30 +155,30 @@ namespace TuneMusix.ViewModel
         {
         }
 
-        public bool TryCatchOccurredException(Exception exception)
+        public bool TryCatchOccurredException( Exception exception )
         {
-            Logger.LogException(exception);
+            Logger.LogException( exception );
             throw exception;
         }
 
-        public void DragOver(IDropInfo dropInfo)
+        public void DragOver( IDropInfo dropInfo )
         {
             dropInfo.NotHandled = true;
             var sourceItem = dropInfo.Data;
-            if (sourceItem != null)
+            if ( sourceItem != null )
             {
                 dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
                 dropInfo.Effects = DragDropEffects.Copy;
             }
         }
 
-        public void Drop(IDropInfo dropInfo)
+        public void Drop( IDropInfo dropInfo )
         {
             Track track = dropInfo.Data as Track;
-            if (track != null && dropInfo != null)
+            if ( track != null && dropInfo != null )
             {
-                ListUtil.ChangeItemPosition(TrackQueue, track, dropInfo.UnfilteredInsertIndex);
-                RaisePropertyChanged("TrackQueue");
+                ListUtil.ChangeItemPosition( TrackQueue, track, dropInfo.UnfilteredInsertIndex );
+                RaisePropertyChanged( "TrackQueue" );
             }
         }
         #endregion

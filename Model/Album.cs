@@ -12,58 +12,23 @@ namespace TuneMusix.Model
         private static readonly int _coverArtResolution = 200;
         private static BitmapSource _defaultCover;
         private BitmapSource _image;
-        private string _interpret;
-        private string _duration;
-        private string _genre;
-        private int _year;
+        public ObservableValue<string> Interpret = new ObservableValue<string>( string.Empty );
+        public ObservableValue<string> Duration = new ObservableValue<string>( string.Empty );
+        public ObservableValue<string> Genre = new ObservableValue<string>( string.Empty );
+        public ObservableValue<int> Year = new ObservableValue<int>();
 
-        public Album(string name) : base(name) { }
+        public Album( string name ) : base( name ) { }
         #region Properties
         public static BitmapSource DefaultCover
         {
             get
             {
-                if(_defaultCover == null)
-                    _defaultCover = Converter.ConvertBitmap(Resources.Resource.defaultAlbumCover);
+                if ( _defaultCover == null )
+                {
+                    _defaultCover = Converter.ConvertBitmap( Resources.Resource.defaultAlbumCover );
+                }
 
                 return _defaultCover;
-            }
-        }
-        public string Duration
-        {
-            get { return _duration; }
-            set
-            {
-                _duration = value;
-                RaisePropertyChanged("Duration");
-            }
-        }
-        public string Interpret
-        {
-            get { return _interpret; }
-            set
-            {
-                _interpret = value;
-                RaisePropertyChanged("Interpret");
-            }
-        }
-        public string Genre
-        {
-            get { return _genre; }
-            set
-            {
-                _genre = value;
-                RaisePropertyChanged("Genre");
-            }
-        }
-
-        public int Year
-        {
-            get { return _year; }
-            set
-            {
-                _year = value;
-                RaisePropertyChanged("Year");
             }
         }
 
@@ -76,7 +41,7 @@ namespace TuneMusix.Model
         {
             get
             {
-                if(_image == null)
+                if ( _image == null )
                 {
                     _image = LoadImage();
                 }
@@ -85,7 +50,7 @@ namespace TuneMusix.Model
             set
             {
                 _image = value;
-                RaisePropertyChanged("CoverArt");
+                NotifyPropertyChanged();
             }
         }
         #endregion
@@ -95,24 +60,24 @@ namespace TuneMusix.Model
             UpdateDuration();
             UpdateInterpret();
             UpdateGenre();
-            if (Itemlist.Count > 0)
+            if ( Itemlist.Count > 0 )
             {
                 Track track = Itemlist[0];
-                Year = track.Year;
+                Year.Value = track.Year.Value;
             }
             base.OnContainerChanged();
         }
 
         private void UpdateGenre()
         {
-            string genre = "";
+            string genre = string.Empty;
             //Check which non duplicate genres are found
             HashSet<string> uniqueNames = new HashSet<string>();
-            foreach (Track track in Itemlist)
+            foreach ( Track track in Itemlist )
             {
-                if (uniqueNames.Add(track.Interpret.ToLower()))
+                if ( uniqueNames.Add( track.Interpret.Value.ToLower() ) )
                 {
-                    if (!genre.Equals(""))
+                    if ( !string.IsNullOrEmpty( genre ) )
                     {
                         genre += ", " + track.Genre;
                     }
@@ -123,22 +88,22 @@ namespace TuneMusix.Model
                 }
             }
             //Set the interpret to unknown if none was found.
-            if (genre.Equals(""))
+            if ( genre.Equals( "" ) )
             {
-                genre = "Unknown";
+                genre = DefaultName;
             }
 
-            Interpret = genre;
+            Genre.Value = genre;
         }
 
         private void UpdateDuration()
         {
             string duration = "00:00:00";
-            foreach (Track track in Itemlist)
+            foreach ( Track track in Itemlist )
             {
-                duration = TrackService.AddDurations(duration, track.Duration);
+                duration = TrackService.AddDurations( duration, track.Duration );
             }
-            this.Duration = duration;
+            this.Duration.Value = duration;
         }
 
         private void UpdateInterpret()
@@ -146,11 +111,11 @@ namespace TuneMusix.Model
             string interpret = "";
             //Check which non duplicate interprets are found
             HashSet<string> uniqueNames = new HashSet<string>();
-            foreach(Track track in Itemlist)
+            foreach ( Track track in Itemlist )
             {
-                if (uniqueNames.Add(track.Interpret.ToLower()))
+                if ( uniqueNames.Add( track.Interpret.Value.ToLower() ) )
                 {
-                    if (!interpret.Equals(""))
+                    if ( !interpret.Equals( "" ) )
                     {
                         interpret += ", " + track.Interpret;
                     }
@@ -161,60 +126,62 @@ namespace TuneMusix.Model
                 }
             }
             //Set the interpret to unknown if none was found.
-            if (interpret.Equals(""))
+            if ( string.IsNullOrEmpty( interpret ) )
             {
-                interpret = "Unknown";
+                interpret = DefaultName;
             }
-            Interpret = interpret;
+            Interpret.Value = interpret;
         }
 
         private BitmapSource LoadImage()
         {
             BitmapSource result = null;
-            if (Itemlist.Count > 0)
+            if ( Itemlist.Count > 0 )
             {
                 //Loop through all tracks of the album until an image is found
-                foreach (Track track in Itemlist)
+                foreach ( Track track in Itemlist )
                 {
-                    TagLib.File file = TagLib.File.Create(track.SourceURL);
-                    if (file.Tag.Pictures != null && file.Tag.Pictures.Length > 0)
+                    TagLib.File file = TagLib.File.Create( track.SourceURL.Value );
+                    if ( file.Tag.Pictures != null && file.Tag.Pictures.Length > 0 )
                     {
-                        var bin = (byte[])(file.Tag.Pictures[0].Data.Data);
+                        var bin = file.Tag.Pictures[0].Data.Data;
                         //Load the first image of the file
-                        using (var memoryStream = new MemoryStream(bin))
+                        using ( var memoryStream = new MemoryStream( bin ) )
                         {
                             try
                             {
-                                Image image = Image.FromStream(memoryStream).GetThumbnailImage
+                                Image image = Image.FromStream( memoryStream ).GetThumbnailImage
                               (
                               _coverArtResolution,
                               _coverArtResolution,
                               null,
                               IntPtr.Zero
                               );
-                                result = Converter.ConvertBitmap(new Bitmap(image));
+                                result = Converter.ConvertBitmap( new Bitmap( image ) );
                             }
-                            catch (Exception e)
+                            catch ( Exception e )
                             {
-                                Logger.Log("Could not load cover art of track '" + track.Title + "'");
-                                Logger.LogException(e);
+                                Logger.Log( $"Could not load cover art of track '{track.Title}'" );
+                                Logger.LogException( e );
                             }
 
                         }
                         //If an image was found end loop
-                        if (result != null)
+                        if ( result != null )
                         {
                             break;
                         }
                     }
                 }
                 //If no image was found load the default image.
-                if (result == null)
+                if ( result == null )
                 {
                     result = Album.DefaultCover;
                 }
             }
             return result;
         }
+
+        private const string DefaultName = "Unknown";
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using TuneMusix.Model;
@@ -17,13 +16,13 @@ namespace TuneMusix.View
             InitializeComponent();
         }
 
-        void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        void ListView_MouseDoubleClick( object sender, MouseButtonEventArgs e )
         {
-            var viewModel = (TrackQueueViewModel)DataContext;
-            var item = ((FrameworkElement)e.OriginalSource).DataContext as Track;
-            if (item != null)
+            var viewModel = ( TrackQueueViewModel ) DataContext;
+            var item = ( ( FrameworkElement ) e.OriginalSource ).DataContext as Track;
+            if ( item != null )
             {
-                viewModel.TrackDoubleClicked.Execute(item);
+                viewModel.TrackDoubleClickedCommand.Execute( item );
             }
         }
     }

@@ -20,7 +20,7 @@
       FontFamily="{DynamicResource MaterialDesignFont}"   
       >
     <Page.Resources>
-        <vm:FolderPageViewModel x:Key="FolderPageViewModel"/>  
+        <vm:FolderPageViewModel x:Key="FolderPageViewModel"/>
     </Page.Resources>
 
     <Grid>
@@ -66,7 +66,7 @@
                 <HierarchicalDataTemplate DataType="{x:Type model:Folder}" ItemsSource="{Binding Children}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="FolderOutline" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="3,0" />
-                        <TextBlock Text="{Binding Name}"></TextBlock>
+                        <TextBlock Text="{Binding Name.Value}"></TextBlock>
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type model:Track}">
