@@ -25,19 +25,45 @@ namespace TuneMusix.Model
             {
                 if ( _instance == null )
                 {
-                    lock ( _lockObject )
+                    if ( _instance == null )
                     {
-                        if ( _instance == null )
-                        {
-                            _instance = new Options();
-                        }
+                        throw new Exception( "Options was not yet created." );
                     }
                 }
                 return _instance;
             }
         }
 
-        private Options() { }
+
+        public static void Create( int volume, bool shuffle, RepeatType repeatTrack, int primaryColorIndex, int accentColorIndex, bool theme, bool askConfirmation )
+        {
+            lock ( _lockObject )
+            {
+                _instance = new Options( volume, shuffle, repeatTrack, primaryColorIndex, accentColorIndex, theme, askConfirmation );
+            }
+        }
+
+        private Options( int volume, bool shuffle, RepeatType repeatTrack, int primaryColorIndex, int accentColorIndex, bool theme, bool askConfirmation )
+        {
+            _volume = volume;
+            Shuffle = shuffle;
+            _repeatTrack = repeatTrack;
+            _askConfirmation = askConfirmation;
+            PrimaryColorIndex = primaryColorIndex;
+            AccentColorIndex = accentColorIndex;
+            _theme = theme;
+
+            //set colors
+            var swatches = new SwatchesProvider().Swatches.ToArray();
+            var palette = new PaletteHelper();
+            palette.ReplacePrimaryColor( swatches[primaryColorIndex] );
+            palette.ReplaceAccentColor( swatches[accentColorIndex] );
+            palette.SetLightDark( theme );
+
+            OnColorChanged();
+            OnRepeatChanged();
+            OnVolumeChanged();
+        }
 
         private bool _effectsActive = true;
         private bool _loggerActive;
@@ -61,7 +87,7 @@ namespace TuneMusix.Model
         // 2 = repeat track
         private RepeatType _repeatTrack;
         //balance of the playback
-        private int balance;
+        private int _balance;
         private bool isStereo;
 
         /// <summary>
@@ -159,7 +185,7 @@ namespace TuneMusix.Model
         /// <summary>
         /// Defines the theme of the application.
         /// </summary>
-        public bool Theme
+        public bool IsDarkMode
         {
             set
             {
@@ -196,7 +222,7 @@ namespace TuneMusix.Model
             get { return _effectsActive; }
             set
             {
-                this._effectsActive = value;
+                _effectsActive = value;
                 Modified = true;
             }
         }
@@ -212,12 +238,12 @@ namespace TuneMusix.Model
                 //is released. 
                 if ( value > 100 )
                 {
-                    this._volume = 100;
+                    _volume = 100;
                     OnVolumeChanged();
                 }
                 else
                 {
-                    this._volume = value;
+                    _volume = value;
                     OnVolumeChanged();
                 }
 
@@ -228,10 +254,10 @@ namespace TuneMusix.Model
         /// </summary>
         public int Balance
         {
-            get { return this.balance; }
+            get { return _balance; }
             set
             {
-                this.balance = value;
+                _balance = value;
                 //Needs event that is called when adjustment on slider is finished to save the value.
                 OnBalanceChanged();
             }
@@ -242,10 +268,10 @@ namespace TuneMusix.Model
         /// </summary>
         public bool LoggerActive
         {
-            get { return this._loggerActive; }
+            get { return _loggerActive; }
             set
             {
-                this._loggerActive = value;
+                _loggerActive = value;
                 Modified = true;
             }
         }
@@ -289,15 +315,21 @@ namespace TuneMusix.Model
         public bool IsModified()
         {
             if ( Modified )
+            {
                 return true;
+            }
 
             if ( AudioControls.Instance.EffectQueue.IsModified )
+            {
                 return true;
+            }
 
             foreach ( BaseEffect effect in AudioControls.Instance.EffectQueue.Effectlist )
             {
                 if ( effect.IsModified )
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -309,7 +341,7 @@ namespace TuneMusix.Model
             if ( IsModified() )
             {
                 DataModel dataModel = DataModel.Instance;
-                Database manager = Database.Instance;
+                DatabaseLegacy manager = DatabaseLegacy.Instance;
                 manager.UpdateOptions( IDGenerator.GetID( false ), this );
                 manager.UpdateEffectQueue( AudioControls.Instance.EffectQueue.Effectlist.ToList<BaseEffect>() );
                 Modified = false;
@@ -324,33 +356,9 @@ namespace TuneMusix.Model
 
         public void SaveValues()
         {
-            Database manager = Database.Instance;
+            DatabaseLegacy manager = DatabaseLegacy.Instance;
             manager.UpdateOptions( IDGenerator.GetID( false ), this );
             Logger.Log( "Options saved to database" );
         }
-
-        public void SetOptions( int volume, bool shuffle, RepeatType repeatTrack, int primaryColorIndex, int accentColorIndex, bool theme, bool askConfirmation )
-        {
-            this._volume = volume;
-            this.Shuffle = shuffle;
-            this._repeatTrack = repeatTrack;
-            this._askConfirmation = askConfirmation;
-            this.PrimaryColorIndex = primaryColorIndex;
-            this.AccentColorIndex = accentColorIndex;
-            this._theme = theme;
-
-            //set colors
-            var swatches = new SwatchesProvider().Swatches.ToArray();
-            var palette = new PaletteHelper();
-            palette.ReplacePrimaryColor( swatches[primaryColorIndex] );
-            palette.ReplaceAccentColor( swatches[accentColorIndex] );
-            palette.SetLightDark( theme );
-
-            OnColorChanged();
-            OnRepeatChanged();
-            OnVolumeChanged();
-        }
-
-
     }
 }

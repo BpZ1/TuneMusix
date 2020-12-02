@@ -1,5 +1,8 @@
 ﻿using CSCore;
 using CSCore.Streams.Effects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
@@ -13,14 +16,14 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         private float _frequency = 0.25f;
         private float _wet_DryMix = 50;
         private int _waveForm = 1;
-        
-        public FlangerEffect()
+
+        public FlangerEffect() : base( EffectType.Flanger )
         {
             IsActive = true;
             _isInitialized = false;
         }
 
-        public FlangerEffect(float delay,float depth,float feedback,float frequency,float wetDryMix,int waveForm)
+        public FlangerEffect( float delay, float depth, float feedback, float frequency, float wetDryMix, int waveForm ) : base( EffectType.Flanger )
         {
             IsActive = true;
             this._delay = delay;
@@ -32,25 +35,52 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             _isInitialized = false;
         }
 
-        public override IWaveSource Apply(IWaveSource waveSource)
+        public override IWaveSource Apply( IWaveSource waveSource )
         {
-            if (IsActive)
-                return waveSource.AppendSource(createFlanger);
+            if ( IsActive )
+                return waveSource.AppendSource( createFlanger );
 
-             return waveSource;          
+            return waveSource;
         }
 
-        private DmoFlangerEffect createFlanger(IWaveSource waveSource)
+        private DmoFlangerEffect createFlanger( IWaveSource waveSource )
         {
-            _flanger = new DmoFlangerEffect(waveSource);
+            _flanger = new DmoFlangerEffect( waveSource );
             _isInitialized = true;
             _flanger.Delay = _delay;
             _flanger.Depth = _depth;
             _flanger.Feedback = _feedback;
             _flanger.Frequency = _frequency;
             _flanger.WetDryMix = _wet_DryMix;
-            _flanger.Waveform = (FlangerWaveform)_waveForm;
+            _flanger.Waveform = ( FlangerWaveform ) _waveForm;
             return _flanger;
+        }
+
+        public override IEnumerable<string> GetValues()
+        {
+            return new List<string>()
+            {
+                Delay.ToString(),
+                Depth.ToString(),
+                Feedback.ToString(),
+                Frequency.ToString(),
+                Wet_DryMix.ToString(),
+                WaveForm.ToString()
+             };
+        }
+
+        public override void SetValues( IEnumerable<string> values )
+        {
+            if ( values.Count() < 6 )
+            {
+                throw new ArgumentException( "Invalid number of values" );
+            }
+            Delay = GetFloatValue( values.ElementAt( 0 ) );
+            Depth = GetFloatValue( values.ElementAt( 1 ) );
+            Feedback = GetFloatValue( values.ElementAt( 2 ) );
+            Frequency = GetFloatValue( values.ElementAt( 3 ) );
+            Wet_DryMix = GetFloatValue( values.ElementAt( 4 ) );
+            WaveForm = GetIntValue( values.ElementAt( 5 ) );
         }
 
         public float Delay
@@ -60,7 +90,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _delay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _flanger.Delay = _delay;
                 }
@@ -73,7 +103,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _depth = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _flanger.Depth = _depth;
                 }
@@ -86,7 +116,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _feedback = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _flanger.Delay = _feedback;
                 }
@@ -99,7 +129,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _frequency = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _flanger.Frequency = _frequency;
                 }
@@ -112,7 +142,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _wet_DryMix = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _flanger.WetDryMix = _wet_DryMix;
                 }
@@ -125,9 +155,9 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _waveForm = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
-                    _flanger.Waveform = (FlangerWaveform)_waveForm;
+                    _flanger.Waveform = ( FlangerWaveform ) _waveForm;
                 }
             }
         }

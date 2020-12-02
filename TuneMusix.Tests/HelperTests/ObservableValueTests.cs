@@ -1,12 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using TuneMusix.Helpers;
 
 namespace TuneMusix.Tests.HelperTests
 {
-    [TestClass]
+    [TestFixture]
     public class ObservableValueTests
     {
-        [TestMethod]
+        [Test]
         public void ValueChanged_NotifyInvoked()
         {
             string value = "test";
@@ -23,7 +23,7 @@ namespace TuneMusix.Tests.HelperTests
             Assert.AreEqual( value2, testValue.Value );
         }
 
-        [TestMethod]
+        [Test]
         public void ValueChanged_SetterActionWasInvoked()
         {
             string value = "test";

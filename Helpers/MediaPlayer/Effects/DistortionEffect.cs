@@ -1,5 +1,8 @@
 ﻿using CSCore;
 using CSCore.Streams.Effects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
@@ -13,11 +16,11 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         private float _postEQCenterFrequency = 2400;
         private float _preLowPassCutoff = 8000;
 
-        public DistortionEffect()
+        public DistortionEffect() : base( EffectType.Distortion )
         {
             _isInitialized = false;
         }
-        public DistortionEffect(float edge,float gain,float postEQBandwidth,float postEQCenterFrequency,float preLowPass)
+        public DistortionEffect( float edge, float gain, float postEQBandwidth, float postEQCenterFrequency, float preLowPass ) : base( EffectType.Distortion )
         {
             this._edge = edge;
             this._gain = gain;
@@ -28,17 +31,17 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         }
 
 
-        public override IWaveSource Apply(IWaveSource waveSource)
+        public override IWaveSource Apply( IWaveSource waveSource )
         {
-            if (IsActive)
-                return waveSource.AppendSource(createDistortion);
+            if ( IsActive )
+                return waveSource.AppendSource( createDistortion );
 
             return waveSource;
         }
 
-        private DmoDistortionEffect createDistortion(IWaveSource waveSource)
+        private DmoDistortionEffect createDistortion( IWaveSource waveSource )
         {
-            _distortion = new DmoDistortionEffect(waveSource);
+            _distortion = new DmoDistortionEffect( waveSource );
             _isInitialized = true;
             _distortion.Edge = _edge;
             _distortion.Gain = _gain;
@@ -55,7 +58,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _edge = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _distortion.Edge = _edge;
                 }
@@ -68,7 +71,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _gain = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _distortion.Gain = _gain;
                 }
@@ -81,7 +84,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _postEQBandwidth = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _distortion.PostEQBandwidth = _postEQBandwidth;
                 }
@@ -94,7 +97,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _postEQCenterFrequency = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _distortion.PostEQCenterFrequency = _postEQCenterFrequency;
                 }
@@ -107,11 +110,36 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _preLowPassCutoff = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _distortion.PreLowpassCutoff = _preLowPassCutoff;
                 }
             }
+        }
+
+        public override IEnumerable<string> GetValues()
+        {
+            return new List<string>()
+            {
+                Edge.ToString(),
+                Gain.ToString(),
+                PostEQBandwidth.ToString(),
+                PostEQCenterFrequency.ToString(),
+                PreLowPassCutoff.ToString()
+             };
+        }
+
+        public override void SetValues( IEnumerable<string> values )
+        {
+            if ( values.Count() <= 5 )
+            {
+                throw new ArgumentException( "Invalid number of values" );
+            }
+            Edge = GetFloatValue( values.ElementAt( 0 ) );
+            Gain = GetFloatValue( values.ElementAt( 1 ) );
+            PostEQBandwidth = GetFloatValue( values.ElementAt( 2 ) );
+            PostEQCenterFrequency = GetFloatValue( values.ElementAt( 3 ) );
+            PreLowPassCutoff = GetFloatValue( values.ElementAt( 4 ) );
         }
     }
 }

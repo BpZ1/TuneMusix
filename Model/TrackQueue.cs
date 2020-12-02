@@ -191,7 +191,7 @@ namespace TuneMusix.Model
 
         private void SaveTrack(Track track)
         {
-            Database.Instance.Insert(track);
+            DatabaseLegacy.Instance.Insert(track);
             track.IsModified = false;
         }
 

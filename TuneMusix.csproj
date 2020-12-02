@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\NUnit3TestAdapter.4.0.0-beta.1\build\net35\NUnit3TestAdapter.props" Condition="Exists('packages\NUnit3TestAdapter.4.0.0-beta.1\build\net35\NUnit3TestAdapter.props')" />
+  <Import Project="packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('packages\NUnit.3.12.0\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -116,6 +118,9 @@
       <HintPath>packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
       <HintPath>packages\taglib.2.1.0.0\lib\policy.2.0.taglib-sharp.dll</HintPath>
       <Private>True</Private>
@@ -123,6 +128,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.SQLite, Version=1.0.105.2, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>packages\System.Data.SQLite.Core.1.0.105.2\lib\net451\System.Data.SQLite.dll</HintPath>
       <Private>True</Private>
@@ -172,20 +178,46 @@
       <DependentUpon>FormattedSlider.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\Visualization\Visualizer.cs" />
+    <Compile Include="Data\Database\AlbumReconstructor.cs" />
+    <Compile Include="Data\Database\DatabaseAccess.cs" />
+    <Compile Include="Data\Database\DatabaseBase.cs" />
+    <Compile Include="Data\Database\DatabaseException.cs" />
+    <Compile Include="Data\Database\FolderReconstructor.cs" />
+    <Compile Include="Data\Database\PlaylistReconstructor.cs" />
+    <Compile Include="Data\Database\Tables\DatabaseTableNames.cs" />
+    <Compile Include="Data\Database\Tables\EffectsTable.cs" />
+    <Compile Include="Data\Database\Tables\FolderTable.cs" />
+    <Compile Include="Data\Database\Tables\IDatabaseTable.cs" />
+    <Compile Include="Data\Database\Tables\OptionsTable.cs" />
+    <Compile Include="Data\Database\Tables\PlaylistTable.cs" />
+    <Compile Include="Data\Database\Tables\PlaylistTracksTable.cs" />
+    <Compile Include="Data\Database\Tables\TableBase.cs" />
+    <Compile Include="Data\Database\Tables\TableManager.cs" />
+    <Compile Include="Data\Database\Tables\TableValues\BoolSqlValue.cs" />
+    <Compile Include="Data\Database\Tables\TableValues\FloatSqlValue.cs" />
+    <Compile Include="Data\Database\Tables\TableValues\IDatabaseKey.cs" />
+    <Compile Include="Data\Database\Tables\TableValues\ForeignKey.cs" />
+    <Compile Include="Data\Database\Tables\TableValues\PrimaryKey.cs" />
+    <Compile Include="Data\Database\Tables\TrackTable.cs" />
     <Compile Include="Data\DataModelOb\DataModelMethods.cs" />
     <Compile Include="Data\SQLDatabase\IDatabase.cs" />
     <Compile Include="Data\SQLDatabase\SQLLoader.cs" />
     <Compile Include="Data\DataModelOb\DataModel.cs" />
     <Compile Include="Data\DataModelOb\DataModelParserMethods.cs" />
     <Compile Include="Data\DataModelOb\DataModelProperty.cs" />
-    <Compile Include="Data\SQLDatabase\Database.cs" />
+    <Compile Include="Data\SQLDatabase\DatabaseLegacy.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseDeletion.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseInsertion.cs" />
     <Compile Include="Data\SQLDatabase\DatabaseSelection.cs" />
+    <Compile Include="Data\Database\Tables\TableValues\IntSqlValue.cs" />
+    <Compile Include="Data\Database\Tables\TableValues\SqlValue.cs" />
+    <Compile Include="Data\Database\Tables\TableValues\VarCharSqlValue.cs" />
     <Compile Include="Helpers\EffectType.cs" />
     <Compile Include="Helpers\NotifyPropertyChangedBase.cs" />
     <Compile Include="Helpers\ObservableValue.cs" />
     <Compile Include="Helpers\RepeatType.cs" />
+    <Compile Include="Helpers\CreatableSingleton.cs" />
+    <Compile Include="Helpers\Singleton.cs" />
     <Compile Include="Helpers\Util\OptionsIDContainer.cs" />
     <Compile Include="Helpers\Exceptions\PlayerException.cs" />
     <Compile Include="Helpers\Util\BindingProxy.cs" />
@@ -551,6 +583,8 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('packages\System.Data.SQLite.Core.1.0.105.2\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\System.Data.SQLite.Core.1.0.105.2\build\net451\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NUnit.3.12.0\build\NUnit.props'))" />
+    <Error Condition="!Exists('packages\NUnit3TestAdapter.4.0.0-beta.1\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NUnit3TestAdapter.4.0.0-beta.1\build\net35\NUnit3TestAdapter.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

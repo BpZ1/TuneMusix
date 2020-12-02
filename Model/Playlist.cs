@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TuneMusix.Model
 {
@@ -7,15 +8,23 @@ namespace TuneMusix.Model
     /// </summary>
     public class Playlist : ItemContainer<Track>
     {
-        public readonly long Id;
+        public readonly string Id;
+
+        public static int MaxNameLength => 50;
+
         public bool IsModified { get; set; }
 
-        public Playlist( string name, long id ) : base( name )
+        public static Playlist Create( string name )
+        {
+            return new Playlist( name, Guid.NewGuid().ToString() );
+        }
+
+        public Playlist( string name, string id ) : base( name )
         {
             Id = id;
         }
 
-        public Playlist( string name, Track track, long id ) : base( name )
+        public Playlist( string name, Track track, string id ) : base( name )
         {
             this.Id = id;
             if ( track != null )
@@ -24,7 +33,7 @@ namespace TuneMusix.Model
             }
         }
 
-        public Playlist( string name, List<Track> tracks, long id ) : base( name )
+        public Playlist( string name, List<Track> tracks, string id ) : base( name )
         {
             this.Id = id;
             foreach ( Track track in tracks )
@@ -66,5 +75,13 @@ namespace TuneMusix.Model
             return added;
         }
 
+        public override bool Equals( object obj )
+        {
+            if ( !( obj is Playlist otherPlaylist ) )
+            {
+                return false;
+            }
+            return Id.Equals( otherPlaylist.Id );
+        }
     }
 }

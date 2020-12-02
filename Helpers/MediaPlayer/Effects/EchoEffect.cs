@@ -1,5 +1,8 @@
 ﻿using CSCore;
 using CSCore.Streams.Effects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
@@ -12,35 +15,36 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         private bool _panDelay = false;
         private float _wet_DryMix = 50;
         private float _rightDelay = 500;
-       
 
-        public EchoEffect()
+        public EchoEffect() : base( EffectType.Echo )
         {
             IsActive = true;
             _isInitialized = false;
         }
-        public EchoEffect(float feedback,float leftDelay,bool panDelay,float wet_DryMix,float rightDelay)
+        public EchoEffect( float feedback, float leftDelay, bool panDelay, float wet_DryMix, float rightDelay ) : base( EffectType.Echo )
         {
             IsActive = true;
-            this._feedback = feedback;
-            this._leftDelay = leftDelay;
-            this._panDelay = panDelay;
-            this._wet_DryMix = wet_DryMix;
-            this._rightDelay = rightDelay;
+            _feedback = feedback;
+            _leftDelay = leftDelay;
+            _panDelay = panDelay;
+            _wet_DryMix = wet_DryMix;
+            _rightDelay = rightDelay;
             _isInitialized = false;
         }
 
-        public override IWaveSource Apply(IWaveSource waveSource)
+        public override IWaveSource Apply( IWaveSource waveSource )
         {
-            if(IsActive)
-                return waveSource.AppendSource(createEcho);
+            if ( IsActive )
+            {
+                return waveSource.AppendSource( createEcho );
+            }
 
             return waveSource;
         }
 
-        private DmoEchoEffect createEcho(IWaveSource waveSource)
+        private DmoEchoEffect createEcho( IWaveSource waveSource )
         {
-            _echo = new DmoEchoEffect(waveSource);
+            _echo = new DmoEchoEffect( waveSource );
             _isInitialized = true;
             _echo.Feedback = _feedback;
             _echo.LeftDelay = _leftDelay;
@@ -58,7 +62,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _feedback = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _echo.Feedback = _feedback;
                 }
@@ -71,7 +75,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _leftDelay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _echo.LeftDelay = _leftDelay;
                 }
@@ -84,7 +88,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _rightDelay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _echo.RightDelay = _rightDelay;
                 }
@@ -97,7 +101,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _panDelay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _echo.PanDelay = _panDelay;
                 }
@@ -110,12 +114,37 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _wet_DryMix = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _echo.WetDryMix = _wet_DryMix;
                 }
             }
         }
         #endregion
+
+        public override IEnumerable<string> GetValues()
+        {
+            return new List<string>()
+            {
+                Feedback.ToString(),
+                LeftDelay.ToString(),
+                RightDelay.ToString(),
+                WetDryMix.ToString(),
+                PanDelay.ToString()
+             };
+        }
+
+        public override void SetValues( IEnumerable<string> values )
+        {
+            if ( values.Count() <= 4 )
+            {
+                throw new ArgumentException( "Invalid number of values" );
+            }
+            Feedback = GetFloatValue( values.ElementAt( 0 ) );
+            LeftDelay = GetFloatValue( values.ElementAt( 1 ) );
+            RightDelay = GetFloatValue( values.ElementAt( 2 ) );
+            WetDryMix = GetFloatValue( values.ElementAt( 3 ) );
+            PanDelay = GetBoolValue( values.ElementAt( 3 ) );
+        }
     }
 }

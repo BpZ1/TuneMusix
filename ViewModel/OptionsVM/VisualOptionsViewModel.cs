@@ -9,7 +9,6 @@ namespace TuneMusix.ViewModel
     class VisualOptionsViewModel
     {
         public IEnumerable<Swatch> Swatches { get; }
-
         public RelayCommand ApplyPrimaryColorCommand { get; set; }
         public RelayCommand ApplyAccentColorCommand { get; set; }
 
@@ -17,29 +16,29 @@ namespace TuneMusix.ViewModel
         {
             Swatches = new SwatchesProvider().Swatches;
 
-            ApplyPrimaryColorCommand = new RelayCommand(ApplyPrimaryColor);
-            ApplyAccentColorCommand = new RelayCommand(ApplyAccentColor);
-        }        
+            ApplyPrimaryColorCommand = new RelayCommand( ApplyPrimaryColor );
+            ApplyAccentColorCommand = new RelayCommand( ApplyAccentColor );
+        }
 
-        private void ApplyPrimaryColor(object argument)
+        private void ApplyPrimaryColor( object argument )
         {
             var swatch = argument as Swatch;
-            if (swatch == null)
+            if ( swatch == null )
                 throw new ArgumentNullException();
 
             Options.Instance.PrimaryColor = swatch;
         }
 
-        private void ApplyAccentColor(object argument)
+        private void ApplyAccentColor( object argument )
         {
             var swatch = argument as Swatch;
             Options.Instance.AccentColor = swatch;
         }
 
-        public bool ChangeTheme
+        public bool IsDarkMode
         {
-            get { return Options.Instance.Theme; }
-            set { Options.Instance.Theme = value; }
+            get { return Options.Instance.IsDarkMode; }
+            set { Options.Instance.IsDarkMode = value; }
         }
     }
 }

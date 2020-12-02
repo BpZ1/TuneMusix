@@ -9,7 +9,7 @@ namespace TuneMusix.Data.DataModelOb
 {
     public partial class DataModel
     {
-        private readonly Database _database = Database.Instance;
+        private readonly DatabaseLegacy _database = DatabaseLegacy.Instance;
         private SQLLoader _loader;
         public double CurrentPosition { get; set; }
         public Folder SelectedFolder { get; set; }
@@ -30,11 +30,11 @@ namespace TuneMusix.Data.DataModelOb
         {
             get
             {
-                if (_instance == null)
+                if ( _instance == null )
                 {
-                    lock (_lockObject)
+                    lock ( _lockObject )
                     {
-                        if (_instance == null)
+                        if ( _instance == null )
                         {
                             SQLLoader loader = new SQLLoader();
                             _instance = loader.LoadFromDB();
@@ -45,15 +45,15 @@ namespace TuneMusix.Data.DataModelOb
             }
         }
 
-        public DataModel(List<Track> tracklist, List<Playlist> playlists, List<Folder> rootfolders,
-            List<Album> albumlist, List<Interpret> interpretlist)
+        public DataModel( List<Track> tracklist, List<Playlist> playlists, List<Folder> rootfolders,
+            List<Album> albumlist, List<Interpret> interpretlist )
         {
             TrackQueue = new TrackQueue();
-            this._tracklist = new ObservableList<Track>(tracklist);
-            this._rootFolders = new ObservableList<Folder>(rootfolders);
-            this._playlists = new ObservableList<Playlist>(playlists);
-            this._albumlist = new ObservableList<Album>(albumlist);
-            this._interpretlist = new ObservableList<Interpret>(interpretlist);
+            this._tracklist = new ObservableList<Track>( tracklist );
+            this._rootFolders = new ObservableList<Folder>( rootfolders );
+            this._playlists = new ObservableList<Playlist>( playlists );
+            this._albumlist = new ObservableList<Album>( albumlist );
+            this._interpretlist = new ObservableList<Interpret>( interpretlist );
 
             this._tracklist.CollectionChanged += CallOnDataModelChanged;
             this._playlists.CollectionChanged += CallOnDataModelChanged;
@@ -62,26 +62,26 @@ namespace TuneMusix.Data.DataModelOb
         #endregion
 
         #region events
-        public delegate void DataModelChangedEventHandler(object sender,object changedObject);     
+        public delegate void DataModelChangedEventHandler( object sender, object changedObject );
         public event DataModelChangedEventHandler CurrentPlaylistChanged;
         public event DataModelChangedEventHandler DataModelChanged;
         public event DataModelChangedEventHandler AlbumlistChanged;
         public event DataModelChangedEventHandler InterpretlistChanged;
         protected virtual void OnCurrentPlaylistChanged()
         {
-            CurrentPlaylistChanged?.Invoke(this, CurrentPlaylist);
+            CurrentPlaylistChanged?.Invoke( this, CurrentPlaylist );
         }
         protected virtual void OnDataModelChanged()
         {
-            DataModelChanged?.Invoke(this, TrackList);
+            DataModelChanged?.Invoke( this, TrackList );
         }
         protected virtual void OnAlbumlistChanged()
         {
-            AlbumlistChanged?.Invoke(this, _albumlist);
+            AlbumlistChanged?.Invoke( this, _albumlist );
         }
         protected virtual void OnInterpretlistChanged()
         {
-            InterpretlistChanged?.Invoke(this, _interpretlist);
+            InterpretlistChanged?.Invoke( this, _interpretlist );
         }
 
         #endregion
@@ -90,7 +90,7 @@ namespace TuneMusix.Data.DataModelOb
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CallOnDataModelChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void CallOnDataModelChanged( object sender, NotifyCollectionChangedEventArgs e )
         {
             OnDataModelChanged();
         }

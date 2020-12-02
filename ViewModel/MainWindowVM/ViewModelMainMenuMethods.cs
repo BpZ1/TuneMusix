@@ -67,7 +67,7 @@ namespace TuneMusix.ViewModel
             if (modifiedCount > 0)
             {              
                 //Save data to database
-                Database dbManager = Database.Instance;
+                DatabaseLegacy dbManager = DatabaseLegacy.Instance;
 
                 _dataModel.SavePlaylists(savePlaylists);
                 _dataModel.SaveTracks(saveTracks);

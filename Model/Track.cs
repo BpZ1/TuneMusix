@@ -10,7 +10,7 @@ namespace TuneMusix.Model
         public bool IsModified { get; set; }
         public Folder Container { get; set; }
         public ObservableValue<string> SourceURL { get; set; }
-        public ObservableValue<long> FolderID { get; set; }
+        public ObservableValue<string> FolderID { get; set; }
         public ObservableValue<string> Album { get; set; }
         public ObservableValue<int> Year { get; set; }
         public ObservableValue<string> Genre { get; set; }
@@ -20,14 +20,14 @@ namespace TuneMusix.Model
         public ObservableValue<bool> IsCurrentTrack { get; set; } = new ObservableValue<bool>();
         public ObservableValue<string> Interpret { get; set; }
         public ObservableValue<string> Title { get; set; }
-        public long Id { get; private set; }
+        public string Id { get; private set; }
         public string Duration { get; private set; }
         public int Index { get; set; }
 
-        public Track( long id, int year, string url, string title, string interpret,
+        public Track( string id, int year, string url, string title, string interpret,
             string album, string comm, string genre, string duration )
         {
-            FolderID = new ObservableValue<long>( OnTrackChanged );
+            FolderID = new ObservableValue<string>( OnTrackChanged );
             Album = new ObservableValue<string>( album ?? string.Empty, OnTrackChanged );
             SourceURL = new ObservableValue<string>( string.Empty, OnTrackChanged );
             Year = new ObservableValue<int>( year, OnTrackChanged );
@@ -51,12 +51,15 @@ namespace TuneMusix.Model
             Duration = duration;
         }
 
-        public Track( string url, long id, long folderId, string title,
+        public Track( string url, string id, string folderId, string title,
             string interpret, string album, int year, string comm, string genre, int rating, string duration ) : this( id, year, url, title, interpret, album, comm, genre, duration )
         {
-            FolderID = new ObservableValue<long>( folderId );
+            FolderID = new ObservableValue<string>( folderId );
             Rating.Value = rating;
         }
+
+        public Track( int year, string url, string title, string interpret,
+            string album, string comm, string genre, string duration ) : this( GenerateId(), year, url, title, interpret, album, comm, genre, duration ) { }
 
         //events
         public delegate void TrackChangedEventHandler( object source );
@@ -119,6 +122,25 @@ namespace TuneMusix.Model
             }
 
             return false;
+        }
+
+        public override bool Equals( object obj )
+        {
+            if ( !( obj is Track otherTrack ) )
+            {
+                return false;
+            }
+            return Id.Equals( otherTrack.Id );
+        }
+
+        private static string GenerateId()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
+using TuneMusix.Data.Database;
 using TuneMusix.Helpers;
 using TuneMusix.Helpers.MediaPlayer.Effects;
 using TuneMusix.Model;
@@ -10,7 +12,7 @@ namespace TuneMusix.Data.SQLDatabase
     /// <summary>
     /// This class contains methods for inserting data into the database.
     /// </summary>
-    public sealed partial class Database : IDatabase
+    public sealed partial class DatabaseLegacy : IDatabase, IDisposable
     {
         private const string TRACK_COMMAND = "tracks(ID, " +
                                                    "folderID," +
@@ -53,9 +55,9 @@ namespace TuneMusix.Data.SQLDatabase
 
         private SQLiteCommand CreateCommand( string prefix, Track track )
         {
-            SQLiteCommand sqlcommand = new SQLiteCommand( prefix + " " + TRACK_COMMAND, _dbConnection );
+            SQLiteCommand sqlcommand = new SQLiteCommand( prefix + " " + TRACK_COMMAND, DatabaseAccess.GetConnection() );
             sqlcommand.Parameters.AddWithValue( "ID", track.Id );
-            if ( track.FolderID.Value == 0 )
+            if ( string.IsNullOrEmpty( track.FolderID.Value ) )
             {
                 sqlcommand.Parameters.AddWithValue( "FolderID", null );
             }
@@ -132,14 +134,7 @@ namespace TuneMusix.Data.SQLDatabase
                                                                                          "@name);",
                                                                                          _dbConnection );
                 command.Parameters.AddWithValue( "ID", f.Id );
-                if ( f.FolderId == 1 )
-                {
-                    command.Parameters.AddWithValue( "folderID", null );
-                }
-                else
-                {
-                    command.Parameters.AddWithValue( "folderID", f.FolderId );
-                }
+                command.Parameters.AddWithValue( "folderID", f.FolderId );
                 command.Parameters.AddWithValue( "URL", f.URL );
                 command.Parameters.AddWithValue( "name", f.Name );
                 commandlist.Add( command );
@@ -237,7 +232,7 @@ namespace TuneMusix.Data.SQLDatabase
             sqlAddCommand.Parameters.AddWithValue( "repeatTrack", ( int ) options.RepeatTrack );
             sqlAddCommand.Parameters.AddWithValue( "primaryColor", options.PrimaryColorIndex );
             sqlAddCommand.Parameters.AddWithValue( "accentColor", options.AccentColorIndex );
-            sqlAddCommand.Parameters.AddWithValue( "theme", Converter.BoolToIntConverter( options.Theme ) );
+            sqlAddCommand.Parameters.AddWithValue( "theme", Converter.BoolToIntConverter( options.IsDarkMode ) );
             sqlAddCommand.Parameters.AddWithValue( "askConfirmation", Converter.BoolToIntConverter( options.AskConfirmation ) );
 
             OpenDBConnection();
@@ -333,7 +328,7 @@ namespace TuneMusix.Data.SQLDatabase
                     command.Parameters.AddWithValue( "Predelay", currentEffect.Predelay );
                     command.Parameters.AddWithValue( "Ratio", currentEffect.Ratio );
                     command.Parameters.AddWithValue( "Release", currentEffect.Release );
-                    command.Parameters.AddWithValue( "Treshold", currentEffect.Treshold );
+                    command.Parameters.AddWithValue( "Treshold", currentEffect.Threshold );
                     command.Parameters.AddWithValue( "Value6", null );
                     command.Parameters.AddWithValue( "Value7", null );
                     command.Parameters.AddWithValue( "Value8", null );
@@ -595,6 +590,12 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 CloseDBConnection();
             }
+        }
+
+        public void Dispose()
+        {
+            _dbConnection?.Close();
+            _dbConnection = null;
         }
     }
 }

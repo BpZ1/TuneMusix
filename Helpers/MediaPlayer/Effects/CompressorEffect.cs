@@ -1,5 +1,8 @@
 ﻿using CSCore;
 using CSCore.Streams.Effects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
@@ -14,17 +17,17 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         private float _release = 200;
         private float _treshold = -20;
 
-        public CompressorEffect()
+        public CompressorEffect() : base( EffectType.Compressor )
         {
             IsActive = true;
             _isInitialized = false;
         }
         public CompressorEffect(
             float attack,
-            float gain,float preDelay,
+            float gain, float preDelay,
             float ratio,
             float release,
-            float trashold)
+            float trashold ) : base( EffectType.Compressor )
         {
             IsActive = true;
             this._attack = attack;
@@ -37,16 +40,18 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         }
 
 
-        public override IWaveSource Apply(IWaveSource waveSource)
+        public override IWaveSource Apply( IWaveSource waveSource )
         {
-            if (IsActive)
-                return waveSource.AppendSource(createCompressor);
+            if ( IsActive )
+            {
+                return waveSource.AppendSource( createCompressor );
+            }
 
-            return waveSource;         
+            return waveSource;
         }
-        private DmoCompressorEffect createCompressor(IWaveSource waveSource)
+        private DmoCompressorEffect createCompressor( IWaveSource waveSource )
         {
-            _compressor = new DmoCompressorEffect(waveSource);
+            _compressor = new DmoCompressorEffect( waveSource );
             _isInitialized = true;
             _compressor.Attack = _attack;
             _compressor.Gain = _gain;
@@ -64,7 +69,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _attack = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _compressor.Attack = _attack;
                 }
@@ -77,7 +82,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _gain = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _compressor.Gain = _gain;
                 }
@@ -90,7 +95,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _preDelay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _compressor.Predelay = _preDelay;
                 }
@@ -103,7 +108,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _ratio = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _compressor.Ratio = _ratio;
                 }
@@ -116,27 +121,50 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _release = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _compressor.Release = _release;
                 }
             }
         }
-        public float Treshold
+        public float Threshold
         {
             get { return _treshold; }
             set
             {
                 _treshold = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _compressor.Threshold = _treshold;
                 }
             }
         }
+        public override IEnumerable<string> GetValues()
+        {
+            return new List<string>()
+            {
+                Attack.ToString(),
+                Gain.ToString(),
+                Predelay.ToString(),
+                Ratio.ToString(),
+                Release.ToString(),
+                Threshold.ToString()
+             };
+        }
 
-
-
+        public override void SetValues( IEnumerable<string> values )
+        {
+            if ( values.Count() <= 6 )
+            {
+                throw new ArgumentException( "Invalid number of values" );
+            }
+            Attack = GetFloatValue( values.ElementAt( 0 ) );
+            Gain = GetFloatValue( values.ElementAt( 1 ) );
+            Predelay = GetFloatValue( values.ElementAt( 2 ) );
+            Ratio = GetFloatValue( values.ElementAt( 3 ) );
+            Release = GetFloatValue( values.ElementAt( 4 ) );
+            Threshold = GetFloatValue( values.ElementAt( 5 ) );
+        }
     }
 }

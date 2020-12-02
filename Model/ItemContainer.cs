@@ -27,25 +27,16 @@ namespace TuneMusix.Model
             ContainerChanged?.Invoke( this );
         }
 
-        #region properties
-
         public virtual bool IsEmpty
         {
             get
             {
-                if ( Itemlist.Count == 0 )
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return Itemlist.Count == 0;
             }
         }
 
         public ObservableList<T> Itemlist => _itemlist;
-        #endregion
+
         public virtual bool Add( T item )
         {
             if ( item == null )
@@ -95,6 +86,27 @@ namespace TuneMusix.Model
                 return true;
             }
             return false;
+        }
+
+        public override bool Equals( object obj )
+        {
+            if ( !( obj is T objT ) )
+            {
+                return false;
+            }
+            if ( obj is ItemContainer<T> container )
+            {
+                return Name.Equals( container );
+            }
+            return base.Equals( obj );
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1978926223;
+            hashCode = hashCode * -1521134295 + Name.Value.GetHashCode(); ;
+            hashCode = hashCode * -1521134295 + _itemlist.GetHashCode();
+            return hashCode;
         }
     }
 }

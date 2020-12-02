@@ -180,7 +180,7 @@ namespace TuneMusix.Helpers
                 string genre = f.Tag.FirstGenre;
                 int year = ( int ) f.Tag.Year;
                 string duration = Converter.TimeSpanToString( f.Properties.Duration );
-                Track track = new Track( IDGenerator.GetID( false ), year, url, title, interpret, album, comm, genre, duration );
+                Track track = new Track( "", year, url, title, interpret, album, comm, genre, duration );
                 return track;
             }
             catch ( UnauthorizedAccessException ex )
@@ -210,7 +210,7 @@ namespace TuneMusix.Helpers
         private Folder CreateFolder( string url )
         {
             string[] URLs = url.Split( '\\' );
-            Folder folder = new Folder( URLs.Last(), url, IDGenerator.GetID( false ) );
+            Folder folder = new Folder( URLs.Last(), url, "" );
             return folder;
         }
 
@@ -267,7 +267,7 @@ namespace TuneMusix.Helpers
                 string comm = file.Tag.Comment;
                 string genre = file.Tag.FirstGenre;
                 int year = ( int ) file.Tag.Year;
-                Track temporaryCompTrack = new Track( 0, year, null, title, interpret, album, comm, genre, null );
+                Track temporaryCompTrack = new Track( "", year, null, title, interpret, album, comm, genre, null );
 
                 CheckTrackModification( track, temporaryCompTrack );
 

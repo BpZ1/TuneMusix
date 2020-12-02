@@ -1,14 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
+using NUnit.Framework;
 using TuneMusix.Model;
 
 namespace TuneMusix.Tests.ModelTests
 {
-    [TestClass]
+    [TestFixture]
     class ContainerTests
     {
-        private Track track1 = new Track( 0, 1, "url1", null, null, null, null, null, null );
+        private Track track1 = new Track( "a", 1, "url1", null, null, null, null, null, "00:00:12" );
 
-        [TestMethod]
+        [Test]
         public void AlbumIsEmpty()
         {
             Album album = new Album( "Album1" );
@@ -20,12 +21,12 @@ namespace TuneMusix.Tests.ModelTests
             Assert.IsTrue( album.IsEmpty );
         }
 
-        [TestMethod]
+        [Test]
         public void FolderIsEmpty()
         {
-            Folder folder1 = new Folder( "Folder1", "URL1", 123 );
-            Folder folder2 = new Folder( "Folder2", "URL2", 124 );
-            Folder folder3 = new Folder( "Folder3", "URL3", 125 );
+            Folder folder1 = new Folder( "Folder1", "URL1", "123" );
+            Folder folder2 = new Folder( "Folder2", "URL2", "124" );
+            Folder folder3 = new Folder( "Folder3", "URL3", "125" );
 
             Assert.IsTrue( folder1.IsEmpty );
             folder1.Add( track1 );
@@ -35,19 +36,19 @@ namespace TuneMusix.Tests.ModelTests
             folder3.Add( folder2 );
             Assert.IsFalse( folder3.IsEmpty );
             folder1.Remove( track1 );
-            Assert.IsTrue( folder3.IsEmpty );
+            Assert.IsTrue( folder1.IsEmpty );
         }
 
-        [TestMethod]
+        [Test]
         public void TrackQueueAdd()
         {
             TrackQueue queue = new TrackQueue();
             bool adding1 = queue.Add( track1 );
             Assert.IsTrue( adding1 );
-            Assert.Equals( queue.Queue.Count, 1 );
+            Assert.AreEqual( queue.Queue.Count, 1 );
             bool adding2 = queue.Add( track1 );
             Assert.IsFalse( adding2 );
-            Assert.Equals( queue.Queue.Count, 1 );
+            Assert.AreEqual( queue.Queue.Count, 1 );
         }
     }
 }

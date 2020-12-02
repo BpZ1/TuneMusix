@@ -1,5 +1,8 @@
 ﻿using CSCore;
 using CSCore.Streams.Effects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
@@ -15,42 +18,73 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         private int _phase = 3;
         private float _wet_DryMix = 50;
 
-        public ChorusEffect()
+        public ChorusEffect() : base( EffectType.Chorus )
         {
             IsActive = true;
             _isInitialized = false;
         }
-        public ChorusEffect(float delay,float depth,float feedback,float frequency,int phase,float wet_DryMix)
+        public ChorusEffect( float delay, float depth, float feedback, float frequency, int waveForm, int phase, float wet_DryMix ) : base( EffectType.Chorus )
         {
             IsActive = true;
-            this._delay = delay;
-            this._depth = depth;
-            this._feedback = feedback;
-            this._frequency = frequency;
-            this._phase = phase;
-            this._wet_DryMix = wet_DryMix;
+            _delay = delay;
+            _depth = depth;
+            _feedback = feedback;
+            _frequency = frequency;
+            _waveForm = waveForm;
+            _phase = phase;
+            _wet_DryMix = wet_DryMix;
             _isInitialized = false;
         }
 
-        public override IWaveSource Apply(IWaveSource waveSource)
+        public override IWaveSource Apply( IWaveSource waveSource )
         {
-            if (IsActive)
-                return waveSource.AppendSource(createChorus);
-  
-            return waveSource;     
+            if ( IsActive )
+                return waveSource.AppendSource( createChorus );
+
+            return waveSource;
         }
 
-        private DmoChorusEffect createChorus(IWaveSource waveSource)
+        private DmoChorusEffect createChorus( IWaveSource waveSource )
         {
-            _chorus = new DmoChorusEffect(waveSource);
+            _chorus = new DmoChorusEffect( waveSource );
             _isInitialized = true;
             _chorus.Delay = _delay;
             _chorus.Depth = _depth;
             _chorus.Feedback = _feedback;
             _chorus.Frequency = _frequency;
-            _chorus.Phase = (ChorusPhase)_phase;
+            _chorus.Phase = ( ChorusPhase ) _phase;
             _chorus.WetDryMix = _wet_DryMix;
             return _chorus;
+        }
+
+        public override IEnumerable<string> GetValues()
+        {
+            return new List<string>()
+            {
+                Delay.ToString(),
+                Depth.ToString(),
+                Feedback.ToString(),
+                Frequency.ToString(),
+                Wet_DryMix.ToString(),
+                WaveForm.ToString(),
+                Phase.ToString()
+            };
+        }
+
+        public override void SetValues( IEnumerable<string> values )
+        {
+            if ( values.Count() <= 5 )
+            {
+                throw new ArgumentException( "Invalid number of values" );
+            }
+
+            Delay = GetFloatValue( values.ElementAt( 0 ) );
+            Depth = GetFloatValue( values.ElementAt( 1 ) );
+            Feedback = GetFloatValue( values.ElementAt( 2 ) );
+            Frequency = GetFloatValue( values.ElementAt( 3 ) );
+            Wet_DryMix = GetFloatValue( values.ElementAt( 4 ) );
+            WaveForm = GetIntValue( values.ElementAt( 5 ) );
+            Phase = GetIntValue( values.ElementAt( 6 ) );
         }
 
         //getter and setter
@@ -62,7 +96,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _delay = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _chorus.Delay = _delay;
                 }
@@ -75,7 +109,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _depth = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _chorus.Depth = _depth;
                 }
@@ -88,7 +122,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _feedback = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _chorus.Feedback = _feedback;
                 }
@@ -101,7 +135,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _frequency = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _chorus.Frequency = _frequency;
                 }
@@ -114,16 +148,16 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _waveForm = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
-                    if(value == 1)
-                    {                 
+                    if ( value == 1 )
+                    {
                         _chorus.Waveform = ChorusWaveform.WaveformSin;
                     }
                     else
                     {
                         _chorus.Waveform = ChorusWaveform.WaveformTriangle;
-                    }                 
+                    }
                 }
             }
         }
@@ -134,9 +168,9 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _phase = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
-                    _chorus.Phase = (ChorusPhase)_phase;
+                    _chorus.Phase = ( ChorusPhase ) _phase;
                 }
             }
         }
@@ -147,7 +181,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _wet_DryMix = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _chorus.WetDryMix = _wet_DryMix;
                 }

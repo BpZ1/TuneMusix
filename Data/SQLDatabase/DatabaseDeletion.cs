@@ -4,7 +4,7 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Data.SQLDatabase
 {
-    public sealed partial class Database : IDatabase
+    public sealed partial class DatabaseLegacy : IDatabase
     {
         public void Delete( IEnumerable<Track> tracks )
         {

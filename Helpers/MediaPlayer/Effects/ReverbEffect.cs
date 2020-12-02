@@ -1,5 +1,8 @@
 ﻿using CSCore;
 using CSCore.Streams.Effects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
@@ -12,7 +15,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         private float _reverbMix = 0;
         private float _reverbTime = 1000;
 
-        public ReverbEffect()
+        public ReverbEffect() : base( EffectType.Reverb )
         {
             IsActive = true;
             _isInitialized = false;
@@ -21,7 +24,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             float highFrequencyRTRatio,
             float inGain,
             float reverbMix,
-            float reverbTime)
+            float reverbTime ) : base( EffectType.Reverb )
         {
             IsActive = true;
             this._highFrequencyRTRatio = highFrequencyRTRatio;
@@ -31,23 +34,48 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             _isInitialized = false;
         }
 
-        public override IWaveSource Apply(IWaveSource waveSource)
+        public override IWaveSource Apply( IWaveSource waveSource )
         {
-            if (IsActive)
-                return waveSource.AppendSource(createFlanger);
-            
+            if ( IsActive )
+            {
+                return waveSource.AppendSource( CreateFlanger );
+            }
+
             return waveSource;
         }
 
-        private DmoWavesReverbEffect createFlanger(IWaveSource waveSource)
+        private DmoWavesReverbEffect CreateFlanger( IWaveSource waveSource )
         {
-            _reverb = new DmoWavesReverbEffect(waveSource);
+            _reverb = new DmoWavesReverbEffect( waveSource );
             _isInitialized = true;
             _reverb.HighFrequencyRTRatio = _highFrequencyRTRatio;
             _reverb.InGain = _inGain;
             _reverb.ReverbMix = _reverbMix;
             _reverb.ReverbTime = _reverbTime;
             return _reverb;
+        }
+
+        public override IEnumerable<string> GetValues()
+        {
+            return new List<string>()
+            {
+                HighFrequencyRTRatio.ToString(),
+                InGain.ToString(),
+                ReverbMix.ToString(),
+                ReverbTime.ToString()
+             };
+        }
+
+        public override void SetValues( IEnumerable<string> values )
+        {
+            if ( values.Count() < 4 )
+            {
+                throw new ArgumentException( "Invalid number of values" );
+            }
+            HighFrequencyRTRatio = GetFloatValue( values.ElementAt( 0 ) );
+            InGain = GetFloatValue( values.ElementAt( 1 ) );
+            ReverbMix = GetFloatValue( values.ElementAt( 2 ) );
+            ReverbTime = GetFloatValue( values.ElementAt( 3 ) );
         }
 
         public float HighFrequencyRTRatio
@@ -57,7 +85,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _highFrequencyRTRatio = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _reverb.HighFrequencyRTRatio = _highFrequencyRTRatio;
                 }
@@ -70,7 +98,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _inGain = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _reverb.InGain = _inGain;
                 }
@@ -83,7 +111,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _reverbMix = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _reverb.ReverbMix = _reverbMix;
                 }
@@ -96,15 +124,11 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _reverbTime = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _reverb.ReverbTime = _reverbTime;
                 }
             }
         }
-
-
-
-
     }
 }

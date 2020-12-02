@@ -16,7 +16,7 @@ namespace TuneMusix.Data.SQLDatabase
     /// </summary>
     public class SQLLoader
     {
-        private Database _database = Database.Instance;
+        private DatabaseLegacy _database = DatabaseLegacy.Instance;
         private IDGenerator _idGen = IDGenerator.Instance;
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace TuneMusix.Data.SQLDatabase
 
             foreach ( Folder folder in FolderList )
             {
-                if ( folder.FolderId == 1 )
+                if ( folder.FolderId == "" )
                     rootList.Add( folder );
             }
             PlaylistSort( playlists, tracklist );

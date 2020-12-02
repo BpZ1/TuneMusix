@@ -1,19 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System;
 using TuneMusix.Helpers;
 using TuneMusix.Model;
 
 namespace TuneMusix.Tests.HelperTests
 {
-    [TestClass]
+    [TestFixture]
     public class TrackServiceTests
     {
-        private Track track1 = new Track( 0, 123, null, "aaaaaa", null, null, null, null, null );
-        private Track track2 = new Track( 0, 234, null, "bbbbbb", null, null, null, null, null );
-        private Track track3 = new Track( 0, 345, null, "cccccc", null, null, null, null, null );
-        private Track track4 = new Track( 0, 567, null, "dddddd", null, null, null, null, null );
+        private Track track1 = new Track( "a", 123, null, "aaaaaa", null, null, null, null, null );
+        private Track track2 = new Track( "b", 234, null, "bbbbbb", null, null, null, null, null );
+        private Track track3 = new Track( "c", 345, null, "cccccc", null, null, null, null, null );
+        private Track track4 = new Track( "d", 567, null, "dddddd", null, null, null, null, null );
 
-        private void setTracks()
+        [SetUp]
+        public void SetUp()
         {
             track1.Album.Value = "peter";
             track1.Interpret.Value = "thomas";
@@ -32,11 +33,9 @@ namespace TuneMusix.Tests.HelperTests
             track4.Title.Value = "ivone";
         }
 
-        [TestMethod]
+        [Test]
         public void Contains()
         {
-            setTracks();
-
             //test of album search
             Assert.IsTrue( TrackService.Contains( track1, "thomas", false ) );
             Assert.IsTrue( TrackService.Contains( track1, "mas", false ) );
@@ -58,7 +57,7 @@ namespace TuneMusix.Tests.HelperTests
 
         }
 
-        [TestMethod]
+        [Test]
         public void AddDurationValid()
         {
             string duration1 = "11:24:44";
@@ -75,18 +74,24 @@ namespace TuneMusix.Tests.HelperTests
             Assert.AreEqual( "00:52:44", TrackService.AddDurations( duration5, duration3 ) );
         }
 
-        [TestMethod]
-        [ExpectedException( typeof( ArgumentNullException ) )]
+        [Test]
         public void NullArgumentAddDuration()
         {
-            TrackService.AddDurations( null, null );
+            Assert.Throws<ArgumentNullException>( () =>
+             {
+                 TrackService.AddDurations( null, null );
+             } );
+
         }
 
-        [TestMethod]
-        [ExpectedException( typeof( FormatException ) )]
+        [Test]
         public void InvalidArgumentAddDuration()
         {
-            TrackService.AddDurations( "ab:as:dd", "dd" );
+            Assert.Throws<FormatException>( () =>
+            {
+                TrackService.AddDurations( "ab:as:dd", "dd" );
+            } );
+
         }
     }
 }

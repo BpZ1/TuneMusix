@@ -164,7 +164,6 @@ namespace TuneMusix.Model
                                 Logger.Log( $"Could not load cover art of track '{track.Title}'" );
                                 Logger.LogException( e );
                             }
-
                         }
                         //If an image was found end loop
                         if ( result != null )
@@ -180,6 +179,25 @@ namespace TuneMusix.Model
                 }
             }
             return result;
+        }
+
+        public override bool Equals( object obj )
+        {
+            if ( !( obj is Album otherAlbum ) )
+            {
+                return false;
+            }
+            return base.Equals( obj );
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1978926223;
+            hashCode = hashCode * -1521134295 + Interpret.Value.GetHashCode();
+            hashCode = hashCode * -1521134295 + Duration.Value.GetHashCode();
+            hashCode = hashCode * -1521134295 + Genre.Value.GetHashCode();
+            hashCode = hashCode * -1521134295 + Year.Value.GetHashCode();
+            return hashCode + base.GetHashCode();
         }
 
         private const string DefaultName = "Unknown";

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using TuneMusix.Data.SQLDatabase;
-using TuneMusix.Helpers;
 using TuneMusix.Helpers.Dialogs;
 using TuneMusix.Helpers.MediaPlayer;
 using TuneMusix.Model;
@@ -288,7 +287,7 @@ namespace TuneMusix.Data.DataModelOb
                         tracks.AddRange( f.Itemlist );
                     }
                     Console.WriteLine( "Tracks added: " + tracks.Count );
-                    folder.FolderId = 1;
+                    folder.FolderId = "";
                     _database.Insert( folders );
                     RootFolders.Add( folder );
                     Add( tracks );
@@ -323,7 +322,7 @@ namespace TuneMusix.Data.DataModelOb
             }
             if ( !contained )
             {
-                Playlist playlist = new Playlist( name, IDGenerator.GetID( true ) );
+                Playlist playlist = Playlist.Create( name );
                 Playlists.Add( playlist );
                 _database.Insert( playlist );
                 OnDataModelChanged();

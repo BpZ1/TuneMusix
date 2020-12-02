@@ -1,5 +1,8 @@
 ﻿using CSCore;
 using CSCore.Streams.Effects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TuneMusix.Helpers.MediaPlayer.Effects
 {
@@ -10,15 +13,15 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
         private bool _isInitialized;
         private double[] _channelFilter;
 
-        public EqualizerEffect()
+        public EqualizerEffect() : base( EffectType.Equalizer )
         {
             _channelFilter = new double[10];
             _isInitialized = false;
         }
 
-        public EqualizerEffect(double[] channelFilter)
+        public EqualizerEffect( double[] channelFilter ) : base( EffectType.Equalizer )
         {
-            if(channelFilter.Length == 10)
+            if ( channelFilter.Length == 10 )
             {
                 this._channelFilter = channelFilter;
             }
@@ -26,26 +29,63 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
 
         }
 
-        public override IWaveSource Apply(IWaveSource waveSource)
-        {     
-            if(IsActive)
+        public override IEnumerable<string> GetValues()
+        {
+            return new List<string>()
+            {
+                ChannelFilter0.ToString(),
+                ChannelFilter1.ToString(),
+                ChannelFilter2.ToString(),
+                ChannelFilter3.ToString(),
+                ChannelFilter4.ToString(),
+                ChannelFilter5.ToString(),
+                ChannelFilter6.ToString(),
+                ChannelFilter7.ToString(),
+                ChannelFilter8.ToString(),
+                ChannelFilter9.ToString()
+             };
+        }
+
+        public override void SetValues( IEnumerable<string> values )
+        {
+            if ( values.Count() < 10 )
+            {
+                throw new ArgumentException( $"Invalid number of values {values.Count()}" );
+            }
+            ChannelFilter0 = GetDoubleValue( values.ElementAt( 0 ) );
+            ChannelFilter1 = GetDoubleValue( values.ElementAt( 1 ) );
+            ChannelFilter2 = GetDoubleValue( values.ElementAt( 2 ) );
+            ChannelFilter3 = GetDoubleValue( values.ElementAt( 3 ) );
+            ChannelFilter4 = GetDoubleValue( values.ElementAt( 4 ) );
+            ChannelFilter5 = GetDoubleValue( values.ElementAt( 5 ) );
+            ChannelFilter6 = GetDoubleValue( values.ElementAt( 6 ) );
+            ChannelFilter7 = GetDoubleValue( values.ElementAt( 7 ) );
+            ChannelFilter8 = GetDoubleValue( values.ElementAt( 8 ) );
+            ChannelFilter9 = GetDoubleValue( values.ElementAt( 9 ) );
+        }
+
+        public override IWaveSource Apply( IWaveSource waveSource )
+        {
+            if ( IsActive )
+            {
                 return waveSource.ToSampleSource().
-                    AppendSource(createEqualizer).
-                    ToWaveSource();
+                  AppendSource( createEqualizer ).
+                  ToWaveSource();
+            }
 
             return waveSource;
         }
 
-        private Equalizer createEqualizer(ISampleSource waveSource)
+        private Equalizer createEqualizer( ISampleSource waveSource )
         {
-            _equalizer = Equalizer.Create10BandEqualizer(waveSource);
+            _equalizer = Equalizer.Create10BandEqualizer( waveSource );
             _isInitialized = true;
             int i = 0;
-            foreach(double value in _channelFilter)
+            foreach ( double value in _channelFilter )
             {
                 _equalizer.SampleFilters[i].AverageGainDB = value;
                 i++;
-            }        
+            }
             return _equalizer;
         }
         #region getter and setter
@@ -56,7 +96,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[0] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[0].AverageGainDB = value;
                 }
@@ -69,7 +109,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[1] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[1].AverageGainDB = value;
                 }
@@ -82,7 +122,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[2] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[2].AverageGainDB = value;
                 }
@@ -95,7 +135,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[3] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[3].AverageGainDB = value;
                 }
@@ -108,7 +148,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[4] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[4].AverageGainDB = value;
                 }
@@ -121,7 +161,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[5] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[5].AverageGainDB = value;
                 }
@@ -134,7 +174,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[6] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[6].AverageGainDB = value;
                 }
@@ -147,7 +187,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[7] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[7].AverageGainDB = value;
                 }
@@ -160,7 +200,7 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[8] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[8].AverageGainDB = value;
                 }
@@ -173,12 +213,12 @@ namespace TuneMusix.Helpers.MediaPlayer.Effects
             {
                 _channelFilter[9] = value;
                 IsModified = true;
-                if (_isInitialized)
+                if ( _isInitialized )
                 {
                     _equalizer.SampleFilters[9].AverageGainDB = value;
                 }
             }
         }
-#endregion
+        #endregion
     }
 }

@@ -44,5 +44,32 @@ namespace TuneMusix.Helpers
         }
 
         private T _value;
+
+        public override bool Equals( object obj )
+        {
+            if ( !( obj is T objectT ) )
+            {
+                return false;
+            }
+            if ( obj == null )
+            {
+                if ( _value == null )
+                {
+                    return true;
+                }
+                return false;
+            }
+            return objectT.Equals( _value );
+        }
+
+        public override string ToString()
+        {
+            return _value?.ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return _value.GetHashCode();
+        }
     }
 }

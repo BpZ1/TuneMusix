@@ -6,7 +6,7 @@ using TuneMusix.Model;
 
 namespace TuneMusix.Data.SQLDatabase
 {
-    public sealed partial class Database : IDatabase
+    public sealed partial class DatabaseLegacy : IDatabase
     {
 
         public List<Track> GetTracks()
@@ -20,18 +20,9 @@ namespace TuneMusix.Data.SQLDatabase
                 // Always call Read before accessing data.
                 while ( _dbReader.Read() )
                 {
-                    long folderID;
-                    if ( _dbReader.IsDBNull( 1 ) )
-                    {
-                        folderID = 0;
-                    }
-                    else
-                    {
-                        folderID = _dbReader.GetInt64( 1 );
-                    }
                     string url = _dbReader.GetString( 2 );
-                    long id = _dbReader.GetInt32( 0 );
-                    long folderId = folderID;
+                    string id = _dbReader.GetString( 0 );
+                    string folderId = _dbReader.GetString( 1 );
                     string title = _dbReader.GetString( 3 );
                     string interpret = _dbReader.GetString( 4 );
                     string album = _dbReader.GetString( 5 );
@@ -63,16 +54,8 @@ namespace TuneMusix.Data.SQLDatabase
                 while ( _dbReader.Read() )
                 {
                     string name = _dbReader.GetString( 3 );
-                    long id = _dbReader.GetInt32( 0 );
-                    long folderid;
-                    if ( _dbReader.IsDBNull( 1 ) )
-                    {
-                        folderid = 1;
-                    }
-                    else
-                    {
-                        folderid = _dbReader.GetInt64( 1 );
-                    }
+                    string id = _dbReader.GetString( 0 );
+                    string folderid = _dbReader.GetString( 1 );
                     string url = _dbReader.GetString( 2 );
                     Folder folder = new Folder( name, url, id, folderid );
                     folderlist.Add( folder );
@@ -96,13 +79,13 @@ namespace TuneMusix.Data.SQLDatabase
             _dbReader = command.ExecuteReader();
             try
             {
-                int volume = 50;
-                bool shuffle = false;
+                var volume = 50;
+                int shuffle = 0;
                 RepeatType repeatTrack = 0;
-                int primaryColor = 16; //Default = BlueGrey
-                int accentColor = 4; //Default = Teal
-                bool theme = false; //Default = Light
-                bool askConfirmation = true;
+                var primaryColor = 16; //Default = BlueGrey
+                var accentColor = 4; //Default = Teal
+                var theme = false; //Default = Light
+                var askConfirmation = true;
 
                 while ( _dbReader.Read() )
                 {
@@ -113,7 +96,7 @@ namespace TuneMusix.Data.SQLDatabase
 
                     if ( !_dbReader.IsDBNull( 1 ) )
                     {
-                        shuffle = Converter.IntToBoolConverter( _dbReader.GetInt32( 1 ) );
+                        shuffle = _dbReader.GetInt32( 1 );
                     }
 
                     if ( !_dbReader.IsDBNull( 2 ) )
@@ -142,7 +125,7 @@ namespace TuneMusix.Data.SQLDatabase
                     }
 
                 }
-                Options.Instance.SetOptions( volume, shuffle, repeatTrack, primaryColor, accentColor, theme, askConfirmation );
+                // Options.Instance.SetOptions( volume, shuffle, repeatTrack, primaryColor, accentColor, theme, askConfirmation );
 
             }
             finally
@@ -190,8 +173,8 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 while ( _dbReader.Read() )
                 {
-                    Playlist playlist = new Playlist( _dbReader.GetString( 1 ), _dbReader.GetInt32( 0 ) );
-                    playlistList.Add( playlist );
+                    //Playlist playlist = new Playlist( _dbReader.GetString( 1 ), _dbReader.GetInt32( 0 ) );
+                    //playlistList.Add( playlist );
                 }
             }
             finally
@@ -216,8 +199,8 @@ namespace TuneMusix.Data.SQLDatabase
             {
                 while ( _dbReader.Read() )
                 {
-                    PlaylistTrack playlistTrack = new PlaylistTrack( _dbReader.GetInt32( 0 ), _dbReader.GetInt32( 1 ) );
-                    playlistTrackList.Add( playlistTrack );
+                    //PlaylistTrack playlistTrack = new PlaylistTrack( _dbReader.GetInt32( 0 ), _dbReader.GetInt32( 1 ) );
+                    // playlistTrackList.Add( playlistTrack );
                 }
             }
             finally
@@ -372,7 +355,7 @@ namespace TuneMusix.Data.SQLDatabase
                         effect.Predelay = value2;
                         effect.Ratio = value3;
                         effect.Release = value4;
-                        effect.Treshold = value5;
+                        effect.Threshold = value5;
                         effectQueue.Add( effect );
                     }
                     if ( type.Equals( "flanger" ) )

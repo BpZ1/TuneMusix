@@ -19,7 +19,7 @@ namespace TuneMusix.Helpers
         {
             get
             {
-                if (instance == null)
+                if ( instance == null )
                 {
                     instance = new IDGenerator();
                 }
@@ -27,10 +27,24 @@ namespace TuneMusix.Helpers
             }
         }
 
-        public void Initialize(long init)
+        public void Initialize( long init )
         {
             IDCounter = init;
             _isInitialized = true;
+        }
+
+        public static long GetId()
+        {
+            CheckInitialized();
+            return Interlocked.Increment( ref IDCounter ) - 1;
+        }
+
+        private static void CheckInitialized()
+        {
+            if ( !_isInitialized )
+            {
+                throw new ClassNotInitializedException( "IDGenerator can only be used after it was initialized." );
+            }
         }
 
         /// <summary>
@@ -38,22 +52,22 @@ namespace TuneMusix.Helpers
         /// </summary>
         /// <param name="saving">Set to true if the current ID should be permanently saved</param>
         /// <returns></returns>
-        public static long GetID(bool saving)
+        public static long GetID( bool saving )
         {
-            if (_isInitialized && !saving)
+            if ( _isInitialized && !saving )
             {
-                return Interlocked.Increment(ref IDCounter)-1;
+                return Interlocked.Increment( ref IDCounter ) - 1;
             }
-            else if(_isInitialized && saving)
+            else if ( _isInitialized && saving )
             {
-                lock (_lockObject)
+                lock ( _lockObject )
                 {
-                    long id = Interlocked.Increment(ref IDCounter);
+                    long id = Interlocked.Increment( ref IDCounter );
                     Options.Instance.SaveValues();
                     return id - 1;
                 }
             }
-            throw new ClassNotInitializedException("IDGenerator can only be used after it was initialized.");
+            throw new ClassNotInitializedException( "IDGenerator can only be used after it was initialized." );
         }
     }
 }
